@@ -1,0 +1,42 @@
+en:
+  error:
+    message:
+      TokenNotFound:            "Token with %{attribute}: '%{value}' was not found."
+      TokenExpired:             "Token with %{attribute}: '%{value}' has expired."
+      Unauthorized:             "Unauthorized."
+      BadRequest:               "Bad request."
+      InternalServerError:      "Internal server error."
+      Invalid:                  "Invalid."
+      InvalidEncoding:          "Encoding is invalid."
+      InvalidAuthorizationType: "Invalid authorization type."
+      InvalidCredentials:       "Invalid credentials."
+      NotFound:                 "Not found."
+      ConnectorError:           "System error."
+      ServerError:              "Server error."
+      ValueOutOfRange:          "Value is out of range."
+      WrongRequestFormat:       "Wrong request format."
+      AuthorizationMissing:     "Authorization header is missing or invalid."
+      AccessTokenMissing:       "Access-Token header is missing."
+      JWTDecodeError:           "A error happened while decoding request's signature."
+      JWTExpiredSignature:      "Signature has expired."
+      JWTVerificationError:     "JWT signature verification failed."
+      JWTIncorrectAlgorithm:    "JWT signed using wrong algorithm."
+      UnknownConfirmationFlow:  "Provided payment confirmation flow is not supported."
+      InvalidPaymentAttributes: "Invalid payment attributes."
+      InvalidAttributeValue:    "Value provided for '%{attribute}' attribute is invalid."
+      InvalidPaymentAccount:    "Invalid payment account."
+      InsufficientFunds:        "Insufficient funds."
+      InvalidConfirmationCode:  "Invalid confirmation code."
+      CanceledByCustomer:       "Canceled By Customer."
+  consent:
+    payments: Confirm payments.
+    providers: Authorize third party providers.
+  customer:
+    scopes:
+      kyc: "Read access to your personal information."
+      accounts: "Read access to your accounts."
+      transactions: "Read access to your transactions."
+      verify_payment: "Verify funds availability in your account."
+      execute_payment: "Execute payments on your behalf."
+      offline_access: "Access to your data when you are offline."
+      funds_availability: "Verify funds availability in your accounts."

@@ -1,0 +1,139 @@
+body {
+  background-color: #17a2b8;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #000;
+}
+
+h1, h2{
+  font-size: 22px;
+  color: #fff;
+  font-weight: 600;
+}
+
+.container {
+  background-color: transparent;
+  box-shadow: none;
+}
+
+.alert {
+  background-color: #fff;
+}
+
+.grant-screen {
+  text-align: center;
+  h1 {
+    font-size: 26px;
+    color: #fff;
+  }
+  p {
+    color: #fff;
+    font-size: 17px;
+    margin-top: 15px;
+    display: block;
+    a {
+      color: #272727;
+      border: none;
+      background: rgb(246,248,249); /* Old browsers */
+      background: linear-gradient(to bottom, rgba(246,248,249,1) 0%,rgba(229,235,238,1) 26%,rgba(215,222,227,1) 50%,rgba(215,222,227,1) 71%,rgba(246,248,249,1) 100%,rgba(245,247,249,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+      filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f6f8f9', endColorstr='#f5f7f9',GradientType=0 ); /* IE6-9 */
+      &:hover {
+        color: #272727;
+      }
+    }
+  }
+
+  .btn {
+    transition: .3s ease-in-out;
+    font-size: 16px;
+    font-weight: bold;
+    &:first-child {
+      margin-right: 5px;
+    }
+  }
+}
+
+.confirm-payment-screen {
+  color: #fff;
+  .modal-header {
+    justify-content: center;
+    h3 {
+      font-size: 26px;
+      font-weight: 600;
+    }
+  }
+  .line {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    h4 {
+      width: 90px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 18px;
+      margin: 10px 0;
+    }
+    p {
+      margin: 0 0 0 10px;
+      width: 190px;
+      text-align: right;
+      font-size: 14px;
+    }
+    &.buttons-group {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      .btn {
+        width: 130px;
+        height: 40px;
+        margin-right: 20px;
+        transition: .3s ease-in-out;
+        margin: 0;
+        font-size: 14px;
+        font-weight: normal;
+        color: #fff;
+        line-height: 1.3;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        &.confirm-payment-btn {
+          background: #428bca;
+          border-color: #357ebd;
+          &:hover {
+            background: #3071a9;
+            border-color: #285e8e;
+          }
+        }
+        &.cancel-payment-btn {
+          background: #d9534f;
+          border-color: #d9534f;
+          &:hover {
+            background: #ff0700;
+            border-color: #ff0700;
+            outline: none;
+          }
+        }
+      }
+    }
+  }
+  form {
+    width: 300px;
+    margin: 20px 0;
+    .form-control {
+      width: 100%;
+      margin: 20px 0;
+    }
+  }
+}
+
+.alert {
+  font-size: 14px;
+  line-height: 1.42857143;
+  text-align: center;
+  color: #a94442;
+  padding: 15px;
+  .close {
+    color: #000;
+    opacity: .2;
+  }
+}

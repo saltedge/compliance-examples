@@ -1,0 +1,22 @@
+doctype html
+html
+  head
+    title
+      | Demo Connector
+    = csrf_meta_tags
+    = csp_meta_tag
+    = stylesheet_link_tag    'application', media: 'all'
+    = javascript_include_tag 'application'
+  body
+    .navbar.navbar-default.navbar-static-top
+      .container
+        h2.nav-logo DemoBank
+        a.navbar-brand href='/'
+          = Sandbox::Adapter.config.humanized_name
+
+    .container.py-5
+      .row
+        .col-12
+          .flash-messages
+            = bootstrap_flash
+          = yield

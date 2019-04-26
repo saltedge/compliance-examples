@@ -1,0 +1,8 @@
+.btn {
+  transition: .3s ease-in-out;
+  font-weight: bold;
+  color: #272727;
+  background: rgb(246,248,249); /* Old browsers */
+  background: linear-gradient(to bottom, rgba(246,248,249,1) 0%,rgba(229,235,238,1) 26%,rgba(215,222,227,1) 50%,rgba(215,222,227,1) 71%,rgba(246,248,249,1) 100%,rgba(245,247,249,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f6f8f9', endColorstr='#f5f7f9',GradientType=0 ); /* IE6-9 */
+}

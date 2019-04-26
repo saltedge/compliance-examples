@@ -1,0 +1,40 @@
+image: ci.banksalt.com/debian9-ruby2.4
+
+services:
+  - postgres:10
+
+cache:
+  key: "$CI_PROJECT_NAMESPACE-$CI_PROJECT_NAME"
+  paths:
+  - vendor/bundle
+  - tmp/rubocop_cache
+
+variables:
+  POSTGRES_DB: demobank_connector_test
+  POSTGRES_USER: dev-user
+  POSTGRES_PASSWORD: "123456"
+  RAILS_ENV: test
+  ARCHFLAGS: "-arch x86_64"
+  BUNDLE_PATH: "vendor/bundle"
+
+before_script:
+  - env
+  - ruby -v
+  - cp config/application-example.yml config/application.yml
+  - cp config/database-example.yml config/database.yml
+  - apt-get install curl
+  - curl -sL https://deb.nodesource.com/setup_8.x | bash -
+  - apt-get update -qq && apt-get install -y -qq nodejs
+  - bundle check || bundle install
+  - bundle exec rails db:environment:set
+  - bundle exec rails db:create
+  - bundle exec rails db:purge db:create db:migrate
+
+ruby_test:
+  stage: test
+  tags:
+    - test
+  except:
+    - PRODUCTION
+  script:
+    - COVERAGE=true FEATURE=true bundle exec rspec --fail-fast

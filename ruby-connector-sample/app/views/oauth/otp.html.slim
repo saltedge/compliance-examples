@@ -1,0 +1,11 @@
+h1.text-center Verify your login
+.row.justify-content-center
+  .form-horizontal.col-4
+    = form_for :verify_otp, url: oauth_verify_otp_path, html: {class: "otp"} do |f|
+      - @interactive_fields.each_with_index do |field, index|
+        - name, attributes = field
+        .form-group
+          = label_tag name, attributes[:humanized_name], class: 'label-control'
+          = send attributes[:html_tag], name, nil, autocomplete: "off", class: 'form-control', autofocus: index.zero?
+      .form-group
+        = f.submit "Verify", class: "btn btn-default btn-success"

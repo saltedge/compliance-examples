@@ -1,0 +1,19 @@
+development:
+  adapter: postgresql
+  database: demobank_connector_development
+  host: db
+  encoding: unicode
+  pool: 5
+  timeout: 5000
+  username: postgres
+  password:
+
+test:
+  adapter: postgresql
+  database: <%= ENV['DATABASE'] || 'demobank_connector_test' %>
+  host: <%= ENV['CI'] ? 'postgres' : 'db' %>
+  encoding: unicode
+  pool: 5
+  timeout: 5000
+  username: postgres
+  password:

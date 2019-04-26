@@ -1,0 +1,7 @@
+{
+  "email": "demobankuser@example.com",
+  "kyc": {
+    "name": "John Smith",
+    "email": "demobankuser@example.com"
+  }
+}

@@ -1,0 +1,33 @@
+[
+  {
+    "name": "Current Account",
+    "nature": "checking",
+    "currency_code": "GBP",
+    "payment_account": true,
+    "balance": 10000.0,
+    "available_amount": 10000.0,
+    "credit_limit": 10000.0,
+    "sort_code": "03-78-45",
+    "extra": {}
+  },
+  {
+    "name": "Time Deposit",
+    "nature": "savings",
+    "currency_code": "GBP",
+    "payment_account": false,
+    "balance": 10000.0,
+    "available_amount": 10000.0,
+    "sort_code": "63-24-45",
+    "extra": {}
+  },
+  {
+    "name": "Loan",
+    "nature": "loan",
+    "currency_code": "GBP",
+    "payment_account": false,
+    "balance": 3000.0,
+    "available_amount": 3000.0,
+    "sort_code": "41-29-47",
+    "extra": {}
+  }
+]

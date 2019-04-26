@@ -1,0 +1,26 @@
+center.confirm-payment-screen
+  .modal-header
+    .modal-title
+      h3 Do you want to confirm the following payment?
+  .modal-body
+    .line
+      h4 From:
+      p= @attributes[:from]
+    .line
+      h4 To:
+      p= @attributes[:to]
+    .line
+      h4 Amount:
+      p= @attributes[:amount]
+    .line
+      h4 Total:
+      p= @attributes[:total]
+    .line
+      = form_tag oauth_make_payment_path(payment_id: @attributes[:id]), class: "confirm-payment-form" do
+        = hidden_field_tag :payment_id, @attributes[:id]
+        - Sandbox::Adapter.config.payment_confirmation_fields.each_with_index do |field, index|
+          - name, attributes = field
+          = send attributes[:html_tag], "credentials[#{name}]", nil, placeholder: attributes[:humanized_name], required: true, class: 'form-control form-input confirmation_code', autofocus: index.zero?
+        .line.buttons-group
+          = submit_tag "Confirm", class: 'btn confirm-payment-btn'
+          = link_to 'Cancel',  oauth_cancel_payment_path(@attributes[:id]), class: 'btn cancel-payment-btn',   method: :post

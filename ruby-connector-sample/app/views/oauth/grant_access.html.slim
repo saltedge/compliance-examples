@@ -1,0 +1,11 @@
+.grant-screen
+  h1
+    = Sandbox::Adapter.config.humanized_name
+  p
+    b<> = @current_token.app_name
+    | is requesting your permission to access:
+    - render_scopes(@current_token.scopes).each do |scope|
+      p = scope
+  p
+    = link_to "Grant", oauth_grant_path, class: "btn btn-default btn-success", method: :post
+    = link_to "Deny", oauth_deny_path, class: "btn btn-default btn-danger", method: :post

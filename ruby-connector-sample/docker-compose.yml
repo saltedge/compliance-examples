@@ -1,0 +1,24 @@
+version: '3'
+
+volumes:
+  postgres_data: {}
+
+services:
+  db:
+    image: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+  app:
+    tty: true
+    stdin_open: true
+    build: .
+    command: bash -c "bundle exec rake db:create db:migrate db:seed && bundle exec rails server -p 3000 -b 0.0.0.0"
+    depends_on:
+      - db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./config:/home/connector/config
+      - ./app:/home/connector/app
+      - ./lib:/home/connector/lib
+    ports:
+      - "3000:3000"
