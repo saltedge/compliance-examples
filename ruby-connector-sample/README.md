@@ -10,7 +10,7 @@
 
 ##### 2. Navigate to project's root folder
   ```bash
-  cd demobank-connector
+  cd ruby-connector-sample
   ```
 
 ##### 3. Create configuration files
