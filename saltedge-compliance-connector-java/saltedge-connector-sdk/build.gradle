@@ -21,26 +21,13 @@ jar {
     enabled = true
 }
 
-javadoc {
-    destinationDir = file('../out/javadoc')
-}
-
-task sourcesJar(type: Jar, dependsOn: classes) {
-    archiveClassifier = 'sources'
-    from sourceSets.main.allSource
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    archiveClassifier = 'javadoc'
-    from javadoc.destinationDir
-}
-
 shadowJar {
     destinationDirectory = file('../out')
     manifest {
         attributes('Implementation-Title': project.name,
                 'Implementation-Version': project.version)
     }
+    from sourceSets.main.allSource
 }
 
 dependencies {

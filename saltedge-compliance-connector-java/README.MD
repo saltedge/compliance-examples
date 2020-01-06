@@ -46,7 +46,7 @@ Consist of modules:
 
 ## SDK Integration
 
-1. Add SDK to target application as Module or as JAR library (jar file can be found in `out` folder);
+1. Add SDK to target application as Module or as JAR library (`out/saltedge-connector-sdk-1.0.0-all.jar`);
 1. Setup application as [described before](#example-application-quick-setup)
 1. Add SDK package (`com.saltedge.connector.sdk`) to component scan annotation in Application class.
     ```java
@@ -104,7 +104,6 @@ Consist of modules:
     providerCallback.paymentConfirmationOAuthSuccess(paymentId, paymentExtra)
     ```
 
-> Notice that you can read generated [`javadoc`](out/javadoc/index.html) documentation in `/out` folder.
 ---
 ## [LICENSE](LICENSE.txt)
 
