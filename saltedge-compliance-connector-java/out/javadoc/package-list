@@ -1,0 +1,15 @@
+com.saltedge.connector.sdk.api.controllers
+com.saltedge.connector.sdk.api.err
+com.saltedge.connector.sdk.api.interceptors
+com.saltedge.connector.sdk.api.mapping
+com.saltedge.connector.sdk.api.services
+com.saltedge.connector.sdk.api.services.payments
+com.saltedge.connector.sdk.api.services.tokens
+com.saltedge.connector.sdk.callback
+com.saltedge.connector.sdk.callback.mapping
+com.saltedge.connector.sdk.callback.services
+com.saltedge.connector.sdk.config
+com.saltedge.connector.sdk.models.persistence
+com.saltedge.connector.sdk.provider
+com.saltedge.connector.sdk.provider.models
+com.saltedge.connector.sdk.tools
