@@ -1,9 +1,9 @@
-# Salt Edge Compliance Connector Java Example
+# Salt Edge Compliance Connector Java Example & SDK (v1)
 
-This codebase was created to demonstrate a full-stack application built with Spring Boot.
+This codebase was created to demonstrate a full-stack application built on Spring Boot, destinated to support communication between ASPSP and Priora Compliance Solution. Current application implements Priora Connector v1 API.
 Consist of modules:
 * **Example Application**
-* **Connector SDK**
+* **Connector SDK v1**
   
 ## Application Requirements
   

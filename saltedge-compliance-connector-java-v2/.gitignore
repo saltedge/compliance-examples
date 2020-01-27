@@ -1,0 +1,10 @@
+/.idea/
+/.gradle/
+build/
+*.iml
+# Dev config
+application.properties
+application.yml
+connector_public_dev.pem
+connector_private_dev.pem
+priora_public_dev.pem
