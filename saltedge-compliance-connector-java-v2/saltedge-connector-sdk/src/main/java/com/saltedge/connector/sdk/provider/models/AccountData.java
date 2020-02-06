@@ -79,7 +79,7 @@ public class AccountData {
     /**
      * International Bank Account Number
      */
-    @JsonProperty("iban")
+    @JsonProperty(Constants.KEY_IBAN)
     public String iban;
 
     /**

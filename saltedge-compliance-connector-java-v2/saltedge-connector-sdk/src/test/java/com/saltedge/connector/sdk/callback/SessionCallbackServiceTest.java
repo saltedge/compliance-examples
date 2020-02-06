@@ -68,8 +68,11 @@ public class SessionCallbackServiceTest {
         // then
         ArgumentCaptor<String> urlCaptor = ArgumentCaptor.forClass(String.class);
         ArgumentCaptor<HttpEntity> entityCaptor = ArgumentCaptor.forClass(HttpEntity.class);
-        verify(restTemplate).exchange(urlCaptor.capture(), eq(HttpMethod.PATCH), entityCaptor.capture(), eq(Object.class));
+
+        verify(restTemplate).exchange(urlCaptor.capture(), eq(HttpMethod.POST), entityCaptor.capture(), eq(Object.class));
+
         assertThat(urlCaptor.getValue()).isEqualTo("http://localhost/api/connectors/v2/sessions/sessionSecret/update");
+        assertThat(entityCaptor.getValue().getHeaders().get("X-HTTP-Method-Override")).isEqualTo(Lists.list("PATCH"));
         assertThat(entityCaptor.getValue().getHeaders().getAccept()).isEqualTo(Lists.list(MediaType.APPLICATION_JSON));
         assertThat(entityCaptor.getValue().getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON);
         assertThat(entityCaptor.getValue().getHeaders().get("App-id")).isEqualTo(Lists.list("QWERTY"));
@@ -85,10 +88,9 @@ public class SessionCallbackServiceTest {
         // then
         ArgumentCaptor<String> urlCaptor = ArgumentCaptor.forClass(String.class);
         ArgumentCaptor<HttpEntity> entityCaptor = ArgumentCaptor.forClass(HttpEntity.class);
-        verify(restTemplate).exchange(urlCaptor.capture(), eq(HttpMethod.PATCH), entityCaptor.capture(), eq(Object.class));
+
+        verify(restTemplate).exchange(urlCaptor.capture(), eq(HttpMethod.POST), entityCaptor.capture(), eq(Object.class));
         assertThat(urlCaptor.getValue()).isEqualTo("http://localhost/api/connectors/v2/sessions/sessionSecret/success");
-        assertThat(entityCaptor.getValue().getHeaders().getAccept()).isEqualTo(Lists.list(MediaType.APPLICATION_JSON));
-        assertThat(entityCaptor.getValue().getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON);
         assertThat(entityCaptor.getValue().getHeaders().get("App-id")).isEqualTo(Lists.list("QWERTY"));
         assertThat(entityCaptor.getValue().getHeaders().get("App-secret")).isEqualTo(Lists.list("ASDFG"));
         assertThat(entityCaptor.getValue().getHeaders().get(Constants.HEADER_AUTHORIZATION).get(0)).startsWith("Bearer ");
@@ -102,10 +104,9 @@ public class SessionCallbackServiceTest {
         // then
         ArgumentCaptor<String> urlCaptor = ArgumentCaptor.forClass(String.class);
         ArgumentCaptor<HttpEntity> entityCaptor = ArgumentCaptor.forClass(HttpEntity.class);
-        verify(restTemplate).exchange(urlCaptor.capture(), eq(HttpMethod.PATCH), entityCaptor.capture(), eq(Object.class));
+
+        verify(restTemplate).exchange(urlCaptor.capture(), eq(HttpMethod.POST), entityCaptor.capture(), eq(Object.class));
         assertThat(urlCaptor.getValue()).isEqualTo("http://localhost/api/connectors/v2/sessions/sessionSecret/fail");
-        assertThat(entityCaptor.getValue().getHeaders().getAccept()).isEqualTo(Lists.list(MediaType.APPLICATION_JSON));
-        assertThat(entityCaptor.getValue().getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON);
         assertThat(entityCaptor.getValue().getHeaders().get("App-id")).isEqualTo(Lists.list("QWERTY"));
         assertThat(entityCaptor.getValue().getHeaders().get("App-secret")).isEqualTo(Lists.list("ASDFG"));
         assertThat(entityCaptor.getValue().getHeaders().get(Constants.HEADER_AUTHORIZATION).get(0)).startsWith("Bearer ");

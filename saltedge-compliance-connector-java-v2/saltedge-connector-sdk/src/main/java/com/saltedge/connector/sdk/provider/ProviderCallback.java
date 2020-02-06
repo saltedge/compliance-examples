@@ -20,7 +20,7 @@
  */
 package com.saltedge.connector.sdk.provider;
 
-import com.saltedge.connector.sdk.provider.models.ConsentData;
+import com.saltedge.connector.sdk.provider.models.ProviderOfferedConsents;
 
 import java.util.List;
 
@@ -38,7 +38,7 @@ public interface ProviderCallback {
      *
      * @return returnUrl where should be redirected user
      */
-    String authorizationOAuthSuccess(String sessionSecret, String userId, List<ConsentData> consents);
+    String onOAuthAuthorizationSuccess(String sessionSecret, String userId, ProviderOfferedConsents consents);
 
     /**
      * Notify about oAuth authorization fail

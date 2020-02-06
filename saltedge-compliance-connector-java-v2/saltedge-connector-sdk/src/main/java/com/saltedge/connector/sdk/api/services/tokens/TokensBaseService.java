@@ -23,15 +23,12 @@ package com.saltedge.connector.sdk.api.services.tokens;
 import com.saltedge.connector.sdk.api.services.BaseService;
 import com.saltedge.connector.sdk.callback.mapping.SessionSuccessCallbackRequest;
 import com.saltedge.connector.sdk.callback.services.SessionsCallbackService;
-import com.saltedge.connector.sdk.config.ApplicationProperties;
 import com.saltedge.connector.sdk.models.persistence.Token;
 import com.saltedge.connector.sdk.models.persistence.TokensRepository;
-import com.saltedge.connector.sdk.provider.models.ConsentData;
+import com.saltedge.connector.sdk.provider.models.ProviderOfferedConsents;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.List;
 
 abstract class TokensBaseService extends BaseService {
     private static Logger log = LoggerFactory.getLogger(TokensBaseService.class);
@@ -45,9 +42,9 @@ abstract class TokensBaseService extends BaseService {
 //        initConfirmedTokenAndSendSessionSuccess(token, null);
 //    }
 
-    protected void initConfirmedTokenAndSendSessionSuccess(Token token, List<ConsentData> fetchConsents) {
+    protected void initConfirmedTokenAndSendSessionSuccess(Token token, ProviderOfferedConsents providerOfferedConsents) {
         token.initConfirmedToken();
-        token.fetchConsents = fetchConsents;
+        token.providerOfferedConsents = providerOfferedConsents;
         tokensRepository.save(token);
         sendSessionSuccess(token);
     }
@@ -61,7 +58,7 @@ abstract class TokensBaseService extends BaseService {
         params.userId = token.userId;
         params.token = token.accessToken;
         params.tokenExpiresAt = token.tokenExpiresAt;
-        params.consent = token.fetchConsents;
+        params.providerOfferedConsents = token.providerOfferedConsents;
         callbackService.sendSuccessCallback(token.sessionSecret, params);
     }
     // TODO: uncomment when embedded type will be active

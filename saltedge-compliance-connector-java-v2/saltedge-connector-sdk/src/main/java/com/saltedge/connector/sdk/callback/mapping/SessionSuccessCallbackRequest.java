@@ -24,16 +24,14 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.saltedge.connector.sdk.config.Constants;
-import com.saltedge.connector.sdk.provider.models.ConsentData;
+import com.saltedge.connector.sdk.provider.models.ProviderOfferedConsents;
 
 import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SessionSuccessCallbackRequest extends BaseCallbackRequest {
     @JsonProperty("consent")
-    public List<ConsentData> consent;
+    public ProviderOfferedConsents providerOfferedConsents;
 
     @JsonProperty("token")
     public String token;

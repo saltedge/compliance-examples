@@ -23,36 +23,17 @@ package com.saltedge.connector.sdk.provider.models;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.saltedge.connector.sdk.config.Constants;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
-/**
- * Consent data from user.
- * Should be requested from User after oAuth authorization.
- *
- * Example: [{"account_id": "AccountId", "scopes": ["balance", "transactions"]}]
- */
 public class ConsentData {
-    /**
-     * Account ID
-     */
-    @JsonProperty(Constants.KEY_ACCOUNT_ID)
-    public String accountId;
-
-    /**
-     * Set of permissions for access token.
-     * Allowed values: balance, transactions
-     */
-    @JsonProperty(Constants.KEY_SCOPES)
-    public List<Scopes> scopes;
+    @JsonProperty(Constants.KEY_IBAN)
+    public String iban;
 
     public ConsentData() {
     }
 
-    public ConsentData(String accountId, List<Scopes> scopes) {
-        this.accountId = accountId;
-        this.scopes = scopes;
+    public ConsentData(String iban) {
+        this.iban = iban;
     }
 
     @Override
@@ -60,49 +41,16 @@ public class ConsentData {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ConsentData that = (ConsentData) o;
-        if (!Objects.equals(accountId, that.accountId)) return false;
-        return Objects.equals(scopes, that.scopes);
+        return Objects.equals(iban, that.iban);
     }
 
     @Override
     public int hashCode() {
-        int result = accountId != null ? accountId.hashCode() : 0;
-        result = 31 * result + (scopes != null ? scopes.hashCode() : 0);
-        return result;
+        return Objects.hashCode(iban);
     }
 
     @Override
     public String toString() {
-        return "ConsentData{" +
-                "accountId='" + accountId + '\'' +
-                ", scopes=" + scopes +
-                '}';
-    }
-
-    /**
-     * Joins consents for accounts, balances and transactions in the single entity
-     *
-     * @param consentToAccounts list of unique ID's of account for which user give consent to provide account name
-     * @param consentToBalances list of unique ID's of accounts for which user give consent to provide balance amount
-     * @param consentToTransactions list of unique ID's of accounts for which user give consent to provide transactions list
-     * @return list of ConsentData where each object contains consents for an account
-     */
-    public static List<ConsentData> joinConsents(
-            List<String> consentToAccounts,
-            List<String> consentToBalances,
-            List<String> consentToTransactions
-    ) {
-        List<ConsentData> result = new ArrayList<>();
-        for (String accountId : consentToAccounts) {
-            List<Scopes> scopes = new ArrayList<>();
-            if (consentToBalances.contains(accountId)) scopes.add(Scopes.balance);
-            if (consentToTransactions.contains(accountId)) scopes.add(Scopes.transactions);
-            result.add(new ConsentData(accountId, scopes));
-        }
-        return result;
-    }
-
-    public enum Scopes {
-        balance, transactions
+        return "ConsentData{" + "iban='" + iban + '\'' + '}';
     }
 }

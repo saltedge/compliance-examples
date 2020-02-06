@@ -22,7 +22,7 @@ package com.saltedge.connector.sdk.models.persistence;
 
 import com.saltedge.connector.sdk.config.ApplicationProperties;
 import com.saltedge.connector.sdk.config.Constants;
-import com.saltedge.connector.sdk.provider.models.ConsentData;
+import com.saltedge.connector.sdk.provider.models.ProviderOfferedConsents;
 import com.saltedge.connector.sdk.tools.ConsentDataConverter;
 import com.saltedge.connector.sdk.tools.KeyTools;
 
@@ -45,9 +45,9 @@ public class Token extends BaseEntity implements Serializable {
     @Column(name = Constants.KEY_SESSION_SECRET, nullable = false)
     public String sessionSecret;
 
-    @Column(name = "fetch_consents", nullable = true)
+    @Column(name = "provider_offered_consents")
     @Convert(converter = ConsentDataConverter.class)
-    public List<ConsentData> fetchConsents;
+    public ProviderOfferedConsents providerOfferedConsents;
 
     @Column(name = Constants.KEY_STATUS, nullable = false)
     public Status status = Status.UNCONFIRMED;

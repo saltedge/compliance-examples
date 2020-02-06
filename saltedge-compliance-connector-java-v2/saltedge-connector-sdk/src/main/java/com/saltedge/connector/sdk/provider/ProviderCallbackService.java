@@ -23,11 +23,9 @@ package com.saltedge.connector.sdk.provider;
 import com.saltedge.connector.sdk.api.services.tokens.ConfirmTokenService;
 import com.saltedge.connector.sdk.api.services.tokens.RevokeTokenService;
 import com.saltedge.connector.sdk.models.persistence.Token;
-import com.saltedge.connector.sdk.provider.models.ConsentData;
+import com.saltedge.connector.sdk.provider.models.ProviderOfferedConsents;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * Implementation of ProviderCallback interface
@@ -48,8 +46,7 @@ public class ProviderCallbackService implements ProviderCallback {
      * @return returnUrl from token
      */
     @Override
-    public String authorizationOAuthSuccess(String sessionSecret, String userId, List<ConsentData> fetchConsents) {
-        List<ConsentData> consents = fetchConsents.isEmpty() ? null : fetchConsents;
+    public String onOAuthAuthorizationSuccess(String sessionSecret, String userId, ProviderOfferedConsents consents) {
         Token token = confirmTokenService.confirmToken(sessionSecret, userId, consents);
         return (token == null) ? null : token.tppRedirectUrl;
     }

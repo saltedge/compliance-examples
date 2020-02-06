@@ -29,7 +29,7 @@ public class SessionSuccessCallbackRequestTests {
 	public void constructorTest() {
 		SessionSuccessCallbackRequest model = new SessionSuccessCallbackRequest();
 
-		assertThat(model.consent).isNull();
+		assertThat(model.providerOfferedConsents).isNull();
 		assertThat(model.token).isNull();
 		assertThat(model.tokenExpiresAt).isNull();
 		assertThat(model.userId).isNull();

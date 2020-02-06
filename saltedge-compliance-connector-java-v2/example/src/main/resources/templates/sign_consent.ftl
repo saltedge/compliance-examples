@@ -18,7 +18,7 @@
                     <legend>Select accounts scopes</legend>
                     <#list accounts as account>
                     <p>
-                        <label><input type="checkbox" name="accounts" value="${account.id}"/> Account: ${account.name}</label>
+                        <label> Account: ${account.name}</label>
                         <label><input type="checkbox" name="balances" value="${account.id}"/> Balance</label>
                         <label><input type="checkbox" name="transactions" value="${account.id}"/> Transactions</label>
                     </p>

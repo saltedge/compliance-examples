@@ -21,6 +21,7 @@
 package com.saltedge.connector.example.model;
 
 import com.saltedge.connector.example.model.converter.StringMapConverter;
+import com.saltedge.connector.sdk.config.Constants;
 import com.saltedge.connector.sdk.models.persistence.BaseEntity;
 
 import javax.persistence.*;
@@ -40,7 +41,7 @@ public class Account extends BaseEntity implements Serializable {
     @Column(name = "currency_code", nullable = false)
     public String currencyCode;
 
-    @Column(name = "iban", nullable = false, unique = true)
+    @Column(name = Constants.KEY_IBAN, nullable = false, unique = true)
     public String iban;
 
     @Column(name = "number", nullable = false, unique = true)

@@ -21,9 +21,10 @@
 package com.saltedge.connector.example.controllers;
 
 import com.saltedge.connector.example.connector.ConnectorService;
-import com.saltedge.connector.example.connector.config.AuthorizationTypes;
 import com.saltedge.connector.sdk.config.Constants;
 import com.saltedge.connector.sdk.provider.ProviderCallback;
+import com.saltedge.connector.sdk.provider.models.AccountData;
+import com.saltedge.connector.sdk.provider.models.ProviderOfferedConsents;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,57 +35,49 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
-@RequestMapping(UserAuthorizeController.BASE_PATH)
-public class UserAuthorizeController {
-    public final static String BASE_PATH = "/oauth/authorize";
-    private static Logger log = LoggerFactory.getLogger(UserAuthorizeController.class);
+@RequestMapping(UserConsentController.BASE_PATH)
+public class UserConsentController {
+    public final static String BASE_PATH = "/oauth/authorize/consent";
+    private static Logger log = LoggerFactory.getLogger(UserConsentController.class);
     @Autowired
     ConnectorService connectorService;
     @Autowired
     ProviderCallback providerCallback;
 
     @GetMapping
-    public ModelAndView signIn(@RequestParam(value = Constants.KEY_SESSION_SECRET, required = false) String sessionSecret) {
-        ModelAndView result = new ModelAndView("sign_in");
+    public ModelAndView showConsentPage(
+            @RequestParam(value = Constants.KEY_SESSION_SECRET) String sessionSecret,
+            @RequestParam(name = Constants.KEY_USER_ID) String userId
+    ) {
+        List<AccountData> accounts = connectorService.getAccountsList(userId);
+        ModelAndView result = new ModelAndView("sign_consent");
         result.addObject(Constants.KEY_SESSION_SECRET, sessionSecret);
+        result.addObject(Constants.KEY_USER_ID, userId);
+        result.addObject("accounts", accounts);
         return result;
     }
 
     @PostMapping
-    public ModelAndView authorizeAndShowConsent(
-            @RequestParam(name = Constants.KEY_SESSION_SECRET) String sessionSecret,
-            @RequestParam String login,
-            @RequestParam String password
+    public ModelAndView onConsentDataSubmit(
+            @RequestParam(value = Constants.KEY_SESSION_SECRET) String sessionSecret,
+            @RequestParam(name = Constants.KEY_USER_ID) String userId,
+            @RequestParam List<String> balances,
+            @RequestParam List<String> transactions
     ) {
-        Map<String, String> params = new HashMap<>();
-        params.put("login", login);
-        params.put("password", password);
-        String userId = connectorService.authorizeUser(AuthorizationTypes.LOGIN_PASSWORD_AUTH_TYPE.code, params);
-        if (userId == null) {
-            return createErrorModel(sessionSecret);
-        } else {
-            ModelAndView result = new ModelAndView("redirect:/oauth/authorize/consent");
-            result.addObject(Constants.KEY_SESSION_SECRET, sessionSecret);
-            result.addObject(Constants.KEY_USER_ID, userId);
-            return result;
-        }
-    }
+        List<AccountData> accounts = connectorService.getAccountsList(userId);
+        List<AccountData> balancesConsents = accounts.stream().filter(item -> balances.contains(item.id)).collect(Collectors.toList());
+        List<AccountData> transactionsConsents = accounts.stream().filter(item -> transactions.contains(item.id)).collect(Collectors.toList());
 
-    @PostMapping("/error")
-    public ModelAndView signInError(
-            @RequestParam(name = Constants.KEY_SESSION_SECRET) String sessionSecret
-    ) {
-        String returnToUrl = providerCallback.authorizationOAuthError(sessionSecret, null);
-        return returnToUrl == null ? createErrorModel(sessionSecret) : new ModelAndView("redirect:" + returnToUrl);
-    }
+        String returnToUrl = providerCallback.onOAuthAuthorizationSuccess(
+                sessionSecret,
+                userId,
+                ProviderOfferedConsents.buildProviderOfferedConsents(balancesConsents, transactionsConsents)
+        );
 
-    private ModelAndView createErrorModel(String sessionSecret) {
-        ModelAndView result = new ModelAndView("sign_error");
-        result.addObject(Constants.KEY_SESSION_SECRET, sessionSecret);
-        return result;
+        return new ModelAndView((returnToUrl == null) ? "sign_error" : "redirect:" + returnToUrl);
     }
 }

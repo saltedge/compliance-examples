@@ -27,32 +27,33 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ConsentDataTests {
+public class ProviderOfferedConsentsTests {
 	@Test
 	public void constructorTest() {
-		ConsentData model = new ConsentData();
+		ProviderOfferedConsents model = new ProviderOfferedConsents();
 
-		assertThat(model.accountId).isNull();
-		assertThat(model.scopes).isNull();
+		assertThat(model.balances).isNull();
+		assertThat(model.transactions).isNull();
 
-		model = new ConsentData("accountId", Lists.list(ConsentData.Scopes.balance));
+		model = new ProviderOfferedConsents(Lists.emptyList(), Lists.emptyList());
 
-		assertThat(model.accountId).isEqualTo("accountId");
-		assertThat(model.scopes).isEqualTo(Lists.list(ConsentData.Scopes.balance));
+		assertThat(model.balances).isEmpty();
+		assertThat(model.transactions).isEmpty();
 	}
 
 	@Test
-	public void joinConsentsTest() {
-		List<String> accounts = Lists.list("id1", "id2", "id3", "id4");
-		List<String> balances = Lists.list("id1", "id4");
-		List<String> transactions = Lists.list("id2", "id4");
-		List<ConsentData> joinResult = ConsentData.joinConsents(accounts, balances, transactions);
+	public void buildProviderOfferedConsentsTest() {
+		AccountData account1 = new AccountData();
+		account1.iban = "MD12345";
+		AccountData account2 = new AccountData();
+		account2.iban = "MD67890";
 
-		assertThat(joinResult).isEqualTo(Lists.list(
-				new ConsentData("id1", Lists.list(ConsentData.Scopes.balance)),
-				new ConsentData("id2", Lists.list(ConsentData.Scopes.transactions)),
-				new ConsentData("id3", Lists.emptyList()),
-				new ConsentData("id4", Lists.list(ConsentData.Scopes.balance, ConsentData.Scopes.transactions))
-		));
+		List<AccountData> balances = Lists.list(account1);
+		List<AccountData> transactions = Lists.list(account2);
+
+		ProviderOfferedConsents joinResult = ProviderOfferedConsents.buildProviderOfferedConsents(balances, transactions);
+
+		assertThat(joinResult.balances).isEqualTo(Lists.list(new ConsentData("MD12345")));
+		assertThat(joinResult.transactions).isEqualTo(Lists.list(new ConsentData("MD67890")));
 	}
 }

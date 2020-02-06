@@ -18,29 +18,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.saltedge.connector.sdk.api.services.tokens;
+package com.saltedge.connector.example.controllers;
 
-import com.saltedge.connector.sdk.models.persistence.Token;
-import com.saltedge.connector.sdk.provider.models.ProviderOfferedConsents;
+import com.saltedge.connector.example.connector.ConnectorService;
+import com.saltedge.connector.sdk.provider.ProviderCallback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 
-@Service
-@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ConfirmTokenService extends TokensBaseService {
-    private static Logger log = LoggerFactory.getLogger(ConfirmTokenService.class);
+@Controller
+@RequestMapping(IndexController.BASE_PATH)
+public class IndexController {
+    public final static String BASE_PATH = "/";
+    private static Logger log = LoggerFactory.getLogger(IndexController.class);
+    @Autowired
+    ConnectorService connectorService;
+    @Autowired
+    ProviderCallback providerCallback;
 
-    public Token confirmToken(String sessionSecret, String userId, ProviderOfferedConsents providerOfferedConsents) {
-        if (StringUtils.isEmpty(sessionSecret == null) || StringUtils.isEmpty(userId)) return null;
-        Token token = findTokenBySessionSecret(sessionSecret);
-        if (token != null) {
-            token.userId = userId;
-            super.initConfirmedTokenAndSendSessionSuccess(token, providerOfferedConsents);
-        }
-        return token;
+    @GetMapping
+    public ModelAndView index() {
+        return new ModelAndView("redirect:" + UserAuthorizeController.BASE_PATH);
     }
 }

@@ -48,6 +48,5 @@ public class Constants {
     public final static String KEY_AMOUNT = "amount";
     public final static String KEY_ACCOUNT_ID = "account_id";
     public final static String KEY_DESCRIPTION = "description";
-
-    private Constants() {}
+    public final static String KEY_IBAN = "iban";
 }

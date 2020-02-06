@@ -23,7 +23,7 @@ package com.saltedge.connector.sdk.tools;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.saltedge.connector.sdk.provider.models.ConsentData;
+import com.saltedge.connector.sdk.provider.models.ProviderOfferedConsents;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,12 +34,12 @@ import java.util.List;
 /**
  * JPA mapper for ConsentData type
  */
-public class ConsentDataConverter implements AttributeConverter<List<ConsentData>, String> {
+public class ConsentDataConverter implements AttributeConverter<List<ProviderOfferedConsents>, String> {
     private static Logger log = LoggerFactory.getLogger(ConsentDataConverter.class);
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
-    public String convertToDatabaseColumn(List<ConsentData> attribute) {
+    public String convertToDatabaseColumn(List<ProviderOfferedConsents> attribute) {
         try {
             return objectMapper.writeValueAsString(attribute);
         } catch (JsonProcessingException e) {
@@ -49,9 +49,9 @@ public class ConsentDataConverter implements AttributeConverter<List<ConsentData
     }
 
     @Override
-    public List<ConsentData> convertToEntityAttribute(String dbData) {
+    public List<ProviderOfferedConsents> convertToEntityAttribute(String dbData) {
         try {
-            TypeReference<List<ConsentData>> typeRef = new TypeReference<List<ConsentData>>() {};
+            TypeReference<List<ProviderOfferedConsents>> typeRef = new TypeReference<List<ProviderOfferedConsents>>() {};
             return objectMapper.readValue(dbData, typeRef);
         } catch (IOException e) {
             log.error("JSON reading error", e);

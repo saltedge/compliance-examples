@@ -24,9 +24,10 @@ import com.saltedge.connector.example.connector.collector.AccountsCollector;
 import com.saltedge.connector.example.connector.config.AuthorizationTypes;
 import com.saltedge.connector.example.controllers.UserAuthorizeController;
 import com.saltedge.connector.example.model.Account;
-import com.saltedge.connector.example.model.Payment;
 import com.saltedge.connector.example.model.User;
-import com.saltedge.connector.example.model.repository.*;
+import com.saltedge.connector.example.model.repository.AccountsRepository;
+import com.saltedge.connector.example.model.repository.TransactionsRepository;
+import com.saltedge.connector.example.model.repository.UsersRepository;
 import com.saltedge.connector.sdk.api.err.NotFound;
 import com.saltedge.connector.sdk.provider.ProviderApi;
 import com.saltedge.connector.sdk.provider.models.AccountData;
@@ -52,8 +53,6 @@ public class ConnectorService implements ProviderApi {
     private static Logger log = LoggerFactory.getLogger(ConnectorService.class);
     @Autowired
     Environment env;
-    @Autowired
-    CurrenciesRepository currenciesRepository;
     @Autowired
     UsersRepository usersRepository;
     @Autowired
