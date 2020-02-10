@@ -27,7 +27,7 @@ class Api::Priora::V2::BaseController < ApplicationController
     @token
   end
 
-  def internal_server_eror(error)
+  def internal_server_error(error)
     # TODO: implement logging and error handling system
     puts "InternalServerError: #{error.class} #{error.message}"
 
