@@ -1,5 +1,5 @@
 class Api::Priora::V2::BaseController < ApplicationController
-  before_action :decode_jwt
+  before_action :jwt_params
   skip_before_action :verify_authenticity_token
 
   ApiError = Class.new(Exception) { attr_accessor :message, :code }
@@ -8,7 +8,7 @@ class Api::Priora::V2::BaseController < ApplicationController
   rescue_from StandardError, with: :internal_server_error
   rescue_from ApiError, with: :api_error
 
-  def decode_jwt
+  def jwt_params
     params.merge! JWT.decode(bearer_token, PRIORA_PUBLIC_KEY, true, {algorithm: 'RS256'}).first["data"]
   end
 
