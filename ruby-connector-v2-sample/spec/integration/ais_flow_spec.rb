@@ -2,7 +2,6 @@ require 'rails_helper'
 require Rails.root.join("lib/tasks/seeds/base_seeder")
 
 RSpec.describe "AIS flow", type: :request do
-
   let(:priora_base_url) { "https://priora.saltedge.com/api/connectors/v2/" }
   let(:private_key)     { File.read(Rails.root.join('spec/fixtures/', 'private.pem')) }
   let(:priora_update_params) do
@@ -136,13 +135,13 @@ RSpec.describe "AIS flow", type: :request do
       get api_priora_v2_account_transactions_path(user.accounts.last.id), headers: headers.merge("HTTP_AUTHORIZATION" => token_from(get_transactions_params))
 
       parsed_response    = JSON.parse(response.body)["data"]
-      first_transaction  = parsed_response.detect { |acc| acc["id"] == 1 }.except("created_at", "updated_at", "booking_date", "value_date")
-      second_transaction = parsed_response.detect { |acc| acc["id"] == 2 }.except("created_at", "updated_at", "booking_date", "value_date")
-      third_transaction  = parsed_response.detect { |acc| acc["id"] == 3 }.except("created_at", "updated_at", "booking_date", "value_date")
+      first_transaction  = parsed_response.first.except("created_at", "updated_at", "booking_date", "value_date")
+      second_transaction = parsed_response.second.except("created_at", "updated_at", "booking_date", "value_date")
+      third_transaction  = parsed_response.third.except("created_at", "updated_at", "booking_date", "value_date")
 
-      expect(first_transaction).to  eq(user.accounts.last.transactions.find_by(id: 1).as_json.except("created_at", "updated_at", "booking_date", "value_date"))
-      expect(second_transaction).to eq(user.accounts.last.transactions.find_by(id: 2).as_json.except("created_at", "updated_at", "booking_date", "value_date"))
-      expect(third_transaction).to  eq(user.accounts.last.transactions.find_by(id: 3).as_json.except("created_at", "updated_at", "booking_date", "value_date"))
+      expect(first_transaction).to  eq(user.accounts.last.transactions.find_by(id: first_transaction["id"]).as_json.except("created_at", "updated_at", "booking_date", "value_date"))
+      expect(second_transaction).to eq(user.accounts.last.transactions.find_by(id: second_transaction["id"]).as_json.except("created_at", "updated_at", "booking_date", "value_date"))
+      expect(third_transaction).to  eq(user.accounts.last.transactions.find_by(id: third_transaction["id"]).as_json.except("created_at", "updated_at", "booking_date", "value_date"))
     end
   end
 end
