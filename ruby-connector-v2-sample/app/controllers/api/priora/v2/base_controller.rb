@@ -9,7 +9,7 @@ class Api::Priora::V2::BaseController < ApplicationController
   rescue_from ApiError, with: :api_error
 
   def jwt_params
-    params.merge! JWT.decode(bearer_token, PRIORA_PUBLIC_KEY, true, {algorithm: 'RS256'}).first["data"]
+    @jwt_params ||= JWT.decode(bearer_token, PRIORA_PUBLIC_KEY, true, {algorithm: 'RS256'}).first["data"]
   end
 
   def bearer_token

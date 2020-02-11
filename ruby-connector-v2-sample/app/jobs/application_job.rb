@@ -4,6 +4,6 @@ class ApplicationJob < ActiveJob::Base
   queue_as :default
 
   rescue_from StandardError do |ex|
-    Rails.logger.warn error(ex.message)
+    Rails.logger.warn "#{ex.class}: #{ex.message}"
   end
 end

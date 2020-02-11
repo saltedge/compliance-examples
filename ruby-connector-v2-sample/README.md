@@ -1,4 +1,4 @@
-This is a demo application that is strictly not recommended to be used in a production environment.
+## This is a demo application that is strictly not recommended to be used in a production environment.
 
 ### Run connector
 1. $ `bundle`
