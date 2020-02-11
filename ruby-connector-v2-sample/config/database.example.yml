@@ -1,0 +1,19 @@
+development:
+  adapter: postgresql
+  database: connector_v2_development
+  host: localhost
+  encoding: unicode
+  pool: 5
+  timeout: 5000
+  username: developer
+  password: passw0rd
+
+test:
+  adapter: postgresql
+  database: <%= ENV['DATABASE'] || 'connector_v2_test' %>
+  host: <%= ENV['CI'] ? 'postgres' : 'localhost' %>
+  encoding: unicode
+  pool: 5
+  timeout: 5000
+  username: developer
+  password: passw0rd

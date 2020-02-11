@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>RubyConnectorV2Sample</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+  </head>
+
+  <body>
+    <%- flash.each do |key, value| %>
+      <%- next if value.blank? %>
+      <%= content_tag(:div, class: "alert alert-#{key == "notice" ? "info" : "danger"}") do %>
+        <%= value %>
+      <% end %>
+    <% end %>
+    <%= yield %>
+  </body>
+</html>
