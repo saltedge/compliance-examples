@@ -78,7 +78,57 @@ class BaseSeeder
           proprietary_bank_transaction_code: "string"
         }
       )
-      puts "Created transactions"
     end
+    puts "Created transactions"
+
+    card_account = user.card_accounts.create!(
+      name: "Example name",
+      masked_pan: "1234 5678 9101 1121",
+      currency: "USD",
+      product: "Girokonto",
+      status: Account::ENABLED,
+      balances: [{
+        balance_type: "openingAvailable",
+        balance_amount: {
+          currency: "EUR",
+          amount: "14355.78"
+        }
+      }]
+    )
+    puts "Created card accounts"
+
+    3.times do |time|
+      value_date = time.days.ago
+      status = CardTransaction::VALID_STATUSES.sample
+
+      card_account.card_transactions.create!(
+        transaction_date: value_date,
+        status: status,
+        currency: card_account.currency,
+        amount: rand(-50..100.0).round(2),
+        transaction_details: "Sogo Cwb Supermar09800",
+        booking_date: status == Transaction::PENDING ? nil : value_date + 1.day,
+        currency_exchange: [
+          {
+            exchange_rate: "0.83",
+            unit_currency: "GBP",
+            quotation_date: "2020-02-14",
+            source_currency: "EUR",
+            target_currency: "GBP",
+            contract_identification: "#210453230294158405"
+          }
+        ],
+        original_amount: {
+          amount: "83",
+          currency: "GBP"
+        },
+        markup_fee: {
+          amount: "3.00",
+          currency: "EUR"
+        },
+        markup_fee_percentage: "0.3"
+      )
+    end
+    puts "Created card transactions"
   end
 end

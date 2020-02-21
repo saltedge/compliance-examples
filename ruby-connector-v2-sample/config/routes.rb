@@ -20,7 +20,11 @@ Rails.application.routes.draw do
         end
 
         resources :card_accounts, only: [:index] do
-          get :card_transactions, to: "accounts#transactions"
+          collection do
+            scope ":account_id" do
+              get "transactions", to: "card_accounts#transactions"
+            end
+          end
         end
 
         resource :errors, only: [:create]
