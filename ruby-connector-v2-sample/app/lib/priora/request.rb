@@ -22,7 +22,7 @@ class Priora::Request
   end
 
   def execute
-    puts  URI.join(BASE_URL, url).to_s
+    puts URI.join(BASE_URL, url).to_s
     RestClient::Request.execute(method: mtd, url: URI.join(BASE_URL, url).to_s, headers: headers)
   rescue RestClient::Exception => ex
     puts JSON.parse(ex.response)

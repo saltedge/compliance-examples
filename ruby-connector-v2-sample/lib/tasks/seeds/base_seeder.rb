@@ -87,6 +87,11 @@ class BaseSeeder
       currency: "USD",
       product: "Girokonto",
       status: Account::ENABLED,
+      credit_limit: {
+        currency: "EUR",
+        amount: "15000"
+      },
+      extra: {},
       balances: [{
         balance_type: "openingAvailable",
         balance_amount: {
@@ -126,9 +131,22 @@ class BaseSeeder
           amount: "3.00",
           currency: "EUR"
         },
-        markup_fee_percentage: "0.3"
+        markup_fee_percentage: "0.3",
+        card_acceptor_id: "string",
+        card_acceptor_address: {
+          street: "rue blue",
+          buildingnNumber: "89",
+          city: "Paris",
+          postalCode: "75000",
+          country: "FR"
+        },
+        merchant_category_code: "some-code",
+        masked_pan: "123456******4321",
+        invoiced: true,
+        proprietary_bank_transaction_code: "code"
       )
     end
+
     puts "Created card transactions"
   end
 end

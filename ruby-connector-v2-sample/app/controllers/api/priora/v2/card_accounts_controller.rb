@@ -4,7 +4,7 @@ class Api::Priora::V2::CardAccountsController < Api::Priora::V2::BaseController
   end
 
   def transactions
-    render json: {data: current_token.user.card_accounts.find_by(id: params[:account_id])&.transactions || []}
+    render json: {data: current_token.user.card_accounts.find_by(id: params[:account_id])&.card_transactions || []}
   end
 
 private
