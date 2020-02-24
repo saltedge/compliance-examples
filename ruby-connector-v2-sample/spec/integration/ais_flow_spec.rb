@@ -128,14 +128,16 @@ RSpec.describe "AIS flow", type: :request do
 
     it "returns all accounts and its transactions related to the user" do
       #Accounts
-      get api_priora_v2_accounts_path, headers: headers.merge("HTTP_AUTHORIZATION" => token_from(data_params))
+      get api_priora_v2_accounts_path,
+        headers: headers.merge("HTTP_AUTHORIZATION" => token_from(data_params))
 
       parsed_response = JSON.parse(response.body)["data"].first.except("created_at", "updated_at")
 
       expect(parsed_response).to eq(user.accounts.last.as_json.except("created_at", "updated_at"))
 
       #Transactions
-      get api_priora_v2_account_transactions_path(user.accounts.last.id), headers: headers.merge("HTTP_AUTHORIZATION" => token_from(get_transactions_params))
+      get api_priora_v2_account_transactions_path(user.accounts.last.id),
+        headers: headers.merge("HTTP_AUTHORIZATION" => token_from(get_transactions_params))
 
       parsed_response    = JSON.parse(response.body)["data"]
       first_transaction  = parsed_response.first.except( "created_at", "updated_at", "booking_date", "value_date")
@@ -157,14 +159,16 @@ RSpec.describe "AIS flow", type: :request do
 
     it "returns all card_accounts and its card_transactions related to the user" do
       #CardAccounts
-      get api_priora_v2_card_accounts_path, headers: headers.merge("HTTP_AUTHORIZATION" => token_from(data_params))
+      get api_priora_v2_card_accounts_path,
+        headers: headers.merge("HTTP_AUTHORIZATION" => token_from(data_params))
 
       parsed_response = JSON.parse(response.body)["data"].first.except("created_at", "updated_at")
 
       expect(parsed_response).to eq(user.card_accounts.last.as_json.except("created_at", "updated_at"))
 
       #CardTransactions
-      get transactions_api_priora_v2_card_accounts_path(user.accounts.last.id), headers: headers.merge("HTTP_AUTHORIZATION" => token_from(get_transactions_params))
+      get transactions_api_priora_v2_card_accounts_path(user.accounts.last.id),
+        headers: headers.merge("HTTP_AUTHORIZATION" => token_from(get_transactions_params))
 
       parsed_response         = JSON.parse(response.body)["data"]
       first_card_transaction  = parsed_response.first.except( "created_at", "updated_at", "booking_date", "value_date")
