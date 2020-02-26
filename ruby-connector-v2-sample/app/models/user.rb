@@ -3,6 +3,7 @@ class User < ApplicationRecord
 
   has_many :tokens, dependent: :destroy
   has_many :accounts, dependent: :destroy
+  has_many :card_accounts, dependent: :destroy
 
   validates :email, presence: true
 

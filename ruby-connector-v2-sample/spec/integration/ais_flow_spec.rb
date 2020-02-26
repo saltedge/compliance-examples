@@ -96,7 +96,7 @@ RSpec.describe "AIS flow", type: :request do
     end
   end
 
-  describe "AIS flow" do
+  describe "AIS and CAIS flow" do
     let!(:user)  { User.last }
     let!(:token) do
       Token.create!(
@@ -127,21 +127,65 @@ RSpec.describe "AIS flow", type: :request do
     end
 
     it "returns all accounts and its transactions related to the user" do
-      get api_priora_v2_accounts_path, headers: headers.merge("HTTP_AUTHORIZATION" => token_from(data_params))
+      #Accounts
+      get api_priora_v2_accounts_path,
+        headers: headers.merge("HTTP_AUTHORIZATION" => token_from(data_params))
 
       parsed_response = JSON.parse(response.body)["data"].first.except("created_at", "updated_at")
+
       expect(parsed_response).to eq(user.accounts.last.as_json.except("created_at", "updated_at"))
 
-      get api_priora_v2_account_transactions_path(user.accounts.last.id), headers: headers.merge("HTTP_AUTHORIZATION" => token_from(get_transactions_params))
+      #Transactions
+      get api_priora_v2_account_transactions_path(user.accounts.last.id),
+        headers: headers.merge("HTTP_AUTHORIZATION" => token_from(get_transactions_params))
 
       parsed_response    = JSON.parse(response.body)["data"]
-      first_transaction  = parsed_response.first.except("created_at", "updated_at", "booking_date", "value_date")
+      first_transaction  = parsed_response.first.except( "created_at", "updated_at", "booking_date", "value_date")
       second_transaction = parsed_response.second.except("created_at", "updated_at", "booking_date", "value_date")
-      third_transaction  = parsed_response.third.except("created_at", "updated_at", "booking_date", "value_date")
+      third_transaction  = parsed_response.third.except( "created_at", "updated_at", "booking_date", "value_date")
 
-      expect(first_transaction).to  eq(user.accounts.last.transactions.find_by(id: first_transaction["id"]).as_json.except("created_at", "updated_at", "booking_date", "value_date"))
-      expect(second_transaction).to eq(user.accounts.last.transactions.find_by(id: second_transaction["id"]).as_json.except("created_at", "updated_at", "booking_date", "value_date"))
-      expect(third_transaction).to  eq(user.accounts.last.transactions.find_by(id: third_transaction["id"]).as_json.except("created_at", "updated_at", "booking_date", "value_date"))
+      expect(first_transaction).to  eq(
+        user.accounts.last.transactions.find_by(id: first_transaction["id"])
+          .as_json.except("created_at", "updated_at", "booking_date", "value_date"))
+
+      expect(second_transaction).to eq(
+        user.accounts.last.transactions.find_by(id: second_transaction["id"])
+          .as_json.except("created_at", "updated_at", "booking_date", "value_date"))
+
+      expect(third_transaction).to  eq(
+        user.accounts.last.transactions.find_by(id: third_transaction["id"])
+          .as_json.except("created_at", "updated_at", "booking_date", "value_date"))
+    end
+
+    it "returns all card_accounts and its card_transactions related to the user" do
+      #CardAccounts
+      get api_priora_v2_card_accounts_path,
+        headers: headers.merge("HTTP_AUTHORIZATION" => token_from(data_params))
+
+      parsed_response = JSON.parse(response.body)["data"].first.except("created_at", "updated_at")
+
+      expect(parsed_response).to eq(user.card_accounts.last.as_json.except("created_at", "updated_at"))
+
+      #CardTransactions
+      get transactions_api_priora_v2_card_accounts_path(user.accounts.last.id),
+        headers: headers.merge("HTTP_AUTHORIZATION" => token_from(get_transactions_params))
+
+      parsed_response         = JSON.parse(response.body)["data"]
+      first_card_transaction  = parsed_response.first.except( "created_at", "updated_at", "booking_date", "value_date")
+      second_card_transaction = parsed_response.second.except("created_at", "updated_at", "booking_date", "value_date")
+      third_card_transaction  = parsed_response.third.except( "created_at", "updated_at", "booking_date", "value_date")
+
+      expect(first_card_transaction).to  eq(
+        user.card_accounts.last.card_transactions.find_by(id: first_transaction["id"])
+          .as_json.except("created_at", "updated_at", "booking_date", "value_date"))
+
+      expect(second_card_transaction).to eq(
+        user.card_accounts.last.card_transactions.find_by(id: second_transaction["id"])
+          .as_json.except("created_at", "updated_at", "booking_date", "value_date"))
+
+      expect(third_card_transaction).to  eq(
+        user.card_accounts.last.card_transactions.find_by(id: third_transaction["id"])
+          .as_json.except("created_at", "updated_at", "booking_date", "value_date"))
     end
   end
 end

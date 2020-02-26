@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_10_110544) do
+ActiveRecord::Schema.define(version: 2020_02_20_144813) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -31,6 +31,41 @@ ActiveRecord::Schema.define(version: 2020_02_10_110544) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_accounts_on_user_id"
+  end
+
+  create_table "card_accounts", force: :cascade do |t|
+    t.bigint "user_id"
+    t.string "name", null: false
+    t.string "masked_pan", null: false
+    t.string "currency", null: false
+    t.string "product", null: false
+    t.string "status", null: false
+    t.jsonb "credit_limit"
+    t.jsonb "balances"
+    t.jsonb "extra"
+    t.index ["user_id"], name: "index_card_accounts_on_user_id"
+  end
+
+  create_table "card_transactions", force: :cascade do |t|
+    t.bigint "card_account_id"
+    t.date "transaction_date", null: false
+    t.string "status", null: false
+    t.string "currency", null: false
+    t.string "amount", null: false
+    t.string "transaction_details", null: false
+    t.string "terminal_id"
+    t.date "booking_date"
+    t.jsonb "currency_exchange"
+    t.jsonb "original_amount"
+    t.jsonb "markup_fee"
+    t.string "markup_fee_percentage"
+    t.string "card_acceptor_id"
+    t.jsonb "card_acceptor_address"
+    t.string "merchant_category_code"
+    t.string "masked_pan"
+    t.boolean "invoiced"
+    t.string "proprietary_bank_transaction_code"
+    t.index ["card_account_id"], name: "index_card_transactions_on_card_account_id"
   end
 
   create_table "tokens", force: :cascade do |t|

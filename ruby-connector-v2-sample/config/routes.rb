@@ -19,6 +19,14 @@ Rails.application.routes.draw do
           get :transactions, to: "accounts#transactions"
         end
 
+        resources :card_accounts, only: [:index] do
+          collection do
+            scope ":account_id" do
+              get "transactions", to: "card_accounts#transactions"
+            end
+          end
+        end
+
         resource :errors, only: [:create]
       end
     end
