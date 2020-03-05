@@ -21,7 +21,7 @@
 package com.saltedge.connector.example.controllers;
 
 import com.saltedge.connector.example.connector.ConnectorService;
-import com.saltedge.connector.sdk.provider.ProviderCallback;
+import com.saltedge.connector.sdk.provider.ConnectorCallback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +38,7 @@ public class IndexController {
     @Autowired
     ConnectorService connectorService;
     @Autowired
-    ProviderCallback providerCallback;
+    ConnectorCallback providerCallback;
 
     @GetMapping
     public ModelAndView index() {

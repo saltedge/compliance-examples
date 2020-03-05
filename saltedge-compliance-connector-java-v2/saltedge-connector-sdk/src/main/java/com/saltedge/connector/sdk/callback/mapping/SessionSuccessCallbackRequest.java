@@ -23,10 +23,11 @@ package com.saltedge.connector.sdk.callback.mapping;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.saltedge.connector.sdk.config.Constants;
+import com.saltedge.connector.sdk.Constants;
 import com.saltedge.connector.sdk.provider.models.ProviderOfferedConsents;
 
 import java.util.Date;
+import java.util.Objects;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SessionSuccessCallbackRequest extends BaseCallbackRequest {
@@ -42,4 +43,47 @@ public class SessionSuccessCallbackRequest extends BaseCallbackRequest {
 
     @JsonProperty(Constants.KEY_USER_ID)
     public String userId;
+
+    public SessionSuccessCallbackRequest() {
+    }
+
+    public SessionSuccessCallbackRequest(
+            ProviderOfferedConsents providerOfferedConsents,
+            String token,
+            Date tokenExpiresAt,
+            String userId
+    ) {
+        this.providerOfferedConsents = providerOfferedConsents;
+        this.token = token;
+        this.tokenExpiresAt = tokenExpiresAt;
+        this.userId = userId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SessionSuccessCallbackRequest that = (SessionSuccessCallbackRequest) o;
+        return Objects.equals(providerOfferedConsents, that.providerOfferedConsents) &&
+                Objects.equals(token, that.token) &&
+                Objects.equals(tokenExpiresAt, that.tokenExpiresAt) &&
+                Objects.equals(userId, that.userId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(providerOfferedConsents, token, tokenExpiresAt, userId);
+    }
+
+    @Override
+    public String toString() {
+        return "SessionSuccessCallbackRequest{" +
+                "providerOfferedConsents=" + providerOfferedConsents +
+                ", token='" + token + '\'' +
+                ", tokenExpiresAt=" + tokenExpiresAt +
+                ", userId='" + userId + '\'' +
+                ", sessionSecret='" + sessionSecret + '\'' +
+                ", extra=" + extra +
+                '}';
+    }
 }

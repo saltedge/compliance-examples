@@ -26,7 +26,7 @@ import com.saltedge.connector.sdk.api.err.HttpErrorParams;
 import com.saltedge.connector.sdk.callback.mapping.BaseCallbackRequest;
 import com.saltedge.connector.sdk.callback.mapping.BaseFailRequest;
 import com.saltedge.connector.sdk.config.ApplicationProperties;
-import com.saltedge.connector.sdk.config.Constants;
+import com.saltedge.connector.sdk.Constants;
 import com.saltedge.connector.sdk.config.PrioraProperties;
 import com.saltedge.connector.sdk.tools.JsonTools;
 import org.slf4j.Logger;

@@ -20,8 +20,8 @@
  */
 package com.saltedge.connector.example.model.repository;
 
-import com.saltedge.connector.example.model.Payment;
-import org.springframework.data.repository.CrudRepository;
+import com.saltedge.connector.example.model.PaymentEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface PaymentsRepository extends CrudRepository<Payment, Long> {
+public interface PaymentsRepository extends JpaRepository<PaymentEntity, Long> {
 }

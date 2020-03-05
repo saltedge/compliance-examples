@@ -37,16 +37,19 @@ abstract class TokensBaseService extends BaseService {
     @Autowired
     protected TokensRepository tokensRepository;
 
-    // TODO uncomment when embedded type will be active
-//    protected void initConfirmedTokenAndSendSessionSuccess(Token token) {
-//        initConfirmedTokenAndSendSessionSuccess(token, null);
-//    }
-
-    protected void initConfirmedTokenAndSendSessionSuccess(Token token, ProviderOfferedConsents providerOfferedConsents) {
-        token.initConfirmedToken();
-        token.providerOfferedConsents = providerOfferedConsents;
-        tokensRepository.save(token);
-        sendSessionSuccess(token);
+    protected void initConfirmedTokenAndSendSessionSuccess(
+            Token token,
+            ProviderOfferedConsents providerOfferedConsents
+    ) {
+        try {
+            token.initConfirmedToken();
+            token.providerOfferedConsents = providerOfferedConsents;
+            tokensRepository.save(token);
+            sendSessionSuccess(token);
+        } catch (Exception e) {
+            log.error("initConfirmedTokenAndSendSessionSuccess: ", e);
+            callbackService.sendFailCallback(token.sessionSecret, e);
+        }
     }
 
     protected Token findTokenBySessionSecret(String sessionSecret) {
@@ -54,13 +57,20 @@ abstract class TokensBaseService extends BaseService {
     }
 
     protected void sendSessionSuccess(Token token) {
-        SessionSuccessCallbackRequest params = new SessionSuccessCallbackRequest();
-        params.userId = token.userId;
-        params.token = token.accessToken;
-        params.tokenExpiresAt = token.tokenExpiresAt;
-        params.providerOfferedConsents = token.providerOfferedConsents;
+        SessionSuccessCallbackRequest params = new SessionSuccessCallbackRequest(
+                token.providerOfferedConsents,
+                token.accessToken,
+                token.tokenExpiresAt,
+                token.userId
+        );
         callbackService.sendSuccessCallback(token.sessionSecret, params);
     }
+
+    // TODO uncomment when embedded type will be active
+//    protected void initConfirmedTokenAndSendSessionSuccess(Token token) {
+//        initConfirmedTokenAndSendSessionSuccess(token, null);
+//    }
+
     // TODO: uncomment when embedded type will be active
 //    protected void failSessionAndThrow(String sessionSecret, RuntimeException exception) {
 //        callbackService.sendFailCallback(sessionSecret, exception);

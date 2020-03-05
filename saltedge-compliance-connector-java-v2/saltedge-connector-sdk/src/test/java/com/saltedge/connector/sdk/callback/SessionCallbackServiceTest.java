@@ -20,11 +20,12 @@
  */
 package com.saltedge.connector.sdk.callback;
 
+import com.saltedge.connector.sdk.api.err.NotFound;
 import com.saltedge.connector.sdk.callback.mapping.BaseCallbackRequest;
 import com.saltedge.connector.sdk.callback.mapping.BaseFailRequest;
 import com.saltedge.connector.sdk.callback.services.SessionsCallbackService;
 import com.saltedge.connector.sdk.config.ApplicationProperties;
-import com.saltedge.connector.sdk.config.Constants;
+import com.saltedge.connector.sdk.Constants;
 import org.assertj.core.util.Lists;
 import org.junit.Before;
 import org.junit.Test;
@@ -100,6 +101,22 @@ public class SessionCallbackServiceTest {
     public void givenMockingRestTemplate_whenSendFailCallback_shouldBeCalledExchangeWithParams() {
         // when
         service.sendFailCallback("sessionSecret", new BaseFailRequest());
+
+        // then
+        ArgumentCaptor<String> urlCaptor = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<HttpEntity> entityCaptor = ArgumentCaptor.forClass(HttpEntity.class);
+
+        verify(restTemplate).exchange(urlCaptor.capture(), eq(HttpMethod.POST), entityCaptor.capture(), eq(Object.class));
+        assertThat(urlCaptor.getValue()).isEqualTo("http://localhost/api/connectors/v2/sessions/sessionSecret/fail");
+        assertThat(entityCaptor.getValue().getHeaders().get("App-id")).isEqualTo(Lists.list("QWERTY"));
+        assertThat(entityCaptor.getValue().getHeaders().get("App-secret")).isEqualTo(Lists.list("ASDFG"));
+        assertThat(entityCaptor.getValue().getHeaders().get(Constants.HEADER_AUTHORIZATION).get(0)).startsWith("Bearer ");
+    }
+
+    @Test
+    public void givenMockingRestTemplate_whenSendFailCallbackWithException_shouldBeCalledExchangeWithParams() {
+        // when
+        service.sendFailCallback("sessionSecret", new NotFound.AccountNotFound());
 
         // then
         ArgumentCaptor<String> urlCaptor = ArgumentCaptor.forClass(String.class);

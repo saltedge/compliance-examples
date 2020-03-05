@@ -26,33 +26,49 @@ import com.saltedge.connector.sdk.models.persistence.Token;
 import com.saltedge.connector.sdk.provider.models.ProviderOfferedConsents;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
+
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 /**
  * Implementation of ProviderCallback interface
- * @see ProviderCallback
+ * @see ConnectorCallback
  */
 @Service
-public class ProviderCallbackService implements ProviderCallback {
+@Validated
+public class ConnectorCallbackService implements ConnectorCallback {
     @Autowired
     ConfirmTokenService confirmTokenService;
     @Autowired
     RevokeTokenService revokeTokenService;
 
     /**
-     * Confirm token by session secret
+     * Provider notify Connector Module about oAuth success authentication and user consent for accounts
      *
-     * @param sessionSecret of Token create session
-     * @param userId of authorized User
+     * @param sessionSecret of Token Create session
+     * @param userId of authenticated User
+     * @param consents list of balances of accounts and transactions of accounts
      * @return returnUrl from token
      */
     @Override
-    public String onOAuthAuthorizationSuccess(String sessionSecret, String userId, ProviderOfferedConsents consents) {
+    public String onOAuthAuthorizationSuccess(
+            @NotEmpty String sessionSecret,
+            @NotEmpty String userId,
+            @NotNull ProviderOfferedConsents consents
+    ) {
         Token token = confirmTokenService.confirmToken(sessionSecret, userId, consents);
         return (token == null) ? null : token.tppRedirectUrl;
     }
 
+    /**
+     * Provider should notify Connector Module about oAuth authentication fail
+     *
+     * @param sessionSecret of Token Create session
+     * @return returnUrl from token
+     */
     @Override
-    public String authorizationOAuthError(String sessionSecret, String errorMessage) {
+    public String onOAuthAuthorizationError(@NotEmpty String sessionSecret) {
         Token token = revokeTokenService.revokeTokenBySessionSecret(sessionSecret);
         return (token == null) ? null : token.tppRedirectUrl;
     }

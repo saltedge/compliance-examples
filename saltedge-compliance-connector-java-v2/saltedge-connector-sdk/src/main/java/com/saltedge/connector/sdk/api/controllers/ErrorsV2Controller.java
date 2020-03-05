@@ -22,7 +22,7 @@ package com.saltedge.connector.sdk.api.controllers;
 
 import com.saltedge.connector.sdk.api.mapping.EmptyJsonModel;
 import com.saltedge.connector.sdk.api.mapping.ErrorsRequest;
-import com.saltedge.connector.sdk.config.Constants;
+import com.saltedge.connector.sdk.Constants;
 import com.saltedge.connector.sdk.models.persistence.Token;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;

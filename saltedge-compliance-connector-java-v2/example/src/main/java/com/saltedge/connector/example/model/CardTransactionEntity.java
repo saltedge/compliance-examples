@@ -30,11 +30,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-@Entity
-public class Transaction extends BaseEntity implements Serializable {
+@Entity(name = "CardTransaction")
+@Table(name = "CardTransaction")
+public class CardTransactionEntity extends BaseEntity implements Serializable {
 
     @Column(name = "amount", nullable = false)
-    public double amount;
+    public String amount;
 
     @Column(name = "description", nullable = false)
     public String description;
@@ -51,15 +52,8 @@ public class Transaction extends BaseEntity implements Serializable {
     @Column(name = "currency_code", nullable = false)
     public String currencyCode;
 
-    @Column(name = "to_iban", nullable = true)
-    public String toIban;
-
-    @Column(name = "to_account_name", nullable = true)
-    public String toAccountName;
-
-    @Column(name = "to_currency_code", nullable = true)
-    public String toCurrencyCode;
-
+    @Column(name = "pan", nullable = true)
+    public String pan;
 
     @Column(name = "fees", nullable = false)
     @Convert(converter = FeesConverter.class)
@@ -71,19 +65,19 @@ public class Transaction extends BaseEntity implements Serializable {
 
     @ManyToOne
     @JoinColumn
-    public Account account;
+    public CardAccountEntity cardAccount;
 
-    public Transaction() {
+    public CardTransactionEntity() {
     }
 
-    public Transaction(double amount,
-                       String currencyCode,
-                       String description,
-                       Date madeOn,
-                       String status,
-                       List<Fee> fees,
-                       Map<String, String> extra,
-                       Account account
+    public CardTransactionEntity(String amount,
+                                 String currencyCode,
+                                 String description,
+                                 Date madeOn,
+                                 String status,
+                                 List<Fee> fees,
+                                 Map<String, String> extra,
+                                 CardAccountEntity cardAccount
     ) {
         this.amount = amount;
         this.currencyCode = currencyCode;
@@ -92,6 +86,6 @@ public class Transaction extends BaseEntity implements Serializable {
         this.status = status;
         this.fees = fees;
         this.extra = extra;
-        this.account = account;
+        this.cardAccount = cardAccount;
     }
 }

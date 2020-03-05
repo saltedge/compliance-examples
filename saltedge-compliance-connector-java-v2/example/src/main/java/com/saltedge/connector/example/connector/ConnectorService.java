@@ -23,16 +23,16 @@ package com.saltedge.connector.example.connector;
 import com.saltedge.connector.example.connector.collector.AccountsCollector;
 import com.saltedge.connector.example.connector.config.AuthorizationTypes;
 import com.saltedge.connector.example.controllers.UserAuthorizeController;
-import com.saltedge.connector.example.model.Account;
-import com.saltedge.connector.example.model.User;
+import com.saltedge.connector.example.model.AccountEntity;
+import com.saltedge.connector.example.model.CardAccountEntity;
+import com.saltedge.connector.example.model.CardTransactionEntity;
+import com.saltedge.connector.example.model.UserEntity;
 import com.saltedge.connector.example.model.repository.AccountsRepository;
-import com.saltedge.connector.example.model.repository.TransactionsRepository;
+import com.saltedge.connector.example.model.repository.CardAccountsRepository;
 import com.saltedge.connector.example.model.repository.UsersRepository;
 import com.saltedge.connector.sdk.api.err.NotFound;
 import com.saltedge.connector.sdk.provider.ProviderApi;
-import com.saltedge.connector.sdk.provider.models.AccountData;
-import com.saltedge.connector.sdk.provider.models.AuthorizationType;
-import com.saltedge.connector.sdk.provider.models.TransactionData;
+import com.saltedge.connector.sdk.provider.models.*;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,15 +40,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import javax.validation.constraints.NotEmpty;
+import java.util.*;
 import java.util.function.Supplier;
 
 @Service
+@Validated
 public class ConnectorService implements ProviderApi {
     private static Logger log = LoggerFactory.getLogger(ConnectorService.class);
     @Autowired
@@ -58,7 +58,7 @@ public class ConnectorService implements ProviderApi {
     @Autowired
     AccountsRepository accountsRepository;
     @Autowired
-    TransactionsRepository transactionsRepository;
+    CardAccountsRepository cardAccountsRepository;
 
     @Override
     public String getAuthorizationPageUrl() {
@@ -113,25 +113,45 @@ public class ConnectorService implements ProviderApi {
     }
 
     @Override
-    public List<AccountData> getAccountsList(@NotNull String userId) {
-        User user = findAndValidateUser(userId);
+    public List<Account> getAccountsOfUser(@NotEmpty String userId) {
+        UserEntity user = findAndValidateUser(userId);
         return AccountsCollector.collectAccounts(accountsRepository, user);
     }
 
     @Override
-    public List<TransactionData> getTransactionsList(@NotNull String userId, String accountId, Date fromDate, Date toDate) {
-        User user = findAndValidateUser(userId);
-        Account account = findAndValidateAccount(user.id, accountId);
+    public List<Transaction> getTransactionsOfAccount(
+            @NotEmpty String userId,
+            @NotEmpty String accountId,
+            Date fromDate,
+            Date toDate
+    ) {
+        UserEntity user = findAndValidateUser(userId);
+        AccountEntity account = accountsRepository.findFirstByIdAndUserId(Long.valueOf(accountId), user.id)
+                .orElseThrow((Supplier<RuntimeException>) NotFound.AccountNotFound::new);
         return ConnectorTypeConverters.convertTransactionsToTransactionsData(account.transactions);
     }
 
-    private User findAndValidateUser(@NotNull String userId) {
-        return usersRepository.findById(Long.valueOf(userId))
-                .orElseThrow((Supplier<RuntimeException>) NotFound.UserNotFound::new);
+    @Override
+    public List<CardAccount> getCardAccountsOfUser(@NotEmpty String userId) {
+        UserEntity user = findAndValidateUser(userId);
+        return AccountsCollector.collectCardAccounts(cardAccountsRepository, user);
     }
 
-    private Account findAndValidateAccount(@NotNull Long userId, String accountId) {
-        return accountsRepository.findFirstByIdAndUserId(Long.valueOf(accountId), userId)
+    @Override
+    public List<CardTransaction> getTransactionsOfCardAccount(
+            @NotEmpty String userId,
+            @NotEmpty String accountId,
+            Date fromDate,
+            Date toDate
+    ) {
+        UserEntity user = findAndValidateUser(userId);
+        CardAccountEntity account = cardAccountsRepository.findFirstByIdAndUserId(Long.valueOf(accountId), user.id)
                 .orElseThrow((Supplier<RuntimeException>) NotFound.AccountNotFound::new);
+        return ConnectorTypeConverters.convertCardTransactionsToTransactionsData(new LinkedList<>(account.cardTransactions));
+    }
+
+    private UserEntity findAndValidateUser(@NotNull String userId) {
+        return usersRepository.findById(Long.valueOf(userId))
+                .orElseThrow((Supplier<RuntimeException>) NotFound.UserNotFound::new);
     }
 }

@@ -21,55 +21,42 @@
 package com.saltedge.connector.example.model;
 
 import com.saltedge.connector.example.model.converter.StringMapConverter;
-import com.saltedge.connector.sdk.config.Constants;
 import com.saltedge.connector.sdk.models.persistence.BaseEntity;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
-@Entity
-public class Account extends BaseEntity implements Serializable {
+@Entity(name = "CardAccount")
+@Table(name = "CardAccount")
+public class CardAccountEntity extends BaseEntity implements Serializable {
 
     @Column(name = "name", nullable = false)
     public String name;
 
-    @Column(name = "nature", nullable = false)
-    public String nature;
+    @Column(name = "pan", nullable = false)
+    public String pan;
 
     @Column(name = "currency_code", nullable = false)
     public String currencyCode;
 
-    @Column(name = Constants.KEY_IBAN, nullable = false, unique = true)
-    public String iban;
-
-    @Column(name = "number", nullable = false, unique = true)
-    public String number;
-
-    @Column(name = "sort_code", nullable = false)
-    public String sortCode;
-
-    @Column(name = "swift_code", nullable = false)
-    public String swiftCode;
-
-    @Column(name = "available_amount", nullable = false)
-    public double availableAmount;
-
-    @Column(name = "balance", nullable = false)
-    public double balance;
-
-    @Column(name = "credit_limit", nullable = false)
-    public double creditLimit;
-
-    @Column(name = "is_payment_account", nullable = false)
-    public Boolean isPaymentAccount;
+    @Column(name = "product", nullable = false)
+    public String product;
 
     @Column(name = "status", nullable = false)
     public String status;
 
-    @Column(name = "pan")
-    public String pan;
+    @Column(name = "available_amount", nullable = false)
+    public String availableAmount;
+
+    @Column(name = "balance", nullable = false)
+    public String balance;
+
+    @Column(name = "credit_limit", nullable = false)
+    public String creditLimit;
 
     @Column(name = "extra", nullable = false)
     @Convert(converter = StringMapConverter.class)
@@ -77,42 +64,35 @@ public class Account extends BaseEntity implements Serializable {
 
     @ManyToOne
     @JoinColumn
-    public User user;
+    public UserEntity user;
 
-    @OneToMany(mappedBy = "account", fetch = FetchType.EAGER)
-    public List<Transaction> transactions;
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(mappedBy = "cardAccount")
+    public List<CardTransactionEntity> cardTransactions;
 
-    public Account() {
+    public CardAccountEntity() {
     }
 
-    public Account(String name,
-                   String nature,
-                   String currencyCode,
-                   String iban,
-                   String number,
-                   String sortCode,
-                   String swiftCode,
-                   double availableAmount,
-                   double balance,
-                   double creditLimit,
-                   Boolean isPaymentAccount,
-                   String status,
-                   String pan,
-                   Map<String, String> extra,
-                   User user) {
+    public CardAccountEntity(
+            String name,
+            String pan,
+            String currencyCode,
+            String product,
+            String status,
+            String availableAmount,
+            String balance,
+            String creditLimit,
+            Map<String, String> extra,
+            UserEntity user
+    ) {
         this.name = name;
-        this.nature = nature;
+        this.pan = pan;
         this.currencyCode = currencyCode;
-        this.iban = iban;
-        this.number = number;
-        this.sortCode = sortCode;
-        this.swiftCode = swiftCode;
+        this.product = product;
+        this.status = status;
         this.availableAmount = availableAmount;
         this.balance = balance;
         this.creditLimit = creditLimit;
-        this.isPaymentAccount = isPaymentAccount;
-        this.status = status;
-        this.pan = pan;
         this.extra = extra;
         this.user = user;
     }

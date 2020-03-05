@@ -21,10 +21,7 @@
 package com.saltedge.connector.example.config;
 
 import com.saltedge.connector.example.model.*;
-import com.saltedge.connector.example.model.repository.AccountsRepository;
-import com.saltedge.connector.example.model.repository.CurrenciesRepository;
-import com.saltedge.connector.example.model.repository.TransactionsRepository;
-import com.saltedge.connector.example.model.repository.UsersRepository;
+import com.saltedge.connector.example.model.repository.*;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,24 +44,31 @@ public class DatabaseInitializer {
     @Autowired
     AccountsRepository accountsRepository;
     @Autowired
+    CardAccountsRepository cardAccountsRepository;
+    @Autowired
     TransactionsRepository transactionsRepository;
-    private User user;
-    private Account account1;
-    private Account account2;
+    @Autowired
+    CardTransactionsRepository cardTransactionsRepository;
+    private UserEntity user;
+    private AccountEntity account1;
+    private AccountEntity account2;
+    private CardAccountEntity cardAccount1;
 
     @EventListener
     public void seed(ContextRefreshedEvent event) {
         seedCurrencies();
-        seedUsers();
+        user = seedUsers();
         seedAccounts();
         seedTransactions();
+        seedCardAccounts();
+        seedCardTransactions();
     }
 
     private void seedCurrencies() {
         if (currenciesRepository.count() == 0) {
-            currenciesRepository.save(new Currency("USD", "USD", 0.812f, "EUR"));
-            currenciesRepository.save(new Currency("GBP", "GBP", 1.502f, "EUR"));
-            currenciesRepository.save(new Currency("EUR", "EUR", 1.0f, "EUR"));
+            currenciesRepository.save(new CurrencyEntity("USD", "USD", 0.812f, "EUR"));
+            currenciesRepository.save(new CurrencyEntity("GBP", "GBP", 1.502f, "EUR"));
+            currenciesRepository.save(new CurrencyEntity("EUR", "EUR", 1.0f, "EUR"));
 
             log.info("Currencies Seeded");
         } else {
@@ -72,9 +76,10 @@ public class DatabaseInitializer {
         }
     }
 
-    private void seedUsers() {
+    private UserEntity seedUsers() {
         if (usersRepository.count() == 0) {
-            user = usersRepository.save(new User(
+            log.info("Users Seeded");
+            return usersRepository.save(new UserEntity(
                     "John Doe",
                     "john.doe@example.org",
                     "Toronto, Ontario, Canada",
@@ -83,16 +88,16 @@ public class DatabaseInitializer {
                     "username",
                     "secret"
             ));
-
-            log.info("Users Seeded");
         } else {
             log.info("Users Seeding Not Required");
+            return usersRepository.findAll().get(0);
+
         }
     }
 
     private void seedAccounts() {
         if (accountsRepository.count() == 0) {
-            account1 = accountsRepository.save(new Account(
+            account1 = accountsRepository.save(new AccountEntity(
                     "My Payment Account 1",
                     "SLRY",//Accounts used for salary payments.
                     "EUR",
@@ -100,16 +105,16 @@ public class DatabaseInitializer {
                     "619656551",
                     "82-78-61",
                     "TBNFFR21PAR",
-                    20000.0,
-                    20000.0,
-                    0.0,
+                    "20000.00",
+                    "20000.00",
+                    "0.00",
                     true,
                     "enabled",
-                    "1111 2222 3333 44444",
+                    null,
                     new HashMap<>(),
                     user
             ));
-            account2 = accountsRepository.save(new Account(
+            account2 = accountsRepository.save(new AccountEntity(
                     "My Payment Account 2",
                     "CACC",//Account used to post debits and credits when no specific account has been nominated.
                     "EUR",
@@ -117,9 +122,9 @@ public class DatabaseInitializer {
                     "619656552",
                     "82-78-62",
                     "TBNFFR22PAR",
-                    10000.0,
-                    10000.0,
-                    10000.0,
+                    "10000.00",
+                    "10000.00",
+                    "10000.00",
                     true,
                     "enabled",
                     null,
@@ -139,16 +144,64 @@ public class DatabaseInitializer {
 
             log.info("Transactions Seeded");
         } else {
-            log.info("Transactions Seeding Not Required");
+            log.info("Transactions Seed Not Required");
         }
     }
 
-    private void generateTransactions(Account account, LocalDate fromDate, LocalDate toDate) {
+    private void generateTransactions(AccountEntity account, LocalDate fromDate, LocalDate toDate) {
         if (fromDate.isAfter(toDate)) return;
         for (LocalDate date = fromDate; (date.isBefore(toDate) || date.isEqual(toDate)); date = date.plusDays(1)) {
             double amount = -(double) date.getDayOfMonth();
-            transactionsRepository.save(new Transaction(
-                    amount,
+            transactionsRepository.save(new TransactionEntity(
+                    String.format("%.2f", amount),
+                    account.currencyCode,
+                    "Payment " + amount + " " + account.currencyCode + "(Account:" + account.id + ")",
+                    date.toDate(),
+                    "booked",
+                    new ArrayList<>(),
+                    new HashMap<>(),
+                    account
+            ));
+        }
+    }
+
+    private void seedCardAccounts() {
+        if (cardAccountsRepository.count() == 0) {
+            cardAccount1 = cardAccountsRepository.save(new CardAccountEntity(
+                    "My Card",
+                    "1111 2222 3333 4444",
+                    "EUR",
+                    "card",
+                    "enabled",
+                    "20000.00",
+                    "20000.00",
+                    "0.00",
+                    new HashMap<>(),
+                    user
+            ));
+
+            log.info("Card Accounts Seeded");
+        } else {
+            log.info("Card Accounts Seed Not Required");
+        }
+    }
+
+    private void seedCardTransactions() {
+        if (cardTransactionsRepository.count() == 0) {
+            generateTransactions(cardAccount1, LocalDate.now().minusMonths(3), LocalDate.now());
+
+            log.info("Card Transactions Seeded");
+        } else {
+            log.info("Card Transactions Seeding Not Required");
+        }
+    }
+
+    private void generateTransactions(CardAccountEntity account, LocalDate fromDate, LocalDate toDate) {
+        if (fromDate.isAfter(toDate)) return;
+        for (LocalDate date = fromDate; (date.isBefore(toDate) || date.isEqual(toDate)); date = date.plusDays(1)) {
+            double amount = -(double) date.getDayOfMonth();
+            cardTransactionsRepository.save(new CardTransactionEntity(
+                    String.format("%.2f", amount),
                     account.currencyCode,
                     "Payment " + amount + " " + account.currencyCode + "(Account:" + account.id + ")",
                     date.toDate(),

@@ -22,7 +22,7 @@ package com.saltedge.connector.sdk.callback.services;
 
 import com.saltedge.connector.sdk.callback.CallbackRestClient;
 import com.saltedge.connector.sdk.callback.mapping.BaseCallbackRequest;
-import com.saltedge.connector.sdk.config.Constants;
+import com.saltedge.connector.sdk.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

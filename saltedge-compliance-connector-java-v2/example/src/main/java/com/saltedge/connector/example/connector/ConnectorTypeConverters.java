@@ -20,9 +20,7 @@
  */
 package com.saltedge.connector.example.connector;
 
-import com.saltedge.connector.example.model.Account;
-import com.saltedge.connector.example.model.Transaction;
-import com.saltedge.connector.example.model.User;
+import com.saltedge.connector.example.model.*;
 import com.saltedge.connector.sdk.provider.models.*;
 
 import java.util.ArrayList;
@@ -38,58 +36,110 @@ public class ConnectorTypeConverters {
         return result;
     }
 
-    public static List<AccountData> convertAccountsToAccountData(List<Account> accounts, User user) {
+    public static List<Account> convertAccountsToAccountData(List<AccountEntity> accounts, UserEntity user) {
         return accounts.stream().map(account -> convertAccountToAccountData(account, user)).collect(Collectors.toList());
     }
 
-    public static AccountData convertAccountToAccountData(Account account, User user) {
-        ArrayList<BalanceData> balances = new ArrayList<>();
-        balances.add(new BalanceData(String.format("%.2f", account.availableAmount), account.currencyCode, "closingAvailable"));//Closing balance of amount of money that is at the disposal of the account owner on the date specified.
-        balances.add(new BalanceData(String.format("%.2f", account.balance), account.currencyCode, "openingAvailable"));//Opening balance of amount of money that is at the disposal of the account owner on the date specified.
-        AccountData result = new AccountData(
+    public static Account convertAccountToAccountData(AccountEntity account, UserEntity user) {
+        ArrayList<AccountBalance> balances = new ArrayList<>();
+        balances.add(new AccountBalance(account.availableAmount, account.currencyCode, "closingAvailable"));//Closing balance of amount of money that is at the disposal of the account owner on the date specified.
+        balances.add(new AccountBalance(account.balance, account.currencyCode, "openingAvailable"));//Opening balance of amount of money that is at the disposal of the account owner on the date specified.
+        Account result = new Account(
                 account.id.toString(),
                 account.name,
                 balances,
                 account.nature,
                 account.currencyCode
         );
-        result.bban = account.number;
-        result.iban = account.iban;
-        result.msisdn = user.phone;
-        result.product = account.nature;
-        result.status = account.status;
+        result.setBban(account.number);
+        result.setIban(account.iban);
+        result.setMsisdn(user.phone);
+        result.setProduct(account.nature);
+        result.setStatus(account.status);
         return result;
     }
 
-    public static List<TransactionData> convertTransactionsToTransactionsData(List<Transaction> transactions) {
+    public static List<CardAccount> convertCardAccountsToAccountData(List<CardAccountEntity> accounts, UserEntity user) {
+        return accounts.stream().map(account -> convertAccountToAccountData(account, user)).collect(Collectors.toList());
+    }
+
+    public static CardAccount convertAccountToAccountData(CardAccountEntity account, UserEntity user) {
+        ArrayList<CardAccountBalance> balances = new ArrayList<>();
+        balances.add(new CardAccountBalance(account.availableAmount, account.currencyCode, "closingAvailable"));//Closing balance of amount of money that is at the disposal of the account owner on the date specified.
+        balances.add(new CardAccountBalance(account.balance, account.currencyCode, "openingAvailable"));//Opening balance of amount of money that is at the disposal of the account owner on the date specified.
+        return new CardAccount(
+                account.id.toString(),
+                account.name,
+                maskPan(account.pan),
+                account.currencyCode,
+                account.product,
+                account.status,
+                balances,
+                new Amount(account.creditLimit, account.currencyCode),
+                new CardAccountExtra()
+        );
+    }
+
+    public static List<Transaction> convertTransactionsToTransactionsData(List<TransactionEntity> transactions) {
         return transactions.stream().map(ConnectorTypeConverters::convertTransactionToTransactionsData).collect(Collectors.toList());
     }
 
-    public static TransactionData convertTransactionToTransactionsData(Transaction transaction) {
-        TransactionData result = new TransactionData(
+    public static Transaction convertTransactionToTransactionsData(TransactionEntity transaction) {
+        Transaction result = new Transaction(
                 transaction.id.toString(),
-                String.format("%.2f", transaction.amount),
+                transaction.amount,
                 transaction.currencyCode,
                 transaction.status,
                 transaction.madeOn
         );
-        result.bookingDate = transaction.postDate;
-        result.creditorDetails = createParticipantDetails(transaction.account);
-        result.debtorDetails = new ParticipantDetails(new ParticipantDetails.Account());
-        result.debtorDetails.account.iban = "GB29 NWBK 6016 1331 9268 19";
-        result.debtorDetails.account.name = "Unknown payee";
+        result.setBookingDate(transaction.postDate);
+        result.setCreditorDetails(createParticipantDetails(transaction.account));
+        result.setDebtorDetails(new ParticipantDetails(new ParticipantDetails.Account(
+                "GB29 NWBK 6016 1331 9268 19",
+                "Unknown payee"
+        )));
 
         List<CurrencyExchange> exchanges = new ArrayList<>();
         exchanges.add(new CurrencyExchange("", "1.0", transaction.postDate, transaction.currencyCode, transaction.currencyCode, transaction.currencyCode));
-        result.currencyExchange = exchanges;
+        result.setCurrencyExchange(exchanges);
 
-        result.extra = new TransactionExtra();
-        result.extra.ultimateCreditor = result.creditorDetails.account.name;
-        result.extra.ultimateDebtor = result.debtorDetails.account.name;
+        result.setExtra(new TransactionExtra());
+        result.getExtra().ultimateCreditor = result.getCreditorDetails().account.name;
+        result.getExtra().ultimateDebtor = result.getDebtorDetails().account.name;
         return result;
     }
 
-    public static ParticipantDetails createParticipantDetails(Account account) {
+    public static List<CardTransaction> convertCardTransactionsToTransactionsData(List<CardTransactionEntity> transactions) {
+        return transactions.stream().map(ConnectorTypeConverters::convertTransactionToTransactionsData).collect(Collectors.toList());
+    }
+
+    public static CardTransaction convertTransactionToTransactionsData(CardTransactionEntity transaction) {
+        List<CurrencyExchange> exchanges = new ArrayList<>();
+        exchanges.add(new CurrencyExchange("", "1.0", transaction.postDate, transaction.currencyCode, transaction.currencyCode, transaction.currencyCode));
+
+        return new CardTransaction(
+                transaction.id.toString(),
+                transaction.amount,
+                transaction.currencyCode,
+                transaction.status,
+                transaction.madeOn,
+                "Payment details",
+                transaction.postDate,
+                new CardTransaction.AcceptorAddress(),
+                "cardAcceptorId",
+                exchanges,
+                false,
+                new Amount("0.0", transaction.currencyCode),
+                "0.0",
+                maskPan(transaction.pan),
+                "merchantCategoryCode",
+                new Amount(transaction.amount, transaction.currencyCode),
+                "proprietaryBankTransactionCode",
+                "terminalId"
+        );
+    }
+
+    public static ParticipantDetails createParticipantDetails(AccountEntity account) {
         ParticipantDetails.Account participantAccount = new ParticipantDetails.Account();
         participantAccount.bban = account.number;
         participantAccount.currencyCode = account.currencyCode;

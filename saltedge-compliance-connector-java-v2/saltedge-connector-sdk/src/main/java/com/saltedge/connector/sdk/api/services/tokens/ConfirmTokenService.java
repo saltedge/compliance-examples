@@ -28,14 +28,22 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.annotation.Validated;
+
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Service
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+@Validated
 public class ConfirmTokenService extends TokensBaseService {
     private static Logger log = LoggerFactory.getLogger(ConfirmTokenService.class);
 
-    public Token confirmToken(String sessionSecret, String userId, ProviderOfferedConsents providerOfferedConsents) {
-        if (StringUtils.isEmpty(sessionSecret == null) || StringUtils.isEmpty(userId)) return null;
+    public Token confirmToken(
+            @NotEmpty String sessionSecret,
+            @NotEmpty String userId,
+            @NotNull ProviderOfferedConsents providerOfferedConsents
+    ) {
         Token token = findTokenBySessionSecret(sessionSecret);
         if (token != null) {
             token.userId = userId;

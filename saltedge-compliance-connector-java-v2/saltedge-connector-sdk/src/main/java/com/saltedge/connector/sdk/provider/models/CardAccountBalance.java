@@ -20,68 +20,32 @@
  */
 package com.saltedge.connector.sdk.provider.models;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import javax.validation.constraints.NotBlank;
-import java.util.Date;
-import java.util.List;
 
 /**
  * Account's balance information
  */
-public class BalanceData {
-    /**
-     * Amount of balance.
-     */
-    @NotBlank
-    @JsonProperty("amount")
-    public String amount;
-
-    /**
-     * Currency code of balance (ISO 4217).
-     */
-    @NotBlank
-    @JsonProperty("currency")
-    public String currency;
-
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class CardAccountBalance {
     /**
      * ExternalBalanceType1code from ISO 20022 (https://www.iso20022.org/).
      * Allowed values: closingBooked, expected, openingBooked, interimAvailable, forwardAvailable, interimBooked, openingAvailable, previouslyClosedBooked, closingAvailable, information
      */
-    @NotBlank
-    @JsonProperty("type")
+    @JsonProperty("balance_type")
     public String type;
 
     /**
-     * A flag indicating if the credit limit of the corresponding account is included in the calculation of the balance, where applicable.
+     * Wrapper for balance amount.
      */
-    @JsonProperty("credit_limit_included")
-    public Boolean creditLimitIncluded;
+    @JsonProperty("balance_amount")
+    public Amount amount;
 
-    /**
-     * Balance last change time.
-     */
-    @JsonProperty("last_change_date_time")
-    @JsonFormat(shape = JsonFormat.Shape.STRING)
-    public Date lastChangeDateTime;
+    public CardAccountBalance() {
+    }
 
-    /**
-     * Reference of the last committed transaction to support the TPP in identifying whether all PSU transactions are already known.
-     */
-    @JsonProperty("last_committed_transaction")
-    public String lastCommittedTransaction;
-
-    /**
-     * Reference date of the balance.
-     */
-    @JsonProperty("reference_date")
-    @JsonFormat(shape = JsonFormat.Shape.STRING)
-    public Date referenceDate;
-
-    public BalanceData(String amount, String currency, String type) {
-        this.amount = amount;
-        this.currency = currency;
+    public CardAccountBalance(String amount, String currency, String type) {
+        this.amount = new Amount(amount, currency);
         this.type = type;
     }
 }

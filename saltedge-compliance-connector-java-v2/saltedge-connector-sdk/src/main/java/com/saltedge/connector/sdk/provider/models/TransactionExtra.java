@@ -20,12 +20,14 @@
  */
 package com.saltedge.connector.sdk.provider.models;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Additional information deemed relevant to a payment.
  * All fields are optional
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class TransactionExtra {
     /**
      * Additional details given for the related transaction.

@@ -24,12 +24,12 @@ import com.saltedge.connector.sdk.api.mapping.AccountsResponse;
 import com.saltedge.connector.sdk.api.mapping.DefaultRequest;
 import com.saltedge.connector.sdk.api.mapping.TransactionsRequest;
 import com.saltedge.connector.sdk.api.mapping.TransactionsResponse;
-import com.saltedge.connector.sdk.config.Constants;
+import com.saltedge.connector.sdk.Constants;
 import com.saltedge.connector.sdk.models.persistence.Token;
 import com.saltedge.connector.sdk.provider.ProviderApi;
-import com.saltedge.connector.sdk.provider.models.AccountData;
-import com.saltedge.connector.sdk.provider.models.BalanceData;
-import com.saltedge.connector.sdk.provider.models.TransactionData;
+import com.saltedge.connector.sdk.provider.models.Account;
+import com.saltedge.connector.sdk.provider.models.AccountBalance;
+import com.saltedge.connector.sdk.provider.models.Transaction;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
@@ -55,13 +55,13 @@ public class AccountsV2ControllerTests {
     @Test
     public void whenList_thenReturnStatus200AndAccountsList() {
         // given
-        List<AccountData> testData = getTestAccountsData();
-        given(mockProviderService.getAccountsList("1")).willReturn(testData);
+        List<Account> testData = getTestAccountsData();
+        given(mockProviderService.getAccountsOfUser("1")).willReturn(testData);
 
         // when
         AccountsV2Controller controller = new AccountsV2Controller();
         controller.providerService = mockProviderService;
-        ResponseEntity<AccountsResponse> result = controller.accountsList(
+        ResponseEntity<AccountsResponse> result = controller.accounts(
                 new Token("1"),
                 new DefaultRequest()
         );
@@ -73,15 +73,15 @@ public class AccountsV2ControllerTests {
 
     @Test
     public void whenList_thenReturnStatus200AndTransactionsList() throws ParseException {
-        List<TransactionData> testData = getTestTransactionsData();
+        List<Transaction> testData = getTestTransactionsData();
         Date startDate = new Date();
         Date endDate = startDate;
-        given(mockProviderService.getTransactionsList("1", "1", startDate, endDate)).willReturn(testData);
+        given(mockProviderService.getTransactionsOfAccount("1", "1", startDate, endDate)).willReturn(testData);
 
         AccountsV2Controller controller = new AccountsV2Controller();
         controller.providerService = mockProviderService;
 
-        ResponseEntity<TransactionsResponse> result = controller.transactionsList(
+        ResponseEntity<TransactionsResponse> result = controller.transactionsOfAccount(
                 new Token("1"),
                 "1",
                 new TransactionsRequest("1", startDate, endDate, "sessionSecret")
@@ -91,12 +91,12 @@ public class AccountsV2ControllerTests {
         assertThat(result.getBody().data).isEqualTo(testData);
     }
 
-    private List<AccountData> getTestAccountsData() {
-        ArrayList<BalanceData> balances = new ArrayList<>();
-        balances.add(new BalanceData(String.format("%.2f", 1000.0), "EUR", "closingAvailable"));
-        balances.add(new BalanceData(String.format("%.2f", 1000.0), "EUR", "openingAvailable"));
-        ArrayList<AccountData> result = new ArrayList<>();
-        result.add(new AccountData(
+    private List<Account> getTestAccountsData() {
+        ArrayList<AccountBalance> balances = new ArrayList<>();
+        balances.add(new AccountBalance(String.format("%.2f", 1000.0), "EUR", "closingAvailable"));
+        balances.add(new AccountBalance(String.format("%.2f", 1000.0), "EUR", "openingAvailable"));
+        ArrayList<Account> result = new ArrayList<>();
+        result.add(new Account(
                 "1",
                 "account",
                 balances,
@@ -106,11 +106,11 @@ public class AccountsV2ControllerTests {
         return result;
     }
 
-    private List<TransactionData> getTestTransactionsData() throws ParseException {
-        ArrayList<TransactionData> result = new ArrayList<>();
+    private List<Transaction> getTestTransactionsData() throws ParseException {
+        ArrayList<Transaction> result = new ArrayList<>();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date madeOn = dateFormat.parse("2020-01-01");
-        result.add(new TransactionData(
+        result.add(new Transaction(
                 "t1",
                 "100.00",
                 "EUR",

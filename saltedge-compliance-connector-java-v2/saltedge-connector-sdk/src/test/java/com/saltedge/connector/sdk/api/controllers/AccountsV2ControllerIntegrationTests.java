@@ -25,7 +25,7 @@ import com.saltedge.connector.sdk.api.mapping.AccountsResponse;
 import com.saltedge.connector.sdk.api.mapping.DefaultRequest;
 import com.saltedge.connector.sdk.api.mapping.ErrorResponse;
 import com.saltedge.connector.sdk.api.mapping.TransactionsRequest;
-import com.saltedge.connector.sdk.config.Constants;
+import com.saltedge.connector.sdk.Constants;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

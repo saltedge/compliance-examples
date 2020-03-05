@@ -20,6 +20,9 @@
  */
 package com.saltedge.connector.sdk.provider.models;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.util.Lists;
 import org.junit.Test;
 
@@ -42,18 +45,31 @@ public class ProviderOfferedConsentsTests {
 	}
 
 	@Test
-	public void buildProviderOfferedConsentsTest() {
-		AccountData account1 = new AccountData();
-		account1.iban = "MD12345";
-		AccountData account2 = new AccountData();
-		account2.iban = "MD67890";
+	public void buildProviderOfferedConsentsTest() throws JsonProcessingException {
+		Account account1 = new Account();
+		account1.setIban("MD12345");
+		Account account2 = new Account();
+		account2.setIban("MD67890");
+		CardAccount cardAccount1 = new CardAccount();
+		cardAccount1.setMaskedPan("**** **** **** 1111");
+		CardAccount cardAccount2 = new CardAccount();
+		cardAccount2.setMaskedPan("**** **** **** 2222");
 
-		List<AccountData> balances = Lists.list(account1);
-		List<AccountData> transactions = Lists.list(account2);
+		List<Account> accountsOfBalancesConsent = Lists.list(account1);
+		List<Account> accountsOfTransactionsConsent = Lists.list(account2);
+		List<CardAccount> cardsOfBalancesConsent = Lists.list(cardAccount1);
+		List<CardAccount> cardsOfTransactionsConsent = Lists.list(cardAccount2);
 
-		ProviderOfferedConsents joinResult = ProviderOfferedConsents.buildProviderOfferedConsents(balances, transactions);
+		ProviderOfferedConsents joinResult = ProviderOfferedConsents.buildProviderOfferedConsents(
+				accountsOfBalancesConsent,
+				accountsOfTransactionsConsent,
+				cardsOfBalancesConsent,
+				cardsOfTransactionsConsent
+		);
 
-		assertThat(joinResult.balances).isEqualTo(Lists.list(new ConsentData("MD12345")));
-		assertThat(joinResult.transactions).isEqualTo(Lists.list(new ConsentData("MD67890")));
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+		String json = mapper.writeValueAsString(joinResult);
+		assertThat(json).isEqualTo("{\"balances\":[{\"iban\":\"MD12345\"},{\"masked_pan\":\"**** **** **** 1111\"}],\"transactions\":[{\"iban\":\"MD67890\"},{\"masked_pan\":\"**** **** **** 2222\"}]}");
 	}
 }

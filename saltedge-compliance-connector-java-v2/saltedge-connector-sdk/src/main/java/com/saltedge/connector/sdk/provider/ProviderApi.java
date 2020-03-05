@@ -20,11 +20,9 @@
  */
 package com.saltedge.connector.sdk.provider;
 
-import com.saltedge.connector.sdk.provider.models.AccountData;
-import com.saltedge.connector.sdk.provider.models.AuthorizationType;
-import com.saltedge.connector.sdk.provider.models.CurrencyExchange;
-import com.saltedge.connector.sdk.provider.models.TransactionData;
+import com.saltedge.connector.sdk.provider.models.*;
 
+import javax.validation.constraints.NotEmpty;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -69,7 +67,7 @@ public interface ProviderApi {
      * @param authType registered AuthorizationType
      * @return confirmation code string
      */
-    String createAndSendAuthorizationConfirmationCode(String userId, AuthorizationType authType);
+    String createAndSendAuthorizationConfirmationCode(@NotEmpty String userId, AuthorizationType authType);
 
     /**
      * Authenticates user by provided credentials.
@@ -82,16 +80,16 @@ public interface ProviderApi {
     String authorizeUser(String authTypeCode, Map<String, String> credentials);
 
     /**
-     * Provides account information of user
+     * Provides accounts information of user
      *
      * @param userId User identifier on Provider side
      * @return list of AccountData objects
-     * @see AccountData
+     * @see Account
      */
-    List<AccountData> getAccountsList(String userId);
+    List<Account> getAccountsOfUser(@NotEmpty String userId);
 
     /**
-     * Provides transactions which belong to account of user
+     * Provides transactions which belong to an account of user
      *
      * @param userId User identifier on Provider side
      * @param accountId Account identifier on Provider side
@@ -100,8 +98,40 @@ public interface ProviderApi {
      * @param toDate Specifies the ending date, to which transactions should be fetched.
      *               This value will always be the today’s date.
      * @return list of TransactionData objects
-     * @see TransactionData
+     * @see Transaction
      */
-    List<TransactionData> getTransactionsList(String userId, String accountId, Date fromDate, Date toDate);
+    List<Transaction> getTransactionsOfAccount(
+            @NotEmpty String userId,
+            @NotEmpty String accountId,
+            Date fromDate,
+            Date toDate
+    );
 
+    /**
+     * Provides card accounts information of user
+     *
+     * @param userId User identifier on Provider side
+     * @return list of CardAccount objects
+     * @see CardAccount
+     */
+    List<CardAccount> getCardAccountsOfUser(@NotEmpty String userId);
+
+    /**
+     * Provides transactions which belong to a card account of user
+     *
+     * @param userId User identifier on Provider side
+     * @param accountId Account identifier on Provider side
+     * @param fromDate Specifies the starting date, from which transactions should be fetched.
+     *                 This value can be set to 90 days ago by default.
+     * @param toDate Specifies the ending date, to which transactions should be fetched.
+     *               This value will always be the today’s date.
+     * @return list of CardTransaction objects
+     * @see CardTransaction
+     */
+    List<CardTransaction> getTransactionsOfCardAccount(
+            @NotEmpty String userId,
+            @NotEmpty String accountId,
+            Date fromDate,
+            Date toDate
+    );
 }

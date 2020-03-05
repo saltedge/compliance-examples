@@ -31,13 +31,13 @@ public class ErrorsRequest extends PrioraBaseRequest {
     public ErrorResponse error;
 
     @JsonProperty("request")
-    public Request request;
+    public RequestData request;
 
     @JsonProperty("response")
     public Map<String, Object> response;
 
     @JsonIgnoreProperties
-    public static class Request {
+    public static class RequestData {
         @JsonProperty("headers")
         public Map<String, String> headers;
 

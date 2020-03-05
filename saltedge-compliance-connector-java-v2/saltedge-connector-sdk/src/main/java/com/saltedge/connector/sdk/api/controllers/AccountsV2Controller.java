@@ -24,7 +24,7 @@ import com.saltedge.connector.sdk.api.mapping.AccountsResponse;
 import com.saltedge.connector.sdk.api.mapping.DefaultRequest;
 import com.saltedge.connector.sdk.api.mapping.TransactionsRequest;
 import com.saltedge.connector.sdk.api.mapping.TransactionsResponse;
-import com.saltedge.connector.sdk.config.Constants;
+import com.saltedge.connector.sdk.Constants;
 import com.saltedge.connector.sdk.models.persistence.Token;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +37,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 /**
  * This controller is responsible for fetching account information for Account Information Service.
@@ -47,6 +49,7 @@ import javax.validation.Valid;
 public class AccountsV2Controller extends BaseV2Controller {
     public final static String BASE_PATH = Constants.API_BASE_PATH + "/accounts";
     private static Logger log = LoggerFactory.getLogger(AccountsV2Controller.class);
+
     /**
      * Fetch list of accounts belonging to a Customer (User) and all relevant information about them being Berlin Group compatible.
      *
@@ -55,8 +58,8 @@ public class AccountsV2Controller extends BaseV2Controller {
      * @return list of Account Data
      */
     @GetMapping
-    public ResponseEntity<AccountsResponse> accountsList(Token token, @Valid DefaultRequest request) {
-        return new ResponseEntity<>(new AccountsResponse(providerService.getAccountsList(token.userId)), HttpStatus.OK);
+    public ResponseEntity<AccountsResponse> accounts(@NotNull Token token, @Valid DefaultRequest request) {
+        return new ResponseEntity<>(new AccountsResponse(providerService.getAccountsOfUser(token.userId)), HttpStatus.OK);
     }
 
     /**
@@ -68,13 +71,13 @@ public class AccountsV2Controller extends BaseV2Controller {
      * @return list of transactions data.
      */
     @GetMapping(path = "/{account_id}/transactions")
-    public ResponseEntity<TransactionsResponse> transactionsList(
-            Token token,
-            @PathVariable(name = "account_id") String accountId,
+    public ResponseEntity<TransactionsResponse> transactionsOfAccount(
+            @NotNull Token token,
+            @NotEmpty @PathVariable(name = "account_id") String accountId,
             @Valid TransactionsRequest request
     ) {
         return new ResponseEntity<>(new TransactionsResponse(
-                providerService.getTransactionsList(token.userId, accountId, request.fromDate, request.toDate)
+                providerService.getTransactionsOfAccount(token.userId, accountId, request.fromDate, request.toDate)
         ), HttpStatus.OK);
     }
 }

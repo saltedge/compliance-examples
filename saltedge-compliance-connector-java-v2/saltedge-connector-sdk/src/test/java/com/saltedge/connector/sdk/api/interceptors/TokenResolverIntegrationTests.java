@@ -25,7 +25,7 @@ import com.saltedge.connector.sdk.api.controllers.AccountsV2Controller;
 import com.saltedge.connector.sdk.api.mapping.DefaultRequest;
 import com.saltedge.connector.sdk.api.mapping.ErrorResponse;
 import com.saltedge.connector.sdk.config.ApplicationProperties;
-import com.saltedge.connector.sdk.config.Constants;
+import com.saltedge.connector.sdk.Constants;
 import com.saltedge.connector.sdk.models.persistence.Token;
 import com.saltedge.connector.sdk.models.persistence.TokensRepository;
 import com.saltedge.connector.sdk.tools.JsonTools;

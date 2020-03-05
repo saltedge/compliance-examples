@@ -34,12 +34,12 @@ import java.util.List;
 /**
  * JPA mapper for ConsentData type
  */
-public class ConsentDataConverter implements AttributeConverter<List<ProviderOfferedConsents>, String> {
+public class ConsentDataConverter implements AttributeConverter<ProviderOfferedConsents, String> {
     private static Logger log = LoggerFactory.getLogger(ConsentDataConverter.class);
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
-    public String convertToDatabaseColumn(List<ProviderOfferedConsents> attribute) {
+    public String convertToDatabaseColumn(ProviderOfferedConsents attribute) {
         try {
             return objectMapper.writeValueAsString(attribute);
         } catch (JsonProcessingException e) {
@@ -49,10 +49,9 @@ public class ConsentDataConverter implements AttributeConverter<List<ProviderOff
     }
 
     @Override
-    public List<ProviderOfferedConsents> convertToEntityAttribute(String dbData) {
+    public ProviderOfferedConsents convertToEntityAttribute(String dbData) {
         try {
-            TypeReference<List<ProviderOfferedConsents>> typeRef = new TypeReference<List<ProviderOfferedConsents>>() {};
-            return objectMapper.readValue(dbData, typeRef);
+            return objectMapper.readValue(dbData, ProviderOfferedConsents.class);
         } catch (IOException e) {
             log.error("JSON reading error", e);
             return null;
