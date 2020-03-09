@@ -21,9 +21,10 @@
 package com.saltedge.connector.example.controllers;
 
 import com.saltedge.connector.example.connector.ConnectorService;
-import com.saltedge.connector.sdk.config.Constants;
-import com.saltedge.connector.sdk.provider.ProviderCallback;
-import com.saltedge.connector.sdk.provider.models.AccountData;
+import com.saltedge.connector.sdk.Constants;
+import com.saltedge.connector.sdk.provider.ConnectorCallback;
+import com.saltedge.connector.sdk.provider.models.Account;
+import com.saltedge.connector.sdk.provider.models.CardAccount;
 import com.saltedge.connector.sdk.provider.models.ProviderOfferedConsents;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,18 +47,20 @@ public class UserConsentController {
     @Autowired
     ConnectorService connectorService;
     @Autowired
-    ProviderCallback providerCallback;
+    ConnectorCallback connectorCallbackService;
 
     @GetMapping
     public ModelAndView showConsentPage(
             @RequestParam(value = Constants.KEY_SESSION_SECRET) String sessionSecret,
             @RequestParam(name = Constants.KEY_USER_ID) String userId
     ) {
-        List<AccountData> accounts = connectorService.getAccountsList(userId);
-        ModelAndView result = new ModelAndView("sign_consent");
+        List<Account> accounts = connectorService.getAccountsOfUser(userId);
+        List<CardAccount> cardAccounts = connectorService.getCardAccountsOfUser(userId);
+        ModelAndView result = new ModelAndView("user_consent");
         result.addObject(Constants.KEY_SESSION_SECRET, sessionSecret);
         result.addObject(Constants.KEY_USER_ID, userId);
         result.addObject("accounts", accounts);
+        result.addObject("card_accounts", cardAccounts);
         return result;
     }
 
@@ -65,19 +68,33 @@ public class UserConsentController {
     public ModelAndView onConsentDataSubmit(
             @RequestParam(value = Constants.KEY_SESSION_SECRET) String sessionSecret,
             @RequestParam(name = Constants.KEY_USER_ID) String userId,
-            @RequestParam List<String> balances,
-            @RequestParam List<String> transactions
+            @RequestParam(name = "balances") List<String> balancesIds,
+            @RequestParam(name = "transactions") List<String> transactionIds,
+            @RequestParam(name = "card_balances") List<String> cardBalanceIds,
+            @RequestParam(name = "card_transactions") List<String> cardTransactionIds
     ) {
-        List<AccountData> accounts = connectorService.getAccountsList(userId);
-        List<AccountData> balancesConsents = accounts.stream().filter(item -> balances.contains(item.id)).collect(Collectors.toList());
-        List<AccountData> transactionsConsents = accounts.stream().filter(item -> transactions.contains(item.id)).collect(Collectors.toList());
+        List<Account> accounts = connectorService.getAccountsOfUser(userId);
+        List<Account> accountsOfBalancesConsent = accounts.stream().filter(item -> balancesIds.contains(item.getId()))
+                .collect(Collectors.toList());
+        List<Account> accountsOfTransactionsConsent = accounts.stream().filter(item -> transactionIds.contains(item.getId()))
+                .collect(Collectors.toList());
 
-        String returnToUrl = providerCallback.onOAuthAuthorizationSuccess(
+        List<CardAccount> cardAccounts = connectorService.getCardAccountsOfUser(userId);
+        List<CardAccount> cardsOfBalancesConsent = cardAccounts.stream().filter(item -> cardBalanceIds.contains(item.getId()))
+                .collect(Collectors.toList());
+        List<CardAccount> cardsOfTransactionsConsent = cardAccounts.stream().filter(item -> cardTransactionIds.contains(item.getId()))
+                .collect(Collectors.toList());
+
+        String returnToUrl = connectorCallbackService.onOAuthAuthorizationSuccess(
                 sessionSecret,
                 userId,
-                ProviderOfferedConsents.buildProviderOfferedConsents(balancesConsents, transactionsConsents)
+                ProviderOfferedConsents.buildProviderOfferedConsents(
+                        accountsOfBalancesConsent,
+                        accountsOfTransactionsConsent,
+                        cardsOfBalancesConsent,
+                        cardsOfTransactionsConsent
+                )
         );
-
-        return new ModelAndView((returnToUrl == null) ? "sign_error" : "redirect:" + returnToUrl);
+        return new ModelAndView((returnToUrl == null) ? "user_sign_error" : "redirect:" + returnToUrl);
     }
 }

@@ -20,9 +20,9 @@
  */
 package com.saltedge.connector.example.connector;
 
-import com.saltedge.connector.example.model.Account;
-import com.saltedge.connector.example.model.Payment;
-import com.saltedge.connector.example.model.Transaction;
+import com.saltedge.connector.example.model.AccountEntity;
+import com.saltedge.connector.example.model.PaymentEntity;
+import com.saltedge.connector.example.model.TransactionEntity;
 import com.saltedge.connector.example.model.repository.AccountsRepository;
 import com.saltedge.connector.example.model.repository.TransactionsRepository;
 
@@ -32,12 +32,12 @@ public class ConnectorServiceTools {
      */
     public static void createTransaction(AccountsRepository accountsRepository,
                                          TransactionsRepository transactionsRepository,
-                                         Payment payment) {
-        Account account = accountsRepository.findById(payment.accountId).orElse(null);
+                                         PaymentEntity payment) {
+        AccountEntity account = accountsRepository.findById(payment.accountId).orElse(null);
         if (account == null) return;
 
-        Transaction transaction = new Transaction();
-        transaction.amount = - payment.total;
+        TransactionEntity transaction = new TransactionEntity();
+        transaction.amount = String.format("%.2f", -payment.total);
         transaction.currencyCode = account.currencyCode;
         transaction.description = payment.description;
         transaction.madeOn = payment.getCreatedAt();

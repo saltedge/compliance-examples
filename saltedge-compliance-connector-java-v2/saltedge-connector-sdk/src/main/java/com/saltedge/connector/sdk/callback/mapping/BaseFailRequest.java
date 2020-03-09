@@ -22,7 +22,7 @@ package com.saltedge.connector.sdk.callback.mapping;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.saltedge.connector.sdk.config.Constants;
+import com.saltedge.connector.sdk.Constants;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class BaseFailRequest extends BaseCallbackRequest {

@@ -20,7 +20,7 @@
  */
 package com.saltedge.connector.example.model;
 
-import com.saltedge.connector.sdk.config.Constants;
+import com.saltedge.connector.sdk.Constants;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;

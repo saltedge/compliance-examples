@@ -20,7 +20,6 @@
  */
 package com.saltedge.connector.sdk;
 
-import com.saltedge.connector.sdk.config.Constants;
 import com.saltedge.connector.sdk.provider.ProviderApi;
 import com.saltedge.connector.sdk.tools.KeyTools;
 import io.jsonwebtoken.Jwts;
@@ -39,15 +38,19 @@ import static org.mockito.BDDMockito.given;
 
 public class TestTools {
     private static final TestTools instance = new TestTools();
+    private String rsaPublicKeyString = null;
     private PublicKey rsaPublicKey = null;
+    private String rsaPrivateKeyString = null;
     private PrivateKey rsaPrivateKey = null;
 
     private TestTools() {
         try {
             String publicKeyFileName = "test_public_key.pem";
-            rsaPublicKey = KeyTools.convertPemStringToPublicKey(readTestKeyFile(publicKeyFileName));
+            rsaPublicKeyString = readTestKeyFile(publicKeyFileName);
+            rsaPublicKey = KeyTools.convertPemStringToPublicKey(rsaPublicKeyString);
             String privateKeyFileName = "test_private_key.pem";
-            rsaPrivateKey = KeyTools.convertPemStringToPrivateKey(readTestKeyFile(privateKeyFileName));
+            rsaPrivateKeyString = readTestKeyFile(privateKeyFileName);
+            rsaPrivateKey = KeyTools.convertPemStringToPrivateKey(rsaPrivateKeyString);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -66,8 +69,16 @@ public class TestTools {
 //        given(providerApi.getPaymentTemplateByCode("1", PaymentTemplates.TYPE_SEPA)).willReturn(PaymentTemplates.SEPA);
     }
 
+    public String getRsaPublicKeyString() {
+        return rsaPublicKeyString;
+    }
+
     public PublicKey getRsaPublicKey() {
         return rsaPublicKey;
+    }
+
+    public String getRsaPrivateKeyString() {
+        return rsaPrivateKeyString;
     }
 
     public PrivateKey getRsaPrivateKey() {

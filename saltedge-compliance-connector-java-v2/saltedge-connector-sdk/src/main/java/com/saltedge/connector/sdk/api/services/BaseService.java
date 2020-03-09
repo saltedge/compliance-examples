@@ -21,7 +21,6 @@
 package com.saltedge.connector.sdk.api.services;
 
 import com.saltedge.connector.sdk.provider.ProviderApi;
-import com.saltedge.connector.sdk.provider.models.AuthMode;
 import com.saltedge.connector.sdk.provider.models.AuthorizationType;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -34,9 +33,5 @@ public abstract class BaseService {
 
     protected AuthorizationType getAuthorizationTypeByCode(String authTypeCode) {
         return providerApi.getAuthorizationTypeByCode(authTypeCode);
-    }
-
-    protected boolean isOAuthAuthorizationType(String authTypeCode) {
-        return getAuthorizationTypeByCode(authTypeCode).mode == AuthMode.OAUTH;
     }
 }

@@ -21,7 +21,7 @@
 package com.saltedge.connector.sdk.models.persistence;
 
 import com.saltedge.connector.sdk.config.ApplicationProperties;
-import com.saltedge.connector.sdk.config.Constants;
+import com.saltedge.connector.sdk.Constants;
 import com.saltedge.connector.sdk.provider.models.ProviderOfferedConsents;
 import com.saltedge.connector.sdk.tools.ConsentDataConverter;
 import com.saltedge.connector.sdk.tools.KeyTools;
@@ -35,17 +35,16 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Database entity for saving data about connection between Connector and Salt Edge Compliance Solution
  */
 @Entity
 public class Token extends BaseEntity implements Serializable {
-    @Column(name = Constants.KEY_SESSION_SECRET, nullable = false)
+    @Column(name = Constants.KEY_SESSION_SECRET, nullable = false, length = 1024)
     public String sessionSecret;
 
-    @Column(name = "provider_offered_consents")
+    @Column(name = "provider_offered_consents", length = 4096)
     @Convert(converter = ConsentDataConverter.class)
     public ProviderOfferedConsents providerOfferedConsents;
 
@@ -71,7 +70,7 @@ public class Token extends BaseEntity implements Serializable {
     @Size(min = 1, max = 4096)
     public String tppName;
 
-    @Column(name = "tpp_redirect_url")
+    @Column(name = "tpp_redirect_url", length = 1024)
     public String tppRedirectUrl;
 
     public Token() {

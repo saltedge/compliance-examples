@@ -24,48 +24,32 @@ import com.saltedge.connector.sdk.models.persistence.BaseEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.io.Serializable;
-import java.util.List;
 
-@Entity
-public class User extends BaseEntity implements Serializable {
+@Entity(name = "Currency")
+@Table(name = "Currency")
+public class CurrencyEntity extends BaseEntity implements Serializable {
+
+    @Column(name = "code", nullable = false, unique = true)
+    public String code;
 
     @Column(name = "name", nullable = false)
     public String name;
 
-    @Column(name = "email", nullable = false)
-    public String email;
+    @Column(name = "rate", nullable = false)
+    public float rate;
 
-    @Column(name = "address", nullable = false)
-    public String address;
+    @Column(name = "unitCurrencyCode", nullable = false)
+    public String unitCurrencyCode;
 
-    @Column(name = "dob", nullable = false)
-    public String dob;
-
-    @Column(name = "phone", nullable = false)
-    public String phone;
-
-    @Column(name = "username", nullable = false, unique = true)
-    public String username;
-
-    @Column(name = "password", nullable = false)
-    public String password;
-
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
-    public List<Account> accounts;
-
-    public User() {
+    public CurrencyEntity() {
     }
 
-    public User(String name, String email, String address, String dob, String phone, String username, String password) {
+    public CurrencyEntity(String code, String name, float rate, String unitCurrencyCode) {
+        this.code = code;
         this.name = name;
-        this.email = email;
-        this.address = address;
-        this.dob = dob;
-        this.phone = phone;
-        this.username = username;
-        this.password = password;
+        this.rate = rate;
+        this.unitCurrencyCode = unitCurrencyCode;
     }
 }

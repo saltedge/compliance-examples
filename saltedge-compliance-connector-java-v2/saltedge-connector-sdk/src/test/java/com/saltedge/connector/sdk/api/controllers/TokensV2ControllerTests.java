@@ -26,7 +26,7 @@ import com.saltedge.connector.sdk.api.mapping.RevokeTokenRequest;
 import com.saltedge.connector.sdk.api.services.tokens.ConfirmTokenService;
 import com.saltedge.connector.sdk.api.services.tokens.CreateTokenService;
 import com.saltedge.connector.sdk.api.services.tokens.RevokeTokenService;
-import com.saltedge.connector.sdk.config.Constants;
+import com.saltedge.connector.sdk.Constants;
 import com.saltedge.connector.sdk.models.persistence.Token;
 import org.junit.Test;
 import org.mockito.Mockito;

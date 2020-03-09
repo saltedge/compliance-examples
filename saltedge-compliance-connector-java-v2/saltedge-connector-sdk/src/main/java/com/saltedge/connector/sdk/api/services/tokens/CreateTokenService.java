@@ -25,7 +25,7 @@ import com.saltedge.connector.sdk.api.err.HttpErrorParams;
 import com.saltedge.connector.sdk.api.err.NotFound;
 import com.saltedge.connector.sdk.api.mapping.CreateTokenRequest;
 import com.saltedge.connector.sdk.callback.mapping.SessionUpdateCallbackRequest;
-import com.saltedge.connector.sdk.config.Constants;
+import com.saltedge.connector.sdk.Constants;
 import com.saltedge.connector.sdk.models.persistence.Token;
 import com.saltedge.connector.sdk.provider.models.AuthMode;
 import com.saltedge.connector.sdk.provider.models.AuthorizationType;

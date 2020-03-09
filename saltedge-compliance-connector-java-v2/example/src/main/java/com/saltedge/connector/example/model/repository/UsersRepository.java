@@ -20,11 +20,11 @@
  */
 package com.saltedge.connector.example.model.repository;
 
-import com.saltedge.connector.example.model.User;
-import org.springframework.data.repository.CrudRepository;
+import com.saltedge.connector.example.model.UserEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface UsersRepository extends CrudRepository<User, Long> {
-    Optional<User> findFirstByUsernameAndPassword(String username, String password);
+public interface UsersRepository extends JpaRepository<UserEntity, Long> {
+    Optional<UserEntity> findFirstByUsernameAndPassword(String username, String password);
 }

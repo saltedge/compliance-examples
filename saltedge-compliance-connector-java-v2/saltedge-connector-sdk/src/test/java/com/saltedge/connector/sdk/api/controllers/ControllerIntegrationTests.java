@@ -20,7 +20,7 @@
  */
 package com.saltedge.connector.sdk.api.controllers;
 
-import com.saltedge.connector.sdk.config.Constants;
+import com.saltedge.connector.sdk.Constants;
 import com.saltedge.connector.sdk.models.persistence.Token;
 import com.saltedge.connector.sdk.models.persistence.TokensRepository;
 import org.springframework.beans.factory.annotation.Autowired;

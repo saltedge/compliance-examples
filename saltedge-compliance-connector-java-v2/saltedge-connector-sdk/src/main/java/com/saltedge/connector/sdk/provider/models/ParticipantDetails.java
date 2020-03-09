@@ -20,12 +20,14 @@
  */
 package com.saltedge.connector.sdk.provider.models;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.saltedge.connector.sdk.config.Constants;
+import com.saltedge.connector.sdk.Constants;
 
 /**
  * Creditor details.
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ParticipantDetails {
     /**
      * Wrapper of creditor's account data
@@ -40,6 +42,7 @@ public class ParticipantDetails {
         this.account = account;
     }
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class Account {
         /**
          * Basic Bank Account Number
@@ -80,10 +83,15 @@ public class ParticipantDetails {
         /**
          * Creditor name.
          */
-        @JsonProperty("name")
+        @JsonProperty(Constants.KEY_NAME)
         public String name;
 
         public Account() {
+        }
+
+        public Account(String iban, String name) {
+            this.iban = iban;
+            this.name = name;
         }
 
         public Account(String bban, String currencyCode, String iban, String maskedPan, String msisdn, String pan, String name) {

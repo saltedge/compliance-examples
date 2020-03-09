@@ -29,6 +29,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Date;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
@@ -53,6 +55,13 @@ public class TokensRepositoryIntegrationTests {
 		// then
 		assertThat(found.accessToken).isEqualTo("123456");
 		assertThat(found.sessionSecret).isEqualTo("secret1");
+		assertThat(found.id).isGreaterThan(0L);
+
+		found.setCreatedAt(new Date(0));
+		found.setUpdatedAt(new Date(0));
+
+		assertThat(found.getCreatedAt()).isEqualTo(new Date(0));
+		assertThat(found.getUpdatedAt()).isEqualTo(new Date(0));
 	}
 
 	@Test

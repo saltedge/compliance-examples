@@ -30,8 +30,9 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
-@Entity
-public class Payment extends BaseEntity implements Serializable {
+@Entity(name = "Payment")
+@Table(name = "Payment")
+public class PaymentEntity extends BaseEntity implements Serializable {
 
     @Column(name = "description", nullable = false)
     public String description;
@@ -68,21 +69,21 @@ public class Payment extends BaseEntity implements Serializable {
 
     @ManyToOne
     @JoinColumn
-    public User user;
+    public UserEntity user;
 
-    public Payment() {
+    public PaymentEntity() {
     }
 
-    public Payment(String paymentTemplateCode,
-                   String description,
-                   Status status,
-                   double amount,
-                   List<Fee> fees,
-                   double total,
-                   Long fromAccountId,
-                   Map<String, String> paymentAttributes,
-                   Map<String, String> extra,
-                   User user) {
+    public PaymentEntity(String paymentTemplateCode,
+                         String description,
+                         Status status,
+                         double amount,
+                         List<Fee> fees,
+                         double total,
+                         Long fromAccountId,
+                         Map<String, String> paymentAttributes,
+                         Map<String, String> extra,
+                         UserEntity user) {
         this.paymentTemplateCode = paymentTemplateCode;
         this.description = description;
         this.status = status;
@@ -100,6 +101,6 @@ public class Payment extends BaseEntity implements Serializable {
     }
 
     public boolean isConfirmed() {
-        return Payment.Status.CONFIRMED.equals(status);
+        return PaymentEntity.Status.CONFIRMED.equals(status);
     }
 }

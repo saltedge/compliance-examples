@@ -18,7 +18,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.saltedge.connector.sdk.config;
+package com.saltedge.connector.sdk;
 
 public class Constants {
     public final static String API_BASE_PATH = "/api/priora/v2";
@@ -41,12 +41,16 @@ public class Constants {
     public final static String KEY_SESSION_SECRET = "session_secret";
     public final static String KEY_CONFIRMATION_CODE = "confirmation_code";
     public final static String KEY_PROVIDER_CODE = "provider_code";
-    public final static String KEY_SCOPES = "scopes";
     public final static String KEY_STATUS = "status";
     public final static String KEY_CURRENCY = "currency";
     public final static String KEY_CURRENCY_CODE = "currency_code";
     public final static String KEY_AMOUNT = "amount";
     public final static String KEY_ACCOUNT_ID = "account_id";
-    public final static String KEY_DESCRIPTION = "description";
     public final static String KEY_IBAN = "iban";
+    public final static String KEY_MASKED_PAN = "masked_pan";
+    public final static String KEY_NAME = "name";
+    public final static String KEY_DESCRIPTION = "description";
+
+    private Constants() {
+    }
 }

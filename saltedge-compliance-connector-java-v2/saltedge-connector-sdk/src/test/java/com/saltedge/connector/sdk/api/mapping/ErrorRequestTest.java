@@ -32,11 +32,28 @@ public class ErrorRequestTest extends ValidationTest {
 		assertThat(model.error).isNull();
 		assertThat(model.request).isNull();
 		assertThat(model.response).isNull();
+	}
 
-		ErrorsRequest.Request request = new ErrorsRequest.Request();
+	@Test
+	public void toStringTest() {
+		ErrorsRequest model = new ErrorsRequest();
 
-		assertThat(request.headers).isNull();
-		assertThat(request.method).isNull();
-		assertThat(request.url).isNull();
+		assertThat(model.toString()).isEqualTo("ErrorsRequest{error=null, request=null, sessionSecret='null'}");
+	}
+
+	@Test
+	public void requestDataConstructorTest() {
+		ErrorsRequest.RequestData model = new ErrorsRequest.RequestData();
+
+		assertThat(model.headers).isNull();
+		assertThat(model.method).isNull();
+		assertThat(model.url).isNull();
+	}
+
+	@Test
+	public void requestDataToStringTest() {
+		ErrorsRequest.RequestData model = new ErrorsRequest.RequestData();
+
+		assertThat(model.toString()).isEqualTo("Request{headers=null, method='null', url='null'}");
 	}
 }

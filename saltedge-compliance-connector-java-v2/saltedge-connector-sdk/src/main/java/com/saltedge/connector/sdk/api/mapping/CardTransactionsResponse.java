@@ -18,36 +18,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.saltedge.connector.example.model;
+package com.saltedge.connector.sdk.api.mapping;
 
-import com.saltedge.connector.sdk.models.persistence.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.saltedge.connector.sdk.Constants;
+import com.saltedge.connector.sdk.provider.models.CardTransaction;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import java.io.Serializable;
+import java.util.List;
 
-@Entity
-public class Currency extends BaseEntity implements Serializable {
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class CardTransactionsResponse {
+    @JsonProperty(Constants.KEY_DATA)
+    public List<CardTransaction> data;
 
-    @Column(name = "code", nullable = false, unique = true)
-    public String code;
-
-    @Column(name = "name", nullable = false)
-    public String name;
-
-    @Column(name = "rate", nullable = false)
-    public float rate;
-
-    @Column(name = "unitCurrencyCode", nullable = false)
-    public String unitCurrencyCode;
-
-    public Currency() {
+    public CardTransactionsResponse() {
     }
 
-    public Currency(String code, String name, float rate, String unitCurrencyCode) {
-        this.code = code;
-        this.name = name;
-        this.rate = rate;
-        this.unitCurrencyCode = unitCurrencyCode;
+    public CardTransactionsResponse(List<CardTransaction> data) {
+        this.data = data;
+    }
+
+    public List<CardTransaction> getData() {
+        return data;
     }
 }

@@ -21,7 +21,7 @@
 package com.saltedge.connector.sdk.api.interceptors;
 
 import com.saltedge.connector.sdk.api.err.Unauthorized;
-import com.saltedge.connector.sdk.config.Constants;
+import com.saltedge.connector.sdk.Constants;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;

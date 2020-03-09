@@ -22,8 +22,8 @@ package com.saltedge.connector.example.controllers;
 
 import com.saltedge.connector.example.connector.ConnectorService;
 import com.saltedge.connector.example.connector.config.AuthorizationTypes;
-import com.saltedge.connector.sdk.config.Constants;
-import com.saltedge.connector.sdk.provider.ProviderCallback;
+import com.saltedge.connector.sdk.Constants;
+import com.saltedge.connector.sdk.provider.ConnectorCallback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,11 +45,11 @@ public class UserAuthorizeController {
     @Autowired
     ConnectorService connectorService;
     @Autowired
-    ProviderCallback providerCallback;
+    ConnectorCallback providerCallback;
 
     @GetMapping
     public ModelAndView signIn(@RequestParam(value = Constants.KEY_SESSION_SECRET, required = false) String sessionSecret) {
-        ModelAndView result = new ModelAndView("sign_in");
+        ModelAndView result = new ModelAndView("user_sign_in");
         result.addObject(Constants.KEY_SESSION_SECRET, sessionSecret);
         return result;
     }
@@ -57,11 +57,11 @@ public class UserAuthorizeController {
     @PostMapping
     public ModelAndView authorizeAndShowConsent(
             @RequestParam(name = Constants.KEY_SESSION_SECRET) String sessionSecret,
-            @RequestParam String login,
+            @RequestParam String username,
             @RequestParam String password
     ) {
         Map<String, String> params = new HashMap<>();
-        params.put("login", login);
+        params.put("login", username);
         params.put("password", password);
         String userId = connectorService.authorizeUser(AuthorizationTypes.LOGIN_PASSWORD_AUTH_TYPE.code, params);
         if (userId == null) {
@@ -78,12 +78,12 @@ public class UserAuthorizeController {
     public ModelAndView signInError(
             @RequestParam(name = Constants.KEY_SESSION_SECRET) String sessionSecret
     ) {
-        String returnToUrl = providerCallback.authorizationOAuthError(sessionSecret, null);
+        String returnToUrl = providerCallback.onOAuthAuthorizationError(sessionSecret);
         return returnToUrl == null ? createErrorModel(sessionSecret) : new ModelAndView("redirect:" + returnToUrl);
     }
 
     private ModelAndView createErrorModel(String sessionSecret) {
-        ModelAndView result = new ModelAndView("sign_error");
+        ModelAndView result = new ModelAndView("user_sign_error");
         result.addObject(Constants.KEY_SESSION_SECRET, sessionSecret);
         return result;
     }

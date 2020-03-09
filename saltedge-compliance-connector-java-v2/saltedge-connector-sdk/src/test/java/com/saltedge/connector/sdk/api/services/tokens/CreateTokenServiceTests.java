@@ -24,7 +24,7 @@ import com.saltedge.connector.sdk.AuthorizationTypes;
 import com.saltedge.connector.sdk.api.err.HttpErrorParams;
 import com.saltedge.connector.sdk.api.mapping.CreateTokenRequest;
 import com.saltedge.connector.sdk.callback.mapping.SessionUpdateCallbackRequest;
-import com.saltedge.connector.sdk.config.Constants;
+import com.saltedge.connector.sdk.Constants;
 import com.saltedge.connector.sdk.models.persistence.Token;
 import org.junit.Before;
 import org.junit.Test;
@@ -44,7 +44,7 @@ import static org.mockito.Mockito.verifyNoInteractions;
 @SpringBootTest
 public class CreateTokenServiceTests extends TokenServicesTests {
 	@Autowired
-	protected CreateTokenService createTokenService;
+	protected CreateTokenService testService;
 
 	@Override
 	@Before
@@ -60,7 +60,7 @@ public class CreateTokenServiceTests extends TokenServicesTests {
 		CreateTokenRequest request = createTokenRequest("sessionSecret", "tppAppName", "redirectUrl");
 
 		// when
-		createTokenService.startAuthorization(request);
+		testService.startAuthorization(request);
 
 		// then
 		final ArgumentCaptor<RuntimeException> captor = ArgumentCaptor.forClass(RuntimeException.class);
@@ -77,7 +77,7 @@ public class CreateTokenServiceTests extends TokenServicesTests {
 		request.authorizationType = "oauth";
 
 		// when
-		createTokenService.startAuthorization(request);
+		testService.startAuthorization(request);
 
 		// then
 		final ArgumentCaptor<SessionUpdateCallbackRequest> callbackCaptor = ArgumentCaptor.forClass(SessionUpdateCallbackRequest.class);

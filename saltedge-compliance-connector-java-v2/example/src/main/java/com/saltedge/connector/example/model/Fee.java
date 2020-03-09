@@ -21,7 +21,7 @@
 package com.saltedge.connector.example.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.saltedge.connector.sdk.config.Constants;
+import com.saltedge.connector.sdk.Constants;
 
 public class Fee {
     @JsonProperty(Constants.KEY_DESCRIPTION)

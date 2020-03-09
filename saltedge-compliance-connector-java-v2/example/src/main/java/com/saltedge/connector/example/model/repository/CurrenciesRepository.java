@@ -20,8 +20,8 @@
  */
 package com.saltedge.connector.example.model.repository;
 
-import com.saltedge.connector.example.model.Currency;
-import org.springframework.data.repository.CrudRepository;
+import com.saltedge.connector.example.model.CurrencyEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface CurrenciesRepository extends CrudRepository<Currency, Long> {
+public interface CurrenciesRepository extends JpaRepository<CurrencyEntity, Long> {
 }

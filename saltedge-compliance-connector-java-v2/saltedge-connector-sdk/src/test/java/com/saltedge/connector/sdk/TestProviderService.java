@@ -21,12 +21,11 @@
 package com.saltedge.connector.sdk;
 
 import com.saltedge.connector.sdk.provider.ProviderApi;
-import com.saltedge.connector.sdk.provider.models.AccountData;
-import com.saltedge.connector.sdk.provider.models.AuthorizationType;
-import com.saltedge.connector.sdk.provider.models.TransactionData;
+import com.saltedge.connector.sdk.provider.models.*;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
+import javax.validation.constraints.NotEmpty;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -59,12 +58,22 @@ public class TestProviderService implements ProviderApi {
     }
 
     @Override
-    public List<AccountData> getAccountsList(@NotNull String userId) {
+    public List<Account> getAccountsOfUser(@NotNull String userId) {
         return null;
     }
 
     @Override
-    public List<TransactionData> getTransactionsList(String userId, String accountId, Date fromDate, Date toDate) {
+    public List<Transaction> getTransactionsOfAccount(String userId, String accountId, Date fromDate, Date toDate) {
+        return null;
+    }
+
+    @Override
+    public List<CardAccount> getCardAccountsOfUser(@NotEmpty String userId) {
+        return null;
+    }
+
+    @Override
+    public List<CardTransaction> getTransactionsOfCardAccount(@NotEmpty String userId, @NotEmpty String accountId, Date fromDate, Date toDate) {
         return null;
     }
 }

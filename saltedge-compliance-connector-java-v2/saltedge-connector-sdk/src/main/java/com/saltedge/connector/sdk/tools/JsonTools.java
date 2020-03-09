@@ -20,9 +20,10 @@
  */
 package com.saltedge.connector.sdk.tools;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.saltedge.connector.sdk.config.Constants;
+import com.saltedge.connector.sdk.Constants;
 import io.jsonwebtoken.Jwts;
 
 import java.security.PrivateKey;
@@ -34,12 +35,14 @@ import java.util.Date;
 public class JsonTools {
     /**
      * Creates mapper with deserialization option to fail on unknown property
+     * and serialization option to skip NULL values
      *
      * @return Jackson's ObjectMapper
      */
     public static ObjectMapper createDefaultMapper() {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         return objectMapper;
     }
 
@@ -51,6 +54,7 @@ public class JsonTools {
      * @return jwt string
      */
     public static String createAuthorizationHeaderValue(Object requestData, PrivateKey key) {
+        if (key == null) return "";
         Instant millis = LocalDateTime.now().plusMinutes(1).atZone(ZoneId.systemDefault()).toInstant();
         return "Bearer " + Jwts.builder().claim(Constants.KEY_DATA, requestData)
                 .signWith(key)

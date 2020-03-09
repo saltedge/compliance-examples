@@ -18,35 +18,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.saltedge.connector.sdk.provider;
+package com.saltedge.connector.sdk.api.mapping;
 
-import com.saltedge.connector.sdk.provider.models.ProviderOfferedConsents;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.saltedge.connector.sdk.Constants;
+import com.saltedge.connector.sdk.provider.models.CardAccount;
 
 import java.util.List;
 
-/**
- * Interface for call back communication from Provider to Connector
- * @see ProviderCallbackService
- */
-public interface ProviderCallback {
-    /**
-     * Notify about oAuth authorization success
-     *
-     * @param sessionSecret of authorization session
-     * @param userId of authorized User
-     * @param consents list of checked by user account consents
-     *
-     * @return returnUrl where should be redirected user
-     */
-    String onOAuthAuthorizationSuccess(String sessionSecret, String userId, ProviderOfferedConsents consents);
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class CardAccountsResponse {
+    @JsonProperty(Constants.KEY_DATA)
+    public List<CardAccount> data;
 
-    /**
-     * Notify about oAuth authorization fail
-     *
-     * @param sessionSecret of authorization session
-     * @param errorMessage of authorization session
-     *
-     * @return returnUrl where should be redirected user
-     */
-    String authorizationOAuthError(String sessionSecret, String errorMessage);
+    public CardAccountsResponse() {
+    }
+
+    public CardAccountsResponse(List<CardAccount> data) {
+        this.data = data;
+    }
+
+    public List<CardAccount> getData() {
+        return data;
+    }
 }

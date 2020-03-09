@@ -20,20 +20,22 @@
  */
 package com.saltedge.connector.sdk.api.mapping;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.saltedge.connector.sdk.config.Constants;
-import com.saltedge.connector.sdk.provider.models.TransactionData;
+import com.saltedge.connector.sdk.Constants;
+import com.saltedge.connector.sdk.provider.models.Transaction;
 
 import java.util.List;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class TransactionsResponse {
     @JsonProperty(Constants.KEY_DATA)
-    public List<TransactionData> data;
+    public List<Transaction> data;
 
     public TransactionsResponse() {
     }
 
-    public TransactionsResponse(List<TransactionData> data) {
+    public TransactionsResponse(List<Transaction> data) {
         this.data = data;
     }
 }

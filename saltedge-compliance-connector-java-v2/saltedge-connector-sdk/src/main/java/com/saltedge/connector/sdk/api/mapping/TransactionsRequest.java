@@ -22,7 +22,7 @@ package com.saltedge.connector.sdk.api.mapping;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.saltedge.connector.sdk.config.Constants;
+import com.saltedge.connector.sdk.Constants;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;

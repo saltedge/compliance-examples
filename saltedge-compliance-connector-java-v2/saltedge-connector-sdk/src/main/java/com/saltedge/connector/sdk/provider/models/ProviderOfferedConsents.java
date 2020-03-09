@@ -26,10 +26,12 @@ import org.springframework.util.StringUtils;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
- * Consent data from bank.
- * Should be requested from User after successful oAuth authorization.
+ * Consent data offered from bank.
+ * Contains array of account's identifier for balances and transactions.
+ * Should be managed by User after successful oAuth authentication.
  *
  * Example:
  * {
@@ -40,22 +42,28 @@ import java.util.stream.Collectors;
  *   ],
  *   "transactions": [
  *     {
- *       "iban": "MD123456"
+ *       "masked_pan": "**** **** **** 1111"
  *     }
  *   ]
  * }
  */
 public class ProviderOfferedConsents {
+    /**
+     * Array of account's identifier for balances.
+     */
     @JsonProperty("balances")
-    public List<ConsentData> balances;
+    public List<ProviderOfferedConsent> balances;
 
+    /**
+     * Array of account's identifier for transactions.
+     */
     @JsonProperty("transactions")
-    public List<ConsentData> transactions;
+    public List<ProviderOfferedConsent> transactions;
 
     public ProviderOfferedConsents() {
     }
 
-    public ProviderOfferedConsents(List<ConsentData> balances, List<ConsentData> transactions) {
+    public ProviderOfferedConsents(List<ProviderOfferedConsent> balances, List<ProviderOfferedConsent> transactions) {
         this.balances = balances;
         this.transactions = transactions;
     }
@@ -65,23 +73,64 @@ public class ProviderOfferedConsents {
      *
      * @param balancesConsents list of Account's for which user give consent to provide balance amount
      * @param transactionsConsents list of Account's for which user give consent to provide transactions list
-     * @return list of ConsentData where each object contains consents for an account
+     * @param cardBalancesConsents list of Card Account's for which user give consent to provide balance amount
+     * @param cardTransactionsConsents list of Card Account's for which user give consent to provide transactions list
+     * @return list of ConsentData where each object contains consents for an account or card account
      */
     public static ProviderOfferedConsents buildProviderOfferedConsents(
-            List<AccountData> balancesConsents,
-            List<AccountData> transactionsConsents
+            List<Account> balancesConsents,
+            List<Account> transactionsConsents,
+            List<CardAccount> cardBalancesConsents,
+            List<CardAccount> cardTransactionsConsents
     ) {
-        List<ConsentData> balances = balancesConsents.stream()
-                .map(ProviderOfferedConsents::convertAccountDataToConsentData)
-                .filter(Objects::nonNull).collect(Collectors.toList());
-        List<ConsentData> transactions = transactionsConsents.stream()
-                .map(ProviderOfferedConsents::convertAccountDataToConsentData)
-                .filter(Objects::nonNull).collect(Collectors.toList());
-        return new ProviderOfferedConsents(balances, transactions);
+        Stream<ProviderOfferedConsent> balances = balancesConsents.stream()
+                .map(ProviderOfferedConsents::convertAccountToConsent)
+                .filter(Objects::nonNull);
+        Stream<ProviderOfferedConsent> transactions = transactionsConsents.stream()
+                .map(ProviderOfferedConsents::convertAccountToConsent)
+                .filter(Objects::nonNull);
+        Stream<ProviderOfferedConsent> cardBalances = cardBalancesConsents.stream()
+                .map(ProviderOfferedConsents::convertAccountToConsent)
+                .filter(Objects::nonNull);
+        Stream<ProviderOfferedConsent> cardTransactions = cardTransactionsConsents.stream()
+                .map(ProviderOfferedConsents::convertAccountToConsent)
+                .filter(Objects::nonNull);
+
+        return new ProviderOfferedConsents(
+                Stream.concat(balances, cardBalances).collect(Collectors.toList()),
+                Stream.concat(transactions, cardTransactions).collect(Collectors.toList())
+        );
     }
 
-    private static ConsentData convertAccountDataToConsentData(AccountData account) {
-        if (account == null || StringUtils.isEmpty(account.iban)) return null;
-        return new ConsentData(account.iban);
+    private static ProviderOfferedConsent convertAccountToConsent(Account account) {
+        if (account == null || StringUtils.isEmpty(account.getIban())) return null;
+        return ProviderOfferedConsent.createAccountConsent(account.getIban());
+    }
+
+    private static ProviderOfferedConsent convertAccountToConsent(CardAccount card) {
+        if (card == null || StringUtils.isEmpty(card.getMaskedPan())) return null;
+        return ProviderOfferedConsent.createCardConsent(card.getMaskedPan());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ProviderOfferedConsents that = (ProviderOfferedConsents) o;
+        return Objects.equals(balances, that.balances) &&
+                Objects.equals(transactions, that.transactions);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(balances, transactions);
+    }
+
+    @Override
+    public String toString() {
+        return "ProviderOfferedConsents{" +
+                "balances=" + balances +
+                ", transactions=" + transactions +
+                '}';
     }
 }

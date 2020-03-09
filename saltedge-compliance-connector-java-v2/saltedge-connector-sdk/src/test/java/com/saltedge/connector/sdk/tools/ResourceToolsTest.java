@@ -18,39 +18,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.saltedge.connector.sdk.provider.models;
+package com.saltedge.connector.sdk.tools;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.saltedge.connector.sdk.config.Constants;
+import org.junit.Test;
 
-import java.util.Objects;
+import static org.assertj.core.api.Assertions.assertThat;
 
-public class ConsentData {
-    @JsonProperty(Constants.KEY_IBAN)
-    public String iban;
-
-    public ConsentData() {
-    }
-
-    public ConsentData(String iban) {
-        this.iban = iban;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ConsentData that = (ConsentData) o;
-        return Objects.equals(iban, that.iban);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(iban);
-    }
-
-    @Override
-    public String toString() {
-        return "ConsentData{" + "iban='" + iban + '\'' + '}';
-    }
+public class ResourceToolsTest {
+	@Test
+	public void readKeyFileTest() {
+		assertThat(new ResourceTools()).isNotNull();
+		assertThat(ResourceTools.readKeyFile("param-param.pem")).isEmpty();
+		assertThat(ResourceTools.readKeyFile("test_public_key.pem")).isNotEmpty();
+	}
 }

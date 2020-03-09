@@ -22,9 +22,10 @@ package com.saltedge.connector.sdk.callback.mapping;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.saltedge.connector.sdk.config.Constants;
+import com.saltedge.connector.sdk.Constants;
 
 import java.util.Map;
+import java.util.Objects;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class BaseCallbackRequest {
@@ -33,4 +34,25 @@ public class BaseCallbackRequest {
 
     @JsonProperty(Constants.KEY_EXTRA)
     public Map<String, String> extra;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BaseCallbackRequest that = (BaseCallbackRequest) o;
+        return Objects.equals(sessionSecret, that.sessionSecret) &&
+                Objects.equals(extra, that.extra);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(sessionSecret, extra);
+    }
+
+    @Override
+    public String toString() {
+        return "BaseCallbackRequest{sessionSecret='" + sessionSecret + '\'' +
+                ", extra=" + extra +
+                '}';
+    }
 }

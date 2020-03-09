@@ -20,22 +20,22 @@
  */
 package com.saltedge.connector.example.model.repository;
 
-import com.saltedge.connector.example.model.Account;
+import com.saltedge.connector.example.model.AccountEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface AccountsRepository extends JpaRepository<Account, Long> {
+public interface AccountsRepository extends JpaRepository<AccountEntity, Long> {
     @Query("select a from Account a where a.iban=?1 OR a.number=?1 OR a.sortCode=?1 OR a.swiftCode=?1")
-    List<Account> findByAccountIdentifier(String accountIdentifier);
+    List<AccountEntity> findByAccountIdentifier(String accountIdentifier);
 
-    Account findFirstByNumber(String accountNumber);
+    AccountEntity findFirstByNumber(String accountNumber);
 
-    Account findFirstByIban(String iban);
+    AccountEntity findFirstByIban(String iban);
 
-    Optional<Account> findFirstByIdAndUserId(Long id, Long userId);
+    Optional<AccountEntity> findFirstByIdAndUserId(Long id, Long userId);
 
-    List<Account> findByUserId(Long userId);
+    List<AccountEntity> findByUserId(Long userId);
 }

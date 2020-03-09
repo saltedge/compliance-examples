@@ -22,11 +22,11 @@ package com.saltedge.connector.sdk.api.mapping;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.saltedge.connector.sdk.config.Constants;
+import com.saltedge.connector.sdk.Constants;
 
 import javax.validation.constraints.NotBlank;
 
-import static com.saltedge.connector.sdk.config.Constants.KEY_REDIRECT_URL;
+import static com.saltedge.connector.sdk.Constants.KEY_REDIRECT_URL;
 
 @JsonIgnoreProperties
 public class CreateTokenRequest extends PrioraBaseRequest {

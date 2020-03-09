@@ -20,9 +20,6 @@
  */
 package com.saltedge.connector.sdk.provider.models;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * Salt Edge Compliance solution supports next Authorization modes.
  *
@@ -32,15 +29,4 @@ import org.slf4j.LoggerFactory;
  */
 public enum AuthMode {
     OAUTH, EMBEDDED;
-
-    private static Logger log = LoggerFactory.getLogger(AuthMode.class);
-
-    public static AuthMode stringToAuthType(String authType) {
-        try {
-            return AuthMode.valueOf(authType.toUpperCase());
-        } catch (Exception e) {
-            log.error("stringToAuthType(" + authType + ") exception", e);
-        }
-        return null;
-    }
 }
