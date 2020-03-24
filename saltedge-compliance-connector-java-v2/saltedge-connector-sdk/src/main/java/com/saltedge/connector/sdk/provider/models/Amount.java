@@ -20,24 +20,31 @@
  */
 package com.saltedge.connector.sdk.provider.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.saltedge.connector.sdk.SDKConstants;
+
+import javax.validation.constraints.NotEmpty;
 
 /**
  * Amount information
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties
 public class Amount {
     /**
      * Amount value.
      */
-    @JsonProperty("amount")
+    @JsonProperty(SDKConstants.KEY_AMOUNT)
+    @NotEmpty
     public String amount;
 
     /**
      * Currency code of balance (ISO 4217).
      */
-    @JsonProperty("currency")
+    @JsonProperty(SDKConstants.KEY_CURRENCY)
+    @NotEmpty
     public String currency;
 
     public Amount() {

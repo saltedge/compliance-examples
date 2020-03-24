@@ -95,7 +95,7 @@ public class Payment extends BaseEntity implements Serializable {
         this.user = user;
     }
 
-    public static enum Status {
+    public enum Status {
         PENDING, CONFIRMED, FAILED, CLOSED
     }
 

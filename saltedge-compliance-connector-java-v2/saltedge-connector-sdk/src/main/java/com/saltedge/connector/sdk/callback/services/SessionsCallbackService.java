@@ -22,7 +22,7 @@ package com.saltedge.connector.sdk.callback.services;
 
 import com.saltedge.connector.sdk.callback.CallbackRestClient;
 import com.saltedge.connector.sdk.callback.mapping.BaseCallbackRequest;
-import com.saltedge.connector.sdk.Constants;
+import com.saltedge.connector.sdk.SDKConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -55,6 +55,6 @@ public class SessionsCallbackService extends CallbackRestClient {
     }
 
     private String createSessionPath(String sessionSecret) {
-        return Constants.CALLBACK_BASE_PATH + "/sessions/" + sessionSecret;
+        return SDKConstants.CALLBACK_BASE_PATH + "/sessions/" + sessionSecret;
     }
 }

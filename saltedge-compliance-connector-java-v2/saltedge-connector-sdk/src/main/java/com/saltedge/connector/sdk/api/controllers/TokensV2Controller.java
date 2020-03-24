@@ -25,7 +25,7 @@ import com.saltedge.connector.sdk.api.mapping.EmptyJsonModel;
 import com.saltedge.connector.sdk.api.mapping.RevokeTokenRequest;
 import com.saltedge.connector.sdk.api.services.tokens.CreateTokenService;
 import com.saltedge.connector.sdk.api.services.tokens.RevokeTokenService;
-import com.saltedge.connector.sdk.Constants;
+import com.saltedge.connector.sdk.SDKConstants;
 import com.saltedge.connector.sdk.models.persistence.Token;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,7 +48,7 @@ import javax.validation.Valid;
 @RequestMapping(TokensV2Controller.BASE_PATH)
 @Validated
 public class TokensV2Controller extends BaseV2Controller {
-    public final static String BASE_PATH = Constants.API_BASE_PATH + "/tokens";
+    public final static String BASE_PATH = SDKConstants.API_BASE_PATH + "/tokens";
     private static Logger log = LoggerFactory.getLogger(TokensV2Controller.class);
     @Autowired
     CreateTokenService createTokenService;

@@ -20,13 +20,13 @@
  */
 package com.saltedge.connector.sdk.api.controllers;
 
-import com.saltedge.connector.sdk.Constants;
+import com.saltedge.connector.sdk.SDKConstants;
 import com.saltedge.connector.sdk.api.mapping.CardAccountsResponse;
 import com.saltedge.connector.sdk.api.mapping.CardTransactionsResponse;
 import com.saltedge.connector.sdk.api.mapping.DefaultRequest;
 import com.saltedge.connector.sdk.api.mapping.TransactionsRequest;
 import com.saltedge.connector.sdk.models.persistence.Token;
-import com.saltedge.connector.sdk.provider.ProviderApi;
+import com.saltedge.connector.sdk.provider.ProviderServiceAbs;
 import com.saltedge.connector.sdk.provider.models.*;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -43,11 +43,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
 public class CardAccountsV2ControllerTests {
-    ProviderApi mockProviderService = Mockito.mock(ProviderApi.class);
+    ProviderServiceAbs mockProviderService = Mockito.mock(ProviderServiceAbs.class);
 
     @Test
     public void basePathTest() {
-        assertThat(CardAccountsV2Controller.BASE_PATH).isEqualTo(Constants.API_BASE_PATH + "/card_accounts");
+        assertThat(CardAccountsV2Controller.BASE_PATH).isEqualTo(SDKConstants.API_BASE_PATH + "/card_accounts");
     }
 
     @Test

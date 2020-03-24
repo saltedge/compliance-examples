@@ -18,27 +18,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.saltedge.connector.sdk.api.services.tokens;
 
-import com.saltedge.connector.sdk.TestTools;
-import com.saltedge.connector.sdk.callback.services.SessionsCallbackService;
-import com.saltedge.connector.sdk.config.ApplicationProperties;
-import com.saltedge.connector.sdk.models.persistence.TokensRepository;
-import com.saltedge.connector.sdk.provider.ProviderApi;
-import org.junit.Before;
-import org.springframework.boot.test.mock.mockito.MockBean;
+package com.saltedge.connector.sdk;
 
-abstract public class TokenServicesTests {
-	@MockBean
-	protected TokensRepository tokensRepository;
-	@MockBean
-	protected SessionsCallbackService callbackService;
-	@MockBean
-	protected ProviderApi providerApi;
+import org.junit.Test;
 
-	@Before
-	public void setUp() throws Exception {
-		callbackService.applicationProperties = new ApplicationProperties();
-		TestTools.initProviderApiMocks(providerApi);
+import static org.assertj.core.api.Assertions.assertThat;
+
+public class SDKConstantsTest {
+	@Test
+	public void valuesTest() {
+		assertThat(SDKConstants.API_BASE_PATH).isEqualTo("/api/priora/v2");
+		assertThat(SDKConstants.CALLBACK_BASE_PATH).isEqualTo("/api/connectors/v2");
+		assertThat(SDKConstants.HEADER_AUTHORIZATION).isEqualTo("authorization");
+		assertThat(SDKConstants.HEADER_CLIENT_ID).isEqualTo("client-id");
+		assertThat(SDKConstants.HEADER_ACCESS_TOKEN).isEqualTo("access-token");
+		assertThat(SDKConstants.STATUS_WAITING_CONFIRMATION_CODE).isEqualTo("waiting_confirmation_code");
+		assertThat(SDKConstants.STATUS_REDIRECT).isEqualTo("redirect");
 	}
 }

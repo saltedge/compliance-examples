@@ -23,7 +23,7 @@ package com.saltedge.connector.sdk.provider.models;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.saltedge.connector.sdk.Constants;
+import com.saltedge.connector.sdk.SDKConstants;
 
 import java.util.Date;
 import java.util.List;
@@ -36,26 +36,26 @@ public class Transaction {
     /**
      * Transaction identifier on Provider side
      */
-    @JsonProperty(Constants.KEY_ID)
+    @JsonProperty(SDKConstants.KEY_ID)
     private String id;
 
     /**
      * Transaction amount
      */
-    @JsonProperty(Constants.KEY_AMOUNT)
+    @JsonProperty(SDKConstants.KEY_AMOUNT)
     private String amount;
 
     /**
      * Transaction currency code in ISO 4217
      */
-    @JsonProperty(Constants.KEY_CURRENCY)
+    @JsonProperty(SDKConstants.KEY_CURRENCY)
     private String currencyCode;
 
     /**
      * Transaction status.
      * Allowed values: booked, pending
      */
-    @JsonProperty(Constants.KEY_STATUS)
+    @JsonProperty(SDKConstants.KEY_STATUS)
     private String status;
 
     /**
@@ -99,7 +99,7 @@ public class Transaction {
     /**
      * Additional information deemed relevant to a payment
      */
-    @JsonProperty(Constants.KEY_EXTRA)
+    @JsonProperty(SDKConstants.KEY_EXTRA)
     private TransactionExtra extra;
 
     public Transaction() {

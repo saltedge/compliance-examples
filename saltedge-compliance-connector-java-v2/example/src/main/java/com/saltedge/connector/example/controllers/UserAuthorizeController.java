@@ -20,71 +20,74 @@
  */
 package com.saltedge.connector.example.controllers;
 
-import com.saltedge.connector.example.connector.ConnectorService;
-import com.saltedge.connector.example.connector.config.AuthorizationTypes;
-import com.saltedge.connector.sdk.Constants;
-import com.saltedge.connector.sdk.provider.ConnectorCallback;
+import com.saltedge.connector.sdk.SDKConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.HashMap;
-import java.util.Map;
+import javax.validation.constraints.NotEmpty;
 
 @Controller
-@RequestMapping(UserAuthorizeController.BASE_PATH)
-public class UserAuthorizeController {
-    public final static String BASE_PATH = "/oauth/authorize";
+@RequestMapping
+public class UserAuthorizeController extends UserBaseController {
     private static Logger log = LoggerFactory.getLogger(UserAuthorizeController.class);
-    @Autowired
-    ConnectorService connectorService;
-    @Autowired
-    ConnectorCallback providerCallback;
+    public final static String TYPE_ACCOUNTS = "accounts";
+    public final static String TYPE_PAYMENTS = "payments";
+    private final static String BASE_PATH = "/oauth/authorize";
+    public final static String ACCOUNTS_BASE_PATH = BASE_PATH + "/" + TYPE_ACCOUNTS;
+    public final static String PAYMENTS_BASE_PATH = BASE_PATH + "/" + TYPE_PAYMENTS;
+    public final static String SESSION_TYPE = "session_type";
 
-    @GetMapping
-    public ModelAndView signIn(@RequestParam(value = Constants.KEY_SESSION_SECRET, required = false) String sessionSecret) {
-        ModelAndView result = new ModelAndView("user_sign_in");
-        result.addObject(Constants.KEY_SESSION_SECRET, sessionSecret);
-        return result;
-    }
-
-    @PostMapping
-    public ModelAndView authorizeAndShowConsent(
-            @RequestParam(name = Constants.KEY_SESSION_SECRET) String sessionSecret,
-            @RequestParam String username,
-            @RequestParam String password
+    @GetMapping(BASE_PATH + "/{" + SESSION_TYPE + "}")
+    public ModelAndView showSignInForAccounts(
+            @PathVariable(SESSION_TYPE) @NotEmpty String sessionType,
+            @RequestParam(value = SDKConstants.KEY_SESSION_SECRET, required = false) String sessionSecret,
+            @RequestParam(value = SDKConstants.KEY_PAYMENT_ID, required = false) String paymentId
     ) {
-        Map<String, String> params = new HashMap<>();
-        params.put("login", username);
-        params.put("password", password);
-        String userId = connectorService.authorizeUser(AuthorizationTypes.LOGIN_PASSWORD_AUTH_TYPE.code, params);
-        if (userId == null) {
-            return createErrorModel(sessionSecret);
+        if (TYPE_PAYMENTS.equals(sessionType)) {
+            return createSignInModel(sessionType).addObject(SDKConstants.KEY_PAYMENT_ID, paymentId);
         } else {
-            ModelAndView result = new ModelAndView("redirect:/oauth/authorize/consent");
-            result.addObject(Constants.KEY_SESSION_SECRET, sessionSecret);
-            result.addObject(Constants.KEY_USER_ID, userId);
-            return result;
+            return createSignInModel(sessionType).addObject(SDKConstants.KEY_SESSION_SECRET, sessionSecret);
         }
     }
 
-    @PostMapping("/error")
-    public ModelAndView signInError(
-            @RequestParam(name = Constants.KEY_SESSION_SECRET) String sessionSecret
+    @PostMapping(BASE_PATH + "/{" + SESSION_TYPE + "}")
+    public ModelAndView onSubmitCredentials(
+            @PathVariable(SESSION_TYPE) @NotEmpty String sessionType,
+            @RequestParam(value = SDKConstants.KEY_SESSION_SECRET, required = false) String sessionSecret,
+            @RequestParam(value = SDKConstants.KEY_PAYMENT_ID, required = false) String paymentId,
+            @RequestParam String username,
+            @RequestParam String password
     ) {
-        String returnToUrl = providerCallback.onOAuthAuthorizationError(sessionSecret);
-        return returnToUrl == null ? createErrorModel(sessionSecret) : new ModelAndView("redirect:" + returnToUrl);
+        if ((!TYPE_PAYMENTS.equals(sessionType) && !TYPE_ACCOUNTS.equals(sessionType))
+                || (StringUtils.isEmpty(sessionSecret) && StringUtils.isEmpty(paymentId))
+        ) {
+            return createSignInModel(sessionType).addObject("error", "Unauthorized access.");
+        }
+
+        Long userId = findUser(username, password);
+        if (userId == null) return createSignInModel(sessionType).addObject("error", "Invalid credentials.");
+
+        ModelAndView result = new ModelAndView("redirect:/oauth/consent/"+sessionType);
+        result.addObject(SDKConstants.KEY_USER_ID, userId);
+        if (TYPE_PAYMENTS.equals(sessionType)) result.addObject(SDKConstants.KEY_PAYMENT_ID, paymentId);
+        if (TYPE_ACCOUNTS.equals(sessionType)) result.addObject(SDKConstants.KEY_SESSION_SECRET, sessionSecret);
+        return result;
     }
 
-    private ModelAndView createErrorModel(String sessionSecret) {
-        ModelAndView result = new ModelAndView("user_sign_error");
-        result.addObject(Constants.KEY_SESSION_SECRET, sessionSecret);
+    private ModelAndView createSignInModel(String sessionType) {
+        ModelAndView result = new ModelAndView("user_sign_in");
+        result.addObject("input_title", createInputTitle(sessionType));
+        result.addObject(SESSION_TYPE, sessionType);
         return result;
+    }
+
+    private String createInputTitle(String sessionType) {
+        if (TYPE_PAYMENTS.equals(sessionType)) return "Input credentials to authenticate payment";
+        else if (sessionType.equals(TYPE_ACCOUNTS)) return "Input credentials to access accounts information";
+        return "Input credentials";
     }
 }

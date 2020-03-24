@@ -20,7 +20,7 @@
  */
 package com.saltedge.connector.sdk;
 
-public class Constants {
+public class SDKConstants {
     public final static String API_BASE_PATH = "/api/priora/v2";
     public final static String CALLBACK_BASE_PATH = "/api/connectors/v2";
 
@@ -36,9 +36,9 @@ public class Constants {
     public final static String KEY_USER_ID = "user_id";
     public final static String KEY_EXTRA = "extra";
     public final static String KEY_REDIRECT_URL = "redirect_url";
+    public final static String KEY_RETURN_TO_URL = "return_to_url";
     public final static String KEY_ERROR_MESSAGE = "error_message";
     public final static String KEY_ERROR_CLASS = "error_class";
-    public final static String KEY_SESSION_SECRET = "session_secret";
     public final static String KEY_CONFIRMATION_CODE = "confirmation_code";
     public final static String KEY_PROVIDER_CODE = "provider_code";
     public final static String KEY_STATUS = "status";
@@ -50,7 +50,7 @@ public class Constants {
     public final static String KEY_MASKED_PAN = "masked_pan";
     public final static String KEY_NAME = "name";
     public final static String KEY_DESCRIPTION = "description";
-
-    private Constants() {
-    }
+    public final static String KEY_SESSION_SECRET = "session_secret";
+    public final static String KEY_PAYMENT_ID = "payment_id";
+    public final static String KEY_END_TO_END_IDENTIFICATION = "end_to_end_identification";
 }

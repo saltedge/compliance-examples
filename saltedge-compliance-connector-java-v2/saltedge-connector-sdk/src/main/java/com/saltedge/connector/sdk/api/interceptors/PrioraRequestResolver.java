@@ -24,7 +24,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.saltedge.connector.sdk.api.err.BadRequest;
 import com.saltedge.connector.sdk.api.mapping.*;
 import com.saltedge.connector.sdk.config.ApplicationProperties;
-import com.saltedge.connector.sdk.Constants;
+import com.saltedge.connector.sdk.SDKConstants;
 import com.saltedge.connector.sdk.tools.JsonTools;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +52,7 @@ public class PrioraRequestResolver implements HandlerMethodArgumentResolver {
         return type.equals(CreateTokenRequest.class)
                 || type.equals(RevokeTokenRequest.class)
                 || type.equals(TransactionsRequest.class)
+                || type.equals(CreatePaymentRequest.class)
                 || type.equals(ErrorsRequest.class)
                 || type.equals(DefaultRequest.class)
                 || type.equals(EmptyJsonModel.class);
@@ -64,7 +65,7 @@ public class PrioraRequestResolver implements HandlerMethodArgumentResolver {
             NativeWebRequest webRequest,
             WebDataBinderFactory binderFactory
     ) {
-        String authorization = webRequest.getHeader(Constants.HEADER_AUTHORIZATION);
+        String authorization = webRequest.getHeader(SDKConstants.HEADER_AUTHORIZATION);
         return parsePayloadAndValidate(authorization, parameter.getParameterType());
     }
 
@@ -74,7 +75,7 @@ public class PrioraRequestResolver implements HandlerMethodArgumentResolver {
             Jws<Claims> claims = Jwts.parser()
                     .setSigningKey(applicationProperties.getPrioraPublicKey())
                     .parseClaimsJws(bearerToken);
-            return mapper.convertValue(claims.getBody().get(Constants.KEY_DATA, Map.class), clazz);
+            return mapper.convertValue(claims.getBody().get(SDKConstants.KEY_DATA, Map.class), clazz);
         } catch (ExpiredJwtException e) {
             throw new BadRequest.JWTExpiredSignature();
         } catch (JwtException e) {

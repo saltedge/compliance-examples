@@ -26,7 +26,7 @@ import com.saltedge.connector.sdk.api.err.HttpErrorParams;
 import com.saltedge.connector.sdk.callback.mapping.BaseCallbackRequest;
 import com.saltedge.connector.sdk.callback.mapping.BaseFailRequest;
 import com.saltedge.connector.sdk.config.ApplicationProperties;
-import com.saltedge.connector.sdk.Constants;
+import com.saltedge.connector.sdk.SDKConstants;
 import com.saltedge.connector.sdk.config.PrioraProperties;
 import com.saltedge.connector.sdk.tools.JsonTools;
 import org.slf4j.Logger;
@@ -92,7 +92,7 @@ public abstract class CallbackRestClient {
         headersMap.add("App-id", applicationProperties.getPrioraAppId());
         headersMap.add("App-secret", applicationProperties.getPrioraAppSecret());
         headersMap.add(
-                Constants.HEADER_AUTHORIZATION,
+                SDKConstants.HEADER_AUTHORIZATION,
                 JsonTools.createAuthorizationHeaderValue(requestData, applicationProperties.getPrivateKey())
         );
         return headersMap;

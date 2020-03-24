@@ -20,7 +20,7 @@
  */
 package com.saltedge.connector.sdk.api.controllers;
 
-import com.saltedge.connector.sdk.Constants;
+import com.saltedge.connector.sdk.SDKConstants;
 import com.saltedge.connector.sdk.models.persistence.Token;
 import com.saltedge.connector.sdk.models.persistence.TokensRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,8 +53,8 @@ abstract public class ControllerIntegrationTests {
 
     protected LinkedMultiValueMap<String, String> createHeaders() {
         LinkedMultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-        headers.add(Constants.HEADER_CLIENT_ID, "clientId");
-        headers.add(Constants.HEADER_ACCESS_TOKEN, "validToken");
+        headers.add(SDKConstants.HEADER_CLIENT_ID, "clientId");
+        headers.add(SDKConstants.HEADER_ACCESS_TOKEN, "validToken");
         return headers;
     }
 

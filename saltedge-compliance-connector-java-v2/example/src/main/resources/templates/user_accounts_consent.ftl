@@ -2,39 +2,17 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sign In Consent</title>
+    <title>User consent</title>
 
-    <style type="text/css">
-        body {
-            font-family: Arial, Helvetica, sans-serif;
-            background-color:lightgrey;
-        }
-        .container {
-            max-width: 640px;
-            margin: 0 auto;
-            padding: 10px 10px;
-            background-color:white;
-        }
-        h1 {
-            text-align:center;
-        }
-        fieldset {
-            border: 0;
-        }
-        .submit {
-            font-size: larger;
-            padding: 5px 10px;
-            color: white;
-            background-color: blue;
-        }
-    </style>
+    <#include "user.css">
 </head>
 <body>
     <div class="container">
-        <h1>Spring Example Consent</h1>
+        <h1 class="top-header">User Consent for Accounts Information</h1>
 
         <#if session_secret?? && accounts?? && card_accounts??>
-            <form action="/oauth/authorize/consent" method="post">
+        <div class="form-container">
+            <form action="/oauth/consent/accounts" method="post">
                 <#list accounts>
                     <h2>Accounts</h2>
                     <#items as item>
@@ -67,6 +45,7 @@
                 <input type="hidden" name="user_id" value="${user_id}">
                 <p><input type="submit" value="Allow" class="submit"></p>
             </form>
+        </div>
         </#if>
     </div>
 </body>

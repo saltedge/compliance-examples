@@ -20,7 +20,7 @@
  */
 package com.saltedge.connector.example.model;
 
-import com.saltedge.connector.sdk.Constants;
+import com.saltedge.connector.sdk.SDKConstants;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -33,7 +33,7 @@ import java.util.Date;
 abstract public class BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = Constants.KEY_ID)
+    @Column(name = SDKConstants.KEY_ID)
     public Long id;
 
     @CreatedDate

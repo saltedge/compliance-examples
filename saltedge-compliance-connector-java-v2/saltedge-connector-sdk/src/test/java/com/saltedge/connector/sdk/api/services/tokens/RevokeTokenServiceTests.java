@@ -21,6 +21,7 @@
 package com.saltedge.connector.sdk.api.services.tokens;
 
 import com.saltedge.connector.sdk.api.err.NotFound;
+import com.saltedge.connector.sdk.api.services.BaseServicesTests;
 import com.saltedge.connector.sdk.models.persistence.Token;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,7 +36,7 @@ import static org.mockito.Mockito.verify;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class RevokeTokenServiceTests extends TokenServicesTests {
+public class RevokeTokenServiceTests extends BaseServicesTests {
 	@Autowired
 	protected RevokeTokenService revokeTokenService;
 

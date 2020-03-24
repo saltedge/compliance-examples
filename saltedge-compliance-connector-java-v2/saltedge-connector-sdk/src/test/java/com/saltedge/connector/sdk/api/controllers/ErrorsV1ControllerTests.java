@@ -22,9 +22,9 @@ package com.saltedge.connector.sdk.api.controllers;
 
 import com.saltedge.connector.sdk.api.mapping.EmptyJsonModel;
 import com.saltedge.connector.sdk.api.mapping.ErrorsRequest;
-import com.saltedge.connector.sdk.Constants;
+import com.saltedge.connector.sdk.SDKConstants;
 import com.saltedge.connector.sdk.models.persistence.Token;
-import com.saltedge.connector.sdk.provider.ProviderApi;
+import com.saltedge.connector.sdk.provider.ProviderServiceAbs;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
@@ -34,11 +34,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verifyNoInteractions;
 
 public class ErrorsV1ControllerTests {
-    ProviderApi mockProviderService = Mockito.mock(ProviderApi.class);
+    ProviderServiceAbs mockProviderService = Mockito.mock(ProviderServiceAbs.class);
 
     @Test
     public void basePathTest() {
-        assertThat(ErrorsV2Controller.BASE_PATH).isEqualTo(Constants.API_BASE_PATH + "/errors");
+        assertThat(ErrorsV2Controller.BASE_PATH).isEqualTo(SDKConstants.API_BASE_PATH + "/errors");
     }
 
     @Test

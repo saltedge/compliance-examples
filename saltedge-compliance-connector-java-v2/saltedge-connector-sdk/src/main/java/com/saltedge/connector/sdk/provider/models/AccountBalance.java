@@ -26,27 +26,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.validation.constraints.NotBlank;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Account's balance information
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class AccountBalance {
-    /**
-     * Amount of balance.
-     */
-    @NotBlank
-    @JsonProperty("amount")
-    public String amount;
-
-    /**
-     * Currency code of balance (ISO 4217).
-     */
-    @NotBlank
-    @JsonProperty("currency")
-    public String currency;
-
+public class AccountBalance extends Amount {
     /**
      * ExternalBalanceType1code from ISO 20022 (https://www.iso20022.org/).
      * Allowed values: closingBooked, expected, openingBooked, interimAvailable, forwardAvailable, interimBooked, openingAvailable, previouslyClosedBooked, closingAvailable, information

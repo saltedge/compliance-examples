@@ -22,7 +22,7 @@ package com.saltedge.connector.sdk.api.controllers;
 
 import com.saltedge.connector.sdk.api.mapping.EmptyJsonModel;
 import com.saltedge.connector.sdk.api.mapping.ErrorsRequest;
-import com.saltedge.connector.sdk.Constants;
+import com.saltedge.connector.sdk.SDKConstants;
 import com.saltedge.connector.sdk.models.persistence.Token;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -38,7 +38,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(ErrorsV2Controller.BASE_PATH)
 public class ErrorsV2Controller extends BaseV2Controller {
-    public final static String BASE_PATH = Constants.API_BASE_PATH + "/errors";
+    public final static String BASE_PATH = SDKConstants.API_BASE_PATH + "/errors";
     private static Logger log = LoggerFactory.getLogger(ErrorsV2Controller.class);
 
     /**

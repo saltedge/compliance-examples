@@ -24,12 +24,13 @@ import com.saltedge.connector.sdk.provider.models.ProviderOfferedConsents;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.Map;
 
 /**
  * Interface for call back communication from Provider application to Connector Module
  * @see ConnectorCallbackService
  */
-public interface ConnectorCallback {
+public interface ConnectorCallbackAbs {
     /**
      * Provider notify Connector Module about oAuth success authentication and user consent for accounts
      *
@@ -38,7 +39,7 @@ public interface ConnectorCallback {
      * @param consents list of balances of accounts and transactions of accounts
      * @return returnUrl from token
      */
-    String onOAuthAuthorizationSuccess(
+    String onOAuthAccountsAuthorizationSuccess(
             @NotEmpty String sessionSecret,
             @NotEmpty String userId,
             @NotNull ProviderOfferedConsents consents
@@ -50,5 +51,28 @@ public interface ConnectorCallback {
      * @param sessionSecret of Token Create session
      * @return returnUrl from token
      */
-    String onOAuthAuthorizationError(@NotEmpty String sessionSecret);
+    String onOAuthAccountsAuthorizationError(@NotEmpty String sessionSecret);
+
+    /**
+     * Provider notify Connector Module about oAuth success authentication and user consent for payment
+     *
+     * @param paymentId of payment
+     * @param userId of authenticated User
+     * @param paymentExtra extra data of payment order
+     * @return returnUrl for Payment authenticate session
+     */
+    String onOAuthPaymentAuthorizationSuccess(
+            @NotEmpty String paymentId,
+            @NotEmpty String userId,
+            @NotEmpty Map<String, String> paymentExtra
+    );
+
+    /**
+     * Provider should notify Connector Module about oAuth authentication fail or Payment confirmation deny
+     *
+     * @param paymentId of payment
+     * @param paymentExtra extra data of payment order
+     * @return returnUrl for Payment authenticate session
+     */
+    String onOAuthPaymentAuthorizationFail(@NotEmpty String paymentId, @NotEmpty Map<String, String> paymentExtra);
 }

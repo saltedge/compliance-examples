@@ -57,32 +57,31 @@ public abstract class NotFound extends RuntimeException implements HttpErrorPara
         }
     }
 
-    // TODO: uncomment when payments will be active
-//    public static class PaymentNotFound extends NotFound {
-//        @Override
-//        public String getErrorMessage() {
-//            return "Payment not found.";
-//        }
-//    }
-//
-//    public static class PaymentNotCreated extends NotFound {
-//        @Override
-//        public String getErrorMessage() {
-//            return "Payment not created.";
-//        }
-//    }
-//
-//    public static class PaymentNotConfirmed extends NotFound {
-//        @Override
-//        public String getErrorMessage() {
-//            return "Payment not confirmed.";
-//        }
-//    }
-//
-//    public static class PaymentNotCanceled extends NotFound {
-//        @Override
-//        public String getErrorMessage() {
-//            return "Payment not canceled.";
-//        }
-//    }
+    public static class PaymentNotFound extends NotFound {
+        @Override
+        public String getErrorMessage() {
+            return "Payment not found.";
+        }
+    }
+
+    public static class PaymentNotCreated extends NotFound {
+        @Override
+        public String getErrorMessage() {
+            return "Payment not created.";
+        }
+    }
+
+    public static class PaymentNotConfirmed extends NotFound {
+        @Override
+        public String getErrorMessage() {
+            return "Payment not confirmed.";
+        }
+    }
+
+    public static class PaymentNotCanceled extends NotFound {
+        @Override
+        public String getErrorMessage() {
+            return "Payment not canceled.";
+        }
+    }
 }

@@ -33,8 +33,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 abstract class TokensBaseService extends BaseService {
     private static Logger log = LoggerFactory.getLogger(TokensBaseService.class);
     @Autowired
-    protected SessionsCallbackService callbackService;
-    @Autowired
     protected TokensRepository tokensRepository;
 
     protected void initConfirmedTokenAndSendSessionSuccess(
@@ -65,15 +63,4 @@ abstract class TokensBaseService extends BaseService {
         );
         callbackService.sendSuccessCallback(token.sessionSecret, params);
     }
-
-    // TODO uncomment when embedded type will be active
-//    protected void initConfirmedTokenAndSendSessionSuccess(Token token) {
-//        initConfirmedTokenAndSendSessionSuccess(token, null);
-//    }
-
-    // TODO: uncomment when embedded type will be active
-//    protected void failSessionAndThrow(String sessionSecret, RuntimeException exception) {
-//        callbackService.sendFailCallback(sessionSecret, exception);
-//        throw exception;
-//    }
 }

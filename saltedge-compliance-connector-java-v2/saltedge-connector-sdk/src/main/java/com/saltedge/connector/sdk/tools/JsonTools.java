@@ -23,7 +23,7 @@ package com.saltedge.connector.sdk.tools;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.saltedge.connector.sdk.Constants;
+import com.saltedge.connector.sdk.SDKConstants;
 import io.jsonwebtoken.Jwts;
 
 import java.security.PrivateKey;
@@ -56,7 +56,7 @@ public class JsonTools {
     public static String createAuthorizationHeaderValue(Object requestData, PrivateKey key) {
         if (key == null) return "";
         Instant millis = LocalDateTime.now().plusMinutes(1).atZone(ZoneId.systemDefault()).toInstant();
-        return "Bearer " + Jwts.builder().claim(Constants.KEY_DATA, requestData)
+        return "Bearer " + Jwts.builder().claim(SDKConstants.KEY_DATA, requestData)
                 .signWith(key)
                 .setExpiration(Date.from(millis))
                 .compact();

@@ -21,7 +21,7 @@
 package com.saltedge.connector.sdk.models.persistence;
 
 import com.saltedge.connector.sdk.config.ApplicationProperties;
-import com.saltedge.connector.sdk.Constants;
+import com.saltedge.connector.sdk.SDKConstants;
 import com.saltedge.connector.sdk.provider.models.ProviderOfferedConsents;
 import com.saltedge.connector.sdk.tools.ConsentDataConverter;
 import com.saltedge.connector.sdk.tools.KeyTools;
@@ -41,14 +41,14 @@ import java.util.Date;
  */
 @Entity
 public class Token extends BaseEntity implements Serializable {
-    @Column(name = Constants.KEY_SESSION_SECRET, nullable = false, length = 1024)
+    @Column(name = SDKConstants.KEY_SESSION_SECRET, nullable = false, length = 1024)
     public String sessionSecret;
 
     @Column(name = "provider_offered_consents", length = 4096)
     @Convert(converter = ConsentDataConverter.class)
     public ProviderOfferedConsents providerOfferedConsents;
 
-    @Column(name = Constants.KEY_STATUS, nullable = false)
+    @Column(name = SDKConstants.KEY_STATUS, nullable = false)
     public Status status = Status.UNCONFIRMED;
 
     @Column(name = "access_token")
@@ -57,10 +57,10 @@ public class Token extends BaseEntity implements Serializable {
     @Column(name = "expires_at")
     public Date tokenExpiresAt;
 
-    @Column(name = Constants.KEY_USER_ID)
+    @Column(name = SDKConstants.KEY_USER_ID)
     public String userId;
 
-    @Column(name = Constants.KEY_CONFIRMATION_CODE)
+    @Column(name = SDKConstants.KEY_CONFIRMATION_CODE)
     public String confirmationCode;
 
     @Column(name = "auth_type_code")

@@ -18,27 +18,43 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.saltedge.connector.example.connector.collector;
+package com.saltedge.connector.sdk.api.mapping;
 
-import com.saltedge.connector.example.connector.ConnectorTypeConverters;
-import com.saltedge.connector.example.model.AccountEntity;
-import com.saltedge.connector.example.model.CardAccountEntity;
-import com.saltedge.connector.example.model.UserEntity;
-import com.saltedge.connector.example.model.repository.AccountsRepository;
-import com.saltedge.connector.example.model.repository.CardAccountsRepository;
-import com.saltedge.connector.sdk.provider.models.Account;
-import com.saltedge.connector.sdk.provider.models.CardAccount;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.saltedge.connector.sdk.SDKConstants;
+import com.saltedge.connector.sdk.models.PaymentOrder;
 
-import java.util.List;
+import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
-public class AccountsCollector {
-    public static List<Account> collectAccounts(AccountsRepository repository, UserEntity user) {
-        List<AccountEntity> accounts = repository.findByUserId(user.id);
-        return ConnectorTypeConverters.convertAccountsToAccountData(accounts, user);
+@JsonIgnoreProperties
+public class CreatePaymentRequest extends PrioraBaseRequest {
+    @JsonProperty("app_name")
+    @NotEmpty
+    public String appName;
+
+    @JsonProperty("provider_code")
+    @NotEmpty
+    public String providerCode;
+
+    @JsonProperty(SDKConstants.KEY_REDIRECT_URL)
+    @NotEmpty
+    public String returnToUrl;
+
+    @JsonProperty("payment")
+    @NotNull
+    @Valid
+    public PaymentOrder paymentOrder;
+
+    public CreatePaymentRequest() {
     }
 
-    public static List<CardAccount> collectCardAccounts(CardAccountsRepository repository, UserEntity user) {
-        List<CardAccountEntity> accounts = repository.findByUserId(user.id);
-        return ConnectorTypeConverters.convertCardAccountsToAccountData(accounts, user);
+    public CreatePaymentRequest(@NotEmpty String appName, @NotEmpty String providerCode, @NotEmpty String returnToUrl, @NotNull @Valid PaymentOrder paymentOrder) {
+        this.appName = appName;
+        this.providerCode = providerCode;
+        this.returnToUrl = returnToUrl;
+        this.paymentOrder = paymentOrder;
     }
 }

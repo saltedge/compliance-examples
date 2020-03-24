@@ -21,7 +21,7 @@
 package com.saltedge.connector.example.model;
 
 import com.saltedge.connector.example.model.converter.StringMapConverter;
-import com.saltedge.connector.sdk.Constants;
+import com.saltedge.connector.sdk.SDKConstants;
 import com.saltedge.connector.sdk.models.persistence.BaseEntity;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
@@ -44,7 +44,7 @@ public class AccountEntity extends BaseEntity implements Serializable {
     @Column(name = "currency_code", nullable = false)
     public String currencyCode;
 
-    @Column(name = Constants.KEY_IBAN, nullable = false, unique = true)
+    @Column(name = SDKConstants.KEY_IBAN, nullable = false, unique = true)
     public String iban;
 
     @Column(name = "number", nullable = false, unique = true)

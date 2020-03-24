@@ -18,7 +18,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.saltedge.connector.example.connector;
+package com.saltedge.connector.example.compliance_connector;
 
 import com.saltedge.connector.example.model.*;
 import com.saltedge.connector.sdk.provider.models.*;
@@ -106,6 +106,8 @@ public class ConnectorTypeConverters {
         result.setExtra(new TransactionExtra());
         result.getExtra().ultimateCreditor = result.getCreditorDetails().account.name;
         result.getExtra().ultimateDebtor = result.getDebtorDetails().account.name;
+
+        result.setRemittanceInformation(new TransactionRemittanceInformation());
         return result;
     }
 

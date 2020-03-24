@@ -21,6 +21,7 @@
 package com.saltedge.connector.sdk.provider;
 
 import com.saltedge.connector.sdk.provider.models.*;
+import org.jetbrains.annotations.NotNull;
 
 import javax.validation.constraints.NotEmpty;
 import java.util.Date;
@@ -31,7 +32,7 @@ import java.util.Map;
  * Interface for communication between Compliance Connector and Service Provider application.
  * Service Provider application should implement `@Service` which `implements ProviderApi`
  */
-public interface ProviderApi {
+public interface ProviderServiceAbs {
     /**
      * Provides Authorization Types registered in `Dashboard/Settings/Authorization types` for Customer.
      * (https://priora.saltedge.com/providers/settings#authorization_types)
@@ -55,29 +56,10 @@ public interface ProviderApi {
     /**
      * Provides url of provider's authorization page designated for oAuth authorization
      *
+     * @param sessionSecret consent session secret
      * @return URL string of Authorization page
      */
-    String getAuthorizationPageUrl();
-
-    /**
-     * Generates confirmation code for authorization interactive step
-     * and send it to customer via designated communication channel (e.g. sms)
-     *
-     * @param userId User identifier on Provider side
-     * @param authType registered AuthorizationType
-     * @return confirmation code string
-     */
-    String createAndSendAuthorizationConfirmationCode(@NotEmpty String userId, AuthorizationType authType);
-
-    /**
-     * Authenticates user by provided credentials.
-     * Credentials values should be extracted from `credentials` map by schema from AuthorizationType by `authTypeCode`
-     *
-     * @param authTypeCode code of registered Authorization Type (e.g. `oauth`)
-     * @param credentials map of required first step credentials.
-     * @return User identifier on Provider side
-     */
-    String authorizeUser(String authTypeCode, Map<String, String> credentials);
+    String getAccountInformationAuthorizationPageUrl(@NotEmpty String sessionSecret);
 
     /**
      * Provides accounts information of user
@@ -134,4 +116,34 @@ public interface ProviderApi {
             Date fromDate,
             Date toDate
     );
+
+    /**
+     * Create a payment order
+     *
+     * @param creditorIban of payment order
+     * @param creditorName of payment order
+     * @param debtorIban of payment order
+     * @param amount of payment order
+     * @param currency of payment order
+     * @param description of payment order
+     * @param extraData hash object
+     * @return unique payment id
+     */
+    String createPayment(
+            @NotEmpty String creditorIban,
+            @NotEmpty String creditorName,
+            @NotEmpty String debtorIban,
+            @NotEmpty String amount,
+            @NotEmpty String currency,
+            String description,
+            @NotNull Map<String, String> extraData
+    );
+
+    /**
+     * Provides url of provider's authorization page designated for oAuth authorization and payment confirmation
+     *
+     * @param paymentId unique of payment order
+     * @return URL string of Authorization page
+     */
+    String getPaymentAuthorizationPageUrl(@NotEmpty String paymentId);
 }

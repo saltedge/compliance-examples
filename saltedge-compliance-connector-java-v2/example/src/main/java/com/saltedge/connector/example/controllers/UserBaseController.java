@@ -18,33 +18,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.saltedge.connector.example.connector;
+package com.saltedge.connector.example.controllers;
 
-import com.saltedge.connector.example.model.AccountEntity;
-import com.saltedge.connector.example.model.PaymentEntity;
-import com.saltedge.connector.example.model.TransactionEntity;
+import com.saltedge.connector.example.compliance_connector.ProviderService;
 import com.saltedge.connector.example.model.repository.AccountsRepository;
+import com.saltedge.connector.example.model.repository.PaymentsRepository;
 import com.saltedge.connector.example.model.repository.TransactionsRepository;
+import com.saltedge.connector.example.model.repository.UsersRepository;
+import com.saltedge.connector.sdk.provider.ConnectorCallbackAbs;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestParam;
 
-public class ConnectorServiceTools {
-    /**
-     * update balances & create transactions
-     */
-    public static void createTransaction(AccountsRepository accountsRepository,
-                                         TransactionsRepository transactionsRepository,
-                                         PaymentEntity payment) {
-        AccountEntity account = accountsRepository.findById(payment.accountId).orElse(null);
-        if (account == null) return;
+abstract public class UserBaseController {
+    @Autowired
+    protected ProviderService providerService;
+    @Autowired
+    protected ConnectorCallbackAbs connectorCallbackService;
+    @Autowired
+    protected ConnectorCallbackAbs providerCallback;
+    @Autowired
+    protected UsersRepository usersRepository;
+    @Autowired
+    protected PaymentsRepository paymentsRepository;
+    @Autowired
+    protected AccountsRepository accountsRepository;
+    @Autowired
+    protected TransactionsRepository transactionsRepository;
 
-        TransactionEntity transaction = new TransactionEntity();
-        transaction.amount = String.format("%.2f", -payment.total);
-        transaction.currencyCode = account.currencyCode;
-        transaction.description = payment.description;
-        transaction.madeOn = payment.getCreatedAt();
-        transaction.status = "posted";
-        transaction.fees = payment.fees;
-        transaction.extra = payment.extra;
-        transaction.account = account;
-        transactionsRepository.save(transaction);
+    protected Long findUser(@RequestParam String username, @RequestParam String password) {
+        if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) return null;
+        return usersRepository.findFirstByUsernameAndPassword(username, password).map(user -> user.id).orElse(null);
     }
 }

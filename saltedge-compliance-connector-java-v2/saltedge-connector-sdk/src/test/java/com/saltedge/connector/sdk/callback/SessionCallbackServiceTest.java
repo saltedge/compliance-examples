@@ -25,7 +25,7 @@ import com.saltedge.connector.sdk.callback.mapping.BaseCallbackRequest;
 import com.saltedge.connector.sdk.callback.mapping.BaseFailRequest;
 import com.saltedge.connector.sdk.callback.services.SessionsCallbackService;
 import com.saltedge.connector.sdk.config.ApplicationProperties;
-import com.saltedge.connector.sdk.Constants;
+import com.saltedge.connector.sdk.SDKConstants;
 import org.assertj.core.util.Lists;
 import org.junit.Before;
 import org.junit.Test;
@@ -78,7 +78,7 @@ public class SessionCallbackServiceTest {
         assertThat(entityCaptor.getValue().getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON);
         assertThat(entityCaptor.getValue().getHeaders().get("App-id")).isEqualTo(Lists.list("QWERTY"));
         assertThat(entityCaptor.getValue().getHeaders().get("App-secret")).isEqualTo(Lists.list("ASDFG"));
-        assertThat(entityCaptor.getValue().getHeaders().get(Constants.HEADER_AUTHORIZATION).get(0)).startsWith("Bearer ");
+        assertThat(entityCaptor.getValue().getHeaders().get(SDKConstants.HEADER_AUTHORIZATION).get(0)).startsWith("Bearer ");
     }
 
     @Test
@@ -94,7 +94,7 @@ public class SessionCallbackServiceTest {
         assertThat(urlCaptor.getValue()).isEqualTo("http://localhost/api/connectors/v2/sessions/sessionSecret/success");
         assertThat(entityCaptor.getValue().getHeaders().get("App-id")).isEqualTo(Lists.list("QWERTY"));
         assertThat(entityCaptor.getValue().getHeaders().get("App-secret")).isEqualTo(Lists.list("ASDFG"));
-        assertThat(entityCaptor.getValue().getHeaders().get(Constants.HEADER_AUTHORIZATION).get(0)).startsWith("Bearer ");
+        assertThat(entityCaptor.getValue().getHeaders().get(SDKConstants.HEADER_AUTHORIZATION).get(0)).startsWith("Bearer ");
     }
 
     @Test
@@ -110,7 +110,7 @@ public class SessionCallbackServiceTest {
         assertThat(urlCaptor.getValue()).isEqualTo("http://localhost/api/connectors/v2/sessions/sessionSecret/fail");
         assertThat(entityCaptor.getValue().getHeaders().get("App-id")).isEqualTo(Lists.list("QWERTY"));
         assertThat(entityCaptor.getValue().getHeaders().get("App-secret")).isEqualTo(Lists.list("ASDFG"));
-        assertThat(entityCaptor.getValue().getHeaders().get(Constants.HEADER_AUTHORIZATION).get(0)).startsWith("Bearer ");
+        assertThat(entityCaptor.getValue().getHeaders().get(SDKConstants.HEADER_AUTHORIZATION).get(0)).startsWith("Bearer ");
     }
 
     @Test
@@ -126,6 +126,6 @@ public class SessionCallbackServiceTest {
         assertThat(urlCaptor.getValue()).isEqualTo("http://localhost/api/connectors/v2/sessions/sessionSecret/fail");
         assertThat(entityCaptor.getValue().getHeaders().get("App-id")).isEqualTo(Lists.list("QWERTY"));
         assertThat(entityCaptor.getValue().getHeaders().get("App-secret")).isEqualTo(Lists.list("ASDFG"));
-        assertThat(entityCaptor.getValue().getHeaders().get(Constants.HEADER_AUTHORIZATION).get(0)).startsWith("Bearer ");
+        assertThat(entityCaptor.getValue().getHeaders().get(SDKConstants.HEADER_AUTHORIZATION).get(0)).startsWith("Bearer ");
     }
 }

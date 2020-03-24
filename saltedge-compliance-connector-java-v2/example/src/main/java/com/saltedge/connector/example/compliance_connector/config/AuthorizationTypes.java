@@ -18,9 +18,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.saltedge.connector.example.connector.config;
+package com.saltedge.connector.example.compliance_connector.config;
 
-import com.saltedge.connector.example.connector.ConnectorTypeConverters;
+import com.saltedge.connector.example.compliance_connector.ConnectorTypeConverters;
 import com.saltedge.connector.sdk.provider.models.AuthMode;
 import com.saltedge.connector.sdk.provider.models.AuthorizationType;
 

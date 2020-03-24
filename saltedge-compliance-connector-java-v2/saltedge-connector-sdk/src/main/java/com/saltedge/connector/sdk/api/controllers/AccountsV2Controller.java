@@ -24,7 +24,7 @@ import com.saltedge.connector.sdk.api.mapping.AccountsResponse;
 import com.saltedge.connector.sdk.api.mapping.DefaultRequest;
 import com.saltedge.connector.sdk.api.mapping.TransactionsRequest;
 import com.saltedge.connector.sdk.api.mapping.TransactionsResponse;
-import com.saltedge.connector.sdk.Constants;
+import com.saltedge.connector.sdk.SDKConstants;
 import com.saltedge.connector.sdk.models.persistence.Token;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +47,7 @@ import javax.validation.constraints.NotNull;
 @RequestMapping(AccountsV2Controller.BASE_PATH)
 @Validated
 public class AccountsV2Controller extends BaseV2Controller {
-    public final static String BASE_PATH = Constants.API_BASE_PATH + "/accounts";
+    public final static String BASE_PATH = SDKConstants.API_BASE_PATH + "/accounts";
     private static Logger log = LoggerFactory.getLogger(AccountsV2Controller.class);
 
     /**

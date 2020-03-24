@@ -21,16 +21,16 @@
 package com.saltedge.connector.example.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.saltedge.connector.sdk.Constants;
+import com.saltedge.connector.sdk.SDKConstants;
 
 public class Fee {
-    @JsonProperty(Constants.KEY_DESCRIPTION)
+    @JsonProperty(SDKConstants.KEY_DESCRIPTION)
     public String description;
 
-    @JsonProperty(Constants.KEY_AMOUNT)
+    @JsonProperty(SDKConstants.KEY_AMOUNT)
     public Double amount;
 
-    @JsonProperty(Constants.KEY_CURRENCY_CODE)
+    @JsonProperty(SDKConstants.KEY_CURRENCY_CODE)
     public String currencyCode;
 
     public Fee() {
