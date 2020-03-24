@@ -1,11 +1,11 @@
 # Salt Edge Compliance Connector Java Example & SDK (v2)
 
 This codebase was created to demonstrate a full-stack application built on Spring Boot, 
-designated to support communication between ASPSP and Priora PSD2 Compliance Solution. 
+designated to support communication between ASPSP and TPP. 
 Current application implements Priora Connector v2 API compatible with **Berlin Group NextGenPSD2 XS2A API**.  
 Consists of modules:
-* **Example Application** - demonstrates a simple
-* **Connector SDK v.2.1.0**
+* **Example Application** - simulate work of Bank App
+* **Connector SDK v.2.1.0** - wrapper of tools for simplification of communication between and Priora PSD2 Compliance Solution  
   
 ## Application Requirements
   
