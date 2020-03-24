@@ -127,7 +127,7 @@ public interface ProviderServiceAbs {
      * @param currency of payment order
      * @param description of payment order
      * @param extraData hash object
-     * @return unique payment id
+     * @return unique payment id or null if payment not created
      */
     String createPayment(
             @NotEmpty String creditorIban,
