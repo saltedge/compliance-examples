@@ -5,6 +5,6 @@ build/
 # Dev config
 application.properties
 application.yml
-connector_public_dev.pem
-connector_private_dev.pem
+connector_public_*.pem
+connector_private_*.pem
 priora_public_dev.pem

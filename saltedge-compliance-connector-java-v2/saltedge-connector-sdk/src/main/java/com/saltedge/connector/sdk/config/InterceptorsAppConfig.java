@@ -20,13 +20,11 @@
  */
 package com.saltedge.connector.sdk.config;
 
-import com.saltedge.connector.sdk.api.interceptors.ClientHeaderValidationInterceptor;
 import com.saltedge.connector.sdk.api.interceptors.PrioraRequestResolver;
 import com.saltedge.connector.sdk.api.interceptors.TokenResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
@@ -37,16 +35,9 @@ import java.util.List;
 @Configuration
 public class InterceptorsAppConfig implements WebMvcConfigurer {
     @Autowired
-    ClientHeaderValidationInterceptor clientValidationInterceptor;
-    @Autowired
     PrioraRequestResolver prioraRequestResolver;
     @Autowired
     TokenResolver tokenResolver;
-
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(clientValidationInterceptor).addPathPatterns(ClientHeaderValidationInterceptor.PATH_PATTERN);
-    }
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {

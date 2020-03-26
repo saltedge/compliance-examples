@@ -25,7 +25,7 @@ import com.saltedge.connector.sdk.api.mapping.AccountsResponse;
 import com.saltedge.connector.sdk.api.mapping.DefaultRequest;
 import com.saltedge.connector.sdk.api.mapping.ErrorResponse;
 import com.saltedge.connector.sdk.api.mapping.TransactionsRequest;
-import com.saltedge.connector.sdk.Constants;
+import com.saltedge.connector.sdk.SDKConstants;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -63,7 +63,7 @@ public class AccountsV2ControllerIntegrationTests extends ControllerIntegrationT
                 TestTools.getInstance().getRsaPrivateKey()
         );
         LinkedMultiValueMap<String, String> headers = createHeaders();
-        headers.add(Constants.HEADER_AUTHORIZATION, auth);
+        headers.add(SDKConstants.HEADER_AUTHORIZATION, auth);
 
         // when
         ResponseEntity<AccountsResponse> response = doAccountsListRequest(headers);
@@ -81,7 +81,7 @@ public class AccountsV2ControllerIntegrationTests extends ControllerIntegrationT
                 LocalDateTime.now().minusMinutes(1)
         );
         LinkedMultiValueMap<String, String> headers = createHeaders();
-        headers.add(Constants.HEADER_AUTHORIZATION, auth);
+        headers.add(SDKConstants.HEADER_AUTHORIZATION, auth);
 
         // when
         ResponseEntity<ErrorResponse> response = doAccountsListRequestForError(headers);
@@ -96,7 +96,7 @@ public class AccountsV2ControllerIntegrationTests extends ControllerIntegrationT
     public void givenHeaderWithInvalidAuthorizationsHeader_whenMakeRequest_thenReturnJWTDecodeError() {
         // given
         LinkedMultiValueMap<String, String> headers = createHeaders();
-        headers.add(Constants.HEADER_AUTHORIZATION, "Bearer ABCDEFGH1234567890");
+        headers.add(SDKConstants.HEADER_AUTHORIZATION, "Bearer ABCDEFGH1234567890");
 
         // when
         ResponseEntity<ErrorResponse> response = doAccountsListRequestForError(headers);
@@ -117,7 +117,7 @@ public class AccountsV2ControllerIntegrationTests extends ControllerIntegrationT
                 new TransactionsRequest("account1", new Date(), new Date(), "sessionSecret"),
                 TestTools.getInstance().getRsaPrivateKey()
         );
-        headers.add(Constants.HEADER_AUTHORIZATION, auth);
+        headers.add(SDKConstants.HEADER_AUTHORIZATION, auth);
 
         // when
         ResponseEntity<ErrorResponse> response = doTransactionsListRequestForError(headers);
@@ -131,7 +131,7 @@ public class AccountsV2ControllerIntegrationTests extends ControllerIntegrationT
         // given
         LinkedMultiValueMap<String, String> headers = createHeaders();
         String auth = TestTools.createAuthorizationHeaderValue(new TransactionsRequest(), TestTools.getInstance().getRsaPrivateKey());
-        headers.add(Constants.HEADER_AUTHORIZATION, auth);
+        headers.add(SDKConstants.HEADER_AUTHORIZATION, auth);
 
         // when
         ResponseEntity<ErrorResponse> response = doTransactionsListRequestForError(headers);

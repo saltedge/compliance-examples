@@ -22,14 +22,14 @@ package com.saltedge.connector.sdk.api.mapping;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.saltedge.connector.sdk.Constants;
+import com.saltedge.connector.sdk.SDKConstants;
 import com.saltedge.connector.sdk.provider.models.CardTransaction;
 
 import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CardTransactionsResponse {
-    @JsonProperty(Constants.KEY_DATA)
+    @JsonProperty(SDKConstants.KEY_DATA)
     public List<CardTransaction> data;
 
     public CardTransactionsResponse() {

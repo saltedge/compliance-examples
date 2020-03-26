@@ -85,11 +85,24 @@ public abstract class BadRequest extends RuntimeException implements HttpErrorPa
         }
     }
 
-    // TODO: uncomment when embedded type will be ready
-//    public static class InvalidConfirmationCode extends BadRequest {
-//        @Override
-//        public String getErrorMessage() {
-//            return "Invalid confirmation code.";
-//        }
-//    }
+    public static class InvalidAttributeValue extends BadRequest {
+        private String valueName = "";
+
+        public InvalidAttributeValue(String valueName) {
+            this.valueName = valueName;
+        }
+
+        @Override
+        public String getErrorMessage() {
+            String errorMessage = "Invalid Attribute Value";
+            return errorMessage + ": " + valueName;
+        }
+    }
+
+    public static class InvalidConfirmationCode extends BadRequest {
+        @Override
+        public String getErrorMessage() {
+            return "Invalid confirmation code.";
+        }
+    }
 }

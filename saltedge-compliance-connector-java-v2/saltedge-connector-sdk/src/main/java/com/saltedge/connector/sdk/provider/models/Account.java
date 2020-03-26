@@ -22,7 +22,7 @@ package com.saltedge.connector.sdk.provider.models;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.saltedge.connector.sdk.Constants;
+import com.saltedge.connector.sdk.SDKConstants;
 
 import javax.validation.constraints.NotBlank;
 import java.util.List;
@@ -37,14 +37,14 @@ public class Account {
      * Account identifier on Provider
      */
     @NotBlank
-    @JsonProperty(Constants.KEY_ID)
+    @JsonProperty(SDKConstants.KEY_ID)
     private String id;
 
     /**
      * Human readable account name
      */
     @NotBlank
-    @JsonProperty(Constants.KEY_NAME)
+    @JsonProperty(SDKConstants.KEY_NAME)
     private String name;
 
     @NotBlank
@@ -63,7 +63,7 @@ public class Account {
      * Currency code of account (ISO 4217).
      */
     @NotBlank
-    @JsonProperty(Constants.KEY_CURRENCY)
+    @JsonProperty(SDKConstants.KEY_CURRENCY)
     private String currencyCode;
 
     /**
@@ -81,7 +81,7 @@ public class Account {
     /**
      * International Bank Account Number
      */
-    @JsonProperty(Constants.KEY_IBAN)
+    @JsonProperty(SDKConstants.KEY_IBAN)
     private String iban;
 
     /**
@@ -105,7 +105,7 @@ public class Account {
     /**
      * Any additional information deemed relevant to a account
      */
-    @JsonProperty(Constants.KEY_EXTRA)
+    @JsonProperty(SDKConstants.KEY_EXTRA)
     private Map<String, String> extra;
 
     public Account() {

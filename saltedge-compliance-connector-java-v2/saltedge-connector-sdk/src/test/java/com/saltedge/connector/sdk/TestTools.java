@@ -20,7 +20,7 @@
  */
 package com.saltedge.connector.sdk;
 
-import com.saltedge.connector.sdk.provider.ProviderApi;
+import com.saltedge.connector.sdk.provider.ProviderServiceAbs;
 import com.saltedge.connector.sdk.tools.KeyTools;
 import io.jsonwebtoken.Jwts;
 
@@ -60,10 +60,10 @@ public class TestTools {
         return instance;
     }
 
-    public static void initProviderApiMocks(ProviderApi providerApi) {
-        given(providerApi.getAuthorizationTypeByCode("login_password_sms")).willReturn(AuthorizationTypes.LOGIN_PASSWORD_SMS_AUTH_TYPE);
-        given(providerApi.getAuthorizationTypeByCode("login_password")).willReturn(AuthorizationTypes.LOGIN_PASSWORD_AUTH_TYPE);
-        given(providerApi.getAuthorizationTypeByCode("oauth")).willReturn(AuthorizationTypes.OAUTH_AUTH_TYPE);
+    public static void initProviderApiMocks(ProviderServiceAbs providerService) {
+        given(providerService.getAuthorizationTypeByCode("login_password_sms")).willReturn(AuthorizationTypes.LOGIN_PASSWORD_SMS_AUTH_TYPE);
+        given(providerService.getAuthorizationTypeByCode("login_password")).willReturn(AuthorizationTypes.LOGIN_PASSWORD_AUTH_TYPE);
+        given(providerService.getAuthorizationTypeByCode("oauth")).willReturn(AuthorizationTypes.OAUTH_AUTH_TYPE);
 //        given(providerApi.getPaymentTemplateByCode("1", PaymentTemplates.TYPE_INTERNAL_TRANSFER)).willReturn(PaymentTemplates.INTERNAL_TRANSFER);
 //        given(providerApi.getPaymentTemplateByCode("1", PaymentTemplates.TYPE_SWIFT)).willReturn(PaymentTemplates.SWIFT);
 //        given(providerApi.getPaymentTemplateByCode("1", PaymentTemplates.TYPE_SEPA)).willReturn(PaymentTemplates.SEPA);
@@ -99,7 +99,7 @@ public class TestTools {
     }
 
     public static String createAuthorizationHeaderValue(Object requestData, PrivateKey key, LocalDateTime expirationTime) {
-        return "Bearer " + Jwts.builder().claim(Constants.KEY_DATA, requestData)
+        return "Bearer " + Jwts.builder().claim(SDKConstants.KEY_DATA, requestData)
                 .signWith(key)
                 .setExpiration(Date.from(expirationTime.atZone(ZoneId.systemDefault()).toInstant()))
                 .compact();

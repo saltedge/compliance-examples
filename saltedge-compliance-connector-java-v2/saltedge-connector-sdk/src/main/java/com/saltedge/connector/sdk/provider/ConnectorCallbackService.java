@@ -20,28 +20,36 @@
  */
 package com.saltedge.connector.sdk.provider;
 
+import com.saltedge.connector.sdk.SDKConstants;
+import com.saltedge.connector.sdk.api.err.NotFound;
 import com.saltedge.connector.sdk.api.services.tokens.ConfirmTokenService;
 import com.saltedge.connector.sdk.api.services.tokens.RevokeTokenService;
+import com.saltedge.connector.sdk.callback.mapping.SessionSuccessCallbackRequest;
+import com.saltedge.connector.sdk.callback.services.SessionsCallbackService;
 import com.saltedge.connector.sdk.models.persistence.Token;
 import com.saltedge.connector.sdk.provider.models.ProviderOfferedConsents;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.Map;
 
 /**
  * Implementation of ProviderCallback interface
- * @see ConnectorCallback
+ * @see ConnectorCallbackAbs
  */
 @Service
 @Validated
-public class ConnectorCallbackService implements ConnectorCallback {
+public class ConnectorCallbackService implements ConnectorCallbackAbs {
     @Autowired
-    ConfirmTokenService confirmTokenService;
+    private ConfirmTokenService confirmTokenService;
     @Autowired
-    RevokeTokenService revokeTokenService;
+    private RevokeTokenService revokeTokenService;
+    @Autowired
+    private SessionsCallbackService callbackService;
 
     /**
      * Provider notify Connector Module about oAuth success authentication and user consent for accounts
@@ -49,10 +57,10 @@ public class ConnectorCallbackService implements ConnectorCallback {
      * @param sessionSecret of Token Create session
      * @param userId of authenticated User
      * @param consents list of balances of accounts and transactions of accounts
-     * @return returnUrl from token
+     * @return returnUrl from token. Authorization page should redirect the browser to it.
      */
     @Override
-    public String onOAuthAuthorizationSuccess(
+    public String onOAuthAccountsAuthorizationSuccess(
             @NotEmpty String sessionSecret,
             @NotEmpty String userId,
             @NotNull ProviderOfferedConsents consents
@@ -68,8 +76,29 @@ public class ConnectorCallbackService implements ConnectorCallback {
      * @return returnUrl from token
      */
     @Override
-    public String onOAuthAuthorizationError(@NotEmpty String sessionSecret) {
+    public String onOAuthAccountsAuthorizationError(@NotEmpty String sessionSecret) {
         Token token = revokeTokenService.revokeTokenBySessionSecret(sessionSecret);
         return (token == null) ? null : token.tppRedirectUrl;
+    }
+
+    @Override
+    public String onOAuthPaymentAuthorizationSuccess(
+            @NotEmpty String paymentId,
+            @NotEmpty String userId,
+            @NotEmpty Map<String, String> paymentExtra
+    ) {
+        String sessionSecret = paymentExtra.get(SDKConstants.KEY_SESSION_SECRET);
+        SessionSuccessCallbackRequest params = new SessionSuccessCallbackRequest(userId, "ACTC");
+        if (!StringUtils.isEmpty(sessionSecret)) callbackService.sendSuccessCallback(sessionSecret, params);
+        String returnToUrl = paymentExtra.get(SDKConstants.KEY_RETURN_TO_URL);
+        return returnToUrl == null ? "" : returnToUrl;
+    }
+
+    @Override
+    public String onOAuthPaymentAuthorizationFail(@NotEmpty String paymentId, @NotEmpty Map<String, String> paymentExtra) {
+        String sessionSecret = paymentExtra.get(SDKConstants.KEY_SESSION_SECRET);
+        if (!StringUtils.isEmpty(sessionSecret)) callbackService.sendFailCallback(sessionSecret, new NotFound.PaymentNotCreated());
+        String returnToUrl = paymentExtra.get(SDKConstants.KEY_RETURN_TO_URL);
+        return returnToUrl == null ? "" : returnToUrl;
     }
 }

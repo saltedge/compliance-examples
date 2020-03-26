@@ -20,12 +20,12 @@
  */
 package com.saltedge.connector.sdk.api.services.tokens;
 
+import com.saltedge.connector.sdk.SDKConstants;
 import com.saltedge.connector.sdk.api.err.BadRequest;
 import com.saltedge.connector.sdk.api.err.HttpErrorParams;
 import com.saltedge.connector.sdk.api.err.NotFound;
 import com.saltedge.connector.sdk.api.mapping.CreateTokenRequest;
 import com.saltedge.connector.sdk.callback.mapping.SessionUpdateCallbackRequest;
-import com.saltedge.connector.sdk.Constants;
 import com.saltedge.connector.sdk.models.persistence.Token;
 import com.saltedge.connector.sdk.provider.models.AuthMode;
 import com.saltedge.connector.sdk.provider.models.AuthorizationType;
@@ -68,9 +68,10 @@ public class CreateTokenService extends TokensBaseService {
 
     private void oAuthAuthorize(Token token) {
         tokensRepository.save(token);
-        SessionUpdateCallbackRequest params = new SessionUpdateCallbackRequest();
-        params.status = Constants.STATUS_REDIRECT;
-        params.redirectUrl = createRedirectUrl(token.sessionSecret);
+        SessionUpdateCallbackRequest params = new SessionUpdateCallbackRequest(
+                providerService.getAccountInformationAuthorizationPageUrl(token.sessionSecret),
+                SDKConstants.STATUS_REDIRECT
+        );
         callbackService.sendUpdateCallback(token.sessionSecret, params);
     }
 
@@ -85,9 +86,5 @@ public class CreateTokenService extends TokensBaseService {
                 authType.code,
                 request.redirectUrl
         );
-    }
-
-    private String createRedirectUrl(String sessionSecret) {
-        return UrlTools.appendParam(providerApi.getAuthorizationPageUrl(), Constants.KEY_SESSION_SECRET, sessionSecret);
     }
 }

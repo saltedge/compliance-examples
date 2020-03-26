@@ -23,19 +23,27 @@ package com.saltedge.connector.sdk.callback.mapping;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.saltedge.connector.sdk.Constants;
+import com.saltedge.connector.sdk.SDKConstants;
 
 import java.util.Date;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SessionUpdateCallbackRequest extends BaseCallbackRequest {
-    @JsonProperty(Constants.KEY_REDIRECT_URL)
+    @JsonProperty(SDKConstants.KEY_REDIRECT_URL)
     public String redirectUrl;
 
-    @JsonProperty(Constants.KEY_STATUS)
+    @JsonProperty(SDKConstants.KEY_STATUS)
     public String status;
 
     @JsonProperty("session_expires_at")
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     public Date sessionExpiresAt;
+
+    public SessionUpdateCallbackRequest() {
+    }
+
+    public SessionUpdateCallbackRequest(String redirectUrl, String status) {
+        this.redirectUrl = redirectUrl;
+        this.status = status;
+    }
 }

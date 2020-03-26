@@ -20,7 +20,7 @@
  */
 package com.saltedge.connector.sdk;
 
-import com.saltedge.connector.sdk.provider.ProviderApi;
+import com.saltedge.connector.sdk.provider.ProviderServiceAbs;
 import com.saltedge.connector.sdk.provider.models.*;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
@@ -31,9 +31,9 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class TestProviderService implements ProviderApi {
+public class TestProviderService implements ProviderServiceAbs {
     @Override
-    public String getAuthorizationPageUrl() {
+    public String getAccountInformationAuthorizationPageUrl(String sessionSecret) {
         return null;
     }
 
@@ -44,16 +44,6 @@ public class TestProviderService implements ProviderApi {
 
     @Override
     public AuthorizationType getAuthorizationTypeByCode(String code) {
-        return null;
-    }
-
-    @Override
-    public String createAndSendAuthorizationConfirmationCode(@NotNull String userId, AuthorizationType authType) {
-        return null;
-    }
-
-    @Override
-    public String authorizeUser(String authTypeCode, Map<String, String> credentials) {
         return null;
     }
 
@@ -74,6 +64,16 @@ public class TestProviderService implements ProviderApi {
 
     @Override
     public List<CardTransaction> getTransactionsOfCardAccount(@NotEmpty String userId, @NotEmpty String accountId, Date fromDate, Date toDate) {
+        return null;
+    }
+
+    @Override
+    public String createPayment(@NotEmpty String creditorIban, @NotEmpty String creditorName, @NotEmpty String debtorIban, @NotEmpty String amount, @NotEmpty String currency, String description, @NotNull Map<String, String> extraData) {
+        return null;
+    }
+
+    @Override
+    public String getPaymentAuthorizationPageUrl(@NotEmpty String paymentId) {
         return null;
     }
 }

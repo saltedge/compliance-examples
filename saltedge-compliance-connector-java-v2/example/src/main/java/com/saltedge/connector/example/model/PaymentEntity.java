@@ -46,6 +46,9 @@ public class PaymentEntity extends BaseEntity implements Serializable {
     @Column(name = "total", nullable = false)
     public double total;
 
+    @Column(name = "currency")
+    public String currency;
+
     @Column(name = "account_id", nullable = false)
     public Long accountId;
 
@@ -53,7 +56,7 @@ public class PaymentEntity extends BaseEntity implements Serializable {
     @Convert(converter = FeesConverter.class)
     public List<Fee> fees;
 
-    @Column(name = "payment_attributes", nullable = false)
+    @Column(name = "payment_attributes", nullable = false)//TODO investigate usage
     @Convert(converter = ObjectMapConverter.class)
     public Map<String, String> paymentAttributes;
 
@@ -61,11 +64,17 @@ public class PaymentEntity extends BaseEntity implements Serializable {
     @Convert(converter = StringMapConverter.class)
     public Map<String, String> extra;
 
-    @Column(name = "payment_template_code")
-    public String paymentTemplateCode;
-
     @Column(name = "confirmation_code")
     public String confirmationCode;
+
+    @Column(name = "from_iban")
+    public String fromIban;
+
+    @Column(name = "to_iban")
+    public String toIban;
+
+    @Column(name = "to_account_name")
+    public String toAccountName;
 
     @ManyToOne
     @JoinColumn
@@ -74,29 +83,29 @@ public class PaymentEntity extends BaseEntity implements Serializable {
     public PaymentEntity() {
     }
 
-    public PaymentEntity(String paymentTemplateCode,
-                         String description,
-                         Status status,
-                         double amount,
-                         List<Fee> fees,
-                         double total,
-                         Long fromAccountId,
-                         Map<String, String> paymentAttributes,
-                         Map<String, String> extra,
-                         UserEntity user) {
-        this.paymentTemplateCode = paymentTemplateCode;
-        this.description = description;
+    public PaymentEntity(
+            Long fromAccountId,
+            String debtorIban,
+            String creditorIban,
+            String creditorName,
+            Status status,
+            double amount,
+            String currency,
+            String description,
+            Map<String, String> extraData
+    ) {
+        this.accountId = fromAccountId;
+        this.fromIban = debtorIban;
+        this.toIban = creditorIban;
+        this.toAccountName = creditorName;
         this.status = status;
         this.amount = amount;
-        this.fees = fees;
-        this.total = total;
-        this.accountId = fromAccountId;
-        this.paymentAttributes = paymentAttributes;
-        this.extra = extra;
-        this.user = user;
+        this.currency = currency;
+        this.description = description;
+        this.extra = extraData;
     }
 
-    public static enum Status {
+    public enum Status {
         PENDING, CONFIRMED, FAILED, CLOSED
     }
 

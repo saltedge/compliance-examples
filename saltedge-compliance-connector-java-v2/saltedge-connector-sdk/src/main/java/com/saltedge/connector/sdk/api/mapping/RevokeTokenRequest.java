@@ -22,7 +22,7 @@ package com.saltedge.connector.sdk.api.mapping;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.saltedge.connector.sdk.Constants;
+import com.saltedge.connector.sdk.SDKConstants;
 
 import javax.validation.constraints.NotBlank;
 
@@ -32,6 +32,6 @@ public class RevokeTokenRequest extends PrioraBaseRequest {
      * Human readable Provider identifier.
      */
     @NotBlank
-    @JsonProperty(Constants.KEY_PROVIDER_CODE)
+    @JsonProperty(SDKConstants.KEY_PROVIDER_CODE)
     public String providerCode;
 }

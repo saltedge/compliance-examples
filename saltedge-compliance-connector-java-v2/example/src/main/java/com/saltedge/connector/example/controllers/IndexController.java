@@ -20,8 +20,8 @@
  */
 package com.saltedge.connector.example.controllers;
 
-import com.saltedge.connector.example.connector.ConnectorService;
-import com.saltedge.connector.sdk.provider.ConnectorCallback;
+import com.saltedge.connector.example.compliance_connector.ProviderService;
+import com.saltedge.connector.sdk.provider.ConnectorCallbackAbs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,12 +36,12 @@ public class IndexController {
     public final static String BASE_PATH = "/";
     private static Logger log = LoggerFactory.getLogger(IndexController.class);
     @Autowired
-    ConnectorService connectorService;
+    private ProviderService providerService;
     @Autowired
-    ConnectorCallback providerCallback;
+    private ConnectorCallbackAbs providerCallback;
 
     @GetMapping
     public ModelAndView index() {
-        return new ModelAndView("redirect:" + UserAuthorizeController.BASE_PATH);
+        return new ModelAndView("redirect:" + UserAuthorizeController.ACCOUNTS_BASE_PATH);
     }
 }

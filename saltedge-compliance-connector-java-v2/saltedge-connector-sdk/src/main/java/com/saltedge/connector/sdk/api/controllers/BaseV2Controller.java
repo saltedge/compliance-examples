@@ -21,7 +21,7 @@
 package com.saltedge.connector.sdk.api.controllers;
 
 import com.saltedge.connector.sdk.api.mapping.EmptyJsonModel;
-import com.saltedge.connector.sdk.provider.ProviderApi;
+import com.saltedge.connector.sdk.provider.ProviderServiceAbs;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +33,7 @@ import org.springframework.http.ResponseEntity;
  */
 abstract class BaseV2Controller {
     @Autowired
-    ProviderApi providerService;
+    ProviderServiceAbs providerService;
 
     @NotNull
     @Contract(" -> new")

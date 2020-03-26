@@ -46,6 +46,7 @@ public class ApiExceptionsHandler extends ResponseEntityExceptionHandler {
             Unauthorized.class
     })
     public ResponseEntity<ErrorResponse> handleCustomException(Exception ex, WebRequest request) {
+        System.out.println("ApiExceptionsHandler:handleCustomException:" + ex.getLocalizedMessage());
         HttpStatus errorStatus = ex instanceof HttpErrorParams ? ((HttpErrorParams) ex).getErrorStatus() : HttpStatus.BAD_REQUEST;
         ErrorResponse error = new ErrorResponse(ex);
         log.error(error.toString());
@@ -55,9 +56,10 @@ public class ApiExceptionsHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    ResponseEntity<ErrorResponse> handleConstraintViolationException(ConstraintViolationException e) {
-        ErrorResponse error = new ErrorResponse("WrongRequestFormat", e.getMessage());
-        log.error(e.toString());
+    ResponseEntity<ErrorResponse> handleConstraintViolationException(ConstraintViolationException ex) {
+        System.out.println("ApiExceptionsHandler:handleConstraintViolationException:" + ex.getLocalizedMessage());
+        ErrorResponse error = new ErrorResponse("WrongRequestFormat", ex.getMessage());
+        log.error(ex.toString());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 }

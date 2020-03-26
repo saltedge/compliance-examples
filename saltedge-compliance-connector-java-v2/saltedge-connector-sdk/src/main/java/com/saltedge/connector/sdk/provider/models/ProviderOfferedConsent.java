@@ -21,15 +21,15 @@
 package com.saltedge.connector.sdk.provider.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.saltedge.connector.sdk.Constants;
+import com.saltedge.connector.sdk.SDKConstants;
 
 import java.util.Objects;
 
 public class ProviderOfferedConsent {
-    @JsonProperty(Constants.KEY_IBAN)
+    @JsonProperty(SDKConstants.KEY_IBAN)
     public String iban;
 
-    @JsonProperty(Constants.KEY_MASKED_PAN)
+    @JsonProperty(SDKConstants.KEY_MASKED_PAN)
     public String maskedPan;
 
     public ProviderOfferedConsent() {

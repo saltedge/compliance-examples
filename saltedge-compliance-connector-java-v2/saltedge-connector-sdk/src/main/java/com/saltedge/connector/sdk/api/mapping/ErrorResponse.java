@@ -22,13 +22,13 @@ package com.saltedge.connector.sdk.api.mapping;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.saltedge.connector.sdk.api.err.HttpErrorParams;
-import com.saltedge.connector.sdk.Constants;
+import com.saltedge.connector.sdk.SDKConstants;
 
 public class ErrorResponse {
-    @JsonProperty(Constants.KEY_ERROR_CLASS)
+    @JsonProperty(SDKConstants.KEY_ERROR_CLASS)
     public String errorClass;
 
-    @JsonProperty(Constants.KEY_ERROR_MESSAGE)
+    @JsonProperty(SDKConstants.KEY_ERROR_MESSAGE)
     public String errorMessage;
 
     public ErrorResponse() { }

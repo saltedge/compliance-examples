@@ -20,11 +20,11 @@
  */
 package com.saltedge.connector.sdk.api.services.tokens;
 
-import com.saltedge.connector.sdk.AuthorizationTypes;
 import com.saltedge.connector.sdk.api.err.HttpErrorParams;
 import com.saltedge.connector.sdk.api.mapping.CreateTokenRequest;
+import com.saltedge.connector.sdk.api.services.BaseServicesTests;
 import com.saltedge.connector.sdk.callback.mapping.SessionUpdateCallbackRequest;
-import com.saltedge.connector.sdk.Constants;
+import com.saltedge.connector.sdk.SDKConstants;
 import com.saltedge.connector.sdk.models.persistence.Token;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,7 +42,7 @@ import static org.mockito.Mockito.verifyNoInteractions;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class CreateTokenServiceTests extends TokenServicesTests {
+public class CreateTokenServiceTests extends BaseServicesTests {
 	@Autowired
 	protected CreateTokenService testService;
 
@@ -50,13 +50,12 @@ public class CreateTokenServiceTests extends TokenServicesTests {
 	@Before
 	public void setUp() throws Exception {
 		super.setUp();
-		given(providerApi.createAndSendAuthorizationConfirmationCode("1", AuthorizationTypes.LOGIN_PASSWORD_SMS_AUTH_TYPE)).willReturn("confirmationCode");
 	}
 
 	@Test
 	public void givenNullAuthType_whenStartAuthorization_thenSendSessionsFailCallback() {
 		// given
-		given(providerApi.getAuthorizationTypeByCode("oauth")).willReturn(null);
+		given(providerService.getAuthorizationTypeByCode("oauth")).willReturn(null);
 		CreateTokenRequest request = createTokenRequest("sessionSecret", "tppAppName", "redirectUrl");
 
 		// when
@@ -72,7 +71,7 @@ public class CreateTokenServiceTests extends TokenServicesTests {
 	@Test
 	public void givenOAuthAuthType_whenStartAuthorization_thenSaveTokenAndSendSessionsUpdateCallback() {
 		// given
-		given(providerApi.getAuthorizationPageUrl()).willReturn("http://example.com");
+		given(providerService.getAccountInformationAuthorizationPageUrl("sessionSecret")).willReturn("http://example.com?session_secret=sessionSecret");
 		CreateTokenRequest request = createTokenRequest("sessionSecret", "tppAppName", "redirectUrl");
 		request.authorizationType = "oauth";
 
@@ -82,7 +81,7 @@ public class CreateTokenServiceTests extends TokenServicesTests {
 		// then
 		final ArgumentCaptor<SessionUpdateCallbackRequest> callbackCaptor = ArgumentCaptor.forClass(SessionUpdateCallbackRequest.class);
 		verify(callbackService).sendUpdateCallback(eq("sessionSecret"), callbackCaptor.capture());
-		assertThat(callbackCaptor.getValue().status).isEqualTo(Constants.STATUS_REDIRECT);
+		assertThat(callbackCaptor.getValue().status).isEqualTo(SDKConstants.STATUS_REDIRECT);
 		assertThat(callbackCaptor.getValue().redirectUrl).isEqualTo("http://example.com?session_secret=sessionSecret");
 
 		final ArgumentCaptor<Token> tokenCaptor = ArgumentCaptor.forClass(Token.class);

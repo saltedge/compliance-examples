@@ -22,10 +22,10 @@ package com.saltedge.connector.sdk.provider.models;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.saltedge.connector.sdk.Constants;
+import com.saltedge.connector.sdk.SDKConstants;
 
 /**
- * Creditor details.
+ * Creditor/Debtor details.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ParticipantDetails {
@@ -53,13 +53,13 @@ public class ParticipantDetails {
         /**
          * Account currency code.
          */
-        @JsonProperty(Constants.KEY_CURRENCY)
+        @JsonProperty(SDKConstants.KEY_CURRENCY)
         public String currencyCode;
 
         /**
          * International Bank Account Number
          */
-        @JsonProperty(Constants.KEY_IBAN)
+        @JsonProperty(SDKConstants.KEY_IBAN)
         public String iban;
 
         /**
@@ -83,7 +83,7 @@ public class ParticipantDetails {
         /**
          * Creditor name.
          */
-        @JsonProperty(Constants.KEY_NAME)
+        @JsonProperty(SDKConstants.KEY_NAME)
         public String name;
 
         public Account() {

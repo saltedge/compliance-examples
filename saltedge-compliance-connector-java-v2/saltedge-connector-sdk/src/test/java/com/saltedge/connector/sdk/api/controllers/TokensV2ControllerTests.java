@@ -26,7 +26,7 @@ import com.saltedge.connector.sdk.api.mapping.RevokeTokenRequest;
 import com.saltedge.connector.sdk.api.services.tokens.ConfirmTokenService;
 import com.saltedge.connector.sdk.api.services.tokens.CreateTokenService;
 import com.saltedge.connector.sdk.api.services.tokens.RevokeTokenService;
-import com.saltedge.connector.sdk.Constants;
+import com.saltedge.connector.sdk.SDKConstants;
 import com.saltedge.connector.sdk.models.persistence.Token;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -45,7 +45,7 @@ public class TokensV2ControllerTests {
 
     @Test
     public void basePathTest() {
-        assertThat(TokensV2Controller.BASE_PATH).isEqualTo(Constants.API_BASE_PATH + "/tokens");
+        assertThat(TokensV2Controller.BASE_PATH).isEqualTo(SDKConstants.API_BASE_PATH + "/tokens");
     }
 
     @Test

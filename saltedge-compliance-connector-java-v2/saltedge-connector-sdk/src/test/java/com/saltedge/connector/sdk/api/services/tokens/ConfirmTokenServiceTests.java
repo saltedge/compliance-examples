@@ -20,6 +20,7 @@
  */
 package com.saltedge.connector.sdk.api.services.tokens;
 
+import com.saltedge.connector.sdk.api.services.BaseServicesTests;
 import com.saltedge.connector.sdk.callback.mapping.SessionSuccessCallbackRequest;
 import com.saltedge.connector.sdk.models.persistence.Token;
 import com.saltedge.connector.sdk.provider.models.ProviderOfferedConsents;
@@ -42,7 +43,7 @@ import static org.mockito.Mockito.verify;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class ConfirmTokenServiceTests extends TokenServicesTests {
+public class ConfirmTokenServiceTests extends BaseServicesTests {
 	@Autowired
 	protected ConfirmTokenService testService;
 

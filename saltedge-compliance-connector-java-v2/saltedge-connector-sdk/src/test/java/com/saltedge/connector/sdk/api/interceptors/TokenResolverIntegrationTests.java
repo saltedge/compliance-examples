@@ -25,7 +25,7 @@ import com.saltedge.connector.sdk.api.controllers.AccountsV2Controller;
 import com.saltedge.connector.sdk.api.mapping.DefaultRequest;
 import com.saltedge.connector.sdk.api.mapping.ErrorResponse;
 import com.saltedge.connector.sdk.config.ApplicationProperties;
-import com.saltedge.connector.sdk.Constants;
+import com.saltedge.connector.sdk.SDKConstants;
 import com.saltedge.connector.sdk.models.persistence.Token;
 import com.saltedge.connector.sdk.models.persistence.TokensRepository;
 import com.saltedge.connector.sdk.tools.JsonTools;
@@ -76,7 +76,7 @@ public class TokenResolverIntegrationTests {
     public void givenHeaderWithInvalidAccessToken_whenMakeRequest_thenReturnTokenNotFoundError() {
         // given
         LinkedMultiValueMap<String, String> headers = createHeaders();
-        headers.add(Constants.HEADER_ACCESS_TOKEN, "invalidToken");
+        headers.add(SDKConstants.HEADER_ACCESS_TOKEN, "invalidToken");
 
         // when
         ResponseEntity<ErrorResponse> response = doRequest(headers);
@@ -90,7 +90,7 @@ public class TokenResolverIntegrationTests {
     public void givenHeaderWithExpiredToken_whenMakeRequest_thenReturnTokenExpiredError() {
         // given
         LinkedMultiValueMap<String, String> headers = createHeaders();
-        headers.add(Constants.HEADER_ACCESS_TOKEN, "validToken");
+        headers.add(SDKConstants.HEADER_ACCESS_TOKEN, "validToken");
 
         // when
         ResponseEntity<ErrorResponse> response = doRequest(headers);
@@ -113,9 +113,9 @@ public class TokenResolverIntegrationTests {
 
     private LinkedMultiValueMap<String, String> createHeaders() {
         LinkedMultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-        headers.add(Constants.HEADER_CLIENT_ID, "clientId");
+        headers.add(SDKConstants.HEADER_CLIENT_ID, "clientId");
         String auth = JsonTools.createAuthorizationHeaderValue(new DefaultRequest(), TestTools.getInstance().getRsaPrivateKey());
-        headers.add(Constants.HEADER_AUTHORIZATION, auth);
+        headers.add(SDKConstants.HEADER_AUTHORIZATION, auth);
         return headers;
     }
 

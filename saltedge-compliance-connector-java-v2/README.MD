@@ -1,11 +1,11 @@
 # Salt Edge Compliance Connector Java Example & SDK (v2)
 
 This codebase was created to demonstrate a full-stack application built on Spring Boot, 
-designated to support communication between ASPSP and Priora Compliance Solution. 
+designated to support communication between ASPSP and TPP. 
 Current application implements Priora Connector v2 API compatible with **Berlin Group NextGenPSD2 XS2A API**.  
 Consists of modules:
-* **Example Application**
-* **Connector SDK v2**
+* **Example Application** - simulate work of Bank App
+* **Connector SDK v.2.1.0** - wrapper of tools for simplification of communication between and Priora PSD2 Compliance Solution  
   
 ## Application Requirements
   
@@ -48,7 +48,7 @@ Consists of modules:
 
 ## SDK Integration
 
-1. Add SDK to target application as Module or as JAR library (`out/saltedge-connector-sdk-2.0.0-all.jar`);
+1. Add SDK to target application as Module or as JAR library (`out/saltedge-connector-sdk-x.x.x-all.jar`);
 1. Setup application as [described before](#example-application-quick-setup)
 1. Add SDK package (`com.saltedge.connector.sdk`) to component scan annotation in Application class.
     ```java
@@ -61,32 +61,37 @@ Consists of modules:
     }
     ```
 1. Add `extra` field to `Payment` entity (if not exist) for storing extra data from Salt Edge Compliance solution (e.g. prioraPaymentId).
-1. Create a service which will provide required by Priora data and receive data from Priora:
-    * Service should implement `ProviderApi` interface and should have `@Service` annotation;
-    * `getAuthorizationTypes(...)` should return list of registered [Authorization types](https://priora.saltedge.com/providers/settings#authorization_types);
-    * `getAuthorizationPageUrl()` should return URL of authorization page for oAuth authorization type;
-    * `confirmationCodeRequired(...)` should return generated confirmation code and send it via available channel (e.g. SMS);
-    * `authorizeUser(...)` should return authorize user by provided credentials and return user id;
-    * `getAccounts(...)` should return accounts list;
-    * `getTransactions(...)` should return transactions list for account;  
+    The Connector will transmit extra data on Payment creation and require it back at the end of the Payment authentication.
+1. Create a service designated for providing information to and receiving events from `Salt Edge PSD2 Compliance`:
+   Service should implement `ProviderServiceAbs` interface and should have `@Service` annotation because it is auto-wired in SDK;
+    * `getAuthorizationTypes(...)` - return list of registered [Authorization types](https://priora.saltedge.com/providers/settings#authorization_types);
+    * `getAuthorizationTypeByCode(...)` - return one of registered [Authorization types](https://priora.saltedge.com/providers/settings#authorization_types);
+    * `getAccountInformationAuthorizationPageUrl(...)` - return URL of authorization page for oAuth authorization of User and consent for accounts information;
+    * `getAccountsOfUser(...)` - return accounts list of User;
+    * `getTransactionsOfAccount(...)` - return transactions list for account of User;
+    * `getCardAccountsOfUser(...)` - return list of card accounts of User;
+    * `getTransactionsOfCardAccount(...)` - return list of transactions of card account of User;
+    * `createPayment(...)` - create a payment order and return payment id or null
+    * `getPaymentAuthorizationPageUrl(...)` - return URL of authorization page for payment;  
    
-1. Use SDK callback service `ProviderCallback` for some events: 
-    * On oAuth (`redirect`) authorization success, call method `authorizationOAuthSuccess(sessionSecret, userId)` of `ProviderCallback` for token confirmation
-    ```java
-    @Autowired
-    ProviderCallback providerCallback;
-    
-    providerCallback.authorizationOAuthSuccess(secret, userId)
-    ```
-    
-    * On oAuth (`redirect`) authorization error, call method `authorizationOAuthError(sessionSecret, errorMessage)` of `ProviderCallback`
-    ```java
-    @Autowired
-    ProviderCallback providerCallback;
-    
-    providerCallback.authorizationOAuthError(secret, errorMessage)
-    ```
+1. Use Connector's SDK callback service `ConnectorCallback` for some events: 
+    * `onOAuthAccountsAuthorizationSuccess(sessionSecret, userId, consents)` - notify SDK about the successful authorization if User for AIS flow:  
+      - `sessionSecret` - unique authorization secret code passed to application via `getAccountInformationAuthorizationPageUrl(...)`;  
+      - `userId` - unique identifier of Provider's system User (Customer);  
+      - `consents` - ProviderOfferedConsents object with user consent to provide account information;  
 
+    * `onOAuthAccountsAuthorizationError(sessionSecret)`- notify SDK about the failed authorization:  
+      - `sessionSecret` - unique authorization secret code passed to application via `getAccountInformationAuthorizationPageUrl(...)`;
+      
+    * `onOAuthPaymentAuthorizationSuccess(paymentId, userId, extra)` - notify SDK about the successful authorization if User for AIS flow:  
+      - `paymentId` - unique payment id;  
+      - `userId` - unique identifier of Provider's system User (Customer);  
+      - `extra` - extra data from authenticated Payment passed to application via `getPaymentAuthorizationPageUrl(...)`;  
+
+    * `onOAuthPaymentAuthorizationFail(paymentId, extra)`- notify SDK about the failed authorization:  
+      - `paymentId` - unique payment id;
+      - `extra` - extra data from authenticated Payment passed to application via `getPaymentAuthorizationPageUrl(...)`;  
+  
   
 ## [Api Documentation](https://priora.banksalt.com/docs/aspsp/v2)
   

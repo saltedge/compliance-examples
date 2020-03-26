@@ -21,7 +21,7 @@
 package com.saltedge.connector.sdk.api.mapping;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.saltedge.connector.sdk.Constants;
+import com.saltedge.connector.sdk.SDKConstants;
 
 import javax.validation.constraints.NotBlank;
 
@@ -30,6 +30,6 @@ public abstract class PrioraBaseRequest {
      * Unique Session identifier in Salt Edge PSD2 Compliance.
      */
     @NotBlank
-    @JsonProperty(Constants.KEY_SESSION_SECRET)
+    @JsonProperty(SDKConstants.KEY_SESSION_SECRET)
     public String sessionSecret;
 }

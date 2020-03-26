@@ -22,7 +22,7 @@ package com.saltedge.connector.sdk.tools;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.saltedge.connector.sdk.Constants;
+import com.saltedge.connector.sdk.SDKConstants;
 import com.saltedge.connector.sdk.TestTools;
 import com.saltedge.connector.sdk.callback.mapping.BaseFailRequest;
 import org.junit.Test;
@@ -42,7 +42,7 @@ public class JsonToolsTest {
 		String jsonString = mapper.writeValueAsString(testObject);
 
 		assertThat(jsonString).contains("TestClass");
-		assertThat(jsonString).doesNotContain(Constants.KEY_ERROR_MESSAGE);
+		assertThat(jsonString).doesNotContain(SDKConstants.KEY_ERROR_MESSAGE);
 
 		BaseFailRequest result = mapper.readValue("{\"key\":\"value\"}", BaseFailRequest.class);
 

@@ -24,9 +24,9 @@ import com.saltedge.connector.sdk.api.mapping.AccountsResponse;
 import com.saltedge.connector.sdk.api.mapping.DefaultRequest;
 import com.saltedge.connector.sdk.api.mapping.TransactionsRequest;
 import com.saltedge.connector.sdk.api.mapping.TransactionsResponse;
-import com.saltedge.connector.sdk.Constants;
+import com.saltedge.connector.sdk.SDKConstants;
 import com.saltedge.connector.sdk.models.persistence.Token;
-import com.saltedge.connector.sdk.provider.ProviderApi;
+import com.saltedge.connector.sdk.provider.ProviderServiceAbs;
 import com.saltedge.connector.sdk.provider.models.Account;
 import com.saltedge.connector.sdk.provider.models.AccountBalance;
 import com.saltedge.connector.sdk.provider.models.Transaction;
@@ -45,11 +45,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
 public class AccountsV2ControllerTests {
-    ProviderApi mockProviderService = Mockito.mock(ProviderApi.class);
+    ProviderServiceAbs mockProviderService = Mockito.mock(ProviderServiceAbs.class);
 
     @Test
     public void basePathTest() {
-        assertThat(AccountsV2Controller.BASE_PATH).isEqualTo(Constants.API_BASE_PATH + "/accounts");
+        assertThat(AccountsV2Controller.BASE_PATH).isEqualTo(SDKConstants.API_BASE_PATH + "/accounts");
     }
 
     @Test
