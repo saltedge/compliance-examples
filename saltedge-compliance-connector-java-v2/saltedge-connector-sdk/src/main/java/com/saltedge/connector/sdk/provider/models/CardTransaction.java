@@ -27,7 +27,7 @@ import com.saltedge.connector.sdk.SDKConstants;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -70,7 +70,7 @@ public class CardTransaction {
     @NotBlank
     @JsonProperty("transaction_date")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private Date transactionDate;
+    private LocalDate transactionDate;
 
     /**
      * Additional details given for the related card transactions.
@@ -84,7 +84,7 @@ public class CardTransaction {
      */
     @JsonProperty("booking_date")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private Date bookingDate;
+    private LocalDate bookingDate;
 
     /**
      * Address of the Card Acceptor as given in the related card transaction.
@@ -161,9 +161,9 @@ public class CardTransaction {
             @NotBlank String amount,
             @NotBlank String currencyCode,
             @NotBlank String status,
-            @NotBlank Date transactionDate,
+            @NotBlank LocalDate transactionDate,
             @NotNull String transactionDetails,
-            Date bookingDate,
+            LocalDate bookingDate,
             AcceptorAddress cardAcceptorAddress,
             String cardAcceptorId,
             List<CurrencyExchange> currencyExchange,
@@ -292,11 +292,11 @@ public class CardTransaction {
         this.status = status;
     }
 
-    public Date getTransactionDate() {
+    public LocalDate getTransactionDate() {
         return transactionDate;
     }
 
-    public void setTransactionDate(Date transactionDate) {
+    public void setTransactionDate(LocalDate transactionDate) {
         this.transactionDate = transactionDate;
     }
 
@@ -308,11 +308,11 @@ public class CardTransaction {
         this.transactionDetails = transactionDetails;
     }
 
-    public Date getBookingDate() {
+    public LocalDate getBookingDate() {
         return bookingDate;
     }
 
-    public void setBookingDate(Date bookingDate) {
+    public void setBookingDate(LocalDate bookingDate) {
         this.bookingDate = bookingDate;
     }
 

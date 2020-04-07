@@ -20,12 +20,16 @@
  */
 package com.saltedge.connector.sdk.callback.services;
 
+import com.saltedge.connector.sdk.api.err.HttpErrorParams;
 import com.saltedge.connector.sdk.callback.CallbackRestClient;
 import com.saltedge.connector.sdk.callback.mapping.BaseCallbackRequest;
 import com.saltedge.connector.sdk.SDKConstants;
+import com.saltedge.connector.sdk.callback.mapping.BaseFailRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
 
 /**
  * Sessions callback service
@@ -34,19 +38,35 @@ import org.springframework.stereotype.Service;
 public class SessionsCallbackService extends CallbackRestClient {
     private static Logger log = LoggerFactory.getLogger(SessionsCallbackService.class);
 
+    @Async
     public void sendUpdateCallback(String sessionSecret, BaseCallbackRequest params) {
         String url = createCallbackRequestUrl(createSessionPath(sessionSecret) + "/update");
-        doCallbackRequest(url, sessionSecret, params);
+        sendSessionCallback(url, sessionSecret, params);
     }
 
+    @Async
     public void sendSuccessCallback(String sessionSecret, BaseCallbackRequest params) {
         String url = createCallbackRequestUrl(createSessionPath(sessionSecret) + "/success");
-        doCallbackRequest(url, sessionSecret, params);
+        sendSessionCallback(url, sessionSecret, params);
     }
 
-    @Override
-    protected String getFailCallbackPath(String sessionSecret) {
-        return createSessionPath(sessionSecret) + "/fail";
+    @Async
+    public void sendFailCallback(String sessionSecret, Exception exception) {
+        BaseFailRequest params = new BaseFailRequest();
+        if (exception instanceof HttpErrorParams) {
+            params.errorClass = ((HttpErrorParams) exception).getErrorClass();
+            params.errorClass = ((HttpErrorParams) exception).getErrorMessage();
+        } else {
+            params.errorClass = exception.getClass().getSimpleName();
+            params.errorClass = exception.getMessage();
+        }
+        sendFailCallback(sessionSecret, params);
+    }
+
+    @Async
+    public void sendFailCallback(String sessionSecret, BaseFailRequest params) {
+        String url = createCallbackRequestUrl(createSessionPath(sessionSecret) + "/fail");
+        sendSessionCallback(url, sessionSecret, params);
     }
 
     @Override
@@ -56,5 +76,12 @@ public class SessionsCallbackService extends CallbackRestClient {
 
     private String createSessionPath(String sessionSecret) {
         return SDKConstants.CALLBACK_BASE_PATH + "/sessions/" + sessionSecret;
+    }
+
+    public void sendSessionCallback(String url, String sessionSecret, BaseCallbackRequest params) {
+        params.sessionSecret = sessionSecret;
+        LinkedMultiValueMap<String, String> headers = createCallbackRequestHeaders(params);
+        printPayload(url, headers, params);
+        doCallbackRequest(url, headers);
     }
 }

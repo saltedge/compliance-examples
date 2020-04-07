@@ -20,8 +20,13 @@
  */
 package com.saltedge.connector.sdk.provider.models;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.saltedge.connector.sdk.tools.JsonTools;
 import org.junit.Test;
 
+import java.time.Instant;
+import java.time.LocalDate;
 import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -43,20 +48,31 @@ public class TransactionTests {
 		assertThat(model.getRemittanceInformation()).isNull();
 		assertThat(model.getExtra()).isNull();
 	}
+
 	@Test
 	public void constructorTest2() {
-		Transaction model = new Transaction("id", "1.0", "EUR", "active", new Date(0));
+		Transaction model = new Transaction("id", "1.0", "EUR", "active", LocalDate.parse("2019-11-18"));
 
 		assertThat(model.getId()).isEqualTo("id");
 		assertThat(model.getAmount()).isEqualTo("1.0");
 		assertThat(model.getCurrencyCode()).isEqualTo("EUR");
 		assertThat(model.getStatus()).isEqualTo("active");
-		assertThat(model.getValueDate()).isEqualTo(new Date(0));
+		assertThat(model.getValueDate()).isEqualTo(LocalDate.parse("2019-11-18"));
 		assertThat(model.getBookingDate()).isNull();
 		assertThat(model.getCreditorDetails()).isNull();
 		assertThat(model.getDebtorDetails()).isNull();
 		assertThat(model.getCurrencyExchange()).isNull();
 		assertThat(model.getRemittanceInformation()).isNull();
 		assertThat(model.getExtra()).isNull();
+	}
+
+	@Test
+	public void serializationTest() throws JsonProcessingException {
+		Transaction model = new Transaction("id", "1.0", "EUR", "active", LocalDate.parse("2019-11-18"));
+
+		ObjectMapper mapper = JsonTools.createDefaultMapper();
+		String json = mapper.writeValueAsString(model);
+
+		assertThat(json).isEqualTo("{\"id\":\"id\",\"amount\":\"1.0\",\"currency\":\"EUR\",\"status\":\"active\",\"value_date\":\"2019-11-18\"}");
 	}
 }

@@ -20,11 +20,8 @@
  */
 package com.saltedge.connector.sdk.provider.models;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import java.util.Date;
 
 /**
  * Reference as contained in the unstructured and structured remittance reference structure.

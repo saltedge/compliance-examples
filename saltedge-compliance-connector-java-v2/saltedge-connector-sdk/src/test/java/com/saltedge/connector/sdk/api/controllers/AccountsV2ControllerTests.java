@@ -37,6 +37,8 @@ import org.springframework.http.ResponseEntity;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -74,8 +76,8 @@ public class AccountsV2ControllerTests {
     @Test
     public void whenList_thenReturnStatus200AndTransactionsList() throws ParseException {
         List<Transaction> testData = getTestTransactionsData();
-        Date startDate = new Date();
-        Date endDate = startDate;
+        Instant startDate = Instant.now();
+        Instant endDate = startDate;
         given(mockProviderService.getTransactionsOfAccount("1", "1", startDate, endDate)).willReturn(testData);
 
         AccountsV2Controller controller = new AccountsV2Controller();
@@ -108,14 +110,12 @@ public class AccountsV2ControllerTests {
 
     private List<Transaction> getTestTransactionsData() throws ParseException {
         ArrayList<Transaction> result = new ArrayList<>();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Date madeOn = dateFormat.parse("2020-01-01");
         result.add(new Transaction(
                 "t1",
                 "100.00",
                 "EUR",
                 "booked",
-                madeOn
+                LocalDate.parse("2020-01-01")
         ));
         return result;
     }

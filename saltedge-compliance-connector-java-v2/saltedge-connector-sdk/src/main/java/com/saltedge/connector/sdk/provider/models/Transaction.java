@@ -25,7 +25,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.saltedge.connector.sdk.SDKConstants;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -63,14 +63,14 @@ public class Transaction {
      */
     @JsonProperty("value_date")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private Date valueDate;
+    private LocalDate valueDate;
 
     /**
      * The Date when an entry is posted to an account on the ASPSPs books.
      */
     @JsonProperty("booking_date")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private Date bookingDate;
+    private LocalDate bookingDate;
 
     /**
      * Creditor details.
@@ -105,7 +105,7 @@ public class Transaction {
     public Transaction() {
     }
 
-    public Transaction(String id, String amount, String currencyCode, String status, Date valueDate) {
+    public Transaction(String id, String amount, String currencyCode, String status, LocalDate valueDate) {
         this.id = id;
         this.amount = amount;
         this.currencyCode = currencyCode;
@@ -145,19 +145,19 @@ public class Transaction {
         this.status = status;
     }
 
-    public Date getValueDate() {
+    public LocalDate getValueDate() {
         return valueDate;
     }
 
-    public void setValueDate(Date valueDate) {
+    public void setValueDate(LocalDate valueDate) {
         this.valueDate = valueDate;
     }
 
-    public Date getBookingDate() {
+    public LocalDate getBookingDate() {
         return bookingDate;
     }
 
-    public void setBookingDate(Date bookingDate) {
+    public void setBookingDate(LocalDate bookingDate) {
         this.bookingDate = bookingDate;
     }
 

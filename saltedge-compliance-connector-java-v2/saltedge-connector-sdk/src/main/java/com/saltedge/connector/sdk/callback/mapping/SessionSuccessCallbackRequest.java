@@ -20,13 +20,12 @@
  */
 package com.saltedge.connector.sdk.callback.mapping;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.saltedge.connector.sdk.SDKConstants;
 import com.saltedge.connector.sdk.provider.models.ProviderOfferedConsents;
 
-import java.util.Date;
+import java.time.Instant;
 import java.util.Objects;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -38,8 +37,7 @@ public class SessionSuccessCallbackRequest extends BaseCallbackRequest {
     public String token;
 
     @JsonProperty("token_expires_at")
-    @JsonFormat(shape = JsonFormat.Shape.STRING)
-    public Date tokenExpiresAt;
+    public Instant tokenExpiresAt;
 
     @JsonProperty(SDKConstants.KEY_USER_ID)
     public String userId;
@@ -53,7 +51,7 @@ public class SessionSuccessCallbackRequest extends BaseCallbackRequest {
     public SessionSuccessCallbackRequest(
             ProviderOfferedConsents providerOfferedConsents,
             String token,
-            Date tokenExpiresAt,
+            Instant tokenExpiresAt,
             String userId
     ) {
         this.providerOfferedConsents = providerOfferedConsents;

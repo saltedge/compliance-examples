@@ -54,6 +54,15 @@ public class RevokeTokenServiceTests extends BaseServicesTests {
 		assertThat(captor.getValue().status).isEqualTo(Token.Status.REVOKED);
 	}
 
+	@Test(expected = NotFound.TokenNotFound.class)
+	public void givenNoToken_whenRevokeTokenBySessionSecret_thenRiseTokenNotFoundException() {
+		// given
+		given(tokensRepository.findFirstBySessionSecret("sessionSecret")).willReturn(null);
+
+		// when
+		revokeTokenService.revokeTokenBySessionSecret("sessionSecret");
+	}
+
 	@Test
 	public void givenToken_whenRevokeTokenBySessionSecret_thenSaveTokeWithStatusRevoked() {
 		// given
@@ -69,11 +78,25 @@ public class RevokeTokenServiceTests extends BaseServicesTests {
 	}
 
 	@Test(expected = NotFound.TokenNotFound.class)
-	public void givenNoToken_whenRevokeTokenBySessionSecret_thenRiseTokenNotFoundException() {
+	public void givenNoToken_whenRevokeTokenByUserIdAndAccessToken_thenRiseTokenNotFoundException() {
 		// given
-		given(tokensRepository.findFirstBySessionSecret("sessionSecret")).willReturn(null);
+		given(tokensRepository.findFirstByUserIdAndAccessToken("userId", "accessToken")).willReturn(null);
 
 		// when
-		revokeTokenService.revokeTokenBySessionSecret("sessionSecret");
+		revokeTokenService.revokeTokenByUserIdAndAccessToken("userId", "accessToken");
+	}
+
+	@Test
+	public void givenToken_whenRevokeTokenByUserIdAndAccessToken_thenSaveTokeWithStatusRevoked() {
+		// given
+		given(tokensRepository.findFirstByUserIdAndAccessToken("userId", "accessToken")).willReturn(new Token());
+
+		// when
+		revokeTokenService.revokeTokenByUserIdAndAccessToken("userId", "accessToken");
+
+		// then
+		final ArgumentCaptor<Token> captor = ArgumentCaptor.forClass(Token.class);
+		verify(tokensRepository).save(captor.capture());
+		assertThat(captor.getValue().status).isEqualTo(Token.Status.REVOKED);
 	}
 }

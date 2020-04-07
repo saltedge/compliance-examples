@@ -69,10 +69,10 @@ public class CardAccountsV2Controller extends BaseV2Controller {
      * @param request data
      * @return list of Card Transactions data.
      */
-    @GetMapping(path = "/{account_id}/transactions")
+    @GetMapping(path = "/{" + SDKConstants.KEY_ACCOUNT_ID + "}/transactions")
     public ResponseEntity<CardTransactionsResponse> transactionsOfCardAccount(
             @NotNull Token token,
-            @NotEmpty @PathVariable(name = "account_id") String accountId,
+            @NotEmpty @PathVariable(name = SDKConstants.KEY_ACCOUNT_ID) String accountId,
             @Valid TransactionsRequest request
     ) {
         return new ResponseEntity<>(new CardTransactionsResponse(

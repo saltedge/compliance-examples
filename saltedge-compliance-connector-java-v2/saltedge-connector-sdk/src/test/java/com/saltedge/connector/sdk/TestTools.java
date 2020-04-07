@@ -21,15 +21,17 @@
 package com.saltedge.connector.sdk;
 
 import com.saltedge.connector.sdk.provider.ProviderServiceAbs;
+import com.saltedge.connector.sdk.tools.JsonTools;
 import com.saltedge.connector.sdk.tools.KeyTools;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.jackson.io.JacksonSerializer;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Scanner;
@@ -95,13 +97,15 @@ public class TestTools {
     }
 
     public static String createAuthorizationHeaderValue(Object requestData, PrivateKey key) {
-        return createAuthorizationHeaderValue(requestData, key, LocalDateTime.now().plusMinutes(5));
+        return createAuthorizationHeaderValue(requestData, key, Instant.now().plus(5, ChronoUnit.MINUTES));
     }
 
-    public static String createAuthorizationHeaderValue(Object requestData, PrivateKey key, LocalDateTime expirationTime) {
-        return "Bearer " + Jwts.builder().claim(SDKConstants.KEY_DATA, requestData)
+    public static String createAuthorizationHeaderValue(Object requestData, PrivateKey key, Instant expirationTime) {
+        return "Bearer " + Jwts.builder()
+                .serializeToJsonWith(new JacksonSerializer<>(JsonTools.createDefaultMapper()))
+                .claim(SDKConstants.KEY_DATA, requestData)
                 .signWith(key)
-                .setExpiration(Date.from(expirationTime.atZone(ZoneId.systemDefault()).toInstant()))
+                .setExpiration(Date.from(expirationTime))
                 .compact();
     }
 

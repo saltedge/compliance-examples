@@ -24,7 +24,7 @@ import com.saltedge.connector.sdk.provider.models.*;
 import org.jetbrains.annotations.NotNull;
 
 import javax.validation.constraints.NotEmpty;
-import java.util.Date;
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 
@@ -85,8 +85,8 @@ public interface ProviderServiceAbs {
     List<Transaction> getTransactionsOfAccount(
             @NotEmpty String userId,
             @NotEmpty String accountId,
-            Date fromDate,
-            Date toDate
+            Instant fromDate,
+            Instant toDate
     );
 
     /**
@@ -113,8 +113,8 @@ public interface ProviderServiceAbs {
     List<CardTransaction> getTransactionsOfCardAccount(
             @NotEmpty String userId,
             @NotEmpty String accountId,
-            Date fromDate,
-            Date toDate
+            Instant fromDate,
+            Instant toDate
     );
 
     /**

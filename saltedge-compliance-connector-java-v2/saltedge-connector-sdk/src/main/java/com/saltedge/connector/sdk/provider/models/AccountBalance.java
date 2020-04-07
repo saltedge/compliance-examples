@@ -20,12 +20,12 @@
  */
 package com.saltedge.connector.sdk.provider.models;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.validation.constraints.NotBlank;
-import java.util.Date;
+import java.time.Instant;
+import java.time.LocalDate;
 
 /**
  * Account's balance information
@@ -50,8 +50,7 @@ public class AccountBalance extends Amount {
      * Balance last change time.
      */
     @JsonProperty("last_change_date_time")
-    @JsonFormat(shape = JsonFormat.Shape.STRING)
-    public Date lastChangeDateTime;
+    public Instant lastChangeDateTime;
 
     /**
      * Reference of the last committed transaction to support the TPP in identifying whether all PSU transactions are already known.
@@ -63,8 +62,7 @@ public class AccountBalance extends Amount {
      * Reference date of the balance.
      */
     @JsonProperty("reference_date")
-    @JsonFormat(shape = JsonFormat.Shape.STRING)
-    public Date referenceDate;
+    public LocalDate referenceDate;
 
     public AccountBalance(String amount, String currency, String type) {
         this.amount = amount;

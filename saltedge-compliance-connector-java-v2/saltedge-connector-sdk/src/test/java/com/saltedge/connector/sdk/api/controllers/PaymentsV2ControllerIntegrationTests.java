@@ -42,7 +42,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.LinkedMultiValueMap;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -52,8 +54,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class PaymentsV2ControllerIntegrationTests extends ControllerIntegrationTests {
-    @MockBean
-    protected SessionsCallbackService callbackService;
 
     @Before
     public void setUp() {
@@ -122,7 +122,7 @@ public class PaymentsV2ControllerIntegrationTests extends ControllerIntegrationT
         String auth = TestTools.createAuthorizationHeaderValue(
                 new DefaultRequest("sessionSecret"),
                 TestTools.getInstance().getRsaPrivateKey(),
-                LocalDateTime.now().minusMinutes(1)
+                Instant.now().minus(1, ChronoUnit.MINUTES)
         );
         LinkedMultiValueMap<String, String> headers = createHeaders();
         headers.add(SDKConstants.HEADER_AUTHORIZATION, auth);

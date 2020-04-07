@@ -36,9 +36,14 @@ public class RevokeTokenService extends TokensBaseService {
         revokeToken(token);
     }
 
-    @Async
     public Token revokeTokenBySessionSecret(String sessionSecret) {
         Token token = findTokenBySessionSecret(sessionSecret);
+        if (token == null) throw new NotFound.TokenNotFound();
+        return revokeToken(token);
+    }
+
+    public Token revokeTokenByUserIdAndAccessToken(String userId, String accessToken) {
+        Token token = tokensRepository.findFirstByUserIdAndAccessToken(userId, accessToken);
         if (token == null) throw new NotFound.TokenNotFound();
         return revokeToken(token);
     }

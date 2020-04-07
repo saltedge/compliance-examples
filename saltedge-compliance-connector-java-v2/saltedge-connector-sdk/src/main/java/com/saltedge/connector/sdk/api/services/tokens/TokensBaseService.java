@@ -21,11 +21,8 @@
 package com.saltedge.connector.sdk.api.services.tokens;
 
 import com.saltedge.connector.sdk.api.services.BaseService;
-import com.saltedge.connector.sdk.callback.mapping.SessionSuccessCallbackRequest;
-import com.saltedge.connector.sdk.callback.services.SessionsCallbackService;
 import com.saltedge.connector.sdk.models.persistence.Token;
 import com.saltedge.connector.sdk.models.persistence.TokensRepository;
-import com.saltedge.connector.sdk.provider.models.ProviderOfferedConsents;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,32 +32,7 @@ abstract class TokensBaseService extends BaseService {
     @Autowired
     protected TokensRepository tokensRepository;
 
-    protected void initConfirmedTokenAndSendSessionSuccess(
-            Token token,
-            ProviderOfferedConsents providerOfferedConsents
-    ) {
-        try {
-            token.initConfirmedToken();
-            token.providerOfferedConsents = providerOfferedConsents;
-            tokensRepository.save(token);
-            sendSessionSuccess(token);
-        } catch (Exception e) {
-            log.error("initConfirmedTokenAndSendSessionSuccess: ", e);
-            callbackService.sendFailCallback(token.sessionSecret, e);
-        }
-    }
-
     protected Token findTokenBySessionSecret(String sessionSecret) {
         return tokensRepository.findFirstBySessionSecret(sessionSecret);
-    }
-
-    protected void sendSessionSuccess(Token token) {
-        SessionSuccessCallbackRequest params = new SessionSuccessCallbackRequest(
-                token.providerOfferedConsents,
-                token.accessToken,
-                token.tokenExpiresAt,
-                token.userId
-        );
-        callbackService.sendSuccessCallback(token.sessionSecret, params);
     }
 }

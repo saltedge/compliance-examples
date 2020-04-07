@@ -29,6 +29,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.time.Instant;
 import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -69,6 +70,7 @@ public class TokensRepositoryIntegrationTests {
 		// given
 		Token token = new Token("secret1", "tppAppName", "authTypeCode", null);
 		token.accessToken = "123456";
+		token.tokenExpiresAt = Instant.parse("2019-11-18T16:04:50.915Z");
 		entityManager.persist(token);
 		entityManager.flush();
 
@@ -77,6 +79,7 @@ public class TokensRepositoryIntegrationTests {
 
 		// then
 		assertThat(found.accessToken).isEqualTo("123456");
+		assertThat(found.tokenExpiresAt.toString()).isEqualTo("2019-11-18T16:04:50.915Z");
 		assertThat(found.sessionSecret).isEqualTo("secret1");
 	}
 

@@ -24,9 +24,11 @@ import com.saltedge.connector.example.model.AccountEntity;
 import com.saltedge.connector.example.model.PaymentEntity;
 import com.saltedge.connector.example.model.TransactionEntity;
 import com.saltedge.connector.sdk.SDKConstants;
+import com.saltedge.connector.sdk.config.ApplicationProperties;
 import com.saltedge.connector.sdk.provider.models.Account;
 import com.saltedge.connector.sdk.provider.models.CardAccount;
 import com.saltedge.connector.sdk.provider.models.ProviderOfferedConsents;
+import com.saltedge.connector.sdk.tools.KeyTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -37,6 +39,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -85,9 +89,11 @@ public class UserConsentController extends UserBaseController {
         List<CardAccount> cardsOfTransactionsConsent = cardAccounts.stream().filter(item -> cardTransactionIds.contains(item.getId()))
                 .collect(Collectors.toList());
 
-        String returnToUrl = connectorCallbackService.onOAuthAccountsAuthorizationSuccess(
+        String returnToUrl = connectorCallbackService.onAccountInformationAuthorizationSuccess(
                 sessionSecret,
                 userId,
+                KeyTools.generateToken(32),
+                Instant.now().plus(1, ChronoUnit.DAYS),
                 ProviderOfferedConsents.buildProviderOfferedConsents(
                         accountsOfBalancesConsent,
                         accountsOfTransactionsConsent,
@@ -131,7 +137,7 @@ public class UserConsentController extends UserBaseController {
         String returnToUrl;
         if (!StringUtils.isEmpty(confirmAction) && payment != null) {
             processAndClosePayment(payment, userId);
-            returnToUrl = connectorCallbackService.onOAuthPaymentAuthorizationSuccess(
+            returnToUrl = connectorCallbackService.onPaymentInitiationAuthorizationSuccess(
                     paymentId.toString(),
                     userId.toString(),
                     payment.extra
@@ -141,7 +147,7 @@ public class UserConsentController extends UserBaseController {
                 payment.status = PaymentEntity.Status.FAILED;
                 paymentsRepository.save(payment);
             }
-            returnToUrl = connectorCallbackService.onOAuthPaymentAuthorizationFail(paymentId.toString(), payment.extra);
+            returnToUrl = connectorCallbackService.onPaymentInitiationAuthorizationFail(paymentId.toString(), payment.extra);
         }
         if (returnToUrl == null) {
             return new ModelAndView("redirect:/oauth/authorize/payments?payment_id=" + paymentId);

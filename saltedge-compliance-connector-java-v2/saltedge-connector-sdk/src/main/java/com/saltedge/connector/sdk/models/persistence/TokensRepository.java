@@ -25,4 +25,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface TokensRepository extends JpaRepository<Token, Long> {
     Token findFirstBySessionSecret(String sessionSecret);
     Token findFirstByAccessToken(String accessToken);
+    Token findFirstByUserIdAndAccessToken(String userId, String accessToken);
 }
