@@ -22,8 +22,7 @@ package com.saltedge.connector.sdk.api.mapping;
 
 import org.junit.Test;
 
-import java.time.Instant;
-import java.util.Date;
+import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -42,11 +41,11 @@ public class TransactionsRequestTest extends ValidationTest {
 
 		assertThat(validator.validate(model)).isNotEmpty();
 
-		model.fromDate = Instant.now();
+		model.fromDate = LocalDate.now();
 
 		assertThat(validator.validate(model)).isNotEmpty();
 
-		model.toDate = Instant.now();
+		model.toDate = LocalDate.now();
 
 		assertThat(validator.validate(model)).isEmpty();
 	}

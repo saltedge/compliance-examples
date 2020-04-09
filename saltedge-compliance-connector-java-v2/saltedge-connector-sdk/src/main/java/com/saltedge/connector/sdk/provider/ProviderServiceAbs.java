@@ -25,6 +25,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.validation.constraints.NotEmpty;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -85,8 +86,8 @@ public interface ProviderServiceAbs {
     List<Transaction> getTransactionsOfAccount(
             @NotEmpty String userId,
             @NotEmpty String accountId,
-            Instant fromDate,
-            Instant toDate
+            LocalDate fromDate,
+            LocalDate toDate
     );
 
     /**
@@ -113,8 +114,8 @@ public interface ProviderServiceAbs {
     List<CardTransaction> getTransactionsOfCardAccount(
             @NotEmpty String userId,
             @NotEmpty String accountId,
-            Instant fromDate,
-            Instant toDate
+            LocalDate fromDate,
+            LocalDate toDate
     );
 
     /**

@@ -38,6 +38,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.LinkedMultiValueMap;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
@@ -117,8 +118,8 @@ public class AccountsV2ControllerIntegrationTests extends ControllerIntegrationT
         String auth = TestTools.createAuthorizationHeaderValue(
                 new TransactionsRequest(
                         "account1",
-                        Instant.parse("2019-10-18T16:04:49.585Z"),
-                        Instant.parse("2020-03-18T16:04:49.585Z"),
+                        LocalDate.parse("2019-10-18"),
+                        LocalDate.parse("2020-03-18"),
                         "sessionSecret"
                 ),
                 TestTools.getInstance().getRsaPrivateKey()

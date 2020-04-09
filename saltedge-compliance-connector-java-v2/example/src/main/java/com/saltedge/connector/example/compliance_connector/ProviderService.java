@@ -47,6 +47,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.constraints.NotEmpty;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.function.Supplier;
 
@@ -103,8 +104,8 @@ public class ProviderService implements ProviderServiceAbs {
     public List<Transaction> getTransactionsOfAccount(
             @NotEmpty String userId,
             @NotEmpty String accountId,
-            Instant fromDate,//TODO use in query
-            Instant toDate//TODO use in query
+            LocalDate fromDate,//TODO use in query
+            LocalDate toDate//TODO use in query
     ) {
         UserEntity user = findAndValidateUser(userId);
         AccountEntity account = accountsRepository.findFirstByIdAndUserId(Long.valueOf(accountId), user.id)
@@ -122,8 +123,8 @@ public class ProviderService implements ProviderServiceAbs {
     public List<CardTransaction> getTransactionsOfCardAccount(
             @NotEmpty String userId,
             @NotEmpty String accountId,
-            Instant fromDate,//TODO use in query
-            Instant toDate//TODO use in query
+            LocalDate fromDate,//TODO use in query
+            LocalDate toDate//TODO use in query
     ) {
         UserEntity user = findAndValidateUser(userId);
         CardAccountEntity account = cardAccountsRepository.findFirstByIdAndUserId(Long.valueOf(accountId), user.id)

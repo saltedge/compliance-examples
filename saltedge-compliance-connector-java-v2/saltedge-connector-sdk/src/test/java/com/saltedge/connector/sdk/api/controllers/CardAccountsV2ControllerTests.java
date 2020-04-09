@@ -72,8 +72,8 @@ public class CardAccountsV2ControllerTests {
     @Test
     public void whenList_thenReturnStatus200AndTransactionsList() throws ParseException {
         List<CardTransaction> testData = getTestTransactionsData();
-        Instant startDate = Instant.now();
-        Instant endDate = startDate;
+        LocalDate startDate = LocalDate.now();
+        LocalDate endDate = startDate;
         given(mockProviderService.getTransactionsOfCardAccount("1", "1", startDate, endDate)).willReturn(testData);
 
         CardAccountsV2Controller controller = new CardAccountsV2Controller();

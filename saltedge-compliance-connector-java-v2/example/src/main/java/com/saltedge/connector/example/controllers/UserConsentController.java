@@ -40,6 +40,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -168,7 +169,7 @@ public class UserConsentController extends UserBaseController {
                 String.format("%.2f", amount),
                 payment.currency,
                 "Payment " + amount + " " + payment.currency + "(Account:" + payment.accountId + ")",
-                payment.getCreatedAt(),
+                LocalDate.now(),
                 "booked",
                 new ArrayList<>(),
                 new HashMap<>(),

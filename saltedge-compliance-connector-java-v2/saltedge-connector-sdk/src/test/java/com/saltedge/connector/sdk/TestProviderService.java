@@ -27,6 +27,7 @@ import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotEmpty;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -53,7 +54,7 @@ public class TestProviderService implements ProviderServiceAbs {
     }
 
     @Override
-    public List<Transaction> getTransactionsOfAccount(String userId, String accountId, Instant fromDate, Instant toDate) {
+    public List<Transaction> getTransactionsOfAccount(String userId, String accountId, LocalDate fromDate, LocalDate toDate) {
         return null;
     }
 
@@ -63,7 +64,7 @@ public class TestProviderService implements ProviderServiceAbs {
     }
 
     @Override
-    public List<CardTransaction> getTransactionsOfCardAccount(@NotEmpty String userId, @NotEmpty String accountId, Instant fromDate, Instant toDate) {
+    public List<CardTransaction> getTransactionsOfCardAccount(@NotEmpty String userId, @NotEmpty String accountId, LocalDate fromDate, LocalDate toDate) {
         return null;
     }
 

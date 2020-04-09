@@ -56,7 +56,7 @@ public class TokensCallbackService extends CallbackRestClient {
     /**
      * Revoke callback needs to be called any time a token is revoked on the Provider Connector side.
      *
-     * @param accessToken
+     * @param accessToken unique token of current consent
      */
     @Async
     public void sendRevokeTokenCallback(@NotEmpty String accessToken) {
