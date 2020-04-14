@@ -63,7 +63,7 @@ public class CreateTokenServiceTests extends BaseServicesTests {
 
 		// then
 		final ArgumentCaptor<RuntimeException> captor = ArgumentCaptor.forClass(RuntimeException.class);
-		verify(callbackService).sendFailCallback(eq("sessionSecret"), captor.capture());
+		verify(sessionsCallbackService).sendFailCallback(eq("sessionSecret"), captor.capture());
 		assertThat(((HttpErrorParams) captor.getValue()).getErrorClass()).isEqualTo("InvalidAuthorizationType");
 		verifyNoInteractions(tokensRepository);
 	}
@@ -80,7 +80,7 @@ public class CreateTokenServiceTests extends BaseServicesTests {
 
 		// then
 		final ArgumentCaptor<SessionUpdateCallbackRequest> callbackCaptor = ArgumentCaptor.forClass(SessionUpdateCallbackRequest.class);
-		verify(callbackService).sendUpdateCallback(eq("sessionSecret"), callbackCaptor.capture());
+		verify(sessionsCallbackService).sendUpdateCallback(eq("sessionSecret"), callbackCaptor.capture());
 		assertThat(callbackCaptor.getValue().status).isEqualTo(SDKConstants.STATUS_REDIRECT);
 		assertThat(callbackCaptor.getValue().redirectUrl).isEqualTo("http://example.com?session_secret=sessionSecret");
 

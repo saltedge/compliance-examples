@@ -23,8 +23,7 @@ package com.saltedge.connector.sdk.models;
 import com.saltedge.connector.sdk.models.persistence.Token;
 import org.junit.Test;
 
-import java.time.LocalDateTime;
-import java.util.Date;
+import java.time.Instant;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -41,7 +40,7 @@ public class TokenTests {
 
 		assertThat(token.status).isEqualTo(Token.Status.CONFIRMED);
 		assertThat(token.accessToken).isNotEmpty();
-		assertThat(token.tokenExpiresAt).isAfter(new Date());
+		assertThat(token.tokenExpiresAt).isAfter(Instant.now());
 	}
 
 	@Test
@@ -56,7 +55,7 @@ public class TokenTests {
 
 		assertThat(token.status).isEqualTo(Token.Status.UNCONFIRMED);
 		assertThat(token.accessToken).isNotEmpty();
-		assertThat(token.tokenExpiresAt).isAfter(new Date());
+		assertThat(token.tokenExpiresAt).isAfter(Instant.now());
 	}
 
 	@Test
@@ -65,11 +64,11 @@ public class TokenTests {
 
 		assertThat(token.isExpired()).isTrue();
 
-		token.setTokenExpiresAt(LocalDateTime.now().minusSeconds(1));
+		token.tokenExpiresAt = Instant.now().minusSeconds(1);
 
 		assertThat(token.isExpired()).isTrue();
 
-		token.setTokenExpiresAt(LocalDateTime.now().plusSeconds(1));
+		token.tokenExpiresAt = Instant.now().plusSeconds(1);
 
 		assertThat(token.isExpired()).isFalse();
 	}

@@ -37,8 +37,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.LinkedMultiValueMap;
 
+import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
+import java.time.temporal.ChronoUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -78,7 +80,7 @@ public class AccountsV2ControllerIntegrationTests extends ControllerIntegrationT
         String auth = TestTools.createAuthorizationHeaderValue(
                 new DefaultRequest("sessionSecret"),
                 TestTools.getInstance().getRsaPrivateKey(),
-                LocalDateTime.now().minusMinutes(1)
+                Instant.now().minus(1, ChronoUnit.MINUTES)
         );
         LinkedMultiValueMap<String, String> headers = createHeaders();
         headers.add(SDKConstants.HEADER_AUTHORIZATION, auth);
@@ -114,13 +116,18 @@ public class AccountsV2ControllerIntegrationTests extends ControllerIntegrationT
         // given
         LinkedMultiValueMap<String, String> headers = createHeaders();
         String auth = TestTools.createAuthorizationHeaderValue(
-                new TransactionsRequest("account1", new Date(), new Date(), "sessionSecret"),
+                new TransactionsRequest(
+                        "account1",
+                        LocalDate.parse("2019-10-18"),
+                        LocalDate.parse("2020-03-18"),
+                        "sessionSecret"
+                ),
                 TestTools.getInstance().getRsaPrivateKey()
         );
         headers.add(SDKConstants.HEADER_AUTHORIZATION, auth);
 
         // when
-        ResponseEntity<ErrorResponse> response = doTransactionsListRequestForError(headers);
+        ResponseEntity<ErrorResponse> response = doTransactionsListRequest(headers);
 
         // then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -134,7 +141,7 @@ public class AccountsV2ControllerIntegrationTests extends ControllerIntegrationT
         headers.add(SDKConstants.HEADER_AUTHORIZATION, auth);
 
         // when
-        ResponseEntity<ErrorResponse> response = doTransactionsListRequestForError(headers);
+        ResponseEntity<ErrorResponse> response = doTransactionsListRequest(headers);
 
         // then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -154,7 +161,7 @@ public class AccountsV2ControllerIntegrationTests extends ControllerIntegrationT
         );
     }
 
-    private ResponseEntity<ErrorResponse> doTransactionsListRequestForError(LinkedMultiValueMap<String, String> headers) {
+    private ResponseEntity<ErrorResponse> doTransactionsListRequest(LinkedMultiValueMap<String, String> headers) {
         return testRestTemplate.exchange(
                 createURLWithPort(AccountsV2Controller.BASE_PATH + "/account1/transactions"), HttpMethod.GET, new HttpEntity<>(headers), ErrorResponse.class
         );

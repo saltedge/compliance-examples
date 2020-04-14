@@ -20,6 +20,7 @@
  */
 package com.saltedge.connector.sdk.api.services.tokens;
 
+import com.saltedge.connector.sdk.callback.mapping.SessionSuccessCallbackRequest;
 import com.saltedge.connector.sdk.models.persistence.Token;
 import com.saltedge.connector.sdk.provider.models.ProviderOfferedConsents;
 import org.slf4j.Logger;
@@ -27,11 +28,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @Service
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -42,13 +45,36 @@ public class ConfirmTokenService extends TokensBaseService {
     public Token confirmToken(
             @NotEmpty String sessionSecret,
             @NotEmpty String userId,
+            @NotEmpty String accessToken,
+            @NotNull Instant accessTokenExpiresAt,
             @NotNull ProviderOfferedConsents providerOfferedConsents
     ) {
         Token token = findTokenBySessionSecret(sessionSecret);
         if (token != null) {
-            token.userId = userId;
-            super.initConfirmedTokenAndSendSessionSuccess(token, providerOfferedConsents);
+            try {
+                token.userId = userId;
+                token.status = Token.Status.CONFIRMED;
+                token.accessToken = accessToken;
+                token.tokenExpiresAt = accessTokenExpiresAt;
+                token.providerOfferedConsents = providerOfferedConsents;
+                tokensRepository.save(token);
+
+                sendSessionSuccess(token);
+            } catch (Exception e) {
+                log.error("initConfirmedTokenAndSendSessionSuccess: ", e);
+                callbackService.sendFailCallback(token.sessionSecret, e);
+            }
         }
         return token;
+    }
+
+    private void sendSessionSuccess(Token token) {
+        SessionSuccessCallbackRequest params = new SessionSuccessCallbackRequest(
+                token.providerOfferedConsents,
+                token.accessToken,
+                token.tokenExpiresAt,
+                token.userId
+        );
+        callbackService.sendSuccessCallback(token.sessionSecret, params);
     }
 }

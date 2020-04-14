@@ -22,7 +22,6 @@ package com.saltedge.connector.example.config;
 
 import com.saltedge.connector.example.model.*;
 import com.saltedge.connector.example.model.repository.*;
-import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +29,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -156,7 +156,7 @@ public class DatabaseInitializer {
                     String.format("%.2f", amount),
                     account.currencyCode,
                     "Payment " + amount + " " + account.currencyCode + "(Account:" + account.id + ")",
-                    date.toDate(),
+                    date,
                     "booked",
                     new ArrayList<>(),
                     new HashMap<>(),
@@ -204,7 +204,7 @@ public class DatabaseInitializer {
                     String.format("%.2f", amount),
                     account.currencyCode,
                     "Payment " + amount + " " + account.currencyCode + "(Account:" + account.id + ")",
-                    date.toDate(),
+                    date,
                     "booked",
                     new ArrayList<>(),
                     new HashMap<>(),

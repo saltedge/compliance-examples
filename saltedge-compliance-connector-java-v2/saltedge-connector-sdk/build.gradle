@@ -6,7 +6,7 @@ plugins {
 }
 
 group 'com.saltedge.connector.sdk'
-version '2.1.0'
+version '2.1.1'
 sourceCompatibility = 1.8
 
 repositories {
@@ -31,17 +31,21 @@ shadowJar {
 }
 
 dependencies {
+    def jjwtVersion = '0.11.1'
+
     implementation 'org.jetbrains:annotations:16.0.2'
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'com.h2database:h2:1.4.200'
-    shadow 'io.jsonwebtoken:jjwt-api:0.10.7'
-    runtime 'io.jsonwebtoken:jjwt-impl:0.10.7', 'io.jsonwebtoken:jjwt-jackson:0.10.7'
-    shadow 'io.jsonwebtoken:jjwt-impl:0.10.7'
-    shadow 'io.jsonwebtoken:jjwt-jackson:0.10.7'
 
-    testImplementation 'io.jsonwebtoken:jjwt-api:0.10.7'
+    shadow "io.jsonwebtoken:jjwt-api:$jjwtVersion"
+    runtime "io.jsonwebtoken:jjwt-impl:$jjwtVersion", "io.jsonwebtoken:jjwt-jackson:$jjwtVersion"
+    shadow "io.jsonwebtoken:jjwt-impl:$jjwtVersion"
+    shadow "io.jsonwebtoken:jjwt-jackson:$jjwtVersion"
+
+    testImplementation "io.jsonwebtoken:jjwt-api:$jjwtVersion"
+    testImplementation "io.jsonwebtoken:jjwt-jackson:$jjwtVersion"
     testCompile group: 'junit', name: 'junit', version: '4.12'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }

@@ -27,9 +27,11 @@ import com.saltedge.connector.example.model.repository.AccountsRepository;
 import com.saltedge.connector.example.model.repository.TransactionsRepository;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDate;
+
 public class ConnectorServiceTools {
     /**
-     * update balances & create transactions
+     * update balances and create transactions
      */
     public static void createTransaction(AccountsRepository accountsRepository,
                                          TransactionsRepository transactionsRepository,
@@ -41,7 +43,7 @@ public class ConnectorServiceTools {
         transaction.amount = String.format("%.2f", -payment.total);
         transaction.currencyCode = account.currencyCode;
         transaction.description = payment.description;
-        transaction.madeOn = payment.getCreatedAt();
+        transaction.madeOn = LocalDate.now();
         transaction.status = "posted";
         transaction.fees = payment.fees;
         transaction.extra = payment.extra;

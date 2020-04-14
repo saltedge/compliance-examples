@@ -24,7 +24,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 /**
  * Info of exchange operation.
@@ -48,7 +48,7 @@ public class CurrencyExchange {
      */
     @JsonProperty("quotation_date")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
-    public Date quotationDate;
+    public LocalDate quotationDate;
 
     /**
      * Currency code from.
@@ -71,7 +71,14 @@ public class CurrencyExchange {
     public CurrencyExchange() {
     }
 
-    public CurrencyExchange(String contractIdentification, String exchangeRate, Date quotationDate, String sourceCurrency, String targetCurrency, String unitCurrency) {
+    public CurrencyExchange(
+            String contractIdentification,
+            String exchangeRate,
+            LocalDate quotationDate,
+            String sourceCurrency,
+            String targetCurrency,
+            String unitCurrency
+    ) {
         this.contractIdentification = contractIdentification;
         this.exchangeRate = exchangeRate;
         this.quotationDate = quotationDate;

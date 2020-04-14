@@ -80,8 +80,13 @@ public class ConnectorTypeConverters {
         );
     }
 
-    public static List<Transaction> convertTransactionsToTransactionsData(List<TransactionEntity> transactions) {
-        return transactions.stream().map(ConnectorTypeConverters::convertTransactionToTransactionsData).collect(Collectors.toList());
+    public static List<Transaction> convertTransactionsToTransactionsData(
+            List<TransactionEntity> transactions
+    ) {
+        return transactions.stream()
+
+                .map(ConnectorTypeConverters::convertTransactionToTransactionsData)
+                .collect(Collectors.toList());
     }
 
     public static Transaction convertTransactionToTransactionsData(TransactionEntity transaction) {

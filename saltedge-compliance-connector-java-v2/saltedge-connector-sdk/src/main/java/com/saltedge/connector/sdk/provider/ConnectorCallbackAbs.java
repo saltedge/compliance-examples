@@ -24,6 +24,7 @@ import com.saltedge.connector.sdk.provider.models.ProviderOfferedConsents;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.time.Instant;
 import java.util.Map;
 
 /**
@@ -35,13 +36,17 @@ public interface ConnectorCallbackAbs {
      * Provider notify Connector Module about oAuth success authentication and user consent for accounts
      *
      * @param sessionSecret of Token Create session
-     * @param userId of authenticated User
+     * @param userId unique identifier of authenticated User
+     * @param accessToken unique string that identifies a user
+     * @param accessTokenExpiresAt expiration time of accessToken (UTC time).
      * @param consents list of balances of accounts and transactions of accounts
      * @return returnUrl from token
      */
-    String onOAuthAccountsAuthorizationSuccess(
+    String onAccountInformationAuthorizationSuccess(
             @NotEmpty String sessionSecret,
             @NotEmpty String userId,
+            @NotEmpty String accessToken,
+            @NotNull Instant accessTokenExpiresAt,
             @NotNull ProviderOfferedConsents consents
     );
 
@@ -51,7 +56,20 @@ public interface ConnectorCallbackAbs {
      * @param sessionSecret of Token Create session
      * @return returnUrl from token
      */
-    String onOAuthAccountsAuthorizationError(@NotEmpty String sessionSecret);
+    String onAccountInformationAuthorizationFail(@NotEmpty String sessionSecret);
+
+    /**
+     * Revoke Account information consent associated with userId and accessToken
+     *
+     * @param userId unique identifier of authenticated User
+     * @param accessToken unique string that identifies a user
+     *
+     * @return operation result
+     */
+    boolean revokeAccountInformationConsent(
+            @NotEmpty String userId,
+            @NotEmpty String accessToken
+    );
 
     /**
      * Provider notify Connector Module about oAuth success authentication and user consent for payment
@@ -61,7 +79,7 @@ public interface ConnectorCallbackAbs {
      * @param paymentExtra extra data of payment order
      * @return returnUrl for Payment authenticate session
      */
-    String onOAuthPaymentAuthorizationSuccess(
+    String onPaymentInitiationAuthorizationSuccess(
             @NotEmpty String paymentId,
             @NotEmpty String userId,
             @NotEmpty Map<String, String> paymentExtra
@@ -74,5 +92,5 @@ public interface ConnectorCallbackAbs {
      * @param paymentExtra extra data of payment order
      * @return returnUrl for Payment authenticate session
      */
-    String onOAuthPaymentAuthorizationFail(@NotEmpty String paymentId, @NotEmpty Map<String, String> paymentExtra);
+    String onPaymentInitiationAuthorizationFail(@NotEmpty String paymentId, @NotEmpty Map<String, String> paymentExtra);
 }

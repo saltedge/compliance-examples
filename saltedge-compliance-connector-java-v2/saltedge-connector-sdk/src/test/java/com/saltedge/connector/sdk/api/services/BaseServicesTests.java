@@ -22,6 +22,7 @@ package com.saltedge.connector.sdk.api.services;
 
 import com.saltedge.connector.sdk.TestTools;
 import com.saltedge.connector.sdk.callback.services.SessionsCallbackService;
+import com.saltedge.connector.sdk.callback.services.TokensCallbackService;
 import com.saltedge.connector.sdk.config.ApplicationProperties;
 import com.saltedge.connector.sdk.models.persistence.TokensRepository;
 import com.saltedge.connector.sdk.provider.ProviderServiceAbs;
@@ -32,13 +33,15 @@ abstract public class BaseServicesTests {
 	@MockBean
 	protected TokensRepository tokensRepository;
 	@MockBean
-	protected SessionsCallbackService callbackService;
+	protected SessionsCallbackService sessionsCallbackService;
+	@MockBean
+	private TokensCallbackService tokensCallbackService;
 	@MockBean
 	protected ProviderServiceAbs providerService;
 
 	@Before
 	public void setUp() throws Exception {
-		callbackService.applicationProperties = new ApplicationProperties();
+		sessionsCallbackService.applicationProperties = new ApplicationProperties();
 		TestTools.initProviderApiMocks(providerService);
 	}
 }

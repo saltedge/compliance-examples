@@ -26,7 +26,7 @@ import com.saltedge.connector.sdk.SDKConstants;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
+import java.time.LocalDate;
 
 public class TransactionsRequest extends PrioraBaseRequest {
     @NotEmpty
@@ -36,17 +36,17 @@ public class TransactionsRequest extends PrioraBaseRequest {
     @NotNull
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     @JsonProperty("from_date")
-    public Date fromDate;
+    public LocalDate fromDate;
 
     @NotNull
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     @JsonProperty("to_date")
-    public Date toDate;
+    public LocalDate toDate;
 
     public TransactionsRequest() {
     }
 
-    public TransactionsRequest(String accountId, Date fromDate, Date toDate, String sessionSecret) {
+    public TransactionsRequest(String accountId, LocalDate fromDate, LocalDate toDate, String sessionSecret) {
         this.accountId = accountId;
         this.fromDate = fromDate;
         this.toDate = toDate;

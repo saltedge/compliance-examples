@@ -20,8 +20,8 @@
  */
 package com.saltedge.connector.sdk.models.persistence;
 
-import com.saltedge.connector.sdk.config.ApplicationProperties;
 import com.saltedge.connector.sdk.SDKConstants;
+import com.saltedge.connector.sdk.config.ApplicationProperties;
 import com.saltedge.connector.sdk.provider.models.ProviderOfferedConsents;
 import com.saltedge.connector.sdk.tools.ConsentDataConverter;
 import com.saltedge.connector.sdk.tools.KeyTools;
@@ -34,7 +34,9 @@ import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Date;
+import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 
 /**
  * Database entity for saving data about connection between Connector and Salt Edge Compliance Solution
@@ -55,7 +57,7 @@ public class Token extends BaseEntity implements Serializable {
     public String accessToken;
 
     @Column(name = "expires_at")
-    public Date tokenExpiresAt;
+    public Instant tokenExpiresAt;
 
     @Column(name = SDKConstants.KEY_USER_ID)
     public String userId;
@@ -87,16 +89,6 @@ public class Token extends BaseEntity implements Serializable {
         this.tppRedirectUrl = tppRedirectUrl;
     }
 
-    public LocalDateTime getTokenExpiresAt() {
-        if (tokenExpiresAt == null) return null;
-        return Instant.ofEpochMilli(tokenExpiresAt.getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
-    }
-
-    public void setTokenExpiresAt(LocalDateTime tokenExpiresAt) {
-        if (tokenExpiresAt == null) this.tokenExpiresAt = null;
-        else this.tokenExpiresAt = Date.from(tokenExpiresAt.atZone(ZoneId.systemDefault()).toInstant());
-    }
-
     public void initConfirmedToken() {
         status = Status.CONFIRMED;
         regenerateTokenAndExpiresAt();
@@ -104,12 +96,11 @@ public class Token extends BaseEntity implements Serializable {
 
     public void regenerateTokenAndExpiresAt() {
         accessToken = KeyTools.generateToken(32);
-        setTokenExpiresAt(LocalDateTime.now().plusMinutes(ApplicationProperties.connectionExpiresInMinutes));
+        tokenExpiresAt = Instant.now().plus(ApplicationProperties.connectionExpiresInMinutes, ChronoUnit.MINUTES);
     }
 
     public boolean isExpired() {
-        LocalDateTime dateTime = getTokenExpiresAt();
-        return dateTime == null || dateTime.isBefore(LocalDateTime.now());
+        return tokenExpiresAt == null || tokenExpiresAt.isBefore(Instant.now());
     }
 
     public enum Status {

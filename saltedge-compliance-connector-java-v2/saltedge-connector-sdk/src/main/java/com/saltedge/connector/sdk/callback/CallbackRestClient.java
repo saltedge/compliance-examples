@@ -20,13 +20,9 @@
  */
 package com.saltedge.connector.sdk.callback;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.saltedge.connector.sdk.api.err.HttpErrorParams;
-import com.saltedge.connector.sdk.callback.mapping.BaseCallbackRequest;
-import com.saltedge.connector.sdk.callback.mapping.BaseFailRequest;
-import com.saltedge.connector.sdk.config.ApplicationProperties;
 import com.saltedge.connector.sdk.SDKConstants;
+import com.saltedge.connector.sdk.config.ApplicationProperties;
 import com.saltedge.connector.sdk.config.PrioraProperties;
 import com.saltedge.connector.sdk.tools.JsonTools;
 import org.slf4j.Logger;
@@ -53,26 +49,10 @@ public abstract class CallbackRestClient {
     public ApplicationProperties applicationProperties;
     @Autowired
     public RestTemplate restTemplate;
+
     protected ObjectMapper mapper = JsonTools.createDefaultMapper();
 
-    protected abstract String getFailCallbackPath(String sessionSecret);
     protected abstract Logger getLogger();
-
-    public void sendFailCallback(String sessionSecret, Exception exception) {
-        BaseFailRequest params = new BaseFailRequest();
-        if (exception instanceof HttpErrorParams) {
-            params.errorClass = ((HttpErrorParams) exception).getErrorClass();
-            params.errorClass = ((HttpErrorParams) exception).getErrorMessage();
-        } else {
-            params.errorClass = exception.getClass().getSimpleName();
-            params.errorClass = exception.getMessage();
-        }
-        sendFailCallback(sessionSecret, params);
-    }
-
-    public void sendFailCallback(String sessionSecret, BaseFailRequest params) {
-        doCallbackRequest(createCallbackRequestUrl(getFailCallbackPath(sessionSecret)), sessionSecret, params);
-    }
 
     public String createCallbackRequestUrl(String path) {
         try {
@@ -91,27 +71,19 @@ public abstract class CallbackRestClient {
         headersMap.add(HttpHeaders.CONTENT_TYPE, "application/json");
         headersMap.add("App-id", applicationProperties.getPrioraAppId());
         headersMap.add("App-secret", applicationProperties.getPrioraAppSecret());
-        headersMap.add(
-                SDKConstants.HEADER_AUTHORIZATION,
-                JsonTools.createAuthorizationHeaderValue(requestData, applicationProperties.getPrivateKey())
-        );
+        if (requestData != null) {
+            headersMap.add(
+                    SDKConstants.HEADER_AUTHORIZATION,
+                    JsonTools.createAuthorizationHeaderValue(requestData, applicationProperties.getPrivateKey())
+            );
+        }
         return headersMap;
     }
 
-    public void doCallbackRequest(String url, String sessionSecret, BaseCallbackRequest params) {
+    public void doCallbackRequest(String url, LinkedMultiValueMap<String, String> headers) {
         try {
-            params.sessionSecret = sessionSecret;
-            LinkedMultiValueMap<String, String> headers = createCallbackRequestHeaders(params);
             headers.add("X-HTTP-Method-Override", "PATCH");
-            getLogger().info("CallbackRequest:"
-                    + "\nPATCH: " + url
-                    + "\nHEADERS: " + mapper.writeValueAsString(headers)
-                    + "\nAuthorization header params: " + mapper.writeValueAsString(params)
-                    + "\n"
-            );
             ResponseEntity<Object> response = restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(headers), Object.class);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
         } catch (HttpClientErrorException e) {
             e.printStackTrace();
             getLogger().error("HttpClientErrorException:", e);
@@ -121,6 +93,19 @@ public abstract class CallbackRestClient {
         } catch (UnknownHttpStatusCodeException e) {
             e.printStackTrace();
             getLogger().error("UnknownHttpStatusCodeException:", e);
+        }
+    }
+
+    public void printPayload(String url, LinkedMultiValueMap<String, String> headers, Object params) {
+        try {
+            getLogger().info("CallbackRequest:"
+                    + "\nPATCH: " + url
+                    + "\nHEADERS: " + mapper.writeValueAsString(headers)
+                    + "\nAuthorization header params: " + ((params == null) ? "null" : mapper.writeValueAsString(params))
+                    + "\n"
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

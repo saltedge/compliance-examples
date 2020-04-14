@@ -23,6 +23,7 @@ package com.saltedge.connector.sdk.callback;
 import com.saltedge.connector.sdk.api.err.NotFound;
 import com.saltedge.connector.sdk.callback.mapping.BaseCallbackRequest;
 import com.saltedge.connector.sdk.callback.mapping.BaseFailRequest;
+import com.saltedge.connector.sdk.callback.mapping.SessionSuccessCallbackRequest;
 import com.saltedge.connector.sdk.callback.services.SessionsCallbackService;
 import com.saltedge.connector.sdk.config.ApplicationProperties;
 import com.saltedge.connector.sdk.SDKConstants;
@@ -38,6 +39,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.*;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.RestTemplate;
+
+import java.time.Instant;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.*;
@@ -84,7 +87,10 @@ public class SessionCallbackServiceTest {
     @Test
     public void givenMockingRestTemplate_whenSendSuccessCallback_shouldBeCalledExchangeWithParams() {
         // when
-        service.sendSuccessCallback("sessionSecret", new BaseCallbackRequest());
+        SessionSuccessCallbackRequest request = new SessionSuccessCallbackRequest();
+        request.token = "accessToken";
+        request.tokenExpiresAt = Instant.parse("2019-11-18T16:04:49.585Z");
+        service.sendSuccessCallback("sessionSecret", request);
 
         // then
         ArgumentCaptor<String> urlCaptor = ArgumentCaptor.forClass(String.class);

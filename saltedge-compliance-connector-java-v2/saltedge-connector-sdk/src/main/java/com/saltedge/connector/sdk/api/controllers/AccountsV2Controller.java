@@ -20,11 +20,11 @@
  */
 package com.saltedge.connector.sdk.api.controllers;
 
+import com.saltedge.connector.sdk.SDKConstants;
 import com.saltedge.connector.sdk.api.mapping.AccountsResponse;
 import com.saltedge.connector.sdk.api.mapping.DefaultRequest;
 import com.saltedge.connector.sdk.api.mapping.TransactionsRequest;
 import com.saltedge.connector.sdk.api.mapping.TransactionsResponse;
-import com.saltedge.connector.sdk.SDKConstants;
 import com.saltedge.connector.sdk.models.persistence.Token;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,10 +70,10 @@ public class AccountsV2Controller extends BaseV2Controller {
      * @param request data
      * @return list of transactions data.
      */
-    @GetMapping(path = "/{account_id}/transactions")
+    @GetMapping(path = "/{" + SDKConstants.KEY_ACCOUNT_ID + "}/transactions")
     public ResponseEntity<TransactionsResponse> transactionsOfAccount(
             @NotNull Token token,
-            @NotEmpty @PathVariable(name = "account_id") String accountId,
+            @NotEmpty @PathVariable(name = SDKConstants.KEY_ACCOUNT_ID) String accountId,
             @Valid TransactionsRequest request
     ) {
         return new ResponseEntity<>(new TransactionsResponse(

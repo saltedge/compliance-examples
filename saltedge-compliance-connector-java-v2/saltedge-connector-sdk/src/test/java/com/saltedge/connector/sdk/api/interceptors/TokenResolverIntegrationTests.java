@@ -43,6 +43,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.LinkedMultiValueMap;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -106,7 +107,7 @@ public class TokenResolverIntegrationTests {
             Token token = new Token("sessionSecret", "tppAppName", "authTypeCode", "tppRedirectUrl");
             token.id = 1L;
             token.accessToken = "validToken";
-            token.setTokenExpiresAt(LocalDateTime.now().minusSeconds(1));
+            token.tokenExpiresAt = Instant.now().minusSeconds(1);
             tokensRepository.save(token);
         }
     }

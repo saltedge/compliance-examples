@@ -21,9 +21,12 @@
 package com.saltedge.connector.sdk.api.controllers;
 
 import com.saltedge.connector.sdk.SDKConstants;
+import com.saltedge.connector.sdk.callback.services.SessionsCallbackService;
+import com.saltedge.connector.sdk.callback.services.TokensCallbackService;
 import com.saltedge.connector.sdk.models.persistence.Token;
 import com.saltedge.connector.sdk.models.persistence.TokensRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.util.LinkedMultiValueMap;
@@ -33,6 +36,10 @@ abstract public class ControllerIntegrationTests {
     private int port = 0;
     @Autowired
     TokensRepository tokensRepository;
+    @MockBean
+    protected SessionsCallbackService callbackService;
+    @MockBean
+    private TokensCallbackService tokensCallbackService;
     protected TestRestTemplate testRestTemplate = new TestRestTemplate();
 
     protected void seedTokensRepository() {

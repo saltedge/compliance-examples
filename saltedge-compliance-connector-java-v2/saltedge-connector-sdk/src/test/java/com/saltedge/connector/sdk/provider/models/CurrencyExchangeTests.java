@@ -20,11 +20,10 @@
  */
 package com.saltedge.connector.sdk.provider.models;
 
-import org.assertj.core.util.Lists;
 import org.junit.Test;
 
+import java.time.LocalDate;
 import java.util.Date;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -40,11 +39,18 @@ public class CurrencyExchangeTests {
 		assertThat(model.targetCurrency).isNull();
 		assertThat(model.unitCurrency).isNull();
 
-		model = new CurrencyExchange("contractIdentification", "1.0", new Date(0L), "USD", "EUR", "GBP");
+		model = new CurrencyExchange(
+				"contractIdentification",
+				"1.0",
+				LocalDate.MIN,
+				"USD",
+				"EUR",
+				"GBP"
+		);
 
 		assertThat(model.contractIdentification).isEqualTo("contractIdentification");
 		assertThat(model.exchangeRate).isEqualTo("1.0");
-		assertThat(model.quotationDate).isEqualTo(new Date(0L));
+		assertThat(model.quotationDate).isEqualTo(LocalDate.MIN);
 		assertThat(model.sourceCurrency).isEqualTo("USD");
 		assertThat(model.targetCurrency).isEqualTo("EUR");
 		assertThat(model.unitCurrency).isEqualTo("GBP");

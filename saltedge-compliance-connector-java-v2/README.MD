@@ -5,7 +5,7 @@ designated to support communication between ASPSP and TPP.
 Current application implements Priora Connector v2 API compatible with **Berlin Group NextGenPSD2 XS2A API**.  
 Consists of modules:
 * **Example Application** - simulate work of Bank App
-* **Connector SDK v.2.1.0** - wrapper of tools for simplification of communication between and Priora PSD2 Compliance Solution  
+* **Connector SDK v.2.1.1** - wrapper of tools for simplification of communication between and Priora PSD2 Compliance Solution  
   
 ## Application Requirements
   
@@ -75,22 +75,24 @@ Consists of modules:
     * `getPaymentAuthorizationPageUrl(...)` - return URL of authorization page for payment;  
    
 1. Use Connector's SDK callback service `ConnectorCallback` for some events: 
-    * `onOAuthAccountsAuthorizationSuccess(sessionSecret, userId, consents)` - notify SDK about the successful authorization if User for AIS flow:  
+    * `onAccountInformationAuthorizationSuccess(sessionSecret, userId, consents)` - notify SDK about the successful authorization if User for AIS flow:  
       - `sessionSecret` - unique authorization secret code passed to application via `getAccountInformationAuthorizationPageUrl(...)`;  
       - `userId` - unique identifier of Provider's system User (Customer);  
       - `consents` - ProviderOfferedConsents object with user consent to provide account information;  
 
-    * `onOAuthAccountsAuthorizationError(sessionSecret)`- notify SDK about the failed authorization:  
+    * `onAccountInformationAuthorizationFail(sessionSecret)`- notify SDK about the failed authorization:  
       - `sessionSecret` - unique authorization secret code passed to application via `getAccountInformationAuthorizationPageUrl(...)`;
       
-    * `onOAuthPaymentAuthorizationSuccess(paymentId, userId, extra)` - notify SDK about the successful authorization if User for AIS flow:  
+    * `onPaymentInitiationAuthorizationSuccess(paymentId, userId, extra)` - notify SDK about the successful authorization if User for AIS flow:  
       - `paymentId` - unique payment id;  
       - `userId` - unique identifier of Provider's system User (Customer);  
       - `extra` - extra data from authenticated Payment passed to application via `getPaymentAuthorizationPageUrl(...)`;  
 
-    * `onOAuthPaymentAuthorizationFail(paymentId, extra)`- notify SDK about the failed authorization:  
+    * `onPaymentInitiationAuthorizationFail(paymentId, extra)`- notify SDK about the failed authorization:  
       - `paymentId` - unique payment id;
-      - `extra` - extra data from authenticated Payment passed to application via `getPaymentAuthorizationPageUrl(...)`;  
+      - `extra` - extra data from authenticated Payment passed to application via `getPaymentAuthorizationPageUrl(...)`;
+      
+    * `revokeAccountInformationConsent(userId, accessToken)`- Revoke Account information consent associated with userId and accessToken;  
   
   
 ## [Api Documentation](https://priora.banksalt.com/docs/aspsp/v2)

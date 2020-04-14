@@ -23,6 +23,7 @@ package com.saltedge.connector.sdk.provider.models;
 import org.assertj.core.util.Lists;
 import org.junit.Test;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -60,9 +61,9 @@ public class CardTransactionTests {
 				"1.0",
 				"EUR",
 				"active",
-				new Date(0),
+				LocalDate.MIN,
 				"transactionDetails",
-				new Date(0),
+				LocalDate.MIN,
 				address,
 				"cardAcceptorId",
 				Lists.emptyList(),
@@ -80,9 +81,9 @@ public class CardTransactionTests {
 		assertThat(model.getAmount()).isEqualTo("1.0");
 		assertThat(model.getCurrencyCode()).isEqualTo("EUR");
 		assertThat(model.getStatus()).isEqualTo("active");
-		assertThat(model.getTransactionDate()).isEqualTo(new Date(0));
+		assertThat(model.getTransactionDate()).isEqualTo(LocalDate.MIN);
 		assertThat(model.getTransactionDetails()).isEqualTo("transactionDetails");
-		assertThat(model.getBookingDate()).isEqualTo(new Date(0));
+		assertThat(model.getBookingDate()).isEqualTo(LocalDate.MIN);
 		assertThat(model.getCardAcceptorAddress()).isEqualTo(address);
 		assertThat(model.getCardAcceptorId()).isEqualTo("cardAcceptorId");
 		assertThat(model.getCurrencyExchange()).isEqualTo(Lists.emptyList());

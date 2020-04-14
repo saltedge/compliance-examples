@@ -23,13 +23,17 @@ package com.saltedge.connector.sdk.tools;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.saltedge.connector.sdk.SDKConstants;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.jackson.io.JacksonSerializer;
 
 import java.security.PrivateKey;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
 public class JsonTools {
@@ -43,6 +47,8 @@ public class JsonTools {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
         return objectMapper;
     }
 
@@ -55,10 +61,11 @@ public class JsonTools {
      */
     public static String createAuthorizationHeaderValue(Object requestData, PrivateKey key) {
         if (key == null) return "";
-        Instant millis = LocalDateTime.now().plusMinutes(1).atZone(ZoneId.systemDefault()).toInstant();
-        return "Bearer " + Jwts.builder().claim(SDKConstants.KEY_DATA, requestData)
+        return "Bearer " + Jwts.builder()
+                .serializeToJsonWith(new JacksonSerializer<>(createDefaultMapper()))
+                .claim(SDKConstants.KEY_DATA, requestData)
                 .signWith(key)
-                .setExpiration(Date.from(millis))
+                .setExpiration(Date.from(Instant.now().plus(1, ChronoUnit.MINUTES)))
                 .compact();
     }
 }

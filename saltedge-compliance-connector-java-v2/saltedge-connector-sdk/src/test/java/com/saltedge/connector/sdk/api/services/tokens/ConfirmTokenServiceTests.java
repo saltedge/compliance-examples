@@ -33,7 +33,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.validation.ConstraintViolationException;
-import java.util.Date;
+import java.time.Instant;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -55,7 +55,7 @@ public class ConfirmTokenServiceTests extends BaseServicesTests {
 
 	@Test(expected = ConstraintViolationException.class)
 	public void givenInvalidParams_whenConfirmToken_thenSendSessionsFailCallback() {
-		testService.confirmToken("", "", null);
+		testService.confirmToken("", "", "", null, null);
 	}
 
 	@Test
@@ -64,7 +64,12 @@ public class ConfirmTokenServiceTests extends BaseServicesTests {
 		given(tokensRepository.findFirstBySessionSecret("sessionSecret")).willReturn(null);
 
 		// when
-		Token result = testService.confirmToken("sessionSecret", "userId", new ProviderOfferedConsents());
+		Token result = testService.confirmToken(
+				"sessionSecret",
+				"userId",
+				"accessToken",
+				Instant.now(),
+				new ProviderOfferedConsents());
 
 		// then
 		assertThat(result).isNull();
@@ -79,21 +84,28 @@ public class ConfirmTokenServiceTests extends BaseServicesTests {
 		given(tokensRepository.findFirstBySessionSecret("sessionSecret")).willReturn(token);
 
 		// when
-		Token result = testService.confirmToken("sessionSecret", "userId", providerOfferedConsents);
+		Token result = testService.confirmToken(
+				"sessionSecret",
+				"userId",
+				"accessToken",
+				Instant.parse("2019-08-21T16:04:49.021Z"),
+				providerOfferedConsents);
 
 		// then
 		assertThat(result).isNotNull();
 		assertThat(result.sessionSecret).isEqualTo("sessionSecret");
 		assertThat(result.userId).isEqualTo("userId");
 		assertThat(result.status).isEqualTo(Token.Status.CONFIRMED);
-		assertThat(result.accessToken).isNotEmpty();
-		assertThat(result.tokenExpiresAt).isAfter(new Date());
+		assertThat(result.accessToken).isEqualTo("accessToken");
+		assertThat(result.tokenExpiresAt).isEqualTo(Instant.parse("2019-08-21T16:04:49.021Z"));
 		assertThat(result.providerOfferedConsents).isEqualTo(providerOfferedConsents);
 		verify(tokensRepository).save(any(Token.class));
+
 		ArgumentCaptor<SessionSuccessCallbackRequest> captor = ArgumentCaptor.forClass(SessionSuccessCallbackRequest.class);
-		verify(callbackService).sendSuccessCallback(eq("sessionSecret"), captor.capture());
+		verify(sessionsCallbackService).sendSuccessCallback(eq("sessionSecret"), captor.capture());
 		assertThat(captor.getValue().providerOfferedConsents).isEqualTo(providerOfferedConsents);
-		assertThat(captor.getValue().token).isNotEmpty();
 		assertThat(captor.getValue().userId).isEqualTo("userId");
+		assertThat(captor.getValue().token).isEqualTo("accessToken");
+		assertThat(captor.getValue().tokenExpiresAt).isEqualTo(Instant.parse("2019-08-21T16:04:49.021Z"));
 	}
 }

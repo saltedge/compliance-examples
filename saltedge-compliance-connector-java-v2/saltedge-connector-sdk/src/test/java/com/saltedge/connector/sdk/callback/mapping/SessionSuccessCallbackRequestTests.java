@@ -20,7 +20,15 @@
  */
 package com.saltedge.connector.sdk.callback.mapping;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.saltedge.connector.sdk.provider.models.ProviderOfferedConsents;
+import com.saltedge.connector.sdk.tools.JsonTools;
 import org.junit.Test;
+
+import java.time.Instant;
+import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -33,5 +41,20 @@ public class SessionSuccessCallbackRequestTests {
 		assertThat(model.token).isNull();
 		assertThat(model.tokenExpiresAt).isNull();
 		assertThat(model.userId).isNull();
+	}
+
+	@Test
+	public void serializationTest() throws JsonProcessingException {
+		SessionSuccessCallbackRequest model = new SessionSuccessCallbackRequest(
+				new ProviderOfferedConsents(),
+				"accessToken",
+				Instant.parse("2019-11-18T16:04:50.915Z"),
+				"userId"
+		);
+
+		ObjectMapper mapper = JsonTools.createDefaultMapper();
+		String json = mapper.writeValueAsString(model);
+
+		assertThat(json).isEqualTo("{\"extra\":{},\"consent\":{},\"token\":\"accessToken\",\"token_expires_at\":\"2019-11-18T16:04:50.915Z\",\"user_id\":\"userId\"}");
 	}
 }

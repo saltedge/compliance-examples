@@ -26,6 +26,7 @@ import com.saltedge.connector.sdk.models.persistence.BaseEntity;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -41,10 +42,10 @@ public class TransactionEntity extends BaseEntity implements Serializable {
     public String description;
 
     @Column(name = "madeOn", nullable = false)
-    public Date madeOn;
+    public LocalDate madeOn;
 
     @Column(name = "postDate", nullable = true)
-    public Date postDate;
+    public LocalDate postDate;
 
     @Column(name = "status", nullable = false)
     public String status;
@@ -80,7 +81,7 @@ public class TransactionEntity extends BaseEntity implements Serializable {
     public TransactionEntity(String amount,
                              String currencyCode,
                              String description,
-                             Date madeOn,
+                             LocalDate madeOn,
                              String status,
                              List<Fee> fees,
                              Map<String, String> extra,

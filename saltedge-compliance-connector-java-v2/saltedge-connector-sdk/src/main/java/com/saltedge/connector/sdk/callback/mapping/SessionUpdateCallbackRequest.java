@@ -20,12 +20,11 @@
  */
 package com.saltedge.connector.sdk.callback.mapping;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.saltedge.connector.sdk.SDKConstants;
 
-import java.util.Date;
+import java.time.Instant;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SessionUpdateCallbackRequest extends BaseCallbackRequest {
@@ -36,8 +35,7 @@ public class SessionUpdateCallbackRequest extends BaseCallbackRequest {
     public String status;
 
     @JsonProperty("session_expires_at")
-    @JsonFormat(shape = JsonFormat.Shape.STRING)
-    public Date sessionExpiresAt;
+    public Instant sessionExpiresAt;
 
     public SessionUpdateCallbackRequest() {
     }
