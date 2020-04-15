@@ -145,6 +145,7 @@ public class Account {
     }
 
     public AccountBalance getBalance(@NotEmpty String balanceType) {
+        if (balances == null || balances.isEmpty() || StringUtils.isEmpty(balanceType)) return null;
         return balances.stream()
                 .filter(model -> balanceType.equals(model.type))
                 .findFirst()

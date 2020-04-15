@@ -120,4 +120,17 @@ public class AccountTests {
 
 		assertThat(model.containsAccountIdentifier("bic")).isTrue();
 	}
+
+	@Test
+	public void getBalanceTest() {
+		Account model = new Account();
+
+		assertThat(model.getBalance("")).isNull();
+
+		model.setBalances(Lists.list(new AccountBalance("1.0", "EUR", "closed")));
+
+		assertThat(model.getBalance("open")).isNull();
+
+		assertThat(model.getBalance("closed").amount).isEqualTo("1.0");
+	}
 }
