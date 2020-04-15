@@ -23,7 +23,7 @@ package com.saltedge.connector.sdk.callback.mapping;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.saltedge.connector.sdk.SDKConstants;
-import com.saltedge.connector.sdk.provider.models.ProviderOfferedConsents;
+import com.saltedge.connector.sdk.api.models.ProviderOfferedConsents;
 
 import java.time.Instant;
 import java.util.Objects;

@@ -20,9 +20,12 @@
  */
 package com.saltedge.connector.sdk.api.controllers;
 
-import com.saltedge.connector.sdk.api.mapping.*;
 import com.saltedge.connector.sdk.SDKConstants;
-import com.saltedge.connector.sdk.models.persistence.Token;
+import com.saltedge.connector.sdk.api.models.requests.DefaultRequest;
+import com.saltedge.connector.sdk.api.models.requests.TransactionsRequest;
+import com.saltedge.connector.sdk.api.models.responses.CardAccountsResponse;
+import com.saltedge.connector.sdk.api.models.responses.CardTransactionsResponse;
+import com.saltedge.connector.sdk.models.Token;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -41,6 +44,7 @@ import javax.validation.constraints.NotNull;
  * This controller is responsible for fetching card account information for Account Information Service.
  * Card account Information Endpoints are responsible for the access to card account identification data
  * and card account transactions history.
+ * https://priora.saltedge.com/docs/aspsp/v2/connector_endpoints#card-accounts
  */
 @RestController
 @RequestMapping(CardAccountsV2Controller.BASE_PATH)

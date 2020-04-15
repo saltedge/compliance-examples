@@ -21,14 +21,14 @@
 package com.saltedge.connector.sdk.provider;
 
 import com.saltedge.connector.sdk.SDKConstants;
-import com.saltedge.connector.sdk.api.err.NotFound;
+import com.saltedge.connector.sdk.api.models.err.NotFound;
 import com.saltedge.connector.sdk.api.services.tokens.ConfirmTokenService;
 import com.saltedge.connector.sdk.api.services.tokens.RevokeTokenService;
 import com.saltedge.connector.sdk.callback.mapping.SessionSuccessCallbackRequest;
 import com.saltedge.connector.sdk.callback.services.SessionsCallbackService;
 import com.saltedge.connector.sdk.callback.services.TokensCallbackService;
-import com.saltedge.connector.sdk.models.persistence.Token;
-import com.saltedge.connector.sdk.provider.models.ProviderOfferedConsents;
+import com.saltedge.connector.sdk.models.Token;
+import com.saltedge.connector.sdk.api.models.ProviderOfferedConsents;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;

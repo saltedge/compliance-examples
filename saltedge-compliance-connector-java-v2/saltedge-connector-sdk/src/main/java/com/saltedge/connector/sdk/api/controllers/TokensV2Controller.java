@@ -20,13 +20,13 @@
  */
 package com.saltedge.connector.sdk.api.controllers;
 
-import com.saltedge.connector.sdk.api.mapping.CreateTokenRequest;
-import com.saltedge.connector.sdk.api.mapping.EmptyJsonModel;
-import com.saltedge.connector.sdk.api.mapping.RevokeTokenRequest;
+import com.saltedge.connector.sdk.api.models.requests.CreateTokenRequest;
+import com.saltedge.connector.sdk.api.models.EmptyJsonModel;
+import com.saltedge.connector.sdk.api.models.requests.RevokeTokenRequest;
 import com.saltedge.connector.sdk.api.services.tokens.CreateTokenService;
 import com.saltedge.connector.sdk.api.services.tokens.RevokeTokenService;
 import com.saltedge.connector.sdk.SDKConstants;
-import com.saltedge.connector.sdk.models.persistence.Token;
+import com.saltedge.connector.sdk.models.Token;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -20,7 +20,7 @@
  */
 package com.saltedge.connector.sdk.callback.services;
 
-import com.saltedge.connector.sdk.api.err.HttpErrorParams;
+import com.saltedge.connector.sdk.api.models.err.HttpErrorParams;
 import com.saltedge.connector.sdk.callback.CallbackRestClient;
 import com.saltedge.connector.sdk.callback.mapping.BaseCallbackRequest;
 import com.saltedge.connector.sdk.SDKConstants;

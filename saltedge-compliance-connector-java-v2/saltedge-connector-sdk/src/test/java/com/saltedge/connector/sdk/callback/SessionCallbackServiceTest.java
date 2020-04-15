@@ -20,13 +20,13 @@
  */
 package com.saltedge.connector.sdk.callback;
 
-import com.saltedge.connector.sdk.api.err.NotFound;
+import com.saltedge.connector.sdk.SDKConstants;
+import com.saltedge.connector.sdk.api.models.err.NotFound;
 import com.saltedge.connector.sdk.callback.mapping.BaseCallbackRequest;
 import com.saltedge.connector.sdk.callback.mapping.BaseFailRequest;
 import com.saltedge.connector.sdk.callback.mapping.SessionSuccessCallbackRequest;
 import com.saltedge.connector.sdk.callback.services.SessionsCallbackService;
 import com.saltedge.connector.sdk.config.ApplicationProperties;
-import com.saltedge.connector.sdk.SDKConstants;
 import org.assertj.core.util.Lists;
 import org.junit.Before;
 import org.junit.Test;

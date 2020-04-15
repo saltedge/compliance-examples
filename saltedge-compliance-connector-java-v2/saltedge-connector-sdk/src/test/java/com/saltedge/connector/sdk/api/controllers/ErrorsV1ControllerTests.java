@@ -20,10 +20,10 @@
  */
 package com.saltedge.connector.sdk.api.controllers;
 
-import com.saltedge.connector.sdk.api.mapping.EmptyJsonModel;
-import com.saltedge.connector.sdk.api.mapping.ErrorsRequest;
 import com.saltedge.connector.sdk.SDKConstants;
-import com.saltedge.connector.sdk.models.persistence.Token;
+import com.saltedge.connector.sdk.api.models.EmptyJsonModel;
+import com.saltedge.connector.sdk.api.models.requests.ErrorsRequest;
+import com.saltedge.connector.sdk.models.Token;
 import com.saltedge.connector.sdk.provider.ProviderServiceAbs;
 import org.junit.Test;
 import org.mockito.Mockito;

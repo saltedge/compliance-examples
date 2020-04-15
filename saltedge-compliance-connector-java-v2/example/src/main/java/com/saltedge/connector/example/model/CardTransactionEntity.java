@@ -22,12 +22,11 @@ package com.saltedge.connector.example.model;
 
 import com.saltedge.connector.example.model.converter.FeesConverter;
 import com.saltedge.connector.example.model.converter.StringMapConverter;
-import com.saltedge.connector.sdk.models.persistence.BaseEntity;
+import com.saltedge.connector.sdk.models.BaseEntity;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 

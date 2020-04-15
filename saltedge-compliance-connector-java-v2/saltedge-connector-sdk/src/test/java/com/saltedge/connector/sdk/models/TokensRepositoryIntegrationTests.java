@@ -20,8 +20,6 @@
  */
 package com.saltedge.connector.sdk.models;
 
-import com.saltedge.connector.sdk.models.persistence.Token;
-import com.saltedge.connector.sdk.models.persistence.TokensRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -20,9 +20,9 @@
  */
 package com.saltedge.connector.sdk;
 
-import com.saltedge.connector.sdk.provider.models.AuthMode;
-import com.saltedge.connector.sdk.provider.models.AuthorizationType;
-import com.saltedge.connector.sdk.provider.models.InputField;
+import com.saltedge.connector.sdk.api.models.AuthMode;
+import com.saltedge.connector.sdk.api.models.AuthorizationType;
+import com.saltedge.connector.sdk.api.models.InputField;
 import org.assertj.core.util.Arrays;
 
 public class AuthorizationTypes {

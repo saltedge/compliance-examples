@@ -20,7 +20,7 @@
  */
 package com.saltedge.connector.example.model;
 
-import com.saltedge.connector.sdk.models.persistence.BaseEntity;
+import com.saltedge.connector.sdk.models.BaseEntity;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 

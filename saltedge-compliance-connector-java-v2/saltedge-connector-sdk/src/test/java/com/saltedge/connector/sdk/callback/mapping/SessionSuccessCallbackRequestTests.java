@@ -20,15 +20,13 @@
  */
 package com.saltedge.connector.sdk.callback.mapping;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.saltedge.connector.sdk.provider.models.ProviderOfferedConsents;
+import com.saltedge.connector.sdk.api.models.ProviderOfferedConsents;
 import com.saltedge.connector.sdk.tools.JsonTools;
 import org.junit.Test;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

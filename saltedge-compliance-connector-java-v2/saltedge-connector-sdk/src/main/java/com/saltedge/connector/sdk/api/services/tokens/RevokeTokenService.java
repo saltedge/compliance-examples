@@ -20,8 +20,8 @@
  */
 package com.saltedge.connector.sdk.api.services.tokens;
 
-import com.saltedge.connector.sdk.api.err.NotFound;
-import com.saltedge.connector.sdk.models.persistence.Token;
+import com.saltedge.connector.sdk.api.models.err.NotFound;
+import com.saltedge.connector.sdk.models.Token;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;

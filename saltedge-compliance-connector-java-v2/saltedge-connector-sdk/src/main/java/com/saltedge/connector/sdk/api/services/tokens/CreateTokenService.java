@@ -21,21 +21,21 @@
 package com.saltedge.connector.sdk.api.services.tokens;
 
 import com.saltedge.connector.sdk.SDKConstants;
-import com.saltedge.connector.sdk.api.err.BadRequest;
-import com.saltedge.connector.sdk.api.err.HttpErrorParams;
-import com.saltedge.connector.sdk.api.err.NotFound;
-import com.saltedge.connector.sdk.api.mapping.CreateTokenRequest;
+import com.saltedge.connector.sdk.api.models.AuthMode;
+import com.saltedge.connector.sdk.api.models.AuthorizationType;
+import com.saltedge.connector.sdk.api.models.err.BadRequest;
+import com.saltedge.connector.sdk.api.models.err.HttpErrorParams;
+import com.saltedge.connector.sdk.api.models.err.NotFound;
+import com.saltedge.connector.sdk.api.models.requests.CreateTokenRequest;
 import com.saltedge.connector.sdk.callback.mapping.SessionUpdateCallbackRequest;
-import com.saltedge.connector.sdk.models.persistence.Token;
-import com.saltedge.connector.sdk.provider.models.AuthMode;
-import com.saltedge.connector.sdk.provider.models.AuthorizationType;
-import com.saltedge.connector.sdk.tools.UrlTools;
+import com.saltedge.connector.sdk.models.Token;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 /**
  * Service is responsible for implementing authentication and authorization of Customer.
@@ -48,7 +48,7 @@ public class CreateTokenService extends TokensBaseService {
     @Async
     public void startAuthorization(CreateTokenRequest params) {
         try {
-            AuthorizationType type = super.getAuthorizationTypeByCode(params.authorizationType);
+            AuthorizationType type = getAuthorizationTypeByCode(params.authorizationType);
             if (type == null) throw new BadRequest.InvalidAuthorizationType();
             else {
                 Token token = createToken(type, params);
@@ -75,10 +75,6 @@ public class CreateTokenService extends TokensBaseService {
         callbackService.sendUpdateCallback(token.sessionSecret, params);
     }
 
-    private void embeddedAuthorize() throws RuntimeException {
-        //TODO Implement when embedded type will be supported by Priora Compliance
-    }
-
     private Token createToken(AuthorizationType authType, CreateTokenRequest request) {
         return new Token(
                 request.sessionSecret,
@@ -86,5 +82,17 @@ public class CreateTokenService extends TokensBaseService {
                 authType.code,
                 request.redirectUrl
         );
+    }
+
+    private AuthorizationType getAuthorizationTypeByCode(String authTypeCode) {
+        if (StringUtils.isEmpty(authTypeCode)) return null;
+        return providerService.getAuthorizationTypes().stream()
+                .filter(type -> authTypeCode.equals(type.code))
+                .findFirst()
+                .orElse(null);
+    }
+
+    private void embeddedAuthorize() throws RuntimeException {
+        //TODO Implement when embedded type will be supported by Priora Compliance
     }
 }

@@ -21,8 +21,8 @@
 package com.saltedge.connector.example.compliance_connector.config;
 
 import com.saltedge.connector.example.compliance_connector.ConnectorTypeConverters;
-import com.saltedge.connector.sdk.provider.models.AuthMode;
-import com.saltedge.connector.sdk.provider.models.AuthorizationType;
+import com.saltedge.connector.sdk.api.models.AuthMode;
+import com.saltedge.connector.sdk.api.models.AuthorizationType;
 
 public class AuthorizationTypes {
     public static AuthorizationType LOGIN_PASSWORD_AUTH_TYPE = new AuthorizationType(
