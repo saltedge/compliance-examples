@@ -32,10 +32,10 @@ import com.saltedge.connector.example.model.repository.CardAccountsRepository;
 import com.saltedge.connector.example.model.repository.PaymentsRepository;
 import com.saltedge.connector.example.model.repository.UsersRepository;
 import com.saltedge.connector.sdk.SDKConstants;
-import com.saltedge.connector.sdk.api.err.BadRequest;
-import com.saltedge.connector.sdk.api.err.NotFound;
+import com.saltedge.connector.sdk.api.models.*;
+import com.saltedge.connector.sdk.api.models.err.BadRequest;
+import com.saltedge.connector.sdk.api.models.err.NotFound;
 import com.saltedge.connector.sdk.provider.ProviderServiceAbs;
-import com.saltedge.connector.sdk.provider.models.*;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +46,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.constraints.NotEmpty;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.function.Supplier;
@@ -89,9 +88,17 @@ public class ProviderService implements ProviderServiceAbs {
     }
 
     @Override
-    public AuthorizationType getAuthorizationTypeByCode(String code) {
-        if (code == null) return null;
-        return getAuthorizationTypes().stream().filter(type -> code.equals(type.code)).findFirst().orElse(null);
+    public List<ExchangeRate> getExchangeRates() {
+        ArrayList<ExchangeRate> result = new ArrayList<>();
+        result.add(new ExchangeRate("EUR", 1.0f));
+        result.add(new ExchangeRate("USD", 0.90f));
+        result.add(new ExchangeRate("CAD", 0.65f));
+        result.add(new ExchangeRate("GBP", 1.502f));
+        result.add(new ExchangeRate("CHF", 0.95f));
+        result.add(new ExchangeRate("RUB", 0.0125f));
+        result.add(new ExchangeRate("CNY", 0.13f));
+        result.add(new ExchangeRate("JPY", 0.0085f));
+        return result;
     }
 
     @Override

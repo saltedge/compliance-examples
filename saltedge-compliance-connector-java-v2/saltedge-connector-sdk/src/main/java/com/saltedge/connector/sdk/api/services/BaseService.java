@@ -22,7 +22,6 @@ package com.saltedge.connector.sdk.api.services;
 
 import com.saltedge.connector.sdk.callback.services.SessionsCallbackService;
 import com.saltedge.connector.sdk.provider.ProviderServiceAbs;
-import com.saltedge.connector.sdk.provider.models.AuthorizationType;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -33,8 +32,4 @@ public abstract class BaseService {
     protected SessionsCallbackService callbackService;
     @Autowired
     protected ProviderServiceAbs providerService;
-
-    protected AuthorizationType getAuthorizationTypeByCode(String authTypeCode) {
-        return providerService.getAuthorizationTypeByCode(authTypeCode);
-    }
 }

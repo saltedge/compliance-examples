@@ -1,5 +1,9 @@
 # Salt Edge Compliance Connector SDK Changelog
 
+## 2.2.0 (2020-04-16)
+### Add:
+- Funds confirmation feature for Payment Instrument Issuer Service Providers
+
 ## 2.1.1 (2020-04-08)
 ### Add:
 - ConnectorCallbackService.revokeAccountInformationConsent(...)

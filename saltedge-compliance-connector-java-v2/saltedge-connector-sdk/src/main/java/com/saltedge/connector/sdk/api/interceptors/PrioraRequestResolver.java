@@ -21,10 +21,11 @@
 package com.saltedge.connector.sdk.api.interceptors;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.saltedge.connector.sdk.api.err.BadRequest;
-import com.saltedge.connector.sdk.api.mapping.*;
-import com.saltedge.connector.sdk.config.ApplicationProperties;
 import com.saltedge.connector.sdk.SDKConstants;
+import com.saltedge.connector.sdk.api.models.EmptyJsonModel;
+import com.saltedge.connector.sdk.api.models.err.BadRequest;
+import com.saltedge.connector.sdk.api.models.requests.*;
+import com.saltedge.connector.sdk.config.ApplicationProperties;
 import com.saltedge.connector.sdk.tools.JsonTools;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +54,7 @@ public class PrioraRequestResolver implements HandlerMethodArgumentResolver {
                 || type.equals(RevokeTokenRequest.class)
                 || type.equals(TransactionsRequest.class)
                 || type.equals(CreatePaymentRequest.class)
+                || type.equals(FundsConfirmationRequest.class)
                 || type.equals(ErrorsRequest.class)
                 || type.equals(DefaultRequest.class)
                 || type.equals(EmptyJsonModel.class);

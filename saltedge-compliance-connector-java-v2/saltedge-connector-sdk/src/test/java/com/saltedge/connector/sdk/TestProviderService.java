@@ -20,13 +20,12 @@
  */
 package com.saltedge.connector.sdk;
 
+import com.saltedge.connector.sdk.api.models.*;
 import com.saltedge.connector.sdk.provider.ProviderServiceAbs;
-import com.saltedge.connector.sdk.provider.models.*;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotEmpty;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -44,7 +43,7 @@ public class TestProviderService implements ProviderServiceAbs {
     }
 
     @Override
-    public AuthorizationType getAuthorizationTypeByCode(String code) {
+    public List<ExchangeRate> getExchangeRates() {
         return null;
     }
 

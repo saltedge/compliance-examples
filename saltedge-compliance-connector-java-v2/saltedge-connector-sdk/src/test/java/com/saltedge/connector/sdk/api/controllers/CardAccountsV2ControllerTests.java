@@ -21,20 +21,19 @@
 package com.saltedge.connector.sdk.api.controllers;
 
 import com.saltedge.connector.sdk.SDKConstants;
-import com.saltedge.connector.sdk.api.mapping.CardAccountsResponse;
-import com.saltedge.connector.sdk.api.mapping.CardTransactionsResponse;
-import com.saltedge.connector.sdk.api.mapping.DefaultRequest;
-import com.saltedge.connector.sdk.api.mapping.TransactionsRequest;
-import com.saltedge.connector.sdk.models.persistence.Token;
+import com.saltedge.connector.sdk.api.models.*;
+import com.saltedge.connector.sdk.api.models.requests.DefaultRequest;
+import com.saltedge.connector.sdk.api.models.requests.TransactionsRequest;
+import com.saltedge.connector.sdk.api.models.responses.CardAccountsResponse;
+import com.saltedge.connector.sdk.api.models.responses.CardTransactionsResponse;
+import com.saltedge.connector.sdk.models.Token;
 import com.saltedge.connector.sdk.provider.ProviderServiceAbs;
-import com.saltedge.connector.sdk.provider.models.*;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.text.ParseException;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;

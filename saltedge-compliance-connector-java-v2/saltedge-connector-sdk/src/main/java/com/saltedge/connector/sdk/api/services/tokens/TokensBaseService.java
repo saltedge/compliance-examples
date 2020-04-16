@@ -21,8 +21,8 @@
 package com.saltedge.connector.sdk.api.services.tokens;
 
 import com.saltedge.connector.sdk.api.services.BaseService;
-import com.saltedge.connector.sdk.models.persistence.Token;
-import com.saltedge.connector.sdk.models.persistence.TokensRepository;
+import com.saltedge.connector.sdk.models.Token;
+import com.saltedge.connector.sdk.models.TokensRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

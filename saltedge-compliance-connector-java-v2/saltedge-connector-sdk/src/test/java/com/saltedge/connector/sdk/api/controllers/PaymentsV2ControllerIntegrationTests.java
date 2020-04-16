@@ -22,19 +22,18 @@ package com.saltedge.connector.sdk.api.controllers;
 
 import com.saltedge.connector.sdk.SDKConstants;
 import com.saltedge.connector.sdk.TestTools;
-import com.saltedge.connector.sdk.api.mapping.CreatePaymentRequest;
-import com.saltedge.connector.sdk.api.mapping.DefaultRequest;
-import com.saltedge.connector.sdk.api.mapping.EmptyJsonModel;
-import com.saltedge.connector.sdk.api.mapping.ErrorResponse;
-import com.saltedge.connector.sdk.callback.services.SessionsCallbackService;
+import com.saltedge.connector.sdk.api.models.Account;
+import com.saltedge.connector.sdk.api.models.Amount;
+import com.saltedge.connector.sdk.api.models.EmptyJsonModel;
+import com.saltedge.connector.sdk.api.models.PaymentOrder;
+import com.saltedge.connector.sdk.api.models.requests.CreatePaymentRequest;
+import com.saltedge.connector.sdk.api.models.requests.DefaultRequest;
+import com.saltedge.connector.sdk.api.models.responses.ErrorResponse;
 import com.saltedge.connector.sdk.config.ApplicationProperties;
-import com.saltedge.connector.sdk.models.PaymentOrder;
-import com.saltedge.connector.sdk.provider.models.Amount;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -43,7 +42,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.LinkedMultiValueMap;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -64,14 +62,18 @@ public class PaymentsV2ControllerIntegrationTests extends ControllerIntegrationT
     @Test
     public void givenHeaderWithValidAuthorization_whenCreatePayment_thenReturnOK() {
         // given
+        Account creditorAccount = new Account();
+        creditorAccount.setIban("iban1");
+        Account debtorAccount = new Account();
+        debtorAccount.setIban("iban2");
         CreatePaymentRequest request = new CreatePaymentRequest(
                 "appName",
                 "providerCode",
                 "returnToUrl",
                 new PaymentOrder(
-                        new PaymentOrder.Account("iban1"),
+                        creditorAccount,
                         "creditorName",
-                        new PaymentOrder.Account("iban2"),
+                        debtorAccount,
                         new Amount("1.0", "USD"),
                         "endToEndIdentification",
                         "remittanceInformationUnstructured"

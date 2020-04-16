@@ -20,7 +20,6 @@
  */
 package com.saltedge.connector.sdk.models;
 
-import com.saltedge.connector.sdk.models.persistence.Token;
 import org.junit.Test;
 
 import java.time.Instant;

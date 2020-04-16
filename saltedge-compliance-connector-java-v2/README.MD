@@ -5,7 +5,7 @@ designated to support communication between ASPSP and TPP.
 Current application implements Priora Connector v2 API compatible with **Berlin Group NextGenPSD2 XS2A API**.  
 Consists of modules:
 * **Example Application** - simulate work of Bank App
-* **Connector SDK v.2.1.1** - wrapper of tools for simplification of communication between and Priora PSD2 Compliance Solution  
+* **Connector SDK v.2.2.0** - wrapper of tools for simplification of communication between and Priora PSD2 Compliance Solution  
   
 ## Application Requirements
   
@@ -65,7 +65,7 @@ Consists of modules:
 1. Create a service designated for providing information to and receiving events from `Salt Edge PSD2 Compliance`:
    Service should implement `ProviderServiceAbs` interface and should have `@Service` annotation because it is auto-wired in SDK;
     * `getAuthorizationTypes(...)` - return list of registered [Authorization types](https://priora.saltedge.com/providers/settings#authorization_types);
-    * `getAuthorizationTypeByCode(...)` - return one of registered [Authorization types](https://priora.saltedge.com/providers/settings#authorization_types);
+    * `getExchangeRates()` - return list of Exchange rates for today;
     * `getAccountInformationAuthorizationPageUrl(...)` - return URL of authorization page for oAuth authorization of User and consent for accounts information;
     * `getAccountsOfUser(...)` - return accounts list of User;
     * `getTransactionsOfAccount(...)` - return transactions list for account of User;

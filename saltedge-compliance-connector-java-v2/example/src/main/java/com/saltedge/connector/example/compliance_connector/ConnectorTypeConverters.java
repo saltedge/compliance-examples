@@ -21,7 +21,7 @@
 package com.saltedge.connector.example.compliance_connector;
 
 import com.saltedge.connector.example.model.*;
-import com.saltedge.connector.sdk.provider.models.*;
+import com.saltedge.connector.sdk.api.models.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -99,7 +99,7 @@ public class ConnectorTypeConverters {
         );
         result.setBookingDate(transaction.postDate);
         result.setCreditorDetails(createParticipantDetails(transaction.account));
-        result.setDebtorDetails(new ParticipantDetails(new ParticipantDetails.Account(
+        result.setDebtorDetails(new ParticipantDetails(ParticipantAccount.createWithIbanAndName(
                 "GB29 NWBK 6016 1331 9268 19",
                 "Unknown payee"
         )));
@@ -147,7 +147,7 @@ public class ConnectorTypeConverters {
     }
 
     public static ParticipantDetails createParticipantDetails(AccountEntity account) {
-        ParticipantDetails.Account participantAccount = new ParticipantDetails.Account();
+        ParticipantAccount participantAccount = new ParticipantAccount();
         participantAccount.bban = account.number;
         participantAccount.currencyCode = account.currencyCode;
         participantAccount.iban = account.iban;

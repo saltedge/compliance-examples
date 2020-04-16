@@ -20,11 +20,10 @@
  */
 package com.saltedge.connector.sdk.provider;
 
-import com.saltedge.connector.sdk.provider.models.*;
+import com.saltedge.connector.sdk.api.models.*;
 import org.jetbrains.annotations.NotNull;
 
 import javax.validation.constraints.NotEmpty;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -44,26 +43,23 @@ public interface ProviderServiceAbs {
     List<AuthorizationType> getAuthorizationTypes();
 
     /**
-     * Provides one of Authorization Types registered in `Dashboard/Settings/Authorization types` for Customer.
-     * (https://priora.saltedge.com/providers/settings#authorization_types)
-     * Authorization Type is selected by type code (e.g. `oauth`)
+     * Provides current currencies exchange rates
      *
-     * @param authTypeCode of Authorization Type (e.g. `oauth`)
-     * @return AuthorizationType registered AuthorizationType
-     * @see AuthorizationType
+     * @return list of ExchangeRate objects
+     * @see ExchangeRate
      */
-    AuthorizationType getAuthorizationTypeByCode(String authTypeCode);
+    List<ExchangeRate> getExchangeRates();
 
     /**
      * Provides url of provider's authorization page designated for oAuth authorization
      *
-     * @param sessionSecret consent session secret
+     * @param sessionSecret create consent session secret
      * @return URL string of Authorization page
      */
     String getAccountInformationAuthorizationPageUrl(@NotEmpty String sessionSecret);
 
     /**
-     * Provides accounts information of user
+     * Return accounts information of user
      *
      * @param userId User identifier on Provider side
      * @return list of AccountData objects
@@ -143,7 +139,7 @@ public interface ProviderServiceAbs {
     /**
      * Provides url of provider's authorization page designated for oAuth authorization and payment confirmation
      *
-     * @param paymentId unique of payment order
+     * @param paymentId unique identifier of payment order
      * @return URL string of Authorization page
      */
     String getPaymentAuthorizationPageUrl(@NotEmpty String paymentId);

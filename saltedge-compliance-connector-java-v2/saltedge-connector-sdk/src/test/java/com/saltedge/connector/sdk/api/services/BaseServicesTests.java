@@ -24,7 +24,7 @@ import com.saltedge.connector.sdk.TestTools;
 import com.saltedge.connector.sdk.callback.services.SessionsCallbackService;
 import com.saltedge.connector.sdk.callback.services.TokensCallbackService;
 import com.saltedge.connector.sdk.config.ApplicationProperties;
-import com.saltedge.connector.sdk.models.persistence.TokensRepository;
+import com.saltedge.connector.sdk.models.TokensRepository;
 import com.saltedge.connector.sdk.provider.ProviderServiceAbs;
 import org.junit.Before;
 import org.springframework.boot.test.mock.mockito.MockBean;

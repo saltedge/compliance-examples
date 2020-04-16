@@ -20,12 +20,12 @@
  */
 package com.saltedge.connector.sdk.api.interceptors;
 
-import com.saltedge.connector.sdk.api.err.BadRequest;
-import com.saltedge.connector.sdk.api.err.NotFound;
-import com.saltedge.connector.sdk.api.err.Unauthorized;
+import com.saltedge.connector.sdk.api.models.err.BadRequest;
+import com.saltedge.connector.sdk.api.models.err.NotFound;
+import com.saltedge.connector.sdk.api.models.err.Unauthorized;
 import com.saltedge.connector.sdk.SDKConstants;
-import com.saltedge.connector.sdk.models.persistence.Token;
-import com.saltedge.connector.sdk.models.persistence.TokensRepository;
+import com.saltedge.connector.sdk.models.Token;
+import com.saltedge.connector.sdk.models.TokensRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;

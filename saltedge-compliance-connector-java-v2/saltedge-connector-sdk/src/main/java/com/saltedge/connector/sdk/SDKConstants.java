@@ -44,7 +44,9 @@ public class SDKConstants {
     public final static String KEY_STATUS = "status";
     public final static String KEY_CURRENCY = "currency";
     public final static String KEY_CURRENCY_CODE = "currency_code";
+    public final static String KEY_ACCOUNT = "account";
     public final static String KEY_AMOUNT = "amount";
+    public final static String KEY_INSTRUCTED_AMOUNT = "instructed_amount";
     public final static String KEY_ACCOUNT_ID = "account_id";
     public final static String KEY_IBAN = "iban";
     public final static String KEY_MASKED_PAN = "masked_pan";

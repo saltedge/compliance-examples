@@ -20,27 +20,24 @@
  */
 package com.saltedge.connector.sdk.api.controllers;
 
-import com.saltedge.connector.sdk.api.mapping.AccountsResponse;
-import com.saltedge.connector.sdk.api.mapping.DefaultRequest;
-import com.saltedge.connector.sdk.api.mapping.TransactionsRequest;
-import com.saltedge.connector.sdk.api.mapping.TransactionsResponse;
 import com.saltedge.connector.sdk.SDKConstants;
-import com.saltedge.connector.sdk.models.persistence.Token;
+import com.saltedge.connector.sdk.api.models.Account;
+import com.saltedge.connector.sdk.api.models.AccountBalance;
+import com.saltedge.connector.sdk.api.models.Transaction;
+import com.saltedge.connector.sdk.api.models.requests.DefaultRequest;
+import com.saltedge.connector.sdk.api.models.requests.TransactionsRequest;
+import com.saltedge.connector.sdk.api.models.responses.AccountsResponse;
+import com.saltedge.connector.sdk.api.models.responses.TransactionsResponse;
+import com.saltedge.connector.sdk.models.Token;
 import com.saltedge.connector.sdk.provider.ProviderServiceAbs;
-import com.saltedge.connector.sdk.provider.models.Account;
-import com.saltedge.connector.sdk.provider.models.AccountBalance;
-import com.saltedge.connector.sdk.provider.models.Transaction;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;

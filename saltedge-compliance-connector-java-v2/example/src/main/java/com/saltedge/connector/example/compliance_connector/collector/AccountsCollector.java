@@ -26,8 +26,8 @@ import com.saltedge.connector.example.model.CardAccountEntity;
 import com.saltedge.connector.example.model.UserEntity;
 import com.saltedge.connector.example.model.repository.AccountsRepository;
 import com.saltedge.connector.example.model.repository.CardAccountsRepository;
-import com.saltedge.connector.sdk.provider.models.Account;
-import com.saltedge.connector.sdk.provider.models.CardAccount;
+import com.saltedge.connector.sdk.api.models.Account;
+import com.saltedge.connector.sdk.api.models.CardAccount;
 
 import java.util.List;
 

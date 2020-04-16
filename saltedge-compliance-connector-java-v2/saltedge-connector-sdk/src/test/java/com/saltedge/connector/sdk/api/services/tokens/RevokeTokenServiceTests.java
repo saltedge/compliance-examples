@@ -20,9 +20,9 @@
  */
 package com.saltedge.connector.sdk.api.services.tokens;
 
-import com.saltedge.connector.sdk.api.err.NotFound;
+import com.saltedge.connector.sdk.api.models.err.NotFound;
 import com.saltedge.connector.sdk.api.services.BaseServicesTests;
-import com.saltedge.connector.sdk.models.persistence.Token;
+import com.saltedge.connector.sdk.models.Token;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;

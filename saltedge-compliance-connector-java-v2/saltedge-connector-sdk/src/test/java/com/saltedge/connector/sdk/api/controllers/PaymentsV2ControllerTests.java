@@ -21,12 +21,9 @@
 package com.saltedge.connector.sdk.api.controllers;
 
 import com.saltedge.connector.sdk.SDKConstants;
-import com.saltedge.connector.sdk.api.mapping.CreatePaymentRequest;
-import com.saltedge.connector.sdk.api.mapping.CreateTokenRequest;
-import com.saltedge.connector.sdk.api.mapping.EmptyJsonModel;
-import com.saltedge.connector.sdk.api.mapping.RevokeTokenRequest;
-import com.saltedge.connector.sdk.api.services.payments.PaymentsService;
-import com.saltedge.connector.sdk.models.persistence.Token;
+import com.saltedge.connector.sdk.api.models.EmptyJsonModel;
+import com.saltedge.connector.sdk.api.models.requests.CreatePaymentRequest;
+import com.saltedge.connector.sdk.api.services.PaymentsService;
 import com.saltedge.connector.sdk.provider.ProviderServiceAbs;
 import org.junit.Test;
 import org.mockito.Mockito;

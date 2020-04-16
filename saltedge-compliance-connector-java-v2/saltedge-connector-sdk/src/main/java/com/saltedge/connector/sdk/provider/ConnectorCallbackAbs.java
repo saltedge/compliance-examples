@@ -20,7 +20,7 @@
  */
 package com.saltedge.connector.sdk.provider;
 
-import com.saltedge.connector.sdk.provider.models.ProviderOfferedConsents;
+import com.saltedge.connector.sdk.api.models.ProviderOfferedConsents;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;

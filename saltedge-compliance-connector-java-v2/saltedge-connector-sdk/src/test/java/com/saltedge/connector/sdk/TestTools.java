@@ -25,6 +25,7 @@ import com.saltedge.connector.sdk.tools.JsonTools;
 import com.saltedge.connector.sdk.tools.KeyTools;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.jackson.io.JacksonSerializer;
+import org.assertj.core.util.Lists;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -63,9 +64,11 @@ public class TestTools {
     }
 
     public static void initProviderApiMocks(ProviderServiceAbs providerService) {
-        given(providerService.getAuthorizationTypeByCode("login_password_sms")).willReturn(AuthorizationTypes.LOGIN_PASSWORD_SMS_AUTH_TYPE);
-        given(providerService.getAuthorizationTypeByCode("login_password")).willReturn(AuthorizationTypes.LOGIN_PASSWORD_AUTH_TYPE);
-        given(providerService.getAuthorizationTypeByCode("oauth")).willReturn(AuthorizationTypes.OAUTH_AUTH_TYPE);
+        given(providerService.getAuthorizationTypes()).willReturn(Lists.list(
+                AuthorizationTypes.LOGIN_PASSWORD_SMS_AUTH_TYPE,
+                AuthorizationTypes.LOGIN_PASSWORD_AUTH_TYPE,
+                AuthorizationTypes.OAUTH_AUTH_TYPE
+        ));
 //        given(providerApi.getPaymentTemplateByCode("1", PaymentTemplates.TYPE_INTERNAL_TRANSFER)).willReturn(PaymentTemplates.INTERNAL_TRANSFER);
 //        given(providerApi.getPaymentTemplateByCode("1", PaymentTemplates.TYPE_SWIFT)).willReturn(PaymentTemplates.SWIFT);
 //        given(providerApi.getPaymentTemplateByCode("1", PaymentTemplates.TYPE_SEPA)).willReturn(PaymentTemplates.SEPA);

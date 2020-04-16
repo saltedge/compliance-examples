@@ -20,12 +20,12 @@
  */
 package com.saltedge.connector.sdk.api.controllers;
 
-import com.saltedge.connector.sdk.TestTools;
-import com.saltedge.connector.sdk.api.mapping.AccountsResponse;
-import com.saltedge.connector.sdk.api.mapping.DefaultRequest;
-import com.saltedge.connector.sdk.api.mapping.ErrorResponse;
-import com.saltedge.connector.sdk.api.mapping.TransactionsRequest;
 import com.saltedge.connector.sdk.SDKConstants;
+import com.saltedge.connector.sdk.TestTools;
+import com.saltedge.connector.sdk.api.models.requests.DefaultRequest;
+import com.saltedge.connector.sdk.api.models.requests.TransactionsRequest;
+import com.saltedge.connector.sdk.api.models.responses.AccountsResponse;
+import com.saltedge.connector.sdk.api.models.responses.ErrorResponse;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,7 +39,6 @@ import org.springframework.util.LinkedMultiValueMap;
 
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;

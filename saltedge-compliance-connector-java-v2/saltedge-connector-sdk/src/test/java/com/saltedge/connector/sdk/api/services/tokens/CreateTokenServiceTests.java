@@ -20,12 +20,12 @@
  */
 package com.saltedge.connector.sdk.api.services.tokens;
 
-import com.saltedge.connector.sdk.api.err.HttpErrorParams;
-import com.saltedge.connector.sdk.api.mapping.CreateTokenRequest;
+import com.saltedge.connector.sdk.SDKConstants;
+import com.saltedge.connector.sdk.api.models.err.HttpErrorParams;
+import com.saltedge.connector.sdk.api.models.requests.CreateTokenRequest;
 import com.saltedge.connector.sdk.api.services.BaseServicesTests;
 import com.saltedge.connector.sdk.callback.mapping.SessionUpdateCallbackRequest;
-import com.saltedge.connector.sdk.SDKConstants;
-import com.saltedge.connector.sdk.models.persistence.Token;
+import com.saltedge.connector.sdk.models.Token;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,6 +33,8 @@ import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.eq;
@@ -55,7 +57,7 @@ public class CreateTokenServiceTests extends BaseServicesTests {
 	@Test
 	public void givenNullAuthType_whenStartAuthorization_thenSendSessionsFailCallback() {
 		// given
-		given(providerService.getAuthorizationTypeByCode("oauth")).willReturn(null);
+		given(providerService.getAuthorizationTypes()).willReturn(Collections.emptyList());
 		CreateTokenRequest request = createTokenRequest("sessionSecret", "tppAppName", "redirectUrl");
 
 		// when

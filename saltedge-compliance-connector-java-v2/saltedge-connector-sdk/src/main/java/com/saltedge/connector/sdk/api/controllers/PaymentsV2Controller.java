@@ -21,9 +21,9 @@
 package com.saltedge.connector.sdk.api.controllers;
 
 import com.saltedge.connector.sdk.SDKConstants;
-import com.saltedge.connector.sdk.api.mapping.CreatePaymentRequest;
-import com.saltedge.connector.sdk.api.mapping.EmptyJsonModel;
-import com.saltedge.connector.sdk.api.services.payments.PaymentsService;
+import com.saltedge.connector.sdk.api.models.requests.CreatePaymentRequest;
+import com.saltedge.connector.sdk.api.models.EmptyJsonModel;
+import com.saltedge.connector.sdk.api.services.PaymentsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +38,7 @@ import javax.validation.Valid;
 /**
  * This controller are responsible for creating payment orders on behalf of Customer via TPP interface.
  * Process of payment creation starts once Customer fills a payment template form and submits the request.
+ * https://priora.saltedge.com/docs/aspsp/v2/connector_endpoints#payments
  */
 @RestController
 @RequestMapping(PaymentsV2Controller.BASE_PATH)

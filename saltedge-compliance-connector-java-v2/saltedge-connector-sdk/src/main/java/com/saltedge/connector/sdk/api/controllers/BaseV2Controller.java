@@ -20,7 +20,7 @@
  */
 package com.saltedge.connector.sdk.api.controllers;
 
-import com.saltedge.connector.sdk.api.mapping.EmptyJsonModel;
+import com.saltedge.connector.sdk.api.models.EmptyJsonModel;
 import com.saltedge.connector.sdk.provider.ProviderServiceAbs;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
