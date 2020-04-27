@@ -5,7 +5,7 @@ Is designated to demonstrate (simulate) communication between ASPSP/Bank and TPP
 _This application is just a Proof Of Concept._  
 [See how to setup application](#Example-Application-Quick-Setup).
   
-This codebase contains SDK module which is the set of tools for simplification of communication between and Priora PSD2 Compliance Solution.    
+This codebase contains SDK module which is the set of tools for simplification of communication between ASPSP/Bank and Priora PSD2 Compliance Solution.    
 The SDK module implements the Priora Connector v2 API compatible with **Berlin Group NextGenPSD2 XS2A API**.
 [See how to add SDK](#SDK-Integration)  
 **Last stable version of SDK library is "2.3.0".**
