@@ -30,15 +30,15 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ProviderOfferedConsentsTests {
+public class ProviderConsentsTests {
 	@Test
 	public void constructorTest() {
-		ProviderOfferedConsents model = new ProviderOfferedConsents();
+		ProviderConsents model = new ProviderConsents();
 
 		assertThat(model.balances).isNull();
 		assertThat(model.transactions).isNull();
 
-		model = new ProviderOfferedConsents(Lists.emptyList(), Lists.emptyList());
+		model = new ProviderConsents(Lists.emptyList(), Lists.emptyList());
 
 		assertThat(model.balances).isEmpty();
 		assertThat(model.transactions).isEmpty();
@@ -60,7 +60,7 @@ public class ProviderOfferedConsentsTests {
 		List<CardAccount> cardsOfBalancesConsent = Lists.list(cardAccount1);
 		List<CardAccount> cardsOfTransactionsConsent = Lists.list(cardAccount2);
 
-		ProviderOfferedConsents joinResult = ProviderOfferedConsents.buildProviderOfferedConsents(
+		ProviderConsents joinResult = ProviderConsents.buildProviderOfferedConsents(
 				accountsOfBalancesConsent,
 				accountsOfTransactionsConsent,
 				cardsOfBalancesConsent,

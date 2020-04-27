@@ -21,25 +21,23 @@
 package com.saltedge.connector.sdk.tools;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.saltedge.connector.sdk.api.models.ProviderOfferedConsents;
+import com.saltedge.connector.sdk.api.models.ProviderConsents;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.AttributeConverter;
 import java.io.IOException;
-import java.util.List;
 
 /**
  * JPA mapper for ConsentData type
  */
-public class ConsentDataConverter implements AttributeConverter<ProviderOfferedConsents, String> {
+public class ConsentDataConverter implements AttributeConverter<ProviderConsents, String> {
     private static Logger log = LoggerFactory.getLogger(ConsentDataConverter.class);
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
-    public String convertToDatabaseColumn(ProviderOfferedConsents attribute) {
+    public String convertToDatabaseColumn(ProviderConsents attribute) {
         try {
             return objectMapper.writeValueAsString(attribute);
         } catch (JsonProcessingException e) {
@@ -49,9 +47,9 @@ public class ConsentDataConverter implements AttributeConverter<ProviderOfferedC
     }
 
     @Override
-    public ProviderOfferedConsents convertToEntityAttribute(String dbData) {
+    public ProviderConsents convertToEntityAttribute(String dbData) {
         try {
-            return objectMapper.readValue(dbData, ProviderOfferedConsents.class);
+            return objectMapper.readValue(dbData, ProviderConsents.class);
         } catch (IOException e) {
             log.error("JSON reading error", e);
             return null;

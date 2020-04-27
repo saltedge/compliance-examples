@@ -23,11 +23,17 @@ package com.saltedge.connector.sdk.api.models.requests;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.saltedge.connector.sdk.SDKConstants;
+import com.saltedge.connector.sdk.api.models.ProviderConsents;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
+import static com.saltedge.connector.sdk.SDKConstants.KEY_ACCESS;
 import static com.saltedge.connector.sdk.SDKConstants.KEY_REDIRECT_URL;
 
+/**
+ * https://priora.saltedge.com/docs/aspsp/v2/connector_endpoints#tokens-create
+ */
 @JsonIgnoreProperties
 public class CreateTokenRequest extends PrioraBaseRequest {
     /**
@@ -57,4 +63,11 @@ public class CreateTokenRequest extends PrioraBaseRequest {
     @JsonProperty(KEY_REDIRECT_URL)
     @NotBlank
     public String redirectUrl;
+
+    /**
+     * Requested access services.
+     */
+    @JsonProperty(KEY_ACCESS)
+    @NotNull
+    public ProviderConsents requestedConsent;
 }

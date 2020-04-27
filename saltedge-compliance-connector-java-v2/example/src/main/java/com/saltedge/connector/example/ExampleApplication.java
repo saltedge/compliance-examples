@@ -28,6 +28,10 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import static com.saltedge.connector.example.ExampleApplication.CONNECTOR_PACKAGE;
 import static com.saltedge.connector.example.ExampleApplication.EXAMPLE_PACKAGE;
 
+/**
+ * Example Application which simulates work of ASPSP/Bank application.
+ * This application is just a POC (Proof Of Concept).
+ */
 @SpringBootApplication(scanBasePackages = {EXAMPLE_PACKAGE, CONNECTOR_PACKAGE})
 @EnableJpaRepositories(basePackages = {EXAMPLE_PACKAGE, CONNECTOR_PACKAGE})
 @EntityScan(basePackages = {EXAMPLE_PACKAGE, CONNECTOR_PACKAGE})

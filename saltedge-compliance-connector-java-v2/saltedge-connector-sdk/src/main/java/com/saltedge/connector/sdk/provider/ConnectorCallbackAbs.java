@@ -20,7 +20,7 @@
  */
 package com.saltedge.connector.sdk.provider;
 
-import com.saltedge.connector.sdk.api.models.ProviderOfferedConsents;
+import com.saltedge.connector.sdk.api.models.ProviderConsents;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -28,33 +28,48 @@ import java.time.Instant;
 import java.util.Map;
 
 /**
- * Interface for call back communication from Provider application to Connector Module
+ * Interface for call back communication from Provider application to Connector SDK Module
  * @see ConnectorCallbackService
  */
 public interface ConnectorCallbackAbs {
+
     /**
-     * Provider notify Connector Module about oAuth success authentication and user consent for accounts
+     * Check if User Consent (Bank Offered Consent) is required for authorization session determined by sessionSecret.
      *
-     * @param sessionSecret of Token Create session
-     * @param userId unique identifier of authenticated User
-     * @param accessToken unique string that identifies a user
+     * @param sessionSecret unique identifier of authorization session
+     * @return true if User Consent (Bank Offered Consent) is required
+     */
+    boolean isUserConsentRequired(@NotEmpty String sessionSecret);
+
+    /**
+     * Provider notify Connector SDK Module about oAuth success authentication
+     * and provides user consent for accounts (balances/transactions)
+     *
+     * @param sessionSecret of User authorization session.
+     * @param userId of authenticated User.
+     * @param accessToken is an unique string that identifies a user.
      * @param accessTokenExpiresAt expiration time of accessToken (UTC time).
-     * @param consents list of balances of accounts and transactions of accounts
-     * @return returnUrl from token
+     * @param consents list of balances of accounts and transactions of accounts.
+     *                 Can be null if bank offered consent is not required.
+     *
+     * @return returnUrl string for final redirection of Authorization session (in browser) back to TPP side.
+     *
+     * @see ProviderServiceAbs#getAccountInformationAuthorizationPageUrl
+     * @see ProviderConsents
      */
     String onAccountInformationAuthorizationSuccess(
             @NotEmpty String sessionSecret,
             @NotEmpty String userId,
             @NotEmpty String accessToken,
             @NotNull Instant accessTokenExpiresAt,
-            @NotNull ProviderOfferedConsents consents
+            ProviderConsents consents
     );
 
     /**
-     * Provider should notify Connector Module about oAuth authentication fail
+     * Provider notifies Connector SDK Module about oAuth authentication fail
      *
      * @param sessionSecret of Token Create session
-     * @return returnUrl from token
+     * @return returnUrl string for final redirection of Authorization session (in browser) back to TPP side.
      */
     String onAccountInformationAuthorizationFail(@NotEmpty String sessionSecret);
 
@@ -77,7 +92,7 @@ public interface ConnectorCallbackAbs {
      * @param paymentId of payment
      * @param userId of authenticated User
      * @param paymentExtra extra data of payment order
-     * @return returnUrl for Payment authenticate session
+     * @return returnUrl string for final redirection of Payment Authorization session
      */
     String onPaymentInitiationAuthorizationSuccess(
             @NotEmpty String paymentId,
@@ -90,7 +105,7 @@ public interface ConnectorCallbackAbs {
      *
      * @param paymentId of payment
      * @param paymentExtra extra data of payment order
-     * @return returnUrl for Payment authenticate session
+     * @return returnUrl string for final redirection of Payment Authorization session
      */
     String onPaymentInitiationAuthorizationFail(@NotEmpty String paymentId, @NotEmpty Map<String, String> paymentExtra);
 }

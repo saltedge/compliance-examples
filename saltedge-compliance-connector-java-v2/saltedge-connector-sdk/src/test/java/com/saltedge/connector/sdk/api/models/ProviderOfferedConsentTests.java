@@ -30,11 +30,17 @@ public class ProviderOfferedConsentTests {
 		ProviderOfferedConsent model = new ProviderOfferedConsent();
 
 		assertThat(model.iban).isNull();
+		assertThat(model.bban).isNull();
+		assertThat(model.bic).isNull();
+		assertThat(model.msisdn).isNull();
 		assertThat(model.maskedPan).isNull();
 
-		model = new ProviderOfferedConsent("iban", "****");
+		model = new ProviderOfferedConsent("iban", "bban", "bic", "msisdn", "****");
 
 		assertThat(model.iban).isEqualTo("iban");
+		assertThat(model.bban).isEqualTo("bban");
+		assertThat(model.bic).isEqualTo("bic");
+		assertThat(model.msisdn).isEqualTo("msisdn");
 		assertThat(model.maskedPan).isEqualTo("****");
 	}
 
@@ -42,20 +48,20 @@ public class ProviderOfferedConsentTests {
 	public void createAccountConsentTest() {
 		ProviderOfferedConsent model = ProviderOfferedConsent.createAccountConsent("iban");
 
-		assertThat(model).isEqualTo(new ProviderOfferedConsent("iban", null));
+		assertThat(model).isEqualTo(new ProviderOfferedConsent("iban", null, null, null, null));
 	}
 
 	@Test
 	public void createCardConsentTest() {
 		ProviderOfferedConsent model = ProviderOfferedConsent.createCardConsent("****");
 
-		assertThat(model).isEqualTo(new ProviderOfferedConsent(null, "****"));
+		assertThat(model).isEqualTo(new ProviderOfferedConsent(null, null, null, null, "****"));
 	}
 
 	@Test
 	public void toStringTest() {
 		ProviderOfferedConsent model = ProviderOfferedConsent.createCardConsent("****");
 
-		assertThat(model.toString()).startsWith("ConsentData");
+		assertThat(model.toString()).startsWith("Consent");
 	}
 }

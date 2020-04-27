@@ -23,7 +23,7 @@ package com.saltedge.connector.sdk.callback.mapping;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.saltedge.connector.sdk.SDKConstants;
-import com.saltedge.connector.sdk.api.models.ProviderOfferedConsents;
+import com.saltedge.connector.sdk.api.models.ProviderConsents;
 
 import java.time.Instant;
 import java.util.Objects;
@@ -31,7 +31,7 @@ import java.util.Objects;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SessionSuccessCallbackRequest extends BaseCallbackRequest {
     @JsonProperty("consent")
-    public ProviderOfferedConsents providerOfferedConsents;
+    public ProviderConsents providerOfferedConsents;
 
     @JsonProperty("token")
     public String token;
@@ -49,7 +49,7 @@ public class SessionSuccessCallbackRequest extends BaseCallbackRequest {
     }
 
     public SessionSuccessCallbackRequest(
-            ProviderOfferedConsents providerOfferedConsents,
+            ProviderConsents providerOfferedConsents,
             String token,
             Instant tokenExpiresAt,
             String userId

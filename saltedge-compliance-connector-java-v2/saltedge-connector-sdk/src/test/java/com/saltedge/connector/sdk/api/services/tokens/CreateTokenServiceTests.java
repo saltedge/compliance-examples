@@ -21,11 +21,13 @@
 package com.saltedge.connector.sdk.api.services.tokens;
 
 import com.saltedge.connector.sdk.SDKConstants;
+import com.saltedge.connector.sdk.api.models.ProviderConsents;
 import com.saltedge.connector.sdk.api.models.err.HttpErrorParams;
 import com.saltedge.connector.sdk.api.models.requests.CreateTokenRequest;
 import com.saltedge.connector.sdk.api.services.BaseServicesTests;
 import com.saltedge.connector.sdk.callback.mapping.SessionUpdateCallbackRequest;
 import com.saltedge.connector.sdk.models.Token;
+import org.assertj.core.util.Lists;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -58,7 +60,7 @@ public class CreateTokenServiceTests extends BaseServicesTests {
 	public void givenNullAuthType_whenStartAuthorization_thenSendSessionsFailCallback() {
 		// given
 		given(providerService.getAuthorizationTypes()).willReturn(Collections.emptyList());
-		CreateTokenRequest request = createTokenRequest("sessionSecret", "tppAppName", "redirectUrl");
+		CreateTokenRequest request = createTokenRequest(ProviderConsents.buildAllAccountsConsent());
 
 		// when
 		testService.startAuthorization(request);
@@ -71,10 +73,10 @@ public class CreateTokenServiceTests extends BaseServicesTests {
 	}
 
 	@Test
-	public void givenOAuthAuthType_whenStartAuthorization_thenSaveTokenAndSendSessionsUpdateCallback() {
+	public void givenOAuthAuthTypeAndBankConsent_whenStartAuthorization_thenSaveTokenWithoutConsentAndSendSessionsUpdateCallback() {
 		// given
-		given(providerService.getAccountInformationAuthorizationPageUrl("sessionSecret")).willReturn("http://example.com?session_secret=sessionSecret");
-		CreateTokenRequest request = createTokenRequest("sessionSecret", "tppAppName", "redirectUrl");
+		given(providerService.getAccountInformationAuthorizationPageUrl("sessionSecret", true)).willReturn("http://example.com?session_secret=sessionSecret");
+		CreateTokenRequest request = createTokenRequest(ProviderConsents.buildAllAccountsConsent());
 		request.authorizationType = "oauth";
 
 		// when
@@ -90,17 +92,40 @@ public class CreateTokenServiceTests extends BaseServicesTests {
 		verify(tokensRepository).save(tokenCaptor.capture());
 		assertThat(tokenCaptor.getValue().status).isEqualTo(Token.Status.UNCONFIRMED);
 		assertThat(tokenCaptor.getValue().sessionSecret).isEqualTo("sessionSecret");
+		assertThat(tokenCaptor.getValue().providerOfferedConsents).isNull();
+	}
+
+	@Test
+	public void givenOAuthAuthTypeAndGlobalConsent_whenStartAuthorization_thenSaveTokenWithConsentAndSendSessionsUpdateCallback() {
+		// given
+		given(providerService.getAccountInformationAuthorizationPageUrl("sessionSecret", false)).willReturn("http://example.com?session_secret=sessionSecret");
+		CreateTokenRequest request = createTokenRequest(new ProviderConsents("allAccounts"));
+		request.authorizationType = "oauth";
+
+		// when
+		testService.startAuthorization(request);
+
+		// then
+		final ArgumentCaptor<SessionUpdateCallbackRequest> callbackCaptor = ArgumentCaptor.forClass(SessionUpdateCallbackRequest.class);
+		verify(sessionsCallbackService).sendUpdateCallback(eq("sessionSecret"), callbackCaptor.capture());
+		assertThat(callbackCaptor.getValue().status).isEqualTo(SDKConstants.STATUS_REDIRECT);
+		assertThat(callbackCaptor.getValue().redirectUrl).isEqualTo("http://example.com?session_secret=sessionSecret");
+
+		final ArgumentCaptor<Token> tokenCaptor = ArgumentCaptor.forClass(Token.class);
+		verify(tokensRepository).save(tokenCaptor.capture());
+		assertThat(tokenCaptor.getValue().status).isEqualTo(Token.Status.UNCONFIRMED);
+		assertThat(tokenCaptor.getValue().sessionSecret).isEqualTo("sessionSecret");
+		assertThat(tokenCaptor.getValue().providerOfferedConsents).isNotNull();
 	}
 
 	private CreateTokenRequest createTokenRequest(
-			String sessionSecret,
-			String tppAppName,
-			String redirectUrl
+			ProviderConsents requestedConsent
 	) {
 		CreateTokenRequest result = new CreateTokenRequest();
-		result.tppAppName = tppAppName;
-		result.sessionSecret = sessionSecret;
-		result.redirectUrl = redirectUrl;
+		result.tppAppName = "tppAppName";
+		result.sessionSecret = "sessionSecret";
+		result.redirectUrl = "redirectUrl";
+		result.requestedConsent = requestedConsent;
 		return result;
 	}
 }

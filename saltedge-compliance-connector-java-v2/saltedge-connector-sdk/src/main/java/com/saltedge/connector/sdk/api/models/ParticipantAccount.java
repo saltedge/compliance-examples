@@ -38,7 +38,7 @@ public class ParticipantAccount {
     /**
      * Basic Bank Account Number
      */
-    @JsonProperty("bban")
+    @JsonProperty(SDKConstants.KEY_BBAN)
     public String bban;
 
     /**

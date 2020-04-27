@@ -20,7 +20,7 @@
  */
 package com.saltedge.connector.sdk.api.services.tokens;
 
-import com.saltedge.connector.sdk.api.models.ProviderOfferedConsents;
+import com.saltedge.connector.sdk.api.models.ProviderConsents;
 import com.saltedge.connector.sdk.api.services.BaseServicesTests;
 import com.saltedge.connector.sdk.callback.mapping.SessionSuccessCallbackRequest;
 import com.saltedge.connector.sdk.models.Token;
@@ -69,7 +69,7 @@ public class ConfirmTokenServiceTests extends BaseServicesTests {
 				"userId",
 				"accessToken",
 				Instant.now(),
-				new ProviderOfferedConsents());
+				new ProviderConsents());
 
 		// then
 		assertThat(result).isNull();
@@ -80,7 +80,7 @@ public class ConfirmTokenServiceTests extends BaseServicesTests {
 		// given
 		Token token = new Token();
 		token.sessionSecret = "sessionSecret";
-		ProviderOfferedConsents providerOfferedConsents = new ProviderOfferedConsents();
+		ProviderConsents providerOfferedConsents = new ProviderConsents();
 		given(tokensRepository.findFirstBySessionSecret("sessionSecret")).willReturn(token);
 
 		// when

@@ -22,7 +22,7 @@ package com.saltedge.connector.sdk.callback.mapping;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.saltedge.connector.sdk.api.models.ProviderOfferedConsents;
+import com.saltedge.connector.sdk.api.models.ProviderConsents;
 import com.saltedge.connector.sdk.tools.JsonTools;
 import org.junit.Test;
 
@@ -44,7 +44,7 @@ public class SessionSuccessCallbackRequestTests {
 	@Test
 	public void serializationTest() throws JsonProcessingException {
 		SessionSuccessCallbackRequest model = new SessionSuccessCallbackRequest(
-				new ProviderOfferedConsents(),
+				new ProviderConsents(),
 				"accessToken",
 				Instant.parse("2019-11-18T16:04:50.915Z"),
 				"userId"

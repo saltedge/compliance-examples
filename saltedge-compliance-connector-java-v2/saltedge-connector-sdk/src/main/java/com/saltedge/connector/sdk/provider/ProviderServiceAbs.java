@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Interface for communication between Compliance Connector and Service Provider application.
+ * Interface for communication between Compliance Connector SDK and Provider/ASPSP application.
  * Service Provider application should implement `@Service` which `implements ProviderApi`
  */
 public interface ProviderServiceAbs {
@@ -51,15 +51,25 @@ public interface ProviderServiceAbs {
     List<ExchangeRate> getExchangeRates();
 
     /**
-     * Provides url of provider's authorization page designated for oAuth authorization
+     * Provides url of provider's authorization page
+     * designated for authorization session of new Account Information Session
      *
-     * @param sessionSecret create consent session secret
-     * @return URL string of Authorization page
+     * @param sessionSecret create consent session secret.
+     *                      should be returned on authentication success or fail.
+     * @param userConsentIsRequired if true then user consent for Account Information (balances, transactions) is required
+     *                              and should be returned on authentication success.
+     * @see ConnectorCallbackService#onAccountInformationAuthorizationSuccess
+     * @see ConnectorCallbackService#onAccountInformationAuthorizationFail
+     * @return URL string
      */
-    String getAccountInformationAuthorizationPageUrl(@NotEmpty String sessionSecret);
+    String getAccountInformationAuthorizationPageUrl(
+            @NotEmpty String sessionSecret,
+            boolean userConsentIsRequired
+    );
 
     /**
-     * Return accounts information of user
+     * Return accounts information of user.
+     * Serves accounts endpoint (https://priora.saltedge.com/docs/aspsp/v2/connector_endpoints#accounts-get)
      *
      * @param userId User identifier on Provider side
      * @return list of AccountData objects
@@ -68,7 +78,8 @@ public interface ProviderServiceAbs {
     List<Account> getAccountsOfUser(@NotEmpty String userId);
 
     /**
-     * Provides transactions which belong to an account of user
+     * Provides transactions which belong to an account of user.
+     * Serves transactions endpoint (https://priora.saltedge.com/docs/aspsp/v2/connector_endpoints#accounts-transactions)
      *
      * @param userId User identifier on Provider side
      * @param accountId Account identifier on Provider side
@@ -87,7 +98,8 @@ public interface ProviderServiceAbs {
     );
 
     /**
-     * Provides card accounts information of user
+     * Provides card accounts information of user.
+     * Serves accounts endpoint (https://priora.saltedge.com/docs/aspsp/v2/connector_endpoints#card-accounts-get)
      *
      * @param userId User identifier on Provider side
      * @return list of CardAccount objects
@@ -96,7 +108,8 @@ public interface ProviderServiceAbs {
     List<CardAccount> getCardAccountsOfUser(@NotEmpty String userId);
 
     /**
-     * Provides transactions which belong to a card account of user
+     * Provides transactions which belong to a card account of user.
+     * Serves transactions endpoint (https://priora.saltedge.com/docs/aspsp/v2/connector_endpoints#card-accounts-transactions)
      *
      * @param userId User identifier on Provider side
      * @param accountId Account identifier on Provider side
@@ -115,7 +128,8 @@ public interface ProviderServiceAbs {
     );
 
     /**
-     * Create a payment order
+     * Initiate a payment order.
+     * Serves payment endpoint (https://priora.saltedge.com/docs/aspsp/v2/connector_endpoints#payments-create)
      *
      * @param creditorIban of payment order
      * @param creditorName of payment order
@@ -124,7 +138,7 @@ public interface ProviderServiceAbs {
      * @param currency of payment order
      * @param description of payment order
      * @param extraData hash object
-     * @return unique payment id or null if payment not created
+     * @return unique identifier of payment or null if payment is not initiated
      */
     String createPayment(
             @NotEmpty String creditorIban,
@@ -137,10 +151,11 @@ public interface ProviderServiceAbs {
     );
 
     /**
-     * Provides url of provider's authorization page designated for oAuth authorization and payment confirmation
+     * Provides url of provider's authorization page
+     * designated for authorization session of new Payment Initiation Session
      *
-     * @param paymentId unique identifier of payment order
-     * @return URL string of Authorization page
+     * @param paymentId unique identifier of payment order for which is required authorization
+     * @return URL string
      */
     String getPaymentAuthorizationPageUrl(@NotEmpty String paymentId);
 }

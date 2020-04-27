@@ -21,7 +21,7 @@
 package com.saltedge.connector.sdk.provider;
 
 import com.saltedge.connector.sdk.SDKConstants;
-import com.saltedge.connector.sdk.api.models.ProviderOfferedConsents;
+import com.saltedge.connector.sdk.api.models.ProviderConsents;
 import com.saltedge.connector.sdk.api.models.err.NotFound;
 import com.saltedge.connector.sdk.api.services.tokens.ConfirmTokenService;
 import com.saltedge.connector.sdk.api.services.tokens.RevokeTokenService;
@@ -75,7 +75,7 @@ public class ConnectorCallbackServiceTests {
 	@Test
 	public void givenNullToken_whenOnOAuthAuthorizationSuccess_thenReturnNull() {
 		// given
-		ProviderOfferedConsents consent = new ProviderOfferedConsents();
+		ProviderConsents consent = new ProviderConsents();
 		given(confirmTokenService.confirmToken(
 				"sessionSecret",
 				"user1",
@@ -101,7 +101,7 @@ public class ConnectorCallbackServiceTests {
 	public void givenToken_whenOnOAuthAuthorizationSuccess_thenConfirmTokenAndReturnRedirectUrl() {
 		// given
 		Token token = new Token("sessionSecret", "tppAppName", "authTypeCode", "http://redirect.to");
-		ProviderOfferedConsents consent = new ProviderOfferedConsents();
+		ProviderConsents consent = new ProviderConsents();
 		given(confirmTokenService.confirmToken(
 				"sessionSecret",
 				"user1",
@@ -131,7 +131,7 @@ public class ConnectorCallbackServiceTests {
 	@Test
 	public void givenNullToken_whenOnOAuthAuthorizationError_thenReturnNull() {
 		// given
-		ProviderOfferedConsents consent = new ProviderOfferedConsents();
+		ProviderConsents consent = new ProviderConsents();
 		given(revokeTokenService.revokeTokenBySessionSecret("sessionSecret")).willReturn(null);
 
 		// when
@@ -164,7 +164,7 @@ public class ConnectorCallbackServiceTests {
 	@Test
 	public void givenNullToken_whenRevokeAccountInformationConsent_thenReturnFalse() {
 		// given
-		ProviderOfferedConsents consent = new ProviderOfferedConsents();
+		ProviderConsents consent = new ProviderConsents();
 		given(revokeTokenService.revokeTokenByUserIdAndAccessToken("userId", "accessToken")).willReturn(null);
 
 		// when

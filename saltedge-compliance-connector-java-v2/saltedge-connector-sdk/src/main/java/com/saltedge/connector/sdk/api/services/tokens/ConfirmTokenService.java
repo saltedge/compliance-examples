@@ -20,9 +20,9 @@
  */
 package com.saltedge.connector.sdk.api.services.tokens;
 
+import com.saltedge.connector.sdk.api.models.ProviderConsents;
 import com.saltedge.connector.sdk.callback.mapping.SessionSuccessCallbackRequest;
 import com.saltedge.connector.sdk.models.Token;
-import com.saltedge.connector.sdk.api.models.ProviderOfferedConsents;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -45,7 +45,7 @@ public class ConfirmTokenService extends TokensBaseService {
             @NotEmpty String userId,
             @NotEmpty String accessToken,
             @NotNull Instant accessTokenExpiresAt,
-            @NotNull ProviderOfferedConsents providerOfferedConsents
+            ProviderConsents providerOfferedConsents
     ) {
         Token token = findTokenBySessionSecret(sessionSecret);
         if (token != null) {
@@ -54,7 +54,10 @@ public class ConfirmTokenService extends TokensBaseService {
                 token.status = Token.Status.CONFIRMED;
                 token.accessToken = accessToken;
                 token.tokenExpiresAt = accessTokenExpiresAt;
-                token.providerOfferedConsents = providerOfferedConsents;
+                if (!token.hasGlobalConsent()) {
+                    token.providerOfferedConsents = (providerOfferedConsents == null)
+                            ? ProviderConsents.buildAllAccountsConsent() : providerOfferedConsents;
+                }
                 tokensRepository.save(token);
 
                 sendSessionSuccess(token);

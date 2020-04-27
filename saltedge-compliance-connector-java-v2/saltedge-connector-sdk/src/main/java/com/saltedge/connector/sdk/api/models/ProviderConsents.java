@@ -20,16 +20,20 @@
  */
 package com.saltedge.connector.sdk.api.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.saltedge.connector.sdk.SDKConstants;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * Consent data offered from bank.
+ * Consent data offered from provider/ASPSP.
  * Contains array of account's identifier for balances and transactions.
  * Should be managed by User after successful oAuth authentication.
  *
@@ -47,11 +51,19 @@ import java.util.stream.Stream;
  *   ]
  * }
  */
-public class ProviderOfferedConsents {
+@JsonIgnoreProperties
+public class ProviderConsents {
+    /**
+     * Only the value "allAccounts" is admitted in case of Global Consent
+     * or null in case of Bank Offered Consent
+     */
+    @JsonProperty("allPsd2")
+    public String globalAccessConsent;
+
     /**
      * Array of account's identifier for balances.
      */
-    @JsonProperty("balances")
+    @JsonProperty(SDKConstants.KEY_BALANCES)
     public List<ProviderOfferedConsent> balances;
 
     /**
@@ -60,12 +72,21 @@ public class ProviderOfferedConsents {
     @JsonProperty("transactions")
     public List<ProviderOfferedConsent> transactions;
 
-    public ProviderOfferedConsents() {
+    public ProviderConsents() {
     }
 
-    public ProviderOfferedConsents(List<ProviderOfferedConsent> balances, List<ProviderOfferedConsent> transactions) {
+    public ProviderConsents(String globalAccessConsent) {
+        this.globalAccessConsent = globalAccessConsent;
+    }
+
+    public ProviderConsents(List<ProviderOfferedConsent> balances, List<ProviderOfferedConsent> transactions) {
         this.balances = balances;
         this.transactions = transactions;
+    }
+
+    @JsonIgnore
+    public boolean isGlobalConsent() {
+        return "allAccounts".equals(globalAccessConsent);
     }
 
     /**
@@ -77,29 +98,33 @@ public class ProviderOfferedConsents {
      * @param cardTransactionsConsents list of Card Account's for which user give consent to provide transactions list
      * @return list of ConsentData where each object contains consents for an account or card account
      */
-    public static ProviderOfferedConsents buildProviderOfferedConsents(
+    public static ProviderConsents buildProviderOfferedConsents(
             List<Account> balancesConsents,
             List<Account> transactionsConsents,
             List<CardAccount> cardBalancesConsents,
             List<CardAccount> cardTransactionsConsents
     ) {
         Stream<ProviderOfferedConsent> balances = balancesConsents.stream()
-                .map(ProviderOfferedConsents::convertAccountToConsent)
+                .map(ProviderConsents::convertAccountToConsent)
                 .filter(Objects::nonNull);
         Stream<ProviderOfferedConsent> transactions = transactionsConsents.stream()
-                .map(ProviderOfferedConsents::convertAccountToConsent)
+                .map(ProviderConsents::convertAccountToConsent)
                 .filter(Objects::nonNull);
         Stream<ProviderOfferedConsent> cardBalances = cardBalancesConsents.stream()
-                .map(ProviderOfferedConsents::convertAccountToConsent)
+                .map(ProviderConsents::convertAccountToConsent)
                 .filter(Objects::nonNull);
         Stream<ProviderOfferedConsent> cardTransactions = cardTransactionsConsents.stream()
-                .map(ProviderOfferedConsents::convertAccountToConsent)
+                .map(ProviderConsents::convertAccountToConsent)
                 .filter(Objects::nonNull);
 
-        return new ProviderOfferedConsents(
+        return new ProviderConsents(
                 Stream.concat(balances, cardBalances).collect(Collectors.toList()),
                 Stream.concat(transactions, cardTransactions).collect(Collectors.toList())
         );
+    }
+
+    public static ProviderConsents buildAllAccountsConsent() {
+        return new ProviderConsents(new ArrayList<>(), new ArrayList<>());
     }
 
     private static ProviderOfferedConsent convertAccountToConsent(Account account) {
@@ -116,20 +141,22 @@ public class ProviderOfferedConsents {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ProviderOfferedConsents that = (ProviderOfferedConsents) o;
-        return Objects.equals(balances, that.balances) &&
+        ProviderConsents that = (ProviderConsents) o;
+        return Objects.equals(globalAccessConsent, that.globalAccessConsent) &&
+                Objects.equals(balances, that.balances) &&
                 Objects.equals(transactions, that.transactions);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(balances, transactions);
+        return Objects.hash(globalAccessConsent, balances, transactions);
     }
 
     @Override
     public String toString() {
         return "ProviderOfferedConsents{" +
-                "balances=" + balances +
+                "globalAccessConsent='" + globalAccessConsent + '\'' +
+                ", balances=" + balances +
                 ", transactions=" + transactions +
                 '}';
     }

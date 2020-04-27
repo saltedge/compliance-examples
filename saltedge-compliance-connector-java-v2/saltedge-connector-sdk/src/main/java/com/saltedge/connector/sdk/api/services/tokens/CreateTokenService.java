@@ -52,6 +52,10 @@ public class CreateTokenService extends TokensBaseService {
             if (type == null) throw new BadRequest.InvalidAuthorizationType();
             else {
                 Token token = createToken(type, params);
+                if (params.requestedConsent.isGlobalConsent()) {
+                    token.providerOfferedConsents = params.requestedConsent;
+                }
+
                 if (AuthMode.OAUTH == type.mode) {
                     oAuthAuthorize(token);
                 } else {
@@ -69,7 +73,10 @@ public class CreateTokenService extends TokensBaseService {
     private void oAuthAuthorize(Token token) {
         tokensRepository.save(token);
         SessionUpdateCallbackRequest params = new SessionUpdateCallbackRequest(
-                providerService.getAccountInformationAuthorizationPageUrl(token.sessionSecret),
+                providerService.getAccountInformationAuthorizationPageUrl(
+                        token.sessionSecret,
+                        !token.hasGlobalConsent()
+                ),
                 SDKConstants.STATUS_REDIRECT
         );
         callbackService.sendUpdateCallback(token.sessionSecret, params);

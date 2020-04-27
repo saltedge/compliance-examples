@@ -21,8 +21,8 @@
 package com.saltedge.connector.sdk.models;
 
 import com.saltedge.connector.sdk.SDKConstants;
+import com.saltedge.connector.sdk.api.models.ProviderConsents;
 import com.saltedge.connector.sdk.config.ApplicationProperties;
-import com.saltedge.connector.sdk.api.models.ProviderOfferedConsents;
 import com.saltedge.connector.sdk.tools.ConsentDataConverter;
 import com.saltedge.connector.sdk.tools.KeyTools;
 
@@ -44,7 +44,7 @@ public class Token extends BaseEntity implements Serializable {
 
     @Column(name = "provider_offered_consents", length = 4096)
     @Convert(converter = ConsentDataConverter.class)
-    public ProviderOfferedConsents providerOfferedConsents;
+    public ProviderConsents providerOfferedConsents;
 
     @Column(name = SDKConstants.KEY_STATUS, nullable = false)
     public Status status = Status.UNCONFIRMED;
@@ -97,6 +97,10 @@ public class Token extends BaseEntity implements Serializable {
 
     public boolean isExpired() {
         return tokenExpiresAt == null || tokenExpiresAt.isBefore(Instant.now());
+    }
+
+    public boolean hasGlobalConsent() {
+        return this.providerOfferedConsents != null && this.providerOfferedConsents.isGlobalConsent();
     }
 
     public enum Status {

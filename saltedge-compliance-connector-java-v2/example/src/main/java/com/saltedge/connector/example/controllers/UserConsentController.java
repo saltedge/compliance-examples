@@ -24,11 +24,9 @@ import com.saltedge.connector.example.model.AccountEntity;
 import com.saltedge.connector.example.model.PaymentEntity;
 import com.saltedge.connector.example.model.TransactionEntity;
 import com.saltedge.connector.sdk.SDKConstants;
-import com.saltedge.connector.sdk.config.ApplicationProperties;
 import com.saltedge.connector.sdk.api.models.Account;
 import com.saltedge.connector.sdk.api.models.CardAccount;
-import com.saltedge.connector.sdk.api.models.ProviderOfferedConsents;
-import com.saltedge.connector.sdk.tools.KeyTools;
+import com.saltedge.connector.sdk.api.models.ProviderConsents;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -39,9 +37,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -90,23 +86,16 @@ public class UserConsentController extends UserBaseController {
         List<CardAccount> cardsOfTransactionsConsent = cardAccounts.stream().filter(item -> cardTransactionIds.contains(item.getId()))
                 .collect(Collectors.toList());
 
-        String returnToUrl = connectorCallbackService.onAccountInformationAuthorizationSuccess(
+        return onAccountInformationAuthorizationSuccess(
                 sessionSecret,
                 userId,
-                KeyTools.generateToken(32),
-                Instant.now().plus(1, ChronoUnit.DAYS),
-                ProviderOfferedConsents.buildProviderOfferedConsents(
+                ProviderConsents.buildProviderOfferedConsents(
                         accountsOfBalancesConsent,
                         accountsOfTransactionsConsent,
                         cardsOfBalancesConsent,
                         cardsOfTransactionsConsent
                 )
         );
-        if (returnToUrl == null) {
-            return new ModelAndView("redirect:/oauth/authorize/accounts?session_secret=" + sessionSecret);
-        } else {
-            return new ModelAndView("redirect:" + returnToUrl);
-        }
     }
 
     @GetMapping(PAYMENTS_BASE_PATH)
