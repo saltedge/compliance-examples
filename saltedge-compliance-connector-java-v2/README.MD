@@ -77,7 +77,7 @@ Target application should be compatible with [following requirements](#Applicati
   ```
   Add Connector SDK dependency to application build.gradle
   ```groovy
-      implementation ('com.saltedge.connector.sdk:saltedge_connector_sdk:x.x.x') {
+      implementation ('com.saltedge.connector.sdk:saltedge-connector-sdk:x.x.x') {
           transitive = true
       }
   ```
