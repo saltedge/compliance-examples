@@ -100,7 +100,7 @@ public class Token extends BaseEntity implements Serializable {
     }
 
     public boolean hasGlobalConsent() {
-        return this.providerOfferedConsents != null && this.providerOfferedConsents.isGlobalConsent();
+        return this.providerOfferedConsents != null && this.providerOfferedConsents.hasGlobalConsent();
     }
 
     public enum Status {

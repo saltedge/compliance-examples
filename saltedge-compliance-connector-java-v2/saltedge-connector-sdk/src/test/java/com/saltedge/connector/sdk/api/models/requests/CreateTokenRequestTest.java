@@ -63,14 +63,14 @@ public class CreateTokenRequestTest extends ValidationTest {
 		CreateTokenRequest model = new CreateTokenRequest();
 		model.requestedConsent = new ProviderConsents();
 
-		assertThat(model.requestedConsent.isGlobalConsent()).isFalse();
+		assertThat(model.requestedConsent.hasGlobalConsent()).isFalse();
 
 		model.requestedConsent.globalAccessConsent = "test";
 
-		assertThat(model.requestedConsent.isGlobalConsent()).isFalse();
+		assertThat(model.requestedConsent.hasGlobalConsent()).isFalse();
 
 		model.requestedConsent.globalAccessConsent = "allAccounts";
 
-		assertThat(model.requestedConsent.isGlobalConsent()).isTrue();
+		assertThat(model.requestedConsent.hasGlobalConsent()).isTrue();
 	}
 }

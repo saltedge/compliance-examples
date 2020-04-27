@@ -72,4 +72,12 @@ public class ProviderConsentsTests {
 		String json = mapper.writeValueAsString(joinResult);
 		assertThat(json).isEqualTo("{\"balances\":[{\"iban\":\"MD12345\"},{\"masked_pan\":\"**** **** **** 1111\"}],\"transactions\":[{\"iban\":\"MD67890\"},{\"masked_pan\":\"**** **** **** 2222\"}]}");
 	}
+
+	@Test
+	public void hasGlobalConsentTest() {
+		assertThat(new ProviderConsents().hasGlobalConsent()).isFalse();
+		assertThat(ProviderConsents.buildAllAccountsConsent().hasGlobalConsent()).isFalse();
+		assertThat(new ProviderConsents("all").hasGlobalConsent()).isFalse();
+		assertThat(new ProviderConsents("allAccounts").hasGlobalConsent()).isTrue();
+	}
 }

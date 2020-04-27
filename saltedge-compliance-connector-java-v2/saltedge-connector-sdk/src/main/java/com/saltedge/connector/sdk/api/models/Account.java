@@ -31,8 +31,6 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Map;
 
-import static com.saltedge.connector.sdk.SDKConstants.KEY_BALANCES;
-
 /**
  * Account information
  */

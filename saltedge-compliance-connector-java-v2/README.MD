@@ -82,7 +82,10 @@ Current version of SDK library is "2.2.0".
     * `createPayment(...)` - create a payment order and return payment id or null
     * `getPaymentAuthorizationPageUrl(...)` - return URL of authorization page for payment;  
    
-1. Use Connector's SDK callback service `ConnectorCallback` for notifying SDK about events: 
+1. Use Connector's SDK callback service `ConnectorCallbackService` for callback communication (e.g. notifying SDK about events):
+    * `isUserConsentRequired(sessionSecret)` - check if User Consent (Bank Offered Consent) is required for authorization session determined by sessionSecret:
+      - `sessionSecret` - unique authorization secret code passed to application via `getAccountInformationAuthorizationPageUrl(...)`;
+
     * `onAccountInformationAuthorizationSuccess(sessionSecret, userId, consents)` - notify SDK about the successful authorization if User for AIS flow:  
       - `sessionSecret` - unique authorization secret code passed to application via `getAccountInformationAuthorizationPageUrl(...)`;  
       - `userId` - unique identifier of Provider's system User (Customer);  

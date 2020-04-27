@@ -42,9 +42,9 @@ public class SessionSuccessCallbackRequestTests {
 	}
 
 	@Test
-	public void serializationTest() throws JsonProcessingException {
+	public void givenBankConsent_whenSerialize_thenReturnJsonString() throws JsonProcessingException {
 		SessionSuccessCallbackRequest model = new SessionSuccessCallbackRequest(
-				new ProviderConsents(),
+				ProviderConsents.buildAllAccountsConsent(),
 				"accessToken",
 				Instant.parse("2019-11-18T16:04:50.915Z"),
 				"userId"
@@ -53,6 +53,21 @@ public class SessionSuccessCallbackRequestTests {
 		ObjectMapper mapper = JsonTools.createDefaultMapper();
 		String json = mapper.writeValueAsString(model);
 
-		assertThat(json).isEqualTo("{\"extra\":{},\"consent\":{},\"token\":\"accessToken\",\"token_expires_at\":\"2019-11-18T16:04:50.915Z\",\"user_id\":\"userId\"}");
+		assertThat(json).isEqualTo("{\"extra\":{},\"consent\":{\"balances\":[],\"transactions\":[]},\"token\":\"accessToken\",\"token_expires_at\":\"2019-11-18T16:04:50.915Z\",\"user_id\":\"userId\"}");
+	}
+
+	@Test
+	public void givenGlobalConsent_whenSerialize_thenReturnJsonString() throws JsonProcessingException {
+		SessionSuccessCallbackRequest model = new SessionSuccessCallbackRequest(
+				new ProviderConsents(ProviderConsents.GLOBAL_CONSENT_VALUE),
+				"accessToken",
+				Instant.parse("2019-11-18T16:04:50.915Z"),
+				"userId"
+		);
+
+		ObjectMapper mapper = JsonTools.createDefaultMapper();
+		String json = mapper.writeValueAsString(model);
+
+		assertThat(json).isEqualTo("{\"extra\":{},\"consent\":{\"allPsd2\":\"allAccounts\"},\"token\":\"accessToken\",\"token_expires_at\":\"2019-11-18T16:04:50.915Z\",\"user_id\":\"userId\"}");
 	}
 }

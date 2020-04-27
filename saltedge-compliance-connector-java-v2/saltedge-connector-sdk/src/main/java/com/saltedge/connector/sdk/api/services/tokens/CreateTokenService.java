@@ -52,7 +52,7 @@ public class CreateTokenService extends TokensBaseService {
             if (type == null) throw new BadRequest.InvalidAuthorizationType();
             else {
                 Token token = createToken(type, params);
-                if (params.requestedConsent.isGlobalConsent()) {
+                if (params.requestedConsent.hasGlobalConsent()) {
                     token.providerOfferedConsents = params.requestedConsent;
                 }
 

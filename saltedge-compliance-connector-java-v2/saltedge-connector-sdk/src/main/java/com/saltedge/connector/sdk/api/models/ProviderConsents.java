@@ -85,9 +85,11 @@ public class ProviderConsents {
     }
 
     @JsonIgnore
-    public boolean isGlobalConsent() {
-        return "allAccounts".equals(globalAccessConsent);
+    public boolean hasGlobalConsent() {
+        return GLOBAL_CONSENT_VALUE.equals(globalAccessConsent);
     }
+
+    public static  final String GLOBAL_CONSENT_VALUE = "allAccounts";
 
     /**
      * Joins consents for balances and transactions in the single entity
