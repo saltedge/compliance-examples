@@ -60,7 +60,7 @@ Target application should be compatible with [following requirements](#Applicati
 ### 1. Add SDK to target application
 #### Add as project module
   1. Fork this repository
-  2. Import module `File/New/Import Module...` in your project
+  2. In IntelliJ IDE Import module `File/New/Import Module...` in your project
   3. Build and run application on target device or emulator
 #### Add as JAR library
   copy jar file `saltedge-connector-sdk-x.x.x-all.jar` 
