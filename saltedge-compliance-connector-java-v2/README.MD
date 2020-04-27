@@ -7,8 +7,8 @@ _This application is just a Proof Of Concept._
   
 This codebase contains SDK module which is the set of tools for simplification of communication between and Priora PSD2 Compliance Solution.    
 The SDK module implements the Priora Connector v2 API compatible with **Berlin Group NextGenPSD2 XS2A API**.
-Current version of SDK library is "2.2.0".
 [See how to add SDK](#SDK-Integration)  
+**Last stable version of SDK library is "2.3.0".**
   
 ### Codebase consists of modules:
 * **example** - simulates work of ASPSP/Bank Application.  
@@ -53,12 +53,38 @@ Current version of SDK library is "2.2.0".
   app.url=http://my_host.org
   ``` 
 
-## SDK Integration
+## SDK Integration  
 
-1. Target application should be compatible with [following requirements](#Application-Requirements)  
-1. Add SDK to target application as Module or as JAR library (`out/saltedge-connector-sdk-x.x.x-all.jar`);
-1. Setup application as [described before](#example-application-quick-setup)
-1. Add SDK package (`com.saltedge.connector.sdk`) to component scan annotation in Application class.
+Target application should be compatible with [following requirements](#Application-Requirements)
+
+### 1. Add SDK to target application
+#### Add as project module
+  1. Fork this repository
+  2. Import module `File/New/Import Module...` in your project
+  3. Build and run application on target device or emulator
+#### Add as JAR library
+  copy jar file `saltedge-connector-sdk-x.x.x-all.jar` 
+  from from `https://github.com/saltedge/compliance-examples/tree/master/saltedge-compliance-connector-java-v2/out/`
+  to your project
+#### Add as Maven dependency  
+  Add Salt Edge maven repository to application's build.gradle
+  ```groovy
+      repositories {
+          maven {
+              url 'https://raw.github.com/saltedge/compliance-examples/master/maven-repo/'
+          }
+      }
+  ```
+  Add Connector SDK dependency to application build.gradle
+  ```groovy
+      implementation ('com.saltedge.connector.sdk:saltedge_connector_sdk:x.x.x') {
+          transitive = true
+      }
+  ```
+    
+### 2. Setup application as [described before](#example-application-quick-setup)
+
+### 3. Add SDK package (`com.saltedge.connector.sdk`) to component scan annotation in Application class.
     ```java
     @SpringBootApplication(scanBasePackages = {EXAMPLE_PACKAGE, CONNECTOR_PACKAGE})
     @EnableJpaRepositories(basePackages = {EXAMPLE_PACKAGE, CONNECTOR_PACKAGE})
@@ -68,42 +94,46 @@ Current version of SDK library is "2.2.0".
        
     }
     ```
-1. Add `extra` field to `Payment` entity (if not exist) for storing extra data from Salt Edge Compliance solution (e.g. prioraPaymentId).
-    The Connector will transmit extra data on Payment creation and require it back at the end of the Payment authentication.
-1. Create a service designated for providing information to and receiving events from `Salt Edge PSD2 Compliance`:
-   This service should implement `ProviderServiceAbs` interface and should have `@Service` annotation because it is auto-wired in SDK;
-    * `getAuthorizationTypes(...)` - return list of registered [Authorization types](https://priora.saltedge.com/providers/settings#authorization_types);
-    * `getExchangeRates()` - return list of Exchange rates for today;
-    * `getAccountInformationAuthorizationPageUrl(...)` - return URL of authorization page for oAuth authorization of User and consent for accounts information;
-    * `getAccountsOfUser(...)` - return accounts list of User;
-    * `getTransactionsOfAccount(...)` - return transactions list for account of User;
-    * `getCardAccountsOfUser(...)` - return list of card accounts of User;
-    * `getTransactionsOfCardAccount(...)` - return list of transactions of card account of User;
-    * `createPayment(...)` - create a payment order and return payment id or null
-    * `getPaymentAuthorizationPageUrl(...)` - return URL of authorization page for payment;  
+    
+### 4. Add `extra` field to `Payment` entity.
+  Add `extra` field (if not exist) for storing extra data from Salt Edge Compliance solution (e.g. prioraPaymentId).
+  The Connector will transmit extra data on Payment creation and require it back at the end of the Payment authentication.
+  
+### 5. Create a service designated for providing information to and receiving events from `Salt Edge PSD2 Compliance`:
+  This service should implement `ProviderServiceAbs` interface and should have `@Service` annotation because it is auto-wired in SDK;  
+  
+  * `getAuthorizationTypes(...)` - return list of registered [Authorization types](https://priora.saltedge.com/providers/settings#authorization_types);
+  * `getExchangeRates()` - return list of Exchange rates for today;
+  * `getAccountInformationAuthorizationPageUrl(...)` - return URL of authorization page for oAuth authorization of User and consent for accounts information;
+  * `getAccountsOfUser(...)` - return accounts list of User;
+  * `getTransactionsOfAccount(...)` - return transactions list for account of User;
+  * `getCardAccountsOfUser(...)` - return list of card accounts of User;
+  * `getTransactionsOfCardAccount(...)` - return list of transactions of card account of User;
+  * `createPayment(...)` - create a payment order and return payment id or null
+  * `getPaymentAuthorizationPageUrl(...)` - return URL of authorization page for payment;  
    
-1. Use Connector's SDK callback service `ConnectorCallbackService` for callback communication (e.g. notifying SDK about events):
-    * `isUserConsentRequired(sessionSecret)` - check if User Consent (Bank Offered Consent) is required for authorization session determined by sessionSecret:
-      - `sessionSecret` - unique authorization secret code passed to application via `getAccountInformationAuthorizationPageUrl(...)`;
+### 6. Use Connector's SDK callback service `ConnectorCallbackService` for callback communication (e.g. notifying SDK about events):
 
-    * `onAccountInformationAuthorizationSuccess(sessionSecret, userId, consents)` - notify SDK about the successful authorization if User for AIS flow:  
-      - `sessionSecret` - unique authorization secret code passed to application via `getAccountInformationAuthorizationPageUrl(...)`;  
-      - `userId` - unique identifier of Provider's system User (Customer);  
-      - `consents` - ProviderOfferedConsents object with user consent to provide account information;  
+  * `isUserConsentRequired(sessionSecret)` - check if User Consent (Bank Offered Consent) is required for authorization session determined by sessionSecret:
+    - `sessionSecret` - unique authorization secret code passed to application via `getAccountInformationAuthorizationPageUrl(...)`;
 
-    * `onAccountInformationAuthorizationFail(sessionSecret)`- notify SDK about the failed authorization:  
-      - `sessionSecret` - unique authorization secret code passed to application via `getAccountInformationAuthorizationPageUrl(...)`;
+  * `onAccountInformationAuthorizationSuccess(sessionSecret, userId, consents)` - notify SDK about the successful authorization if User for AIS flow:  
+    - `sessionSecret` - unique authorization secret code passed to application via `getAccountInformationAuthorizationPageUrl(...)`;       - `userId` - unique identifier of Provider's system User (Customer);  
+    - `consents` - ProviderOfferedConsents object with user consent to provide account information;  
+
+  * `onAccountInformationAuthorizationFail(sessionSecret)`- notify SDK about the failed authorization:  
+    - `sessionSecret` - unique authorization secret code passed to application via `getAccountInformationAuthorizationPageUrl(...)`;
       
-    * `onPaymentInitiationAuthorizationSuccess(paymentId, userId, extra)` - notify SDK about the successful authorization if User for AIS flow:  
-      - `paymentId` - unique payment id;  
-      - `userId` - unique identifier of Provider's system User (Customer);  
-      - `extra` - extra data from authenticated Payment passed to application via `getPaymentAuthorizationPageUrl(...)`;  
+  * `onPaymentInitiationAuthorizationSuccess(paymentId, userId, extra)` - notify SDK about the successful authorization if User for AIS flow:  
+    - `paymentId` - unique payment id;  
+    - `userId` - unique identifier of Provider's system User (Customer);  
+    - `extra` - extra data from authenticated Payment passed to application via `getPaymentAuthorizationPageUrl(...)`;  
 
     * `onPaymentInitiationAuthorizationFail(paymentId, extra)`- notify SDK about the failed authorization:  
-      - `paymentId` - unique payment id;
-      - `extra` - extra data from authenticated Payment passed to application via `getPaymentAuthorizationPageUrl(...)`;
+    - `paymentId` - unique payment id;
+    - `extra` - extra data from authenticated Payment passed to application via `getPaymentAuthorizationPageUrl(...)`;
       
-    * `revokeAccountInformationConsent(userId, accessToken)`- Revoke Account information consent associated with userId and accessToken;  
+  * `revokeAccountInformationConsent(userId, accessToken)`- Revoke Account information consent associated with userId and accessToken;  
   
   
 ## [Api Documentation](https://priora.banksalt.com/docs/aspsp/v2)

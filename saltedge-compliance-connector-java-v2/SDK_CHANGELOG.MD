@@ -1,5 +1,9 @@
 # Salt Edge Compliance Connector SDK Changelog
 
+## 2.3.0 (2020-04-28)
+### Add:
+- Global Consent support (TPP offered consent)
+
 ## 2.2.0 (2020-04-16)
 ### Add:
 - Funds confirmation feature for Payment Instrument Issuer Service Providers
