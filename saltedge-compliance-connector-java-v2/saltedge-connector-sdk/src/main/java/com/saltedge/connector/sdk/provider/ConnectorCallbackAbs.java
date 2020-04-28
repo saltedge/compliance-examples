@@ -29,7 +29,7 @@ import java.util.Map;
 
 /**
  * Interface for call back communication from Provider application to Connector SDK Module
- * @see ConnectorCallbackService
+ * @see ConnectorSDKCallbackService
  */
 public interface ConnectorCallbackAbs {
 

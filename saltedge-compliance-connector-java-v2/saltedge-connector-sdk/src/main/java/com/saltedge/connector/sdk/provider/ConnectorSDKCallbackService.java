@@ -46,7 +46,7 @@ import java.util.Map;
  */
 @Service
 @Validated
-public class ConnectorCallbackService implements ConnectorCallbackAbs {
+public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
     @Autowired
     private ConfirmTokenService confirmTokenService;
     @Autowired

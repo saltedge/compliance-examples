@@ -52,7 +52,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 @SpringBootTest
 public class ConnectorCallbackServiceTests {
 	@Autowired
-	private ConnectorCallbackService testService;
+	private ConnectorSDKCallbackService testService;
 	@MockBean
 	private ConfirmTokenService confirmTokenService;
 	@MockBean

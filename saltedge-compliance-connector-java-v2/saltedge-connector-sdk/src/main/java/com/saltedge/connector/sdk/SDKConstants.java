@@ -21,6 +21,7 @@
 package com.saltedge.connector.sdk;
 
 public class SDKConstants {
+    public final static String CONNECTOR_PACKAGE = "com.saltedge.connector.sdk";
     public final static String API_BASE_PATH = "/api/priora/v2";
     public final static String CALLBACK_BASE_PATH = "/api/connectors/v2";
 

@@ -58,8 +58,8 @@ public interface ProviderServiceAbs {
      *                      should be returned on authentication success or fail.
      * @param userConsentIsRequired if true then user consent for Account Information (balances, transactions) is required
      *                              and should be returned on authentication success.
-     * @see ConnectorCallbackService#onAccountInformationAuthorizationSuccess
-     * @see ConnectorCallbackService#onAccountInformationAuthorizationFail
+     * @see ConnectorSDKCallbackService#onAccountInformationAuthorizationSuccess
+     * @see ConnectorSDKCallbackService#onAccountInformationAuthorizationFail
      * @return URL string
      */
     String getAccountInformationAuthorizationPageUrl(

@@ -86,11 +86,10 @@ Target application should be compatible with [following requirements](#Applicati
 
 ### 3. Add SDK package (`com.saltedge.connector.sdk`) to component scan annotation in Application class.
     ```java
-    @SpringBootApplication(scanBasePackages = {EXAMPLE_PACKAGE, CONNECTOR_PACKAGE})
-    @EnableJpaRepositories(basePackages = {EXAMPLE_PACKAGE, CONNECTOR_PACKAGE})
-    @EntityScan(basePackages = {EXAMPLE_PACKAGE, CONNECTOR_PACKAGE})
+    @SpringBootApplication(scanBasePackages = {CURRENT_APP_PACKAGE, SDKConstants.CONNECTOR_PACKAGE})
+    @EnableJpaRepositories(basePackages = {CURRENT_APP_PACKAGE, SDKConstants.CONNECTOR_PACKAGE})
+    @EntityScan(basePackages = {CURRENT_APP_PACKAGE, SDKConstants.CONNECTOR_PACKAGE})
     public class ExampleApplication {
-       public static final String CONNECTOR_PACKAGE = "com.saltedge.connector.sdk";
        
     }
     ```
@@ -112,7 +111,7 @@ Target application should be compatible with [following requirements](#Applicati
   * `createPayment(...)` - create a payment order and return payment id or null
   * `getPaymentAuthorizationPageUrl(...)` - return URL of authorization page for payment;  
    
-### 6. Use Connector's SDK callback service `ConnectorCallbackService` for callback communication (e.g. notifying SDK about events):
+### 6. Use Connector's SDK callback service `ConnectorSDKCallbackService` for callback communication (e.g. notifying SDK about events):
 
   * `isUserConsentRequired(sessionSecret)` - check if User Consent (Bank Offered Consent) is required for authorization session determined by sessionSecret:
     - `sessionSecret` - unique authorization secret code passed to application via `getAccountInformationAuthorizationPageUrl(...)`;
