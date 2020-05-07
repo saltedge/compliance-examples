@@ -66,7 +66,6 @@ abstract public class UserBaseController {
                 sessionSecret,
                 userId,
                 KeyTools.generateToken(32),
-                Instant.now().plus(1, ChronoUnit.DAYS),
                 consents
         );
         if (returnToUrl == null) {

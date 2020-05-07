@@ -32,6 +32,8 @@ public class SDKConstants {
     public final static String STATUS_WAITING_CONFIRMATION_CODE = "waiting_confirmation_code";
     public final static String STATUS_REDIRECT = "redirect";
 
+    public final static int CONSENT_MAX_PERIOD = 1;
+
     public final static String KEY_DATA = "data";
     public final static String KEY_ID = "id";
     public final static String KEY_USER_ID = "user_id";

@@ -20,6 +20,7 @@
  */
 package com.saltedge.connector.sdk.api.models.requests;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.saltedge.connector.sdk.SDKConstants;
@@ -27,6 +28,8 @@ import com.saltedge.connector.sdk.api.models.ProviderConsents;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+
+import java.time.LocalDate;
 
 import static com.saltedge.connector.sdk.SDKConstants.KEY_ACCESS;
 import static com.saltedge.connector.sdk.SDKConstants.KEY_REDIRECT_URL;
@@ -70,4 +73,13 @@ public class CreateTokenRequest extends PrioraBaseRequest {
     @JsonProperty(KEY_ACCESS)
     @NotNull
     public ProviderConsents requestedConsent;
+
+    /**
+     * A valid until date for the requested consent.
+     * Date in ISODate Format, e.g. 2017-10-30.
+     * If not set will be replaced with maximum possible date (now + 90 days)
+     */
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    @JsonProperty("valid_until")
+    public LocalDate validUntil;
 }

@@ -27,7 +27,6 @@ import com.saltedge.connector.sdk.api.models.requests.CreateTokenRequest;
 import com.saltedge.connector.sdk.api.services.BaseServicesTests;
 import com.saltedge.connector.sdk.callback.mapping.SessionUpdateCallbackRequest;
 import com.saltedge.connector.sdk.models.Token;
-import org.assertj.core.util.Lists;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,9 +35,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.byLessThan;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
@@ -93,6 +97,9 @@ public class CreateTokenServiceTests extends BaseServicesTests {
 		assertThat(tokenCaptor.getValue().status).isEqualTo(Token.Status.UNCONFIRMED);
 		assertThat(tokenCaptor.getValue().sessionSecret).isEqualTo("sessionSecret");
 		assertThat(tokenCaptor.getValue().providerOfferedConsents).isNull();
+		Instant testTokenExpiresAt = Instant.now().plus(SDKConstants.CONSENT_MAX_PERIOD + 1, ChronoUnit.DAYS)
+				.atZone(ZoneOffset.UTC).withHour(0).withMinute(0).withSecond(0).withNano(0).toInstant();
+		assertThat(tokenCaptor.getValue().tokenExpiresAt).isCloseTo(testTokenExpiresAt, byLessThan(100, ChronoUnit.MILLIS));
 	}
 
 	@Test
@@ -101,6 +108,7 @@ public class CreateTokenServiceTests extends BaseServicesTests {
 		given(providerService.getAccountInformationAuthorizationPageUrl("sessionSecret", false)).willReturn("http://example.com?session_secret=sessionSecret");
 		CreateTokenRequest request = createTokenRequest(new ProviderConsents("allAccounts"));
 		request.authorizationType = "oauth";
+		request.validUntil = LocalDate.now().plusDays(1);
 
 		// when
 		testService.startAuthorization(request);
@@ -116,6 +124,10 @@ public class CreateTokenServiceTests extends BaseServicesTests {
 		assertThat(tokenCaptor.getValue().status).isEqualTo(Token.Status.UNCONFIRMED);
 		assertThat(tokenCaptor.getValue().sessionSecret).isEqualTo("sessionSecret");
 		assertThat(tokenCaptor.getValue().providerOfferedConsents).isNotNull();
+
+		Instant testTokenExpiresAt = Instant.now().plus(2, ChronoUnit.DAYS)
+				.atZone(ZoneOffset.UTC).withHour(0).withMinute(0).withSecond(0).withNano(0).toInstant();
+		assertThat(tokenCaptor.getValue().tokenExpiresAt).isEqualTo(testTokenExpiresAt);
 	}
 
 	private CreateTokenRequest createTokenRequest(

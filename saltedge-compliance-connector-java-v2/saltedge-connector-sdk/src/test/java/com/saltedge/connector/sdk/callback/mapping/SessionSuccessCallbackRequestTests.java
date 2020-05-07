@@ -37,7 +37,6 @@ public class SessionSuccessCallbackRequestTests {
 
 		assertThat(model.providerOfferedConsents).isNull();
 		assertThat(model.token).isNull();
-		assertThat(model.tokenExpiresAt).isNull();
 		assertThat(model.userId).isNull();
 	}
 
@@ -46,14 +45,13 @@ public class SessionSuccessCallbackRequestTests {
 		SessionSuccessCallbackRequest model = new SessionSuccessCallbackRequest(
 				ProviderConsents.buildAllAccountsConsent(),
 				"accessToken",
-				Instant.parse("2019-11-18T16:04:50.915Z"),
 				"userId"
 		);
 
 		ObjectMapper mapper = JsonTools.createDefaultMapper();
 		String json = mapper.writeValueAsString(model);
 
-		assertThat(json).isEqualTo("{\"extra\":{},\"consent\":{\"balances\":[],\"transactions\":[]},\"token\":\"accessToken\",\"token_expires_at\":\"2019-11-18T16:04:50.915Z\",\"user_id\":\"userId\"}");
+		assertThat(json).isEqualTo("{\"extra\":{},\"consent\":{\"balances\":[],\"transactions\":[]},\"token\":\"accessToken\",\"user_id\":\"userId\"}");
 	}
 
 	@Test
@@ -61,13 +59,12 @@ public class SessionSuccessCallbackRequestTests {
 		SessionSuccessCallbackRequest model = new SessionSuccessCallbackRequest(
 				new ProviderConsents(ProviderConsents.GLOBAL_CONSENT_VALUE),
 				"accessToken",
-				Instant.parse("2019-11-18T16:04:50.915Z"),
 				"userId"
 		);
 
 		ObjectMapper mapper = JsonTools.createDefaultMapper();
 		String json = mapper.writeValueAsString(model);
 
-		assertThat(json).isEqualTo("{\"extra\":{},\"consent\":{\"allPsd2\":\"allAccounts\"},\"token\":\"accessToken\",\"token_expires_at\":\"2019-11-18T16:04:50.915Z\",\"user_id\":\"userId\"}");
+		assertThat(json).isEqualTo("{\"extra\":{},\"consent\":{\"allPsd2\":\"allAccounts\"},\"token\":\"accessToken\",\"user_id\":\"userId\"}");
 	}
 }

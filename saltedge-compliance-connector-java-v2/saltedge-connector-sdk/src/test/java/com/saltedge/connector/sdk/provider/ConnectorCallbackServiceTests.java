@@ -112,7 +112,6 @@ public class ConnectorCallbackServiceTests {
 				"",
 				"",
 				"",
-				null,
 				null);
 	}
 
@@ -124,7 +123,6 @@ public class ConnectorCallbackServiceTests {
 				"sessionSecret",
 				"user1",
 				"accessToken",
-				Instant.parse("2019-11-18T16:04:49.585Z"),
 				consent
 		)).willReturn(null);
 
@@ -133,7 +131,6 @@ public class ConnectorCallbackServiceTests {
 				"sessionSecret",
 				"user1",
 				"accessToken",
-				Instant.parse("2019-11-18T16:04:49.585Z"),
 				consent
 		);
 
@@ -144,13 +141,12 @@ public class ConnectorCallbackServiceTests {
 	@Test
 	public void givenToken_whenOnAccountInformationAuthorizationSuccess_thenConfirmTokenAndReturnRedirectUrl() {
 		// given
-		Token token = new Token("sessionSecret", "tppAppName", "authTypeCode", "http://redirect.to");
+		Token token = new Token("sessionSecret", "tppAppName", "authTypeCode", "http://redirect.to", Instant.parse("2019-11-18T16:04:49.585Z"));
 		ProviderConsents consent = new ProviderConsents();
 		given(confirmTokenService.confirmToken(
 				"sessionSecret",
 				"user1",
 				"accessToken",
-				Instant.parse("2019-11-18T16:04:49.585Z"),
 				consent
 		)).willReturn(token);
 
@@ -159,7 +155,6 @@ public class ConnectorCallbackServiceTests {
 				"sessionSecret",
 				"user1",
 				"accessToken",
-				Instant.parse("2019-11-18T16:04:49.585Z"),
 				consent
 		);
 
@@ -187,7 +182,8 @@ public class ConnectorCallbackServiceTests {
 	@Test
 	public void givenToken_whenOnAccountInformationAuthorizationFail_thenRevokeTokenAndReturnRedirectUrl() {
 		// given
-		Token token = new Token("sessionSecret", "tppAppName", "authTypeCode", "http://redirect.to");
+		Token token = new Token("userId");
+		token.tppRedirectUrl = "http://redirect.to";
 		given(revokeTokenService.revokeTokenBySessionSecret("sessionSecret")).willReturn(token);
 
 		// when
@@ -217,7 +213,7 @@ public class ConnectorCallbackServiceTests {
 	@Test
 	public void givenRevokedToken_whenRevokeAccountInformationConsent_thenSendRevokeCallbackAndReturnTrue() {
 		// given
-		Token token = new Token("sessionSecret", "tppAppName", "authTypeCode", "http://redirect.to");
+		Token token = new Token("userId");
 		token.status = Token.Status.REVOKED;
 		given(revokeTokenService.revokeTokenByUserIdAndAccessToken("userId", "accessToken")).willReturn(token);
 
@@ -232,7 +228,7 @@ public class ConnectorCallbackServiceTests {
 	@Test
 	public void givenNotRevokedToken_whenRevokeAccountInformationConsent_thenReturnFalse() {
 		// given
-		Token token = new Token("sessionSecret", "tppAppName", "authTypeCode", "http://redirect.to");
+		Token token = new Token("userId");
 		token.status = Token.Status.UNCONFIRMED;
 		given(revokeTokenService.revokeTokenByUserIdAndAccessToken("userId", "accessToken")).willReturn(token);
 

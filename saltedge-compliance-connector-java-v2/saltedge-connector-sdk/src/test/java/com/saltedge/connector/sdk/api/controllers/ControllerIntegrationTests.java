@@ -23,6 +23,7 @@ package com.saltedge.connector.sdk.api.controllers;
 import com.saltedge.connector.sdk.SDKConstants;
 import com.saltedge.connector.sdk.callback.services.SessionsCallbackService;
 import com.saltedge.connector.sdk.callback.services.TokensCallbackService;
+import com.saltedge.connector.sdk.config.ApplicationProperties;
 import com.saltedge.connector.sdk.models.Token;
 import com.saltedge.connector.sdk.models.TokensRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.util.LinkedMultiValueMap;
+
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 
 abstract public class ControllerIntegrationTests {
     @LocalServerPort
@@ -43,17 +47,17 @@ abstract public class ControllerIntegrationTests {
     protected TestRestTemplate testRestTemplate = new TestRestTemplate();
 
     protected void seedTokensRepository() {
-        Token newToken1 = new Token("sessionSecret", "tppAppName", "oauth", "tppRedirectUrl");
+        Token newToken1 = new Token("sessionSecret", "tppAppName", "oauth", "tppRedirectUrl", Instant.now().plus(ApplicationProperties.connectionExpiresInMinutes, ChronoUnit.MINUTES));
         newToken1.id = 1L;
         newToken1.userId = "1";
-        newToken1.initConfirmedToken();
+        newToken1.status = Token.Status.CONFIRMED;
         newToken1.accessToken = "validToken";
         tokensRepository.save(newToken1);
 
-        Token newToken2 = new Token("sessionSecret2", "tppAppName", "oauth", "tppRedirectUrl");
+        Token newToken2 = new Token("sessionSecret2", "tppAppName", "oauth", "tppRedirectUrl", Instant.now().plus(ApplicationProperties.connectionExpiresInMinutes, ChronoUnit.MINUTES));
         newToken2.id = 2L;
         newToken2.userId = "2";
-        newToken2.initConfirmedToken();
+        newToken2.status = Token.Status.CONFIRMED;
         newToken2.accessToken = "validToken2";
         tokensRepository.save(newToken2);
     }

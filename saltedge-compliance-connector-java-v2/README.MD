@@ -8,7 +8,7 @@ _This application is just a Proof Of Concept._
 This codebase contains SDK module which is the set of tools for simplification of communication between ASPSP/Bank and Priora PSD2 Compliance Solution.    
 The SDK module implements the Priora Connector v2 API compatible with **Berlin Group NextGenPSD2 XS2A API**.
 [See how to add SDK](#SDK-Integration)  
-**Last stable version of SDK library is "2.3.0".**
+**Last stable version of SDK library is "2.3.1".**
   
 ### Codebase consists of modules:
 * **example** - simulates work of ASPSP/Bank Application.  
@@ -116,8 +116,9 @@ Target application should be compatible with [following requirements](#Applicati
   * `isUserConsentRequired(sessionSecret)` - check if User Consent (Bank Offered Consent) is required for authorization session determined by sessionSecret:
     - `sessionSecret` - unique authorization secret code passed to application via `getAccountInformationAuthorizationPageUrl(...)`;
 
-  * `onAccountInformationAuthorizationSuccess(sessionSecret, userId, consents)` - notify SDK about the successful authorization if User for AIS flow:  
+  * `onAccountInformationAuthorizationSuccess(sessionSecret, userId, accessToken, consents)` - notify SDK about the successful authorization if User for AIS flow:  
     - `sessionSecret` - unique authorization secret code passed to application via `getAccountInformationAuthorizationPageUrl(...)`;       - `userId` - unique identifier of Provider's system User (Customer);  
+    - `accessToken` - unique access identifier;  
     - `consents` - ProviderOfferedConsents object with user consent to provide account information;  
 
   * `onAccountInformationAuthorizationFail(sessionSecret)`- notify SDK about the failed authorization:  

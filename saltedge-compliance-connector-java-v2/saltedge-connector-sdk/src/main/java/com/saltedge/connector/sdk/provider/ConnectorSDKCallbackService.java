@@ -65,7 +65,7 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
     @Override
     public boolean isUserConsentRequired(@NotEmpty String sessionSecret) {
         Token token = confirmTokenService.findTokenBySessionSecret(sessionSecret);
-        return token != null && !token.hasGlobalConsent();
+        return token != null && token.notGlobalConsent();
     }
 
     /**
@@ -74,9 +74,9 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
      *
      * @param sessionSecret of User authorization session.
      * @param userId of authenticated User.
-     * @param accessToken is an unique string that identifies a user.
-     * @param accessTokenExpiresAt expiration time of accessToken (UTC time).
-     * @param consents list of balances of accounts and transactions of accounts.
+     * @param accessToken is an unique string that identifies a user access.
+     *                    life period of accessToken is set by TPP and can not be more than 90 days.
+     * @param consents bank offered consent with list of balances of accounts and transactions of accounts.
      *                 Can be null if bank offered consent is not required.
      * @return returnUrl string for final redirection of Authorization session (in browser) back to TPP side.
      *
@@ -88,17 +88,32 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
             @NotEmpty String sessionSecret,
             @NotEmpty String userId,
             @NotEmpty String accessToken,
-            @NotNull Instant accessTokenExpiresAt,
             ProviderConsents consents
     ) {
         Token token = confirmTokenService.confirmToken(
                 sessionSecret,
                 userId,
                 accessToken,
-                accessTokenExpiresAt,
                 consents
         );
         return (token == null) ? null : token.tppRedirectUrl;
+    }
+
+    /**
+     * @deprecated
+     * This method is expected to be retained only for back compatibility.
+     * Replaced by {@link #onAccountInformationAuthorizationSuccess(String, String, String, ProviderConsents)}
+     */
+    @Override
+    @Deprecated
+    public String onAccountInformationAuthorizationSuccess(
+            @NotEmpty String sessionSecret,
+            @NotEmpty String userId,
+            @NotEmpty String accessToken,
+            @NotNull Instant accessTokenExpiresAt,
+            ProviderConsents consents
+    ) {
+        return onAccountInformationAuthorizationSuccess(sessionSecret, userId, accessToken, consents);
     }
 
     /**

@@ -47,6 +47,33 @@ public interface ConnectorCallbackAbs {
      *
      * @param sessionSecret of User authorization session.
      * @param userId of authenticated User.
+     * @param accessToken is an unique string that identifies a user access.
+     *                    life period of accessToken is set by TPP and can not be more than 90 days.
+     * @param consents list of balances of accounts and transactions of accounts.
+     *                 Can be null if bank offered consent is not required.
+     *
+     * @return returnUrl string for final redirection of Authorization session (in browser) back to TPP side.
+     *
+     * @see ProviderServiceAbs#getAccountInformationAuthorizationPageUrl
+     * @see ProviderConsents
+     */
+    String onAccountInformationAuthorizationSuccess(
+            @NotEmpty String sessionSecret,
+            @NotEmpty String userId,
+            @NotEmpty String accessToken,
+            ProviderConsents consents
+    );
+
+    /**
+     * @deprecated
+     * This method is expected to be retained only for back compatibility.
+     * Replaced by {@link #onAccountInformationAuthorizationSuccess(String, String, String, ProviderConsents)}
+     *
+     * Provider notify Connector SDK Module about oAuth success authentication
+     * and provides user consent for accounts (balances/transactions)
+     *
+     * @param sessionSecret of User authorization session.
+     * @param userId of authenticated User.
      * @param accessToken is an unique string that identifies a user.
      * @param accessTokenExpiresAt expiration time of accessToken (UTC time).
      * @param consents list of balances of accounts and transactions of accounts.
@@ -57,6 +84,7 @@ public interface ConnectorCallbackAbs {
      * @see ProviderServiceAbs#getAccountInformationAuthorizationPageUrl
      * @see ProviderConsents
      */
+    @Deprecated
     String onAccountInformationAuthorizationSuccess(
             @NotEmpty String sessionSecret,
             @NotEmpty String userId,

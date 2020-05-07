@@ -25,7 +25,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.saltedge.connector.sdk.SDKConstants;
 import com.saltedge.connector.sdk.api.models.ProviderConsents;
 
-import java.time.Instant;
 import java.util.Objects;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -35,9 +34,6 @@ public class SessionSuccessCallbackRequest extends BaseCallbackRequest {
 
     @JsonProperty("token")
     public String token;
-
-    @JsonProperty("token_expires_at")
-    public Instant tokenExpiresAt;
 
     @JsonProperty(SDKConstants.KEY_USER_ID)
     public String userId;
@@ -51,12 +47,10 @@ public class SessionSuccessCallbackRequest extends BaseCallbackRequest {
     public SessionSuccessCallbackRequest(
             ProviderConsents providerOfferedConsents,
             String token,
-            Instant tokenExpiresAt,
             String userId
     ) {
         this.providerOfferedConsents = providerOfferedConsents;
         this.token = token;
-        this.tokenExpiresAt = tokenExpiresAt;
         this.userId = userId;
     }
 
@@ -72,13 +66,12 @@ public class SessionSuccessCallbackRequest extends BaseCallbackRequest {
         SessionSuccessCallbackRequest that = (SessionSuccessCallbackRequest) o;
         return Objects.equals(providerOfferedConsents, that.providerOfferedConsents) &&
                 Objects.equals(token, that.token) &&
-                Objects.equals(tokenExpiresAt, that.tokenExpiresAt) &&
                 Objects.equals(userId, that.userId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(providerOfferedConsents, token, tokenExpiresAt, userId);
+        return Objects.hash(providerOfferedConsents, token, userId);
     }
 
     @Override
@@ -86,7 +79,6 @@ public class SessionSuccessCallbackRequest extends BaseCallbackRequest {
         return "SessionSuccessCallbackRequest{" +
                 "providerOfferedConsents=" + providerOfferedConsents +
                 ", token='" + token + '\'' +
-                ", tokenExpiresAt=" + tokenExpiresAt +
                 ", userId='" + userId + '\'' +
                 ", sessionSecret='" + sessionSecret + '\'' +
                 ", extra=" + extra +

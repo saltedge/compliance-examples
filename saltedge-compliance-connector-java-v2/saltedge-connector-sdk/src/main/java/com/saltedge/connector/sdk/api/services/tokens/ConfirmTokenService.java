@@ -20,6 +20,7 @@
  */
 package com.saltedge.connector.sdk.api.services.tokens;
 
+import com.saltedge.connector.sdk.SDKConstants;
 import com.saltedge.connector.sdk.api.models.ProviderConsents;
 import com.saltedge.connector.sdk.callback.mapping.SessionSuccessCallbackRequest;
 import com.saltedge.connector.sdk.models.Token;
@@ -31,8 +32,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 
 @Service
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -44,7 +45,6 @@ public class ConfirmTokenService extends TokensBaseService {
             @NotEmpty String sessionSecret,
             @NotEmpty String userId,
             @NotEmpty String accessToken,
-            @NotNull Instant accessTokenExpiresAt,
             ProviderConsents providerOfferedConsents
     ) {
         Token token = findTokenBySessionSecret(sessionSecret);
@@ -53,8 +53,10 @@ public class ConfirmTokenService extends TokensBaseService {
                 token.userId = userId;
                 token.status = Token.Status.CONFIRMED;
                 token.accessToken = accessToken;
-                token.tokenExpiresAt = accessTokenExpiresAt;
-                if (!token.hasGlobalConsent()) {
+                if (token.tokenExpiresAt == null) {
+                    token.tokenExpiresAt = Instant.now().plus(SDKConstants.CONSENT_MAX_PERIOD, ChronoUnit.DAYS);
+                }
+                if (token.notGlobalConsent()) {
                     token.providerOfferedConsents = (providerOfferedConsents == null)
                             ? ProviderConsents.buildAllAccountsConsent() : providerOfferedConsents;
                 }
@@ -73,7 +75,6 @@ public class ConfirmTokenService extends TokensBaseService {
         SessionSuccessCallbackRequest params = new SessionSuccessCallbackRequest(
                 token.providerOfferedConsents,
                 token.accessToken,
-                token.tokenExpiresAt,
                 token.userId
         );
         callbackService.sendSuccessCallback(token.sessionSecret, params);

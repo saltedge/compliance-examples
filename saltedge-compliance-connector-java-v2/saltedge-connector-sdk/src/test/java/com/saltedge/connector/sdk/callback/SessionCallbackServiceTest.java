@@ -89,7 +89,6 @@ public class SessionCallbackServiceTest {
         // when
         SessionSuccessCallbackRequest request = new SessionSuccessCallbackRequest();
         request.token = "accessToken";
-        request.tokenExpiresAt = Instant.parse("2019-11-18T16:04:49.585Z");
         service.sendSuccessCallback("sessionSecret", request);
 
         // then

@@ -20,6 +20,7 @@
  */
 package com.saltedge.connector.sdk.api.services.tokens;
 
+import com.saltedge.connector.sdk.SDKConstants;
 import com.saltedge.connector.sdk.api.models.ProviderConsents;
 import com.saltedge.connector.sdk.api.services.BaseServicesTests;
 import com.saltedge.connector.sdk.callback.mapping.SessionSuccessCallbackRequest;
@@ -34,8 +35,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.validation.ConstraintViolationException;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.byLessThan;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
@@ -55,7 +58,7 @@ public class ConfirmTokenServiceTests extends BaseServicesTests {
 
 	@Test(expected = ConstraintViolationException.class)
 	public void givenInvalidParams_whenConfirmToken_thenSendSessionsFailCallback() {
-		testService.confirmToken("", "", "", null, null);
+		testService.confirmToken("", "", "", null);
 	}
 
 	@Test
@@ -68,8 +71,7 @@ public class ConfirmTokenServiceTests extends BaseServicesTests {
 				"sessionSecret",
 				"userId",
 				"accessToken",
-				Instant.now(),
-				new ProviderConsents());
+				ProviderConsents.buildAllAccountsConsent());
 
 		// then
 		assertThat(result).isNull();
@@ -80,6 +82,7 @@ public class ConfirmTokenServiceTests extends BaseServicesTests {
 		// given
 		Token token = new Token();
 		token.sessionSecret = "sessionSecret";
+		token.tokenExpiresAt = Instant.parse("2019-08-21T16:04:49.021Z");
 		ProviderConsents providerOfferedConsents = ProviderConsents.buildAllAccountsConsent();
 		given(tokensRepository.findFirstBySessionSecret("sessionSecret")).willReturn(token);
 
@@ -88,7 +91,6 @@ public class ConfirmTokenServiceTests extends BaseServicesTests {
 				"sessionSecret",
 				"userId",
 				"accessToken",
-				Instant.parse("2019-08-21T16:04:49.021Z"),
 				providerOfferedConsents
 		);
 
@@ -109,13 +111,13 @@ public class ConfirmTokenServiceTests extends BaseServicesTests {
 		assertThat(captor.getValue().providerOfferedConsents.globalAccessConsent).isNull();
 		assertThat(captor.getValue().userId).isEqualTo("userId");
 		assertThat(captor.getValue().token).isEqualTo("accessToken");
-		assertThat(captor.getValue().tokenExpiresAt).isEqualTo(Instant.parse("2019-08-21T16:04:49.021Z"));
 	}
 
 	@Test
 	public void givenValidParamsWithNullBankConsent_whenConfirmToken_thenReturnTokenAndSendSuccess() {
 		// given
 		Token token = new Token();
+		token.tokenExpiresAt = null;
 		token.sessionSecret = "sessionSecret";
 		given(tokensRepository.findFirstBySessionSecret("sessionSecret")).willReturn(token);
 
@@ -124,7 +126,6 @@ public class ConfirmTokenServiceTests extends BaseServicesTests {
 				"sessionSecret",
 				"userId",
 				"accessToken",
-				Instant.parse("2019-08-21T16:04:49.021Z"),
 				null
 		);
 
@@ -134,7 +135,8 @@ public class ConfirmTokenServiceTests extends BaseServicesTests {
 		assertThat(result.userId).isEqualTo("userId");
 		assertThat(result.status).isEqualTo(Token.Status.CONFIRMED);
 		assertThat(result.accessToken).isEqualTo("accessToken");
-		assertThat(result.tokenExpiresAt).isEqualTo(Instant.parse("2019-08-21T16:04:49.021Z"));
+		assertThat(result.tokenExpiresAt)
+				.isCloseTo(Instant.now().plus(SDKConstants.CONSENT_MAX_PERIOD, ChronoUnit.DAYS), byLessThan(100, ChronoUnit.MILLIS));
 		assertThat(result.providerOfferedConsents).isEqualTo(ProviderConsents.buildAllAccountsConsent());
 		verify(tokensRepository).save(any(Token.class));
 
@@ -143,7 +145,6 @@ public class ConfirmTokenServiceTests extends BaseServicesTests {
 		assertThat(captor.getValue().providerOfferedConsents).isEqualTo(ProviderConsents.buildAllAccountsConsent());
 		assertThat(captor.getValue().userId).isEqualTo("userId");
 		assertThat(captor.getValue().token).isEqualTo("accessToken");
-		assertThat(captor.getValue().tokenExpiresAt).isEqualTo(Instant.parse("2019-08-21T16:04:49.021Z"));
 	}
 
 	@Test
@@ -153,6 +154,7 @@ public class ConfirmTokenServiceTests extends BaseServicesTests {
 		Token token = new Token();
 		token.providerOfferedConsents = globalConsents;
 		token.sessionSecret = "sessionSecret";
+		token.tokenExpiresAt = Instant.parse("2019-08-21T16:04:49.021Z");
 		given(tokensRepository.findFirstBySessionSecret("sessionSecret")).willReturn(token);
 
 		// when
@@ -160,7 +162,6 @@ public class ConfirmTokenServiceTests extends BaseServicesTests {
 				"sessionSecret",
 				"userId",
 				"accessToken",
-				Instant.parse("2019-08-21T16:04:49.021Z"),
 				null
 		);
 
@@ -179,6 +180,5 @@ public class ConfirmTokenServiceTests extends BaseServicesTests {
 		assertThat(captor.getValue().providerOfferedConsents).isEqualTo(globalConsents);
 		assertThat(captor.getValue().userId).isEqualTo("userId");
 		assertThat(captor.getValue().token).isEqualTo("accessToken");
-		assertThat(captor.getValue().tokenExpiresAt).isEqualTo(Instant.parse("2019-08-21T16:04:49.021Z"));
 	}
 }
