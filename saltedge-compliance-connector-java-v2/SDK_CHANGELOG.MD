@@ -7,7 +7,10 @@
   
 ### Change:  
 - In ConnectorSDKCallbackService deprecated onAccountInformationAuthorizationSuccess(...) method.  
-  Replaced with onAccountInformationAuthorizationSuccess(...) without accessTokenExpiresAt param.  
+  Replaced with onAccountInformationAuthorizationSuccess(...) without accessTokenExpiresAt param.
+  
+### Remove:
+- Removed tokenExpiresAt param in session success callback  
   
 ## 2.3.0 (2020-04-28)
 ### Add:
