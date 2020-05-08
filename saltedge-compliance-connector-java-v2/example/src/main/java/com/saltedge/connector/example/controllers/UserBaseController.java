@@ -25,10 +25,16 @@ import com.saltedge.connector.example.model.repository.AccountsRepository;
 import com.saltedge.connector.example.model.repository.PaymentsRepository;
 import com.saltedge.connector.example.model.repository.TransactionsRepository;
 import com.saltedge.connector.example.model.repository.UsersRepository;
+import com.saltedge.connector.sdk.api.models.ProviderConsents;
 import com.saltedge.connector.sdk.provider.ConnectorCallbackAbs;
+import com.saltedge.connector.sdk.tools.KeyTools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.validation.constraints.NotEmpty;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 
 abstract public class UserBaseController {
     @Autowired
@@ -46,8 +52,26 @@ abstract public class UserBaseController {
     @Autowired
     protected TransactionsRepository transactionsRepository;
 
-    protected Long findUser(@RequestParam String username, @RequestParam String password) {
+    protected Long findUser(String username, String password) {
         if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) return null;
         return usersRepository.findFirstByUsernameAndPassword(username, password).map(user -> user.id).orElse(null);
+    }
+
+    protected ModelAndView onAccountInformationAuthorizationSuccess(
+            @NotEmpty String sessionSecret,
+            @NotEmpty String userId,
+            ProviderConsents consents
+    ) {
+        String returnToUrl = connectorCallbackService.onAccountInformationAuthorizationSuccess(
+                sessionSecret,
+                userId,
+                KeyTools.generateToken(32),
+                consents
+        );
+        if (returnToUrl == null) {
+            return new ModelAndView("redirect:/oauth/authorize/accounts?session_secret=" + sessionSecret);
+        } else {
+            return new ModelAndView("redirect:" + returnToUrl);
+        }
     }
 }

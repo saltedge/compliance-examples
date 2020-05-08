@@ -33,7 +33,10 @@ import java.util.Map;
 @Service
 public class TestProviderService implements ProviderServiceAbs {
     @Override
-    public String getAccountInformationAuthorizationPageUrl(String sessionSecret) {
+    public String getAccountInformationAuthorizationPageUrl(
+            String sessionSecret,
+            boolean userConsentIsRequired
+    ) {
         return null;
     }
 

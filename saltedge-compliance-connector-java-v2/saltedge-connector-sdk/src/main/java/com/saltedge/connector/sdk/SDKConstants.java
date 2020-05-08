@@ -21,6 +21,7 @@
 package com.saltedge.connector.sdk;
 
 public class SDKConstants {
+    public final static String CONNECTOR_PACKAGE = "com.saltedge.connector.sdk";
     public final static String API_BASE_PATH = "/api/priora/v2";
     public final static String CALLBACK_BASE_PATH = "/api/connectors/v2";
 
@@ -30,6 +31,8 @@ public class SDKConstants {
 
     public final static String STATUS_WAITING_CONFIRMATION_CODE = "waiting_confirmation_code";
     public final static String STATUS_REDIRECT = "redirect";
+
+    public final static int CONSENT_MAX_PERIOD = 1;
 
     public final static String KEY_DATA = "data";
     public final static String KEY_ID = "id";
@@ -49,10 +52,16 @@ public class SDKConstants {
     public final static String KEY_INSTRUCTED_AMOUNT = "instructed_amount";
     public final static String KEY_ACCOUNT_ID = "account_id";
     public final static String KEY_IBAN = "iban";
+    public final static String KEY_BBAN = "bban";
+    public final static String KEY_BIC = "bic";
+    public final static String KEY_MSISDN = "msisdn";
     public final static String KEY_MASKED_PAN = "masked_pan";
     public final static String KEY_NAME = "name";
     public final static String KEY_DESCRIPTION = "description";
     public final static String KEY_SESSION_SECRET = "session_secret";
     public final static String KEY_PAYMENT_ID = "payment_id";
     public final static String KEY_END_TO_END_IDENTIFICATION = "end_to_end_identification";
+    public final static String KEY_ACCESS = "access";
+    public final static String KEY_BALANCES = "balances";
+    public final static String KEY_PRODUCT = "product";
 }

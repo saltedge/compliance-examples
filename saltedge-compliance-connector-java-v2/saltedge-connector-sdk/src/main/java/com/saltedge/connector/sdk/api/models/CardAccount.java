@@ -64,21 +64,21 @@ public class CardAccount {
      * Product Name of the Bank for card account, proprietary definition.
      */
     @NotBlank
-    @JsonProperty("product")
+    @JsonProperty(SDKConstants.KEY_PRODUCT)
     private String product;
 
     /**
      * Current status of the account. Allowed values: enabled, deleted, blocked
      */
     @NotBlank
-    @JsonProperty("status")
+    @JsonProperty(SDKConstants.KEY_STATUS)
     private String status;
 
     /**
      * List of balances
      */
     @NotBlank
-    @JsonProperty("balances")
+    @JsonProperty(SDKConstants.KEY_BALANCES)
     private List<CardAccountBalance> balances;
 
     /**

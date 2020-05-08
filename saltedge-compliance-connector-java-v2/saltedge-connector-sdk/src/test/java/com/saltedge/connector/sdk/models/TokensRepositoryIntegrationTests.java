@@ -43,7 +43,7 @@ public class TokensRepositoryIntegrationTests {
 	@Test
 	public void whenFindFirstBySessionSecret_thenReturnToken() {
 		// given
-		Token token = new Token("secret1", "tppAppName", "authTypeCode", null);
+		Token token = new Token("secret1", "tppAppName", "authTypeCode", null, Instant.parse("2019-11-18T16:04:50.915Z"));
 		token.accessToken = "123456";
 		entityManager.persist(token);
 		entityManager.flush();
@@ -66,9 +66,8 @@ public class TokensRepositoryIntegrationTests {
 	@Test
 	public void whenFindFirstByAccessToken_thenReturnToken() {
 		// given
-		Token token = new Token("secret1", "tppAppName", "authTypeCode", null);
+		Token token = new Token("secret1", "tppAppName", "authTypeCode", null, Instant.parse("2019-11-18T16:04:50.915Z"));
 		token.accessToken = "123456";
-		token.tokenExpiresAt = Instant.parse("2019-11-18T16:04:50.915Z");
 		entityManager.persist(token);
 		entityManager.flush();
 
@@ -84,7 +83,7 @@ public class TokensRepositoryIntegrationTests {
 	@Test
 	public void whenFindFirstByAccessToken_thenReturnNull() {
 		// given
-		Token token = new Token("secret1", "tppAppName", "authTypeCode", null);
+		Token token = new Token("secret1", "tppAppName", "authTypeCode", null, Instant.parse("2019-11-18T16:04:50.915Z"));
 		token.accessToken = "123456";
 		entityManager.persist(token);
 		entityManager.flush();

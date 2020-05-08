@@ -20,20 +20,23 @@
  */
 package com.saltedge.connector.example;
 
+import com.saltedge.connector.sdk.SDKConstants;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-import static com.saltedge.connector.example.ExampleApplication.CONNECTOR_PACKAGE;
 import static com.saltedge.connector.example.ExampleApplication.EXAMPLE_PACKAGE;
 
-@SpringBootApplication(scanBasePackages = {EXAMPLE_PACKAGE, CONNECTOR_PACKAGE})
-@EnableJpaRepositories(basePackages = {EXAMPLE_PACKAGE, CONNECTOR_PACKAGE})
-@EntityScan(basePackages = {EXAMPLE_PACKAGE, CONNECTOR_PACKAGE})
+/**
+ * Example Application which simulates work of ASPSP/Bank application.
+ * This application is just a POC (Proof Of Concept).
+ */
+@SpringBootApplication(scanBasePackages = {EXAMPLE_PACKAGE, SDKConstants.CONNECTOR_PACKAGE})
+@EnableJpaRepositories(basePackages = {EXAMPLE_PACKAGE, SDKConstants.CONNECTOR_PACKAGE})
+@EntityScan(basePackages = {EXAMPLE_PACKAGE, SDKConstants.CONNECTOR_PACKAGE})
 public class ExampleApplication {
     public static final String EXAMPLE_PACKAGE = "com.saltedge.connector.example";
-    public static final String CONNECTOR_PACKAGE = "com.saltedge.connector.sdk";
 
     public static void main(String[] args) {
         SpringApplication.run(ExampleApplication.class, args);

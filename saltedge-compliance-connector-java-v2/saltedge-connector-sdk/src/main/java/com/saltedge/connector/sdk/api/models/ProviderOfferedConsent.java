@@ -20,23 +20,53 @@
  */
 package com.saltedge.connector.sdk.api.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.saltedge.connector.sdk.SDKConstants;
 
 import java.util.Objects;
 
+@JsonIgnoreProperties
 public class ProviderOfferedConsent {
+    /**
+     * International Bank Account Number
+     */
     @JsonProperty(SDKConstants.KEY_IBAN)
     public String iban;
 
+    /**
+     * Basic Bank Account Number
+     */
+    @JsonProperty(SDKConstants.KEY_BBAN)
+    public String bban;
+
+    /**
+     * Bank Identifier Code
+     */
+    @JsonProperty(SDKConstants.KEY_BIC)
+    public String bic;
+
+    /**
+     * A number uniquely identifying a subscription in a Global System for Mobile communications
+     * or a Universal Mobile Telecommunications System mobile network.
+     */
+    @JsonProperty(SDKConstants.KEY_MSISDN)
+    public String msisdn;
+
+    /**
+     * Primary Account Number (PAN) of a card in a masked form.
+     */
     @JsonProperty(SDKConstants.KEY_MASKED_PAN)
     public String maskedPan;
 
     public ProviderOfferedConsent() {
     }
 
-    public ProviderOfferedConsent(String iban, String maskedPan) {
+    public ProviderOfferedConsent(String iban, String bban, String bic, String msisdn, String maskedPan) {
         this.iban = iban;
+        this.bban = bban;
+        this.bic = bic;
+        this.msisdn = msisdn;
         this.maskedPan = maskedPan;
     }
 
@@ -57,18 +87,25 @@ public class ProviderOfferedConsent {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ProviderOfferedConsent that = (ProviderOfferedConsent) o;
-        return Objects.equals(iban, that.iban) && Objects.equals(maskedPan, that.maskedPan);
+        return Objects.equals(iban, that.iban) &&
+                Objects.equals(bban, that.bban) &&
+                Objects.equals(bic, that.bic) &&
+                Objects.equals(msisdn, that.msisdn) &&
+                Objects.equals(maskedPan, that.maskedPan);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(iban, maskedPan);
+        return Objects.hash(iban, bban, bic, msisdn, maskedPan);
     }
 
     @Override
     public String toString() {
-        return "ConsentData{" +
+        return "Consent{" +
                 "iban='" + iban + '\'' +
+                ", bban='" + bban + '\'' +
+                ", bic='" + bic + '\'' +
+                ", msisdn='" + msisdn + '\'' +
                 ", maskedPan='" + maskedPan + '\'' +
                 '}';
     }

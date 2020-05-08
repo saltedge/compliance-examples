@@ -41,6 +41,7 @@ public class UserAuthorizeController extends UserBaseController {
     public final static String PAYMENTS_BASE_PATH = BASE_PATH + "/" + TYPE_PAYMENTS;
     public final static String SESSION_TYPE = "session_type";
 
+    // Show SignIn page
     @GetMapping(BASE_PATH + "/{" + SESSION_TYPE + "}")
     public ModelAndView showSignInForAccounts(
             @PathVariable(SESSION_TYPE) @NotEmpty String sessionType,
@@ -54,6 +55,7 @@ public class UserAuthorizeController extends UserBaseController {
         }
     }
 
+    // Receive SignIn page credentials
     @PostMapping(BASE_PATH + "/{" + SESSION_TYPE + "}")
     public ModelAndView onSubmitCredentials(
             @PathVariable(SESSION_TYPE) @NotEmpty String sessionType,
@@ -68,14 +70,20 @@ public class UserAuthorizeController extends UserBaseController {
             return createSignInModel(sessionType).addObject("error", "Unauthorized access.");
         }
 
+        // Find user by credentials
         Long userId = findUser(username, password);
         if (userId == null) return createSignInModel(sessionType).addObject("error", "Invalid credentials.");
 
-        ModelAndView result = new ModelAndView("redirect:/oauth/consent/"+sessionType);
-        result.addObject(SDKConstants.KEY_USER_ID, userId);
-        if (TYPE_PAYMENTS.equals(sessionType)) result.addObject(SDKConstants.KEY_PAYMENT_ID, paymentId);
-        if (TYPE_ACCOUNTS.equals(sessionType)) result.addObject(SDKConstants.KEY_SESSION_SECRET, sessionSecret);
-        return result;
+        //Redirect to bank Offered Consent Page
+        if (connectorCallbackService.isUserConsentRequired(sessionSecret)) {
+            ModelAndView result = new ModelAndView("redirect:/oauth/consent/"+sessionType);
+            result.addObject(SDKConstants.KEY_USER_ID, userId);
+            if (TYPE_PAYMENTS.equals(sessionType)) result.addObject(SDKConstants.KEY_PAYMENT_ID, paymentId);
+            if (TYPE_ACCOUNTS.equals(sessionType)) result.addObject(SDKConstants.KEY_SESSION_SECRET, sessionSecret);
+            return result;
+        } else {
+            return onAccountInformationAuthorizationSuccess(sessionSecret, String.valueOf(userId), null);
+        }
     }
 
     private ModelAndView createSignInModel(String sessionType) {

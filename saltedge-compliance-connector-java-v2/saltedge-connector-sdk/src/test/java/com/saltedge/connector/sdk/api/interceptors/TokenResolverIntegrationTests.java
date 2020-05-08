@@ -103,10 +103,9 @@ public class TokenResolverIntegrationTests {
     @Before
     public void setUp() {
         if (tokensRepository.count() == 0) {
-            Token token = new Token("sessionSecret", "tppAppName", "authTypeCode", "tppRedirectUrl");
+            Token token = new Token("sessionSecret", "tppAppName", "authTypeCode", "tppRedirectUrl", Instant.now().minusSeconds(1));
             token.id = 1L;
             token.accessToken = "validToken";
-            token.tokenExpiresAt = Instant.now().minusSeconds(1);
             tokensRepository.save(token);
         }
     }

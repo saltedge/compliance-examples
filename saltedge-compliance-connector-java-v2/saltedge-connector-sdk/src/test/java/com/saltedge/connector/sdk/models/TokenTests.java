@@ -20,6 +20,7 @@
  */
 package com.saltedge.connector.sdk.models;
 
+import com.saltedge.connector.sdk.api.models.ProviderConsents;
 import org.junit.Test;
 
 import java.time.Instant;
@@ -27,36 +28,6 @@ import java.time.Instant;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class TokenTests {
-	@Test
-	public void initConfirmedTokenTest() {
-		Token token = new Token();
-
-		assertThat(token.status).isEqualTo(Token.Status.UNCONFIRMED);
-		assertThat(token.accessToken).isNull();
-		assertThat(token.tokenExpiresAt).isNull();
-
-		token.initConfirmedToken();
-
-		assertThat(token.status).isEqualTo(Token.Status.CONFIRMED);
-		assertThat(token.accessToken).isNotEmpty();
-		assertThat(token.tokenExpiresAt).isAfter(Instant.now());
-	}
-
-	@Test
-	public void regenerateTokenAndExpiresAtTest() {
-		Token token = new Token();
-
-		assertThat(token.status).isEqualTo(Token.Status.UNCONFIRMED);
-		assertThat(token.accessToken).isNull();
-		assertThat(token.tokenExpiresAt).isNull();
-
-		token.regenerateTokenAndExpiresAt();
-
-		assertThat(token.status).isEqualTo(Token.Status.UNCONFIRMED);
-		assertThat(token.accessToken).isNotEmpty();
-		assertThat(token.tokenExpiresAt).isAfter(Instant.now());
-	}
-
 	@Test
 	public void isExpiredTest() {
 		Token token = new Token();
@@ -70,5 +41,20 @@ public class TokenTests {
 		token.tokenExpiresAt = Instant.now().plusSeconds(1);
 
 		assertThat(token.isExpired()).isFalse();
+	}
+
+	@Test
+	public void notGlobalConsentTest() {
+		Token token = new Token();
+
+		assertThat(token.notGlobalConsent()).isTrue();
+
+		token.providerOfferedConsents = ProviderConsents.buildAllAccountsConsent();
+
+		assertThat(token.notGlobalConsent()).isTrue();
+
+		token.providerOfferedConsents = new ProviderConsents(ProviderConsents.GLOBAL_CONSENT_VALUE);
+
+		assertThat(token.notGlobalConsent()).isFalse();
 	}
 }

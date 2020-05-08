@@ -48,7 +48,7 @@ public class Account {
     @JsonProperty(SDKConstants.KEY_NAME)
     private String name;
 
-    @JsonProperty("balances")
+    @JsonProperty(SDKConstants.KEY_BALANCES)
     private List<AccountBalance> balances;
 
     /**
@@ -68,13 +68,13 @@ public class Account {
     /**
      * Basic Bank Account Number
      */
-    @JsonProperty("bban")
+    @JsonProperty(SDKConstants.KEY_BBAN)
     private String bban;
 
     /**
      * Bank Identifier Code
      */
-    @JsonProperty("bic")
+    @JsonProperty(SDKConstants.KEY_BIC)
     private String bic;
 
     /**
@@ -86,19 +86,19 @@ public class Account {
     /**
      * A number uniquely identifying a subscription in a Global System for Mobile communications or a Universal Mobile Telecommunications System mobile network.
      */
-    @JsonProperty("msisdn")
+    @JsonProperty(SDKConstants.KEY_MSISDN)
     private String msisdn;
 
     /**
      * Product Name of the Bank for this account, proprietary definition.
      */
-    @JsonProperty("product")
+    @JsonProperty(SDKConstants.KEY_PRODUCT)
     private String product;
 
     /**
      * Current status of the account. Allowed values: enabled, deleted, blocked
      */
-    @JsonProperty("status")
+    @JsonProperty(SDKConstants.KEY_STATUS)
     private String status;
 
     /**

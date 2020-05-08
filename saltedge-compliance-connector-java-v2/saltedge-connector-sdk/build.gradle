@@ -1,12 +1,13 @@
 plugins {
     id 'java'
+    id 'maven'
     id 'com.github.johnrengelman.shadow' version '5.2.0'
     id 'org.springframework.boot' version '2.2.2.RELEASE'
     id 'io.spring.dependency-management' version '1.0.8.RELEASE'
 }
 
 group 'com.saltedge.connector.sdk'
-version '2.2.0'
+version '2.3.1'
 sourceCompatibility = 1.8
 
 repositories {
@@ -19,15 +20,6 @@ bootJar {
 
 jar {
     enabled = true
-}
-
-shadowJar {
-    destinationDirectory = file('../out')
-    manifest {
-        attributes('Implementation-Title': project.name,
-                'Implementation-Version': project.version)
-    }
-    from sourceSets.main.allSource
 }
 
 dependencies {
@@ -48,4 +40,21 @@ dependencies {
     testImplementation "io.jsonwebtoken:jjwt-jackson:$jjwtVersion"
     testCompile group: 'junit', name: 'junit', version: '4.12'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+shadowJar {
+    destinationDirectory = file('../out')
+    manifest {
+        attributes('Implementation-Title': project.name,
+                'Implementation-Version': project.version)
+    }
+    from sourceSets.main.allSource
+}
+
+uploadShadow {
+    repositories {
+        mavenDeployer {
+            repository(url: uri("${rootProject.projectDir}/../../maven-repo"))
+        }
+    }
 }

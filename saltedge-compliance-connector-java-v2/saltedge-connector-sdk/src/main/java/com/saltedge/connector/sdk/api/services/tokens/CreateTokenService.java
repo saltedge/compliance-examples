@@ -37,6 +37,11 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
+
 /**
  * Service is responsible for implementing authentication and authorization of Customer.
  */
@@ -52,6 +57,10 @@ public class CreateTokenService extends TokensBaseService {
             if (type == null) throw new BadRequest.InvalidAuthorizationType();
             else {
                 Token token = createToken(type, params);
+                if (params.requestedConsent.hasGlobalConsent()) {
+                    token.providerOfferedConsents = params.requestedConsent;
+                }
+
                 if (AuthMode.OAUTH == type.mode) {
                     oAuthAuthorize(token);
                 } else {
@@ -69,18 +78,25 @@ public class CreateTokenService extends TokensBaseService {
     private void oAuthAuthorize(Token token) {
         tokensRepository.save(token);
         SessionUpdateCallbackRequest params = new SessionUpdateCallbackRequest(
-                providerService.getAccountInformationAuthorizationPageUrl(token.sessionSecret),
+                providerService.getAccountInformationAuthorizationPageUrl(
+                        token.sessionSecret,
+                        token.notGlobalConsent()
+                ),
                 SDKConstants.STATUS_REDIRECT
         );
         callbackService.sendUpdateCallback(token.sessionSecret, params);
     }
 
     private Token createToken(AuthorizationType authType, CreateTokenRequest request) {
+        LocalDate validUntil = request.validUntil;
+        if (validUntil == null) validUntil = LocalDate.now().plus(SDKConstants.CONSENT_MAX_PERIOD, ChronoUnit.DAYS);
+        Instant tokenExpiresAt = validUntil.atStartOfDay().toInstant(ZoneOffset.UTC).plus(1, ChronoUnit.DAYS);
         return new Token(
                 request.sessionSecret,
                 request.tppAppName,
                 authType.code,
-                request.redirectUrl
+                request.redirectUrl,
+                tokenExpiresAt
         );
     }
 

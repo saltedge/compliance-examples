@@ -32,7 +32,7 @@ abstract class TokensBaseService extends BaseService {
     @Autowired
     protected TokensRepository tokensRepository;
 
-    protected Token findTokenBySessionSecret(String sessionSecret) {
+    public Token findTokenBySessionSecret(String sessionSecret) {
         return tokensRepository.findFirstBySessionSecret(sessionSecret);
     }
 }

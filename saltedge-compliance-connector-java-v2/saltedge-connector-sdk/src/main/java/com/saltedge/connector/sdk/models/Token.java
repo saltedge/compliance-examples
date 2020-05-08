@@ -21,14 +21,15 @@
 package com.saltedge.connector.sdk.models;
 
 import com.saltedge.connector.sdk.SDKConstants;
+import com.saltedge.connector.sdk.api.models.ProviderConsents;
 import com.saltedge.connector.sdk.config.ApplicationProperties;
-import com.saltedge.connector.sdk.api.models.ProviderOfferedConsents;
 import com.saltedge.connector.sdk.tools.ConsentDataConverter;
 import com.saltedge.connector.sdk.tools.KeyTools;
 
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.Instant;
@@ -44,7 +45,7 @@ public class Token extends BaseEntity implements Serializable {
 
     @Column(name = "provider_offered_consents", length = 4096)
     @Convert(converter = ConsentDataConverter.class)
-    public ProviderOfferedConsents providerOfferedConsents;
+    public ProviderConsents providerOfferedConsents;
 
     @Column(name = SDKConstants.KEY_STATUS, nullable = false)
     public Status status = Status.UNCONFIRMED;
@@ -78,25 +79,26 @@ public class Token extends BaseEntity implements Serializable {
         this.userId = userId;
     }
 
-    public Token(String sessionSecret, String tppAppName, String authTypeCode, String tppRedirectUrl) {
+    public Token(
+            @NotEmpty String sessionSecret,
+            @NotEmpty String tppAppName,
+            String authTypeCode,
+            String tppRedirectUrl,
+            Instant tokenExpiresAt
+    ) {
         this.sessionSecret = sessionSecret;
         this.tppName = tppAppName;
         this.authTypeCode = authTypeCode;
         this.tppRedirectUrl = tppRedirectUrl;
-    }
-
-    public void initConfirmedToken() {
-        status = Status.CONFIRMED;
-        regenerateTokenAndExpiresAt();
-    }
-
-    public void regenerateTokenAndExpiresAt() {
-        accessToken = KeyTools.generateToken(32);
-        tokenExpiresAt = Instant.now().plus(ApplicationProperties.connectionExpiresInMinutes, ChronoUnit.MINUTES);
+        this.tokenExpiresAt = tokenExpiresAt;
     }
 
     public boolean isExpired() {
         return tokenExpiresAt == null || tokenExpiresAt.isBefore(Instant.now());
+    }
+
+    public boolean notGlobalConsent() {
+        return this.providerOfferedConsents == null || !this.providerOfferedConsents.hasGlobalConsent();
     }
 
     public enum Status {

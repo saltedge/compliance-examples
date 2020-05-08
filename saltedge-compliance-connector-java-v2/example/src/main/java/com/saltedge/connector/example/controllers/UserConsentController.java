@@ -24,11 +24,9 @@ import com.saltedge.connector.example.model.AccountEntity;
 import com.saltedge.connector.example.model.PaymentEntity;
 import com.saltedge.connector.example.model.TransactionEntity;
 import com.saltedge.connector.sdk.SDKConstants;
-import com.saltedge.connector.sdk.config.ApplicationProperties;
 import com.saltedge.connector.sdk.api.models.Account;
 import com.saltedge.connector.sdk.api.models.CardAccount;
-import com.saltedge.connector.sdk.api.models.ProviderOfferedConsents;
-import com.saltedge.connector.sdk.tools.KeyTools;
+import com.saltedge.connector.sdk.api.models.ProviderConsents;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -39,12 +37,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Controller
@@ -73,40 +70,47 @@ public class UserConsentController extends UserBaseController {
     public ModelAndView onAccountsConsentSubmit(
             @RequestParam(value = SDKConstants.KEY_SESSION_SECRET) String sessionSecret,
             @RequestParam(name = SDKConstants.KEY_USER_ID) String userId,
-            @RequestParam(name = "balances") List<String> balancesIds,
-            @RequestParam(name = "transactions") List<String> transactionIds,
-            @RequestParam(name = "card_balances") List<String> cardBalanceIds,
-            @RequestParam(name = "card_transactions") List<String> cardTransactionIds
+            @RequestParam(name = "balances", required = false) List<String> balancesIds,
+            @RequestParam(name = "transactions", required = false) List<String> transactionIds,
+            @RequestParam(name = "card_balances", required = false) List<String> cardBalanceIds,
+            @RequestParam(name = "card_transactions", required = false) List<String> cardTransactionIds
     ) {
+        // process accounts
         List<Account> accounts = providerService.getAccountsOfUser(userId);
-        List<Account> accountsOfBalancesConsent = accounts.stream().filter(item -> balancesIds.contains(item.getId()))
-                .collect(Collectors.toList());
-        List<Account> accountsOfTransactionsConsent = accounts.stream().filter(item -> transactionIds.contains(item.getId()))
-                .collect(Collectors.toList());
 
+        List<Account> consentForBalances;
+        if (balancesIds == null) consentForBalances = new ArrayList<>();
+        else consentForBalances = accounts.stream()
+                .filter(item -> balancesIds.contains(item.getId())).collect(Collectors.toList());
+
+        List<Account> consentForTransactions;
+        if (transactionIds == null) consentForTransactions = new ArrayList<>();
+        else consentForTransactions = accounts.stream()
+                .filter(item -> transactionIds.contains(item.getId())).collect(Collectors.toList());
+
+        // process card accounts
         List<CardAccount> cardAccounts = providerService.getCardAccountsOfUser(userId);
-        List<CardAccount> cardsOfBalancesConsent = cardAccounts.stream().filter(item -> cardBalanceIds.contains(item.getId()))
-                .collect(Collectors.toList());
-        List<CardAccount> cardsOfTransactionsConsent = cardAccounts.stream().filter(item -> cardTransactionIds.contains(item.getId()))
-                .collect(Collectors.toList());
 
-        String returnToUrl = connectorCallbackService.onAccountInformationAuthorizationSuccess(
+        List<CardAccount> consentForCardsBalances;
+        if (cardBalanceIds == null) consentForCardsBalances = new ArrayList<>();
+        else consentForCardsBalances = cardAccounts.stream()
+                .filter(item -> cardBalanceIds.contains(item.getId())).collect(Collectors.toList());
+
+        List<CardAccount> consentForCardsTransactions;
+        if (cardTransactionIds == null) consentForCardsTransactions = new ArrayList<>();
+        else consentForCardsTransactions = cardAccounts.stream()
+                .filter(item -> cardTransactionIds.contains(item.getId())).collect(Collectors.toList());
+
+        return onAccountInformationAuthorizationSuccess(
                 sessionSecret,
                 userId,
-                KeyTools.generateToken(32),
-                Instant.now().plus(1, ChronoUnit.DAYS),
-                ProviderOfferedConsents.buildProviderOfferedConsents(
-                        accountsOfBalancesConsent,
-                        accountsOfTransactionsConsent,
-                        cardsOfBalancesConsent,
-                        cardsOfTransactionsConsent
+                ProviderConsents.buildProviderOfferedConsents(
+                        consentForBalances,
+                        consentForTransactions,
+                        consentForCardsBalances,
+                        consentForCardsTransactions
                 )
         );
-        if (returnToUrl == null) {
-            return new ModelAndView("redirect:/oauth/authorize/accounts?session_secret=" + sessionSecret);
-        } else {
-            return new ModelAndView("redirect:" + returnToUrl);
-        }
     }
 
     @GetMapping(PAYMENTS_BASE_PATH)
@@ -115,7 +119,7 @@ public class UserConsentController extends UserBaseController {
             @RequestParam(name = SDKConstants.KEY_USER_ID) Long userId
     ) {
         ModelAndView result = new ModelAndView("user_payments_consent");
-        PaymentEntity payment = paymentsRepository.findById(Long.valueOf(paymentId)).orElse(null);;
+        PaymentEntity payment = paymentsRepository.findById(paymentId).orElse(null);
         if (payment != null) {
             result.addObject("account_from", payment.fromIban);
             result.addObject("account_to", payment.toIban);
@@ -134,7 +138,7 @@ public class UserConsentController extends UserBaseController {
             @RequestParam(name = "confirm", required = false) String confirmAction,
             @RequestParam(name = "deny", required = false) String denyAction
     ) {
-        PaymentEntity payment = paymentsRepository.findById(Long.valueOf(paymentId)).orElse(null);
+        PaymentEntity payment = paymentsRepository.findById(paymentId).orElse(null);
         String returnToUrl;
         if (!StringUtils.isEmpty(confirmAction) && payment != null) {
             processAndClosePayment(payment, userId);
@@ -144,11 +148,13 @@ public class UserConsentController extends UserBaseController {
                     payment.extra
             );
         } else {
+            Map<String, String> extra = new HashMap<>();
             if (payment != null) {
+                extra = payment.extra;
                 payment.status = PaymentEntity.Status.FAILED;
                 paymentsRepository.save(payment);
             }
-            returnToUrl = connectorCallbackService.onPaymentInitiationAuthorizationFail(paymentId.toString(), payment.extra);
+            returnToUrl = connectorCallbackService.onPaymentInitiationAuthorizationFail(paymentId.toString(), extra);
         }
         if (returnToUrl == null) {
             return new ModelAndView("redirect:/oauth/authorize/payments?payment_id=" + paymentId);

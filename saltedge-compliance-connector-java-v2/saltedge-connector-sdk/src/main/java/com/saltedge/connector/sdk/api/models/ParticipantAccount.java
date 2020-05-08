@@ -38,7 +38,7 @@ public class ParticipantAccount {
     /**
      * Basic Bank Account Number
      */
-    @JsonProperty("bban")
+    @JsonProperty(SDKConstants.KEY_BBAN)
     public String bban;
 
     /**
@@ -56,13 +56,13 @@ public class ParticipantAccount {
     /**
      * Primary Account Number (PAN) of a card in a masked form.
      */
-    @JsonProperty("masked_pan")
+    @JsonProperty(SDKConstants.KEY_MASKED_PAN)
     public String maskedPan;
 
     /**
      * A number uniquely identifying a subscription
      */
-    @JsonProperty("msisdn")
+    @JsonProperty(SDKConstants.KEY_MSISDN)
     public String msisdn;
 
     /**

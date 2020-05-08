@@ -50,6 +50,11 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.function.Supplier;
 
+/**
+ * Example (Proof of concept) of Provider Service,
+ * designated for communication between Compliance Connector SDK and Provider/ASPSP application.
+ * @see ProviderServiceAbs
+ */
 @Service
 @Validated
 public class ProviderService implements ProviderServiceAbs {
@@ -66,7 +71,10 @@ public class ProviderService implements ProviderServiceAbs {
     private PaymentsRepository paymentsRepository;
 
     @Override
-    public String getAccountInformationAuthorizationPageUrl(String sessionSecret) {
+    public String getAccountInformationAuthorizationPageUrl(
+            String sessionSecret,
+            boolean userConsentIsRequired
+    ) {
         try {
             return getAuthorizationPageUrlWithQueryParam(
                     UserAuthorizeController.ACCOUNTS_BASE_PATH,

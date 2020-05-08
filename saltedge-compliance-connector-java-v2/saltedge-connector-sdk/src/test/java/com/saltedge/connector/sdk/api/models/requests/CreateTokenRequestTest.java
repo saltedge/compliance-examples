@@ -20,6 +20,7 @@
  */
 package com.saltedge.connector.sdk.api.models.requests;
 
+import com.saltedge.connector.sdk.api.models.ProviderConsents;
 import com.saltedge.connector.sdk.api.models.ValidationTest;
 import org.junit.Test;
 
@@ -50,17 +51,26 @@ public class CreateTokenRequestTest extends ValidationTest {
 
 		model.providerCode = "providerCode";
 
+		assertThat(validator.validate(model)).isNotEmpty();
+
+		model.requestedConsent = new ProviderConsents();
+
 		assertThat(validator.validate(model)).isEmpty();
 	}
 
 	@Test
-	public void getAuthorizationTypeTest() {
+	public void requestedConsentTest() {
 		CreateTokenRequest model = new CreateTokenRequest();
+		model.requestedConsent = new ProviderConsents();
 
-		assertThat(model.authorizationType).isNull();
+		assertThat(model.requestedConsent.hasGlobalConsent()).isFalse();
 
-		model.authorizationType = "password";
+		model.requestedConsent.globalAccessConsent = "test";
 
-		assertThat(model.authorizationType).isEqualTo("password");
+		assertThat(model.requestedConsent.hasGlobalConsent()).isFalse();
+
+		model.requestedConsent.globalAccessConsent = "allAccounts";
+
+		assertThat(model.requestedConsent.hasGlobalConsent()).isTrue();
 	}
 }
