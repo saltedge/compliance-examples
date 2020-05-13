@@ -1,5 +1,9 @@
 # Salt Edge Compliance Connector SDK Changelog
 
+## 2.3.2 (2020-05-13)
+### Add:  
+- Add `fail session` callback call to ConnectorSDKCallbackService.onAccountInformationAuthorizationFail(...).  
+
 ## 2.3.1 (2020-05-08)
 ### Add:  
 - Add valid_until param to Consent (Token) create request.   

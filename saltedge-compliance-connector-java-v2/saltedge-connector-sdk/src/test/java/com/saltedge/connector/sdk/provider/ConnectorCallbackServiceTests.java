@@ -168,7 +168,7 @@ public class ConnectorCallbackServiceTests {
 	}
 
 	@Test
-	public void givenNullToken_whenOnAccountInformationAuthorizationFail_thenReturnNull() {
+	public void givenNullToken_whenOnAccountInformationAuthorizationFail_thenReturnNullAndSendFailCallback() {
 		// given
 		given(revokeTokenService.revokeTokenBySessionSecret("sessionSecret")).willReturn(null);
 
@@ -177,10 +177,11 @@ public class ConnectorCallbackServiceTests {
 
 		// then
 		assertThat(result).isNull();
+		verify(sessionsCallbackService).sendFailCallback(eq("sessionSecret"), eq(new NotFound.UserNotFound()));
 	}
 
 	@Test
-	public void givenToken_whenOnAccountInformationAuthorizationFail_thenRevokeTokenAndReturnRedirectUrl() {
+	public void givenToken_whenOnAccountInformationAuthorizationFail_thenRevokeTokenAndReturnRedirectUrlAndSendFailCallback() {
 		// given
 		Token token = new Token("userId");
 		token.tppRedirectUrl = "http://redirect.to";
@@ -191,6 +192,7 @@ public class ConnectorCallbackServiceTests {
 
 		// then
 		assertThat(result).isEqualTo("http://redirect.to");
+		verify(sessionsCallbackService).sendFailCallback(eq("sessionSecret"), eq(new NotFound.UserNotFound()));
 	}
 
 	@Test(expected = ConstraintViolationException.class)
