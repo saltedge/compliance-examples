@@ -23,6 +23,7 @@ package com.saltedge.connector.sdk.provider;
 import com.saltedge.connector.sdk.SDKConstants;
 import com.saltedge.connector.sdk.api.models.ProviderConsents;
 import com.saltedge.connector.sdk.api.models.err.NotFound;
+import com.saltedge.connector.sdk.api.models.err.Unauthorized;
 import com.saltedge.connector.sdk.api.services.tokens.ConfirmTokenService;
 import com.saltedge.connector.sdk.api.services.tokens.RevokeTokenService;
 import com.saltedge.connector.sdk.callback.mapping.SessionSuccessCallbackRequest;
@@ -177,7 +178,7 @@ public class ConnectorCallbackServiceTests {
 
 		// then
 		assertThat(result).isNull();
-		verify(sessionsCallbackService).sendFailCallback(eq("sessionSecret"), eq(new NotFound.UserNotFound()));
+		verify(sessionsCallbackService).sendFailCallback(eq("sessionSecret"), eq(new Unauthorized.AccessDenied()));
 	}
 
 	@Test
@@ -192,7 +193,7 @@ public class ConnectorCallbackServiceTests {
 
 		// then
 		assertThat(result).isEqualTo("http://redirect.to");
-		verify(sessionsCallbackService).sendFailCallback(eq("sessionSecret"), eq(new NotFound.UserNotFound()));
+		verify(sessionsCallbackService).sendFailCallback(eq("sessionSecret"), eq(new Unauthorized.AccessDenied()));
 	}
 
 	@Test(expected = ConstraintViolationException.class)

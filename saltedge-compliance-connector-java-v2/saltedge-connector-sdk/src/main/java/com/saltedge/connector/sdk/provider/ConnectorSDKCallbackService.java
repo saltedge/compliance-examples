@@ -119,6 +119,7 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
 
     /**
      * Provider notifies Connector SDK Module about oAuth authentication fail
+     * and SDK send fail callback request
      *
      * @param sessionSecret of Token Create session
      * @return returnUrl string for final redirection of Authorization session (in browser) back to TPP side.
@@ -126,7 +127,7 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
     @Override
     public String onAccountInformationAuthorizationFail(@NotEmpty String sessionSecret) {
         Token token = revokeTokenService.revokeTokenBySessionSecret(sessionSecret);
-        sessionsCallbackService.sendFailCallback(sessionSecret, new NotFound.UserNotFound());
+        sessionsCallbackService.sendFailCallback(sessionSecret, new Unauthorized.AccessDenied());
         return (token == null) ? null : token.tppRedirectUrl;
     }
 
