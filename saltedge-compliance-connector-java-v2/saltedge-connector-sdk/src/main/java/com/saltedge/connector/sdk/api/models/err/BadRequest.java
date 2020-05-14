@@ -22,6 +22,8 @@ package com.saltedge.connector.sdk.api.models.err;
 
 import org.springframework.http.HttpStatus;
 
+import java.util.Objects;
+
 /**
  * Set of BadRequest (400) errors
  */
@@ -104,5 +106,20 @@ public abstract class BadRequest extends RuntimeException implements HttpErrorPa
         public String getErrorMessage() {
             return "Invalid confirmation code.";
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BadRequest that = (BadRequest) o;
+        return Objects.equals(getErrorStatus(), that.getErrorStatus()) &&
+                Objects.equals(getErrorClass(), that.getErrorClass()) &&
+                Objects.equals(getErrorMessage(), that.getErrorMessage());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getErrorStatus(), getErrorClass(), getErrorMessage());
     }
 }

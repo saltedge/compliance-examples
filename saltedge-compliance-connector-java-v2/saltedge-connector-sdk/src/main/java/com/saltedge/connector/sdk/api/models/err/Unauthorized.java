@@ -22,6 +22,8 @@ package com.saltedge.connector.sdk.api.models.err;
 
 import org.springframework.http.HttpStatus;
 
+import java.util.Objects;
+
 /**
  * Set of Unauthorized errors
  */
@@ -54,5 +56,27 @@ public abstract class Unauthorized extends RuntimeException implements HttpError
         public String getErrorMessage() {
             return "Invalid Client Id.";
         }
+    }
+
+    public static class AccessDenied extends Unauthorized {
+        @Override
+        public String getErrorMessage() {
+            return "Access denied.";
+        }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Unauthorized that = (Unauthorized) o;
+        return Objects.equals(getErrorStatus(), that.getErrorStatus()) &&
+                Objects.equals(getErrorClass(), that.getErrorClass()) &&
+                Objects.equals(getErrorMessage(), that.getErrorMessage());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getErrorStatus(), getErrorClass(), getErrorMessage());
     }
 }

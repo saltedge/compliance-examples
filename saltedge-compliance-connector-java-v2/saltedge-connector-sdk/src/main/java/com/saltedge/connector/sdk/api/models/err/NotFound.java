@@ -22,6 +22,8 @@ package com.saltedge.connector.sdk.api.models.err;
 
 import org.springframework.http.HttpStatus;
 
+import java.util.Objects;
+
 /**
  * Set of NotFound errors
  */
@@ -35,6 +37,8 @@ public abstract class NotFound extends RuntimeException implements HttpErrorPara
     public String getErrorClass() {
         return getClass().getSimpleName();
     }
+
+    // successors of NotFound
 
     public static class UserNotFound extends NotFound {
         @Override
@@ -83,5 +87,20 @@ public abstract class NotFound extends RuntimeException implements HttpErrorPara
         public String getErrorMessage() {
             return "Payment not canceled.";
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        NotFound that = (NotFound) o;
+        return Objects.equals(getErrorStatus(), that.getErrorStatus()) &&
+                Objects.equals(getErrorClass(), that.getErrorClass()) &&
+                Objects.equals(getErrorMessage(), that.getErrorMessage());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getErrorStatus(), getErrorClass(), getErrorMessage());
     }
 }

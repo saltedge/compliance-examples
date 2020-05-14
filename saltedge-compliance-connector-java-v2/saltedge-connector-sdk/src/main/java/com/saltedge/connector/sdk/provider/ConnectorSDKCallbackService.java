@@ -23,6 +23,7 @@ package com.saltedge.connector.sdk.provider;
 import com.saltedge.connector.sdk.SDKConstants;
 import com.saltedge.connector.sdk.api.models.ProviderConsents;
 import com.saltedge.connector.sdk.api.models.err.NotFound;
+import com.saltedge.connector.sdk.api.models.err.Unauthorized;
 import com.saltedge.connector.sdk.api.services.tokens.ConfirmTokenService;
 import com.saltedge.connector.sdk.api.services.tokens.RevokeTokenService;
 import com.saltedge.connector.sdk.callback.mapping.SessionSuccessCallbackRequest;
@@ -118,6 +119,7 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
 
     /**
      * Provider notifies Connector SDK Module about oAuth authentication fail
+     * and SDK send fail callback request
      *
      * @param sessionSecret of Token Create session
      * @return returnUrl string for final redirection of Authorization session (in browser) back to TPP side.
@@ -125,6 +127,7 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
     @Override
     public String onAccountInformationAuthorizationFail(@NotEmpty String sessionSecret) {
         Token token = revokeTokenService.revokeTokenBySessionSecret(sessionSecret);
+        sessionsCallbackService.sendFailCallback(sessionSecret, new Unauthorized.AccessDenied());
         return (token == null) ? null : token.tppRedirectUrl;
     }
 
@@ -174,7 +177,10 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
      * @return returnUrl string for final redirection of Payment Authorization session
      */
     @Override
-    public String onPaymentInitiationAuthorizationFail(@NotEmpty String paymentId, @NotEmpty Map<String, String> paymentExtra) {
+    public String onPaymentInitiationAuthorizationFail(
+            @NotEmpty String paymentId,
+            @NotEmpty Map<String, String> paymentExtra
+    ) {
         String sessionSecret = paymentExtra.get(SDKConstants.KEY_SESSION_SECRET);
         if (!StringUtils.isEmpty(sessionSecret)) sessionsCallbackService.sendFailCallback(sessionSecret, new NotFound.PaymentNotCreated());
         String returnToUrl = paymentExtra.get(SDKConstants.KEY_RETURN_TO_URL);

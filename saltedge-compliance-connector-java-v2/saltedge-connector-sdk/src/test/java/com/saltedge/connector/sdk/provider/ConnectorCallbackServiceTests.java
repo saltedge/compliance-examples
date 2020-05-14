@@ -23,6 +23,7 @@ package com.saltedge.connector.sdk.provider;
 import com.saltedge.connector.sdk.SDKConstants;
 import com.saltedge.connector.sdk.api.models.ProviderConsents;
 import com.saltedge.connector.sdk.api.models.err.NotFound;
+import com.saltedge.connector.sdk.api.models.err.Unauthorized;
 import com.saltedge.connector.sdk.api.services.tokens.ConfirmTokenService;
 import com.saltedge.connector.sdk.api.services.tokens.RevokeTokenService;
 import com.saltedge.connector.sdk.callback.mapping.SessionSuccessCallbackRequest;
@@ -168,7 +169,7 @@ public class ConnectorCallbackServiceTests {
 	}
 
 	@Test
-	public void givenNullToken_whenOnAccountInformationAuthorizationFail_thenReturnNull() {
+	public void givenNullToken_whenOnAccountInformationAuthorizationFail_thenReturnNullAndSendFailCallback() {
 		// given
 		given(revokeTokenService.revokeTokenBySessionSecret("sessionSecret")).willReturn(null);
 
@@ -177,10 +178,11 @@ public class ConnectorCallbackServiceTests {
 
 		// then
 		assertThat(result).isNull();
+		verify(sessionsCallbackService).sendFailCallback(eq("sessionSecret"), eq(new Unauthorized.AccessDenied()));
 	}
 
 	@Test
-	public void givenToken_whenOnAccountInformationAuthorizationFail_thenRevokeTokenAndReturnRedirectUrl() {
+	public void givenToken_whenOnAccountInformationAuthorizationFail_thenRevokeTokenAndReturnRedirectUrlAndSendFailCallback() {
 		// given
 		Token token = new Token("userId");
 		token.tppRedirectUrl = "http://redirect.to";
@@ -191,6 +193,7 @@ public class ConnectorCallbackServiceTests {
 
 		// then
 		assertThat(result).isEqualTo("http://redirect.to");
+		verify(sessionsCallbackService).sendFailCallback(eq("sessionSecret"), eq(new Unauthorized.AccessDenied()));
 	}
 
 	@Test(expected = ConstraintViolationException.class)
