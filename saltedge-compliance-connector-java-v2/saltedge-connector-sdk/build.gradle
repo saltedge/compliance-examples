@@ -29,7 +29,6 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'com.h2database:h2:1.4.200'
 
     shadow "io.jsonwebtoken:jjwt-api:$jjwtVersion"
     runtime "io.jsonwebtoken:jjwt-impl:$jjwtVersion", "io.jsonwebtoken:jjwt-jackson:$jjwtVersion"
@@ -40,6 +39,7 @@ dependencies {
     testImplementation "io.jsonwebtoken:jjwt-jackson:$jjwtVersion"
     testCompile group: 'junit', name: 'junit', version: '4.12'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'com.h2database:h2:1.4.200'
 }
 
 shadowJar {
