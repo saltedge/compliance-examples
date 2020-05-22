@@ -2,9 +2,3 @@
 .gradle/
 build/
 *.iml
-# Dev config
-application.properties
-application.yml
-connector_public_*.pem
-connector_private_*.pem
-priora_public_dev.pem
