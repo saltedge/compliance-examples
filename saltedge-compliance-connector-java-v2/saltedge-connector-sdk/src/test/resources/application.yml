@@ -1,0 +1,11 @@
+spring:
+  profiles: test
+connector:
+  private_key_name: test_private_key.pem
+  public_key_name: test_public_key.pem
+  priora:
+    app_code: spring_connector_example_md
+    app_id: QWERTY
+    app_secret: ASDFG
+    base_url: http://localhost
+    public_key_name: test_public_key.pem
