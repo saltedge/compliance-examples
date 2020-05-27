@@ -16,9 +16,7 @@ public class ApplicationPropertiesTest {
 
 	@Test
 	public void valuesTest() {
-		assertThat(applicationProperties.getPublicKeyName()).isNotEmpty();
 		assertThat(applicationProperties.getPrivateKeyName()).isNotEmpty();
-		assertThat(applicationProperties.getPublicKey()).isNotNull();
 		assertThat(applicationProperties.getPrivateKey()).isNotNull();
 
 		PrioraProperties prioraProperties = applicationProperties.getPriora();

@@ -30,11 +30,11 @@ import java.net.URL;
 import java.security.PublicKey;
 
 /**
+ * Priora object properties from application.yml
+ *
  * Example of application.yml
  * connector:
  *   private_key_name: connector_private_prod.pem
- *   public_key_name: connector_public_prod.pem
- *   connection_expires_in_minutes: 5
  *   priora:
  *     app_code: spring_connector_example
  *     app_id: xxxxxxxxx

@@ -37,19 +37,17 @@ import java.security.PublicKey;
  * Example of application.yml
  * connector:
  *   private_key_name: connector_private_prod.pem
- *   public_key_name: connector_public_prod.pem
- *   connection_expires_in_minutes: 5
+ *   priora:
+ *     app_code: spring_connector_example
+ *     app_id: xxxxxxxxx
+ *     app_secret: xxxxxxxxx
+ *     base_url: https://priora.saltedge.com/
+ *     public_key_name: priora_public_prod.pem
  */
 @Configuration
 @EnableConfigurationProperties(ApplicationProperties.class)
 @ConfigurationProperties("connector")
 public class ApplicationProperties {
-    /**
-     * Name of Connector's public key file in PEM format
-     */
-    @NotBlank
-    private String publicKeyName;
-
     /**
      * Name of Connector's private key file in PEM format
      */
@@ -63,15 +61,7 @@ public class ApplicationProperties {
     @NotNull
     private PrioraProperties priora;
 
-    /**
-     * Expiration period of Access Token for Salt Edge Compliance Solution.
-     */
-    @NotNull
-    public static Integer connectionExpiresInMinutes = 24 * 60;
-
-    private PublicKey publicKey;
     private PrivateKey privateKey;
-
 
     public String getPrioraAppCode() {
         return priora.getAppCode();
@@ -89,13 +79,6 @@ public class ApplicationProperties {
         return priora;
     }
 
-    public PublicKey getPublicKey() {
-        if (publicKey == null) {
-            publicKey = KeyTools.convertPemStringToPublicKey(ResourceTools.readKeyFile(publicKeyName));
-        }
-        return publicKey;
-    }
-
     public PrivateKey getPrivateKey() {
         if (privateKey == null) {
             privateKey = KeyTools.convertPemStringToPrivateKey(ResourceTools.readKeyFile(privateKeyName));
@@ -103,16 +86,12 @@ public class ApplicationProperties {
         return privateKey;
     }
 
-    public String getPublicKeyName() {
-        return publicKeyName;
-    }
-
-    public void setPublicKeyName(String publicKeyName) {
-        this.publicKeyName = publicKeyName;
-    }
-
     public String getPrivateKeyName() {
         return privateKeyName;
+    }
+
+    public PublicKey getPrioraPublicKey() {
+        return getPriora().getPrioraPublicKey();
     }
 
     public void setPrivateKeyName(String privateKeyName) {
@@ -123,15 +102,7 @@ public class ApplicationProperties {
         this.priora = priora;
     }
 
-    public void setPublicKey(PublicKey publicKey) {
-        this.publicKey = publicKey;
-    }
-
     public void setPrivateKey(PrivateKey privateKey) {
         this.privateKey = privateKey;
-    }
-
-    public PublicKey getPrioraPublicKey() {
-        return getPriora().getPrioraPublicKey();
     }
 }
