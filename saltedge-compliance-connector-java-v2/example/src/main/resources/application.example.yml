@@ -2,8 +2,6 @@ spring:
   profiles: prod
 connector:
   private_key_name: connector_private_prod.pem
-  public_key_name: connector_public_prod.pem
-  connection_expires_in_minutes: 5
   priora:
     app_code: spring_connector_example_md
     app_id: xxxxxxxxx

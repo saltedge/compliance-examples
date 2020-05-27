@@ -47,14 +47,14 @@ abstract public class ControllerIntegrationTests {
     protected TestRestTemplate testRestTemplate = new TestRestTemplate();
 
     protected void seedTokensRepository() {
-        Token newToken1 = new Token("sessionSecret", "tppAppName", "oauth", "tppRedirectUrl", Instant.now().plus(ApplicationProperties.connectionExpiresInMinutes, ChronoUnit.MINUTES));
+        Token newToken1 = new Token("sessionSecret", "tppAppName", "oauth", "tppRedirectUrl", Instant.now().plus(24 * 60, ChronoUnit.MINUTES));
         newToken1.id = 1L;
         newToken1.userId = "1";
         newToken1.status = Token.Status.CONFIRMED;
         newToken1.accessToken = "validToken";
         tokensRepository.save(newToken1);
 
-        Token newToken2 = new Token("sessionSecret2", "tppAppName", "oauth", "tppRedirectUrl", Instant.now().plus(ApplicationProperties.connectionExpiresInMinutes, ChronoUnit.MINUTES));
+        Token newToken2 = new Token("sessionSecret2", "tppAppName", "oauth", "tppRedirectUrl", Instant.now().plus(24 * 60, ChronoUnit.MINUTES));
         newToken2.id = 2L;
         newToken2.userId = "2";
         newToken2.status = Token.Status.CONFIRMED;
