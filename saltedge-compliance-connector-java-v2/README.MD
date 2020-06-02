@@ -33,10 +33,10 @@ The SDK module implements the Priora Connector v2 API compatible with **Berlin G
     cp example/src/main/resources/application.example.yml example/src/main/resources/application.yml
     cp example/src/main/resources/application.example.properties example/src/main/resources/application.properties
     ```
-1. Add secret keys  
+1. Add secret keys (SDK expects private key in PKCS#8 format)
     You can generate your RSA key pair using this commands: 
     ```bash
-    openssl genrsa -out connector_private_prod.pem 2048
+    openssl genpkey -out connector_private_prod.pem -algorithm RSA -pkeyopt rsa_keygen_bits:2048
     openssl rsa -pubout -in connector_private_prod.pem -out connector_public_prod.pem
     ```
    > Notice that you must save the content of `connector_public_prod.pem` in your Provider [Dashboard/Settings](https://priora.saltedge.com/providers/settings).
