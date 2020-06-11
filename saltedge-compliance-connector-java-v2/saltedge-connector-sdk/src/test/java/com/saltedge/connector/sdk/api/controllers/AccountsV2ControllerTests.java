@@ -29,6 +29,7 @@ import com.saltedge.connector.sdk.api.models.requests.TransactionsRequest;
 import com.saltedge.connector.sdk.api.models.responses.AccountsResponse;
 import com.saltedge.connector.sdk.api.models.responses.TransactionsResponse;
 import com.saltedge.connector.sdk.models.Token;
+import com.saltedge.connector.sdk.models.TransactionsPage;
 import com.saltedge.connector.sdk.provider.ProviderServiceAbs;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -39,6 +40,7 @@ import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
@@ -75,7 +77,8 @@ public class AccountsV2ControllerTests {
         List<Transaction> testData = getTestTransactionsData();
         LocalDate startDate = LocalDate.now();
         LocalDate endDate = startDate;
-        given(mockProviderService.getTransactionsOfAccount("1", "1", startDate, endDate)).willReturn(testData);
+        given(mockProviderService.getTransactionsOfAccount("1", "1", startDate, endDate, "fromId"))
+                .willReturn(new TransactionsPage(testData, "nextId"));
 
         AccountsV2Controller controller = new AccountsV2Controller();
         controller.providerService = mockProviderService;
@@ -83,11 +86,12 @@ public class AccountsV2ControllerTests {
         ResponseEntity<TransactionsResponse> result = controller.transactionsOfAccount(
                 new Token("1"),
                 "1",
-                new TransactionsRequest("1", startDate, endDate, "sessionSecret")
+                new TransactionsRequest("1", startDate, endDate, "fromId", "sessionSecret")
         );
 
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(result.getBody().data).isEqualTo(testData);
+        assertThat(Objects.requireNonNull(result.getBody()).data).isEqualTo(testData);
+        assertThat(Objects.requireNonNull(result.getBody()).meta.nextId).isEqualTo("nextId");
     }
 
     private List<Account> getTestAccountsData() {

@@ -89,21 +89,23 @@ public class AccountEntity extends BaseEntity implements Serializable {
     public AccountEntity() {
     }
 
-    public AccountEntity(String name,
-                         String nature,
-                         String currencyCode,
-                         String iban,
-                         String number,
-                         String sortCode,
-                         String swiftCode,
-                         String availableAmount,
-                         String balance,
-                         String creditLimit,
-                         Boolean isPaymentAccount,
-                         String status,
-                         String pan,
-                         Map<String, String> extra,
-                         UserEntity user) {
+    public AccountEntity(
+            String name,
+            String nature,
+            String currencyCode,
+            String iban,
+            String number,
+            String sortCode,
+            String swiftCode,
+            String availableAmount,
+            String balance,
+            String creditLimit,
+            Boolean isPaymentAccount,
+            String status,
+            String pan,
+            Map<String, String> extra,
+            UserEntity user
+    ) {
         this.name = name;
         this.nature = nature;
         this.currencyCode = currencyCode;

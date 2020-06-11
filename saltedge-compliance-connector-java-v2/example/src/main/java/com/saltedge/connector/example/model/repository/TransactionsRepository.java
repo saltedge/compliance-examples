@@ -21,7 +21,14 @@
 package com.saltedge.connector.example.model.repository;
 
 import com.saltedge.connector.example.model.TransactionEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+
+import java.time.LocalDate;
+import java.util.List;
 
 public interface TransactionsRepository extends JpaRepository<TransactionEntity, Long> {
+    Page<TransactionEntity> findByAccountIdAndMadeOnBetween(Long accountId, LocalDate fromDate, LocalDate toDate, Pageable pageable);
 }

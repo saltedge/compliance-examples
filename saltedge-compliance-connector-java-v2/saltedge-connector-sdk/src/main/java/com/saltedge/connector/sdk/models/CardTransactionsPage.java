@@ -18,29 +18,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.saltedge.connector.sdk.api.models.responses;
+package com.saltedge.connector.sdk.models;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.saltedge.connector.sdk.SDKConstants;
-import com.saltedge.connector.sdk.api.models.Meta;
-import com.saltedge.connector.sdk.api.models.Transaction;
+import com.saltedge.connector.sdk.api.models.CardTransaction;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class TransactionsResponse {
-    @JsonProperty(SDKConstants.KEY_DATA)
-    public List<Transaction> data;
+/**
+ * Card Transactions page
+ */
+public class CardTransactionsPage {
+    /**
+     * Id of the next entity used in paginated responses.
+     */
+    @NotNull
+    public List<CardTransaction> cardTransactions;
 
-    @JsonProperty(SDKConstants.KEY_META)
-    public Meta meta;
+    public String nextId;
 
-    public TransactionsResponse() {
-    }
-
-    public TransactionsResponse(List<Transaction> data, Meta meta) {
-        this.data = data;
-        this.meta = meta;
+    public CardTransactionsPage(@NotNull List<CardTransaction> cardTransactions, String nextId) {
+        this.cardTransactions = cardTransactions;
+        this.nextId = nextId;
     }
 }

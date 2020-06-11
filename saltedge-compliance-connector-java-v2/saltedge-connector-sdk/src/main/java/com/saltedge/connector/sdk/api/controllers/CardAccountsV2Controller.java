@@ -21,11 +21,14 @@
 package com.saltedge.connector.sdk.api.controllers;
 
 import com.saltedge.connector.sdk.SDKConstants;
+import com.saltedge.connector.sdk.api.models.Meta;
 import com.saltedge.connector.sdk.api.models.requests.DefaultRequest;
 import com.saltedge.connector.sdk.api.models.requests.TransactionsRequest;
 import com.saltedge.connector.sdk.api.models.responses.CardAccountsResponse;
 import com.saltedge.connector.sdk.api.models.responses.CardTransactionsResponse;
+import com.saltedge.connector.sdk.models.CardTransactionsPage;
 import com.saltedge.connector.sdk.models.Token;
+import com.saltedge.connector.sdk.models.TransactionsPage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -71,7 +74,7 @@ public class CardAccountsV2Controller extends BaseV2Controller {
      * @param token linked to Access-Token header
      * @param accountId unique id of bank account
      * @param request data
-     * @return list of Card Transactions data.
+     * @return list of card transactions data with nextId of next page.
      */
     @GetMapping(path = "/{" + SDKConstants.KEY_ACCOUNT_ID + "}/transactions")
     public ResponseEntity<CardTransactionsResponse> transactionsOfCardAccount(
@@ -79,8 +82,13 @@ public class CardAccountsV2Controller extends BaseV2Controller {
             @NotEmpty @PathVariable(name = SDKConstants.KEY_ACCOUNT_ID) String accountId,
             @Valid TransactionsRequest request
     ) {
-        return new ResponseEntity<>(new CardTransactionsResponse(
-                providerService.getTransactionsOfCardAccount(token.userId, accountId, request.fromDate, request.toDate)
-        ), HttpStatus.OK);
+        CardTransactionsPage resultPage = providerService.getTransactionsOfCardAccount(
+                token.userId,
+                accountId,
+                request.fromDate,
+                request.toDate,
+                request.fromId
+        );
+        return new ResponseEntity<>(new CardTransactionsResponse(resultPage.cardTransactions, new Meta(resultPage.nextId)), HttpStatus.OK);
     }
 }

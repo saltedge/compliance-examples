@@ -77,14 +77,15 @@ public class TransactionEntity extends BaseEntity implements Serializable {
     public TransactionEntity() {
     }
 
-    public TransactionEntity(String amount,
-                             String currencyCode,
-                             String description,
-                             LocalDate madeOn,
-                             String status,
-                             List<Fee> fees,
-                             Map<String, String> extra,
-                             AccountEntity account
+    public TransactionEntity(
+            String amount,
+            String currencyCode,
+            String description,
+            LocalDate madeOn,
+            String status,
+            List<Fee> fees,
+            Map<String, String> extra,
+            AccountEntity account
     ) {
         this.amount = amount;
         this.currencyCode = currencyCode;

@@ -26,10 +26,13 @@ import com.saltedge.connector.sdk.api.models.requests.DefaultRequest;
 import com.saltedge.connector.sdk.api.models.requests.TransactionsRequest;
 import com.saltedge.connector.sdk.api.models.responses.AccountsResponse;
 import com.saltedge.connector.sdk.api.models.responses.ErrorResponse;
+import com.saltedge.connector.sdk.models.TransactionsPage;
+import com.saltedge.connector.sdk.provider.ProviderServiceAbs;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -40,8 +43,11 @@ import org.springframework.util.LinkedMultiValueMap;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.Collections;
+import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.given;
 
 /**
  * Tests Interceptors + AccountsV2Controller
@@ -49,6 +55,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class AccountsV2ControllerIntegrationTests extends ControllerIntegrationTests {
+    @MockBean
+    ProviderServiceAbs mockProviderService;
+
     @Before
     public void setUp() {
         seedTokensRepository();
@@ -89,7 +98,7 @@ public class AccountsV2ControllerIntegrationTests extends ControllerIntegrationT
 
         // then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-        assertThat(response.getBody().errorClass).isEqualTo("JWTExpiredSignature");
+        assertThat(Objects.requireNonNull(response.getBody()).errorClass).isEqualTo("JWTExpiredSignature");
         assertThat(response.getBody().errorMessage).isEqualTo("JWT Expired Signature.");
     }
 
@@ -104,7 +113,7 @@ public class AccountsV2ControllerIntegrationTests extends ControllerIntegrationT
 
         // then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-        assertThat(response.getBody().errorClass).isEqualTo("JWTDecodeError");
+        assertThat(Objects.requireNonNull(response.getBody()).errorClass).isEqualTo("JWTDecodeError");
         assertThat(response.getBody().errorMessage).isEqualTo("JWT strings must contain exactly 2 period characters. Found: 0");
     }
 
@@ -119,11 +128,14 @@ public class AccountsV2ControllerIntegrationTests extends ControllerIntegrationT
                         "account1",
                         LocalDate.parse("2019-10-18"),
                         LocalDate.parse("2020-03-18"),
+                        "fromId",
                         "sessionSecret"
                 ),
                 TestTools.getInstance().getRsaPrivateKey()
         );
         headers.add(SDKConstants.HEADER_AUTHORIZATION, auth);
+        given(mockProviderService.getTransactionsOfAccount("1", "account1", LocalDate.parse("2019-10-18"), LocalDate.parse("2020-03-18"), "fromId"))
+                .willReturn(new TransactionsPage(Collections.emptyList(), "nextId"));
 
         // when
         ResponseEntity<ErrorResponse> response = doTransactionsListRequest(headers);
@@ -144,7 +156,7 @@ public class AccountsV2ControllerIntegrationTests extends ControllerIntegrationT
 
         // then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-        assertThat(response.getBody().errorClass).isEqualTo("WrongRequestFormat");
+        assertThat(Objects.requireNonNull(response.getBody()).errorClass).isEqualTo("WrongRequestFormat");
         assertThat(response.getBody().errorMessage).isNotEmpty();
     }
 

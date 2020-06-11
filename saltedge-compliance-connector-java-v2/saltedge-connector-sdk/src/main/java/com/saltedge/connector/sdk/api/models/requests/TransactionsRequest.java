@@ -43,13 +43,23 @@ public class TransactionsRequest extends PrioraBaseRequest {
     @JsonProperty("to_date")
     public LocalDate toDate;
 
+    @JsonProperty("from_id")
+    public String fromId;
+
     public TransactionsRequest() {
     }
 
-    public TransactionsRequest(String accountId, LocalDate fromDate, LocalDate toDate, String sessionSecret) {
+    public TransactionsRequest(
+            String accountId,
+            LocalDate fromDate,
+            LocalDate toDate,
+            String fromId,
+            String sessionSecret
+    ) {
         this.accountId = accountId;
         this.fromDate = fromDate;
         this.toDate = toDate;
+        this.fromId = fromId;
         this.sessionSecret = sessionSecret;
     }
 }

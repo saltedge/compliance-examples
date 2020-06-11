@@ -18,29 +18,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.saltedge.connector.sdk.api.models.responses;
+package com.saltedge.connector.sdk.api.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.saltedge.connector.sdk.SDKConstants;
-import com.saltedge.connector.sdk.api.models.Meta;
-import com.saltedge.connector.sdk.api.models.Transaction;
 
-import java.util.List;
-
+/**
+ * Meta information
+ */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class TransactionsResponse {
-    @JsonProperty(SDKConstants.KEY_DATA)
-    public List<Transaction> data;
+@JsonIgnoreProperties
+public class Meta {
+    /**
+     * Id of the next entity used in paginated responses.
+     */
+    @JsonProperty("next_id")
+    public String nextId;
 
-    @JsonProperty(SDKConstants.KEY_META)
-    public Meta meta;
-
-    public TransactionsResponse() {
+    public Meta() {
     }
 
-    public TransactionsResponse(List<Transaction> data, Meta meta) {
-        this.data = data;
-        this.meta = meta;
+    public Meta(String nextId) {
+        this.nextId = nextId;
     }
 }

@@ -21,7 +21,10 @@
 package com.saltedge.connector.sdk.provider;
 
 import com.saltedge.connector.sdk.api.models.*;
+import com.saltedge.connector.sdk.models.CardTransactionsPage;
+import com.saltedge.connector.sdk.models.TransactionsPage;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.data.util.Pair;
 
 import javax.validation.constraints.NotEmpty;
 import java.time.LocalDate;
@@ -72,7 +75,7 @@ public interface ProviderServiceAbs {
      * Serves accounts endpoint (https://priora.saltedge.com/docs/aspsp/v2/connector_endpoints#accounts-get)
      *
      * @param userId User identifier on Provider side
-     * @return list of AccountData objects
+     * @return list of Account objects
      * @see Account
      */
     List<Account> getAccountsOfUser(@NotEmpty String userId);
@@ -87,14 +90,17 @@ public interface ProviderServiceAbs {
      *                 This value can be set to 90 days ago by default.
      * @param toDate Specifies the ending date, to which transactions should be fetched.
      *               This value will always be the today’s date.
-     * @return list of TransactionData objects
+     * @param fromId Specifies the ID of page for Pageable request.
+     * @return page object with list of Transaction objects and next page id
      * @see Transaction
+     * @see TransactionsPage
      */
-    List<Transaction> getTransactionsOfAccount(
+    TransactionsPage getTransactionsOfAccount(
             @NotEmpty String userId,
             @NotEmpty String accountId,
-            LocalDate fromDate,
-            LocalDate toDate
+            @NotNull LocalDate fromDate,
+            @NotNull LocalDate toDate,
+            String fromId
     );
 
     /**
@@ -117,14 +123,17 @@ public interface ProviderServiceAbs {
      *                 This value can be set to 90 days ago by default.
      * @param toDate Specifies the ending date, to which transactions should be fetched.
      *               This value will always be the today’s date.
-     * @return list of CardTransaction objects
+     * @param fromId Specifies the ID of page for Pageable request.
+     * @return page object with list of CardTransaction objects and next page id
      * @see CardTransaction
+     * @see CardTransactionsPage
      */
-    List<CardTransaction> getTransactionsOfCardAccount(
+    CardTransactionsPage getTransactionsOfCardAccount(
             @NotEmpty String userId,
             @NotEmpty String accountId,
-            LocalDate fromDate,
-            LocalDate toDate
+            @NotNull LocalDate fromDate,
+            @NotNull LocalDate toDate,
+            String fromId
     );
 
     /**

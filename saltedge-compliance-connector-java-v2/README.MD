@@ -25,14 +25,14 @@ The SDK module implements the Priora Connector v2 API compatible with **Berlin G
 
 1. Clone project
 1. Navigate to project's root folder
-    ```bash
-    cd saltedge-compliance-connector-java
-    ```
+  ```bash
+  cd saltedge-compliance-connector-java
+  ```
 1. Create configuration files
-    ```bash
-    cp example/src/main/resources/application.example.yml example/src/main/resources/application.yml
-    cp example/src/main/resources/application.example.properties example/src/main/resources/application.properties
-    ```
+  ```bash
+  cp example/src/main/resources/application.example.yml example/src/main/resources/application.yml
+  cp example/src/main/resources/application.example.properties example/src/main/resources/application.properties
+  ```
 1. Add secret keys (SDK expects private key in PKCS#8 format)
     You can generate your RSA key pair using this commands: 
     ```bash
@@ -45,9 +45,9 @@ The SDK module implements the Priora Connector v2 API compatible with **Berlin G
 1. Edit configuration files  
     * Example application uses a H2 in memory database (for now), can be changed easily in the `application.properties` for any other database type.
     * Set your external host name in `application.properties`
-      ```yaml
-      app.url=http://123456789.ngrok.io
-      ```
+  ```yaml
+  app.url=http://123456789.ngrok.io
+  ```
 1. Set your external host name in `application.properties`
   ```yaml
   app.url=http://my_host.org
@@ -102,42 +102,96 @@ Target application should be compatible with [following requirements](#Applicati
   This service should implement `ProviderServiceAbs` interface and should have `@Service` annotation because it is auto-wired in SDK;  
   
   * `getAuthorizationTypes(...)` - return list of registered [Authorization types](https://priora.saltedge.com/providers/settings#authorization_types);
+  
   * `getExchangeRates()` - return list of Exchange rates for today;
+  
   * `getAccountInformationAuthorizationPageUrl(...)` - return URL of authorization page for oAuth authorization of User and consent for accounts information;
+    * **param** `sessionSecret` create consent session secret. should be returned on authentication success or fail.
+    * **param** `userConsentIsRequired` if true then user consent for Account Information (balances, transactions) is required and should be returned on authentication success.
+    * **return** URL string
+  
   * `getAccountsOfUser(...)` - return accounts list of User;
-  * `getTransactionsOfAccount(...)` - return transactions list for account of User;
+    * **param** `userId` User identifier on Provider side
+    * **return** list of Account objects
+  
+  * `getTransactionsOfAccount(...)` - provides transactions which belong to an account of user.;
+    * **param** `userId` User identifier on Provider side
+    * **param** `accountId` Account identifier on Provider side
+    * **param** `fromDate` Specifies the starting date, from which transactions should be fetched. This value can be set to 90 days ago by default.
+    * **param** `toDate` Specifies the ending date, to which transactions should be fetched. This value will always be the today’s date.
+    * **param** `fromId` Specifies the ID of page for Pageable request.
+    * **return** page object with list of Transaction objects and next page id
+  
   * `getCardAccountsOfUser(...)` - return list of card accounts of User;
-  * `getTransactionsOfCardAccount(...)` - return list of transactions of card account of User;
+    * **param** `userId` User identifier on Provider side
+    * **return** list of Card Account objects
+  
+  * `getTransactionsOfCardAccount(...)` - provides transactions which belong to a card account of user;
+    * **param** `userId` User identifier on Provider side
+    * **param** `accountId` Account identifier on Provider side
+    * **param** `fromDate` Specifies the starting date, from which transactions should be fetched. This value can be set to 90 days ago by default.
+    * **param** `toDate` Specifies the ending date, to which transactions should be fetched. This value will always be the today’s date.
+    * **param** `fromId` Specifies the ID of page for Pageable request.
+    * **return** page object with list of CardTransaction objects and next page id
+  
   * `createPayment(...)` - create a payment order and return payment id or null
-  * `getPaymentAuthorizationPageUrl(...)` - return URL of authorization page for payment;  
-   
+    * **param** `creditorIban` of payment order
+    * **param** `creditorName` of payment order
+    * **param** `debtorIban` of payment order
+    * **param** `amount` of payment order
+    * **param** `currency` of payment order
+    * **param** `description` of payment order
+    * **param** `extraData` hash object
+    * **return** unique identifier of payment or null if payment is not initiated
+  
+  * `getPaymentAuthorizationPageUrl(...)` - return URL of authorization page for payment;
+    * **param** `paymentId` unique identifier of payment order for which is required authorization
+    * **return** URL string    
+    
+    
 ### 6. Use Connector's SDK callback service `ConnectorSDKCallbackService` for callback communication (e.g. notifying SDK about events):
 
   * `isUserConsentRequired(sessionSecret)` - check if User Consent (Bank Offered Consent) is required for authorization session determined by sessionSecret:
-    - `sessionSecret` - unique authorization secret code passed to application via `getAccountInformationAuthorizationPageUrl(...)`;
+    * `sessionSecret` unique authorization secret code passed to application via `getAccountInformationAuthorizationPageUrl(...)`;
 
   * `onAccountInformationAuthorizationSuccess(sessionSecret, userId, accessToken, consents)` - notify SDK about the successful authorization if User for AIS flow:  
-    - `sessionSecret` - unique authorization secret code passed to application via `getAccountInformationAuthorizationPageUrl(...)`;       - `userId` - unique identifier of Provider's system User (Customer);  
-    - `accessToken` - unique access identifier;  
-    - `consents` - ProviderOfferedConsents object with user consent to provide account information;  
+    * `sessionSecret` unique authorization secret code passed to application via `getAccountInformationAuthorizationPageUrl(...)`;       - `userId` - unique identifier of Provider's system User (Customer);  
+    * `accessToken` unique access identifier;  
+    * `consents` ProviderOfferedConsents object with user consent to provide account information;  
 
   * `onAccountInformationAuthorizationFail(sessionSecret)`- notify SDK about the failed authorization:  
-    - `sessionSecret` - unique authorization secret code passed to application via `getAccountInformationAuthorizationPageUrl(...)`;
+    * `sessionSecret` unique authorization secret code passed to application via `getAccountInformationAuthorizationPageUrl(...)`;
       
   * `onPaymentInitiationAuthorizationSuccess(paymentId, userId, extra)` - notify SDK about the successful authorization if User for AIS flow:  
-    - `paymentId` - unique payment id;  
-    - `userId` - unique identifier of Provider's system User (Customer);  
-    - `extra` - extra data from authenticated Payment passed to application via `getPaymentAuthorizationPageUrl(...)`;  
+    * `paymentId` unique payment id;  
+    * `userId` unique identifier of Provider's system User (Customer);  
+    * `extra` extra data from authenticated Payment passed to application via `getPaymentAuthorizationPageUrl(...)`;  
 
     * `onPaymentInitiationAuthorizationFail(paymentId, extra)`- notify SDK about the failed authorization:  
-    - `paymentId` - unique payment id;
-    - `extra` - extra data from authenticated Payment passed to application via `getPaymentAuthorizationPageUrl(...)`;
+    * `paymentId` unique payment id;
+    * `extra` extra data from authenticated Payment passed to application via `getPaymentAuthorizationPageUrl(...)`;
       
-  * `revokeAccountInformationConsent(userId, accessToken)`- Revoke Account information consent associated with userId and accessToken;  
+  * `revokeAccountInformationConsent(userId, accessToken)`- Revoke Account information consent associated with userId and accessToken;
+    * `userId` unique identifier of Provider's system User (Customer);
+    * `accessToken` unique access identifier;  
   
   
 ## [Api Documentation](https://priora.banksalt.com/docs/aspsp/v2)
   
+---
+## For SDK developers  
+ 
+### How to upload SDK changes  
+If you are developer and have made changes to this SDK then you will need to deploy that changes.  
+Just pass next steps:  
+  * Update SDK version in `build.gradle`
+  * Run gradle task `uploadShadow`
+  ```bash
+  ./gradlew uploadShadow
+  ```
+  * Commit 
+  * Make a pull-request to repository
+   
 ---
 ## [LICENSE](LICENSE.txt)
 

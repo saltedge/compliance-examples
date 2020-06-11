@@ -1,5 +1,9 @@
 # Salt Edge Compliance Connector SDK Changelog
 
+## 2.4.0
+### Add:  
+- Pagination support for transactions and card transactions
+
 ## 2.3.3 (2020-05-27)
 ### Remove:  
 - Remove redundant application properties: `public_key_name`, `connection_expires_in_minutes`.
