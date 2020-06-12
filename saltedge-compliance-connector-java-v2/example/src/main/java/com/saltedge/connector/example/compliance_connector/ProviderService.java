@@ -58,7 +58,7 @@ import java.util.function.Supplier;
 @Validated
 public class ProviderService implements ProviderServiceAbs {
     private static Logger log = LoggerFactory.getLogger(ProviderService.class);
-    private static int PAGE_SIZE = 30;
+    public static int PAGE_SIZE = 30;
     @Autowired
     private Environment env;
     @Autowired

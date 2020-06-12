@@ -18,11 +18,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.saltedge.connector.example.model.repository;
+package com.saltedge.connector.example.compliance_connector;
 
-import com.saltedge.connector.example.compliance_connector.ProviderService;
 import com.saltedge.connector.example.config.DatabaseInitializer;
 import com.saltedge.connector.example.model.TransactionEntity;
+import com.saltedge.connector.example.model.repository.TransactionsRepository;
+import com.saltedge.connector.sdk.models.TransactionsPage;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,43 +36,65 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class TransactionsRepositoryIntegrationTests {
+public class ProviderServiceTests {
 	@Autowired
 	private DatabaseInitializer databaseInitializer;
 	@Autowired
-	private TransactionsRepository testRepository;
+	private ProviderService testService;
 
 	@Test
-	public void givenTransactions_whenFindByAccountIdAndMadeOnBetween_thenReturnPage() {
+	public void givenTransactions_whenGetTransactionsOfAccount_thenReturnPage() {
 		// given
 		databaseInitializer.seed();
 
-		//then
-		List<TransactionEntity> allTransactions = testRepository.findAll();
+		List<TransactionEntity> allTransactions = databaseInitializer.transactionsRepository.findAll();
 		assertThat(allTransactions.size()).isEqualTo(93);
+		Long userId = allTransactions.get(0).account.user.id;
 		Long accountId = allTransactions.get(0).account.id;
 		LocalDate fromDate = allTransactions.get(0).madeOn;
 		LocalDate toDate = allTransactions.get(92).madeOn;
+		String fromID = null;
 
-		Page<TransactionEntity> page = testRepository.findByAccountIdAndMadeOnBetween(accountId, fromDate, toDate, PageRequest.of(0, ProviderService.PAGE_SIZE));
-		assertThat(page.getContent().size()).isEqualTo(30);
-		assertTrue(page.hasNext());
+		//when
+		TransactionsPage result = testService.getTransactionsOfAccount(userId.toString(), accountId.toString(), fromDate, toDate, fromID);
+		fromID = result.nextId;
 
-		page = testRepository.findByAccountIdAndMadeOnBetween(accountId, fromDate, toDate, PageRequest.of(1, ProviderService.PAGE_SIZE));
-		assertThat(page.getContent().size()).isEqualTo(30);
-		assertTrue(page.hasNext());
+		//then
+		assertThat(result.transactions.size()).isEqualTo(30);
+		assertThat(fromID).isEqualTo("1");
 
-		page = testRepository.findByAccountIdAndMadeOnBetween(accountId, fromDate, toDate, PageRequest.of(2, ProviderService.PAGE_SIZE));
-		assertThat(page.getContent().size()).isEqualTo(30);
-		assertTrue(page.hasNext());
+		//when
+		result = testService.getTransactionsOfAccount(userId.toString(), accountId.toString(), fromDate, toDate, fromID);
+		fromID = result.nextId;
 
-		page = testRepository.findByAccountIdAndMadeOnBetween(accountId, fromDate, toDate, PageRequest.of(3, ProviderService.PAGE_SIZE));
-		assertThat(page.getContent().size()).isEqualTo(3);
-		assertFalse(page.hasNext());
+		//then
+		assertThat(result.transactions.size()).isEqualTo(30);
+		assertThat(fromID).isEqualTo("2");
+
+		//when
+		result = testService.getTransactionsOfAccount(userId.toString(), accountId.toString(), fromDate, toDate, fromID);
+		fromID = result.nextId;
+
+		//then
+		assertThat(result.transactions.size()).isEqualTo(30);
+		assertThat(fromID).isEqualTo("3");
+
+		//when
+		result = testService.getTransactionsOfAccount(userId.toString(), accountId.toString(), fromDate, toDate, fromID);
+
+		//then
+		assertThat(result.transactions.size()).isEqualTo(3);
+		assertNull(result.nextId);
+
+		//when
+		result = testService.getTransactionsOfAccount(userId.toString(), accountId.toString(), fromDate, toDate, "4");
+
+		//then
+		assertTrue(result.transactions.isEmpty());
+		assertNull(result.nextId);
 	}
 }

@@ -1,6 +1,6 @@
 # Salt Edge Compliance Connector SDK Changelog
 
-## 2.4.0
+## 2.4.0 (2020-06-12)
 ### Add:  
 - Pagination support for transactions and card transactions
 
