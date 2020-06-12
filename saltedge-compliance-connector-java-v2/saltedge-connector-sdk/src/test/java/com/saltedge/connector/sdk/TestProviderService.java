@@ -21,6 +21,8 @@
 package com.saltedge.connector.sdk;
 
 import com.saltedge.connector.sdk.api.models.*;
+import com.saltedge.connector.sdk.models.CardTransactionsPage;
+import com.saltedge.connector.sdk.models.TransactionsPage;
 import com.saltedge.connector.sdk.provider.ProviderServiceAbs;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
@@ -56,7 +58,7 @@ public class TestProviderService implements ProviderServiceAbs {
     }
 
     @Override
-    public List<Transaction> getTransactionsOfAccount(String userId, String accountId, LocalDate fromDate, LocalDate toDate) {
+    public TransactionsPage getTransactionsOfAccount(String userId, String accountId, LocalDate fromDate, LocalDate toDate, String fromId) {
         return null;
     }
 
@@ -66,7 +68,7 @@ public class TestProviderService implements ProviderServiceAbs {
     }
 
     @Override
-    public List<CardTransaction> getTransactionsOfCardAccount(@NotEmpty String userId, @NotEmpty String accountId, LocalDate fromDate, LocalDate toDate) {
+    public CardTransactionsPage getTransactionsOfCardAccount(@NotEmpty String userId, @NotEmpty String accountId, LocalDate fromDate, LocalDate toDate, String fromId) {
         return null;
     }
 

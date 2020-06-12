@@ -35,6 +35,7 @@ public class SDKConstants {
     public final static int CONSENT_MAX_PERIOD = 1;
 
     public final static String KEY_DATA = "data";
+    public final static String KEY_META = "meta";
     public final static String KEY_ID = "id";
     public final static String KEY_USER_ID = "user_id";
     public final static String KEY_EXTRA = "extra";

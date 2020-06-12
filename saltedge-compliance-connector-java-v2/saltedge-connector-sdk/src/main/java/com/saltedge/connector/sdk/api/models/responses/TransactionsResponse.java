@@ -23,6 +23,7 @@ package com.saltedge.connector.sdk.api.models.responses;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.saltedge.connector.sdk.SDKConstants;
+import com.saltedge.connector.sdk.api.models.Meta;
 import com.saltedge.connector.sdk.api.models.Transaction;
 
 import java.util.List;
@@ -32,10 +33,14 @@ public class TransactionsResponse {
     @JsonProperty(SDKConstants.KEY_DATA)
     public List<Transaction> data;
 
+    @JsonProperty(SDKConstants.KEY_META)
+    public Meta meta;
+
     public TransactionsResponse() {
     }
 
-    public TransactionsResponse(List<Transaction> data) {
+    public TransactionsResponse(List<Transaction> data, Meta meta) {
         this.data = data;
+        this.meta = meta;
     }
 }

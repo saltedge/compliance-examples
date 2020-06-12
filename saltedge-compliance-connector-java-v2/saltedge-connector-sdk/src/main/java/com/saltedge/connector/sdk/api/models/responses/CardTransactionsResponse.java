@@ -24,6 +24,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.saltedge.connector.sdk.SDKConstants;
 import com.saltedge.connector.sdk.api.models.CardTransaction;
+import com.saltedge.connector.sdk.api.models.Meta;
 
 import java.util.List;
 
@@ -32,11 +33,15 @@ public class CardTransactionsResponse {
     @JsonProperty(SDKConstants.KEY_DATA)
     public List<CardTransaction> data;
 
+    @JsonProperty(SDKConstants.KEY_META)
+    public Meta meta;
+
     public CardTransactionsResponse() {
     }
 
-    public CardTransactionsResponse(List<CardTransaction> data) {
+    public CardTransactionsResponse(List<CardTransaction> data, Meta meta) {
         this.data = data;
+        this.meta = meta;
     }
 
     public List<CardTransaction> getData() {

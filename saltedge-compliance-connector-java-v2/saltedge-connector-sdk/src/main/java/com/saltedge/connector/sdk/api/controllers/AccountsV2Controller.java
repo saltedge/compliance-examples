@@ -21,11 +21,13 @@
 package com.saltedge.connector.sdk.api.controllers;
 
 import com.saltedge.connector.sdk.SDKConstants;
-import com.saltedge.connector.sdk.api.models.responses.AccountsResponse;
+import com.saltedge.connector.sdk.api.models.Meta;
 import com.saltedge.connector.sdk.api.models.requests.DefaultRequest;
 import com.saltedge.connector.sdk.api.models.requests.TransactionsRequest;
+import com.saltedge.connector.sdk.api.models.responses.AccountsResponse;
 import com.saltedge.connector.sdk.api.models.responses.TransactionsResponse;
 import com.saltedge.connector.sdk.models.Token;
+import com.saltedge.connector.sdk.models.TransactionsPage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -64,12 +66,12 @@ public class AccountsV2Controller extends BaseV2Controller {
     }
 
     /**
-     * Fetch all transactions related to a bank account.
+     * Fetch transactions related to a bank account.
      *
      * @param token linked to Access-Token header
      * @param accountId unique id of bank account
      * @param request data
-     * @return list of transactions data.
+     * @return list of transactions data with nextId of next page
      */
     @GetMapping(path = "/{" + SDKConstants.KEY_ACCOUNT_ID + "}/transactions")
     public ResponseEntity<TransactionsResponse> transactionsOfAccount(
@@ -77,8 +79,13 @@ public class AccountsV2Controller extends BaseV2Controller {
             @NotEmpty @PathVariable(name = SDKConstants.KEY_ACCOUNT_ID) String accountId,
             @Valid TransactionsRequest request
     ) {
-        return new ResponseEntity<>(new TransactionsResponse(
-                providerService.getTransactionsOfAccount(token.userId, accountId, request.fromDate, request.toDate)
-        ), HttpStatus.OK);
+        TransactionsPage resultPage = providerService.getTransactionsOfAccount(
+                token.userId,
+                accountId,
+                request.fromDate,
+                request.toDate,
+                request.fromId
+        );
+        return new ResponseEntity<>(new TransactionsResponse(resultPage.transactions, new Meta(resultPage.nextId)), HttpStatus.OK);
     }
 }

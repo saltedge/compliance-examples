@@ -40,15 +40,15 @@ public class DatabaseInitializer {
     @Autowired
     CurrenciesRepository currenciesRepository;
     @Autowired
-    UsersRepository usersRepository;
+    public UsersRepository usersRepository;
     @Autowired
-    AccountsRepository accountsRepository;
+    public AccountsRepository accountsRepository;
     @Autowired
-    CardAccountsRepository cardAccountsRepository;
+    public CardAccountsRepository cardAccountsRepository;
     @Autowired
-    TransactionsRepository transactionsRepository;
+    public TransactionsRepository transactionsRepository;
     @Autowired
-    CardTransactionsRepository cardTransactionsRepository;
+    public CardTransactionsRepository cardTransactionsRepository;
     private UserEntity user;
     private AccountEntity account1;
     private AccountEntity account2;
@@ -56,6 +56,10 @@ public class DatabaseInitializer {
 
     @EventListener
     public void seed(ContextRefreshedEvent event) {
+        seed();
+    }
+
+    public void seed() {
         seedCurrencies();
         user = seedUsers();
         seedAccounts();

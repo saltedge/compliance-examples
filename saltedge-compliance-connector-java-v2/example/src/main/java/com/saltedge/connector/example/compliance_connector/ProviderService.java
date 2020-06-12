@@ -23,25 +23,24 @@ package com.saltedge.connector.example.compliance_connector;
 import com.saltedge.connector.example.compliance_connector.collector.AccountsCollector;
 import com.saltedge.connector.example.compliance_connector.config.AuthorizationTypes;
 import com.saltedge.connector.example.controllers.UserAuthorizeController;
-import com.saltedge.connector.example.model.AccountEntity;
-import com.saltedge.connector.example.model.CardAccountEntity;
-import com.saltedge.connector.example.model.PaymentEntity;
-import com.saltedge.connector.example.model.UserEntity;
-import com.saltedge.connector.example.model.repository.AccountsRepository;
-import com.saltedge.connector.example.model.repository.CardAccountsRepository;
-import com.saltedge.connector.example.model.repository.PaymentsRepository;
-import com.saltedge.connector.example.model.repository.UsersRepository;
+import com.saltedge.connector.example.model.*;
+import com.saltedge.connector.example.model.repository.*;
 import com.saltedge.connector.sdk.SDKConstants;
 import com.saltedge.connector.sdk.api.models.*;
 import com.saltedge.connector.sdk.api.models.err.BadRequest;
 import com.saltedge.connector.sdk.api.models.err.NotFound;
+import com.saltedge.connector.sdk.models.CardTransactionsPage;
+import com.saltedge.connector.sdk.models.TransactionsPage;
 import com.saltedge.connector.sdk.provider.ProviderServiceAbs;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -59,12 +58,17 @@ import java.util.function.Supplier;
 @Validated
 public class ProviderService implements ProviderServiceAbs {
     private static Logger log = LoggerFactory.getLogger(ProviderService.class);
+    public static int PAGE_SIZE = 30;
     @Autowired
     private Environment env;
     @Autowired
     private UsersRepository usersRepository;
     @Autowired
     private AccountsRepository accountsRepository;
+    @Autowired
+    private TransactionsRepository transactionsRepository;
+    @Autowired
+    private CardTransactionsRepository cardTransactionsRepository;
     @Autowired
     private CardAccountsRepository cardAccountsRepository;
     @Autowired
@@ -116,16 +120,32 @@ public class ProviderService implements ProviderServiceAbs {
     }
 
     @Override
-    public List<Transaction> getTransactionsOfAccount(
+    public TransactionsPage getTransactionsOfAccount(
             @NotEmpty String userId,
             @NotEmpty String accountId,
-            LocalDate fromDate,//TODO use in query
-            LocalDate toDate//TODO use in query
+            @NotNull LocalDate fromDate,
+            @NotNull LocalDate toDate,
+            String fromId
     ) {
         UserEntity user = findAndValidateUser(userId);
-        AccountEntity account = accountsRepository.findFirstByIdAndUserId(Long.valueOf(accountId), user.id)
+        AccountEntity account = accountsRepository
+                .findFirstByIdAndUserId(Long.parseLong(accountId), user.id)
                 .orElseThrow((Supplier<RuntimeException>) NotFound.AccountNotFound::new);
-        return ConnectorTypeConverters.convertTransactionsToTransactionsData(account.transactions);
+        int fromIdValue = (StringUtils.isEmpty(fromId)) ? 0 : Integer.parseInt(fromId);
+        Page<TransactionEntity> pagedResult = transactionsRepository.findByAccountIdAndMadeOnBetween(
+                account.id,
+                fromDate, toDate,
+                PageRequest.of(fromIdValue, PAGE_SIZE)
+        );
+
+        if (pagedResult.hasContent()) {
+            return new TransactionsPage(
+                    ConnectorTypeConverters.convertTransactionsToTransactionsData(pagedResult.getContent()),
+                    (pagedResult.hasNext()) ? String.valueOf(fromIdValue + 1) : null
+            );
+        } else {
+            return new TransactionsPage(new ArrayList<>(), null);
+        }
     }
 
     @Override
@@ -135,16 +155,33 @@ public class ProviderService implements ProviderServiceAbs {
     }
 
     @Override
-    public List<CardTransaction> getTransactionsOfCardAccount(
+    public CardTransactionsPage getTransactionsOfCardAccount(
             @NotEmpty String userId,
             @NotEmpty String accountId,
-            LocalDate fromDate,//TODO use in query
-            LocalDate toDate//TODO use in query
+            @NotNull LocalDate fromDate,
+            @NotNull LocalDate toDate,
+            String fromId
     ) {
         UserEntity user = findAndValidateUser(userId);
-        CardAccountEntity account = cardAccountsRepository.findFirstByIdAndUserId(Long.valueOf(accountId), user.id)
+        CardAccountEntity account = cardAccountsRepository
+                .findFirstByIdAndUserId(Long.valueOf(accountId), user.id)
                 .orElseThrow((Supplier<RuntimeException>) NotFound.AccountNotFound::new);
-        return ConnectorTypeConverters.convertCardTransactionsToTransactionsData(new LinkedList<>(account.cardTransactions));
+
+        int fromIdValue = (StringUtils.isEmpty(fromId)) ? 0 : Integer.parseInt(fromId);
+        Page<CardTransactionEntity> pagedResult = cardTransactionsRepository.findByCardAccountIdAndMadeOnBetween(
+                account.id,
+                fromDate, toDate,
+                PageRequest.of(fromIdValue, PAGE_SIZE)
+        );
+
+        if (pagedResult.hasContent()) {
+            return new CardTransactionsPage(
+                    ConnectorTypeConverters.convertCardTransactionsToTransactionsData(pagedResult.getContent()),
+                    (pagedResult.hasNext()) ? String.valueOf(fromIdValue + 1) : null
+            );
+        } else {
+            return new CardTransactionsPage(new ArrayList<>(), null);
+        }
     }
 
     @Override

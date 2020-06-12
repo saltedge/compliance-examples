@@ -26,6 +26,7 @@ import com.saltedge.connector.sdk.api.models.requests.DefaultRequest;
 import com.saltedge.connector.sdk.api.models.requests.TransactionsRequest;
 import com.saltedge.connector.sdk.api.models.responses.CardAccountsResponse;
 import com.saltedge.connector.sdk.api.models.responses.CardTransactionsResponse;
+import com.saltedge.connector.sdk.models.CardTransactionsPage;
 import com.saltedge.connector.sdk.models.Token;
 import com.saltedge.connector.sdk.provider.ProviderServiceAbs;
 import org.junit.Test;
@@ -37,6 +38,7 @@ import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
@@ -73,7 +75,8 @@ public class CardAccountsV2ControllerTests {
         List<CardTransaction> testData = getTestTransactionsData();
         LocalDate startDate = LocalDate.now();
         LocalDate endDate = startDate;
-        given(mockProviderService.getTransactionsOfCardAccount("1", "1", startDate, endDate)).willReturn(testData);
+        given(mockProviderService.getTransactionsOfCardAccount("1", "1", startDate, endDate, "fromId"))
+                .willReturn(new CardTransactionsPage(testData, "nextId"));
 
         CardAccountsV2Controller controller = new CardAccountsV2Controller();
         controller.providerService = mockProviderService;
@@ -81,11 +84,12 @@ public class CardAccountsV2ControllerTests {
         ResponseEntity<CardTransactionsResponse> result = controller.transactionsOfCardAccount(
                 new Token("1"),
                 "1",
-                new TransactionsRequest("1", startDate, endDate, "sessionSecret")
+                new TransactionsRequest("1", startDate, endDate, "fromId", "sessionSecret")
         );
 
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(result.getBody().data).isEqualTo(testData);
+        assertThat(Objects.requireNonNull(result.getBody()).data).isEqualTo(testData);
+        assertThat(Objects.requireNonNull(result.getBody()).meta.nextId).isEqualTo("nextId");
     }
 
     private List<CardAccount> getTestAccountsData() {
