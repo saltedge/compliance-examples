@@ -11,6 +11,9 @@
         background-color:#009E47;
         text-align:center;
     }
+    h2 {
+        text-align:center;
+    }
     .form-container {
       padding: 5px 10px;
       text-align:center;
@@ -34,4 +37,17 @@
     .inline {
         display: inline;
     }
+    table {border-collapse: collapse;}
+    table, th, td {border: 1px solid black;}
+    th, td {
+        padding: 5px;
+        background-color:none;
+        text-align: center;
+        vertical-align: center;
+        align: center;
+    }
+    table.center {
+        margin-left:auto;
+        margin-right:auto;
+      }
 </style>

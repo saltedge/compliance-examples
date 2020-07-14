@@ -18,8 +18,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.saltedge.connector.example.controllers;
+package com.saltedge.connector.example.controllers.consent;
 
+import com.saltedge.connector.example.controllers.UserBaseController;
 import com.saltedge.connector.example.model.AccountEntity;
 import com.saltedge.connector.example.model.PaymentEntity;
 import com.saltedge.connector.example.model.TransactionEntity;

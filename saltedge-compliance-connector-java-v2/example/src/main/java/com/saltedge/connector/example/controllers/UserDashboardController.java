@@ -20,28 +20,53 @@
  */
 package com.saltedge.connector.example.controllers;
 
-import com.saltedge.connector.example.compliance_connector.ProviderService;
+import com.saltedge.connector.example.model.repository.UsersRepository;
+import com.saltedge.connector.sdk.SDKConstants;
 import com.saltedge.connector.sdk.provider.ConnectorCallbackAbs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-@Controller
-@RequestMapping(IndexController.BASE_PATH)
-public class IndexController {
-    public final static String BASE_PATH = "/";
-    private static Logger log = LoggerFactory.getLogger(IndexController.class);
-    @Autowired
-    private ProviderService providerService;
-    @Autowired
-    private ConnectorCallbackAbs providerCallback;
+import java.util.List;
 
-    @GetMapping
-    public ModelAndView index() {
-        return new ModelAndView("redirect:" + UserAuthController.BASE_PATH);
+@Controller
+@RequestMapping
+public class UserDashboardController {
+    private static Logger log = LoggerFactory.getLogger(UserDashboardController.class);
+    public final static String BASE_PATH = "/users/dashboard";
+
+    @Autowired
+    protected ConnectorCallbackAbs connectorCallbackService;
+    @Autowired
+    protected UsersRepository usersRepository;
+
+    // Show Dashboard page
+    @GetMapping(BASE_PATH)
+    public ModelAndView showDashboard(
+            @RequestParam(value = SDKConstants.KEY_USER_ID) Long userId
+    ) {
+        List<String> accessTokens = connectorCallbackService.getActiveAccessTokens(String.valueOf(userId));
+        ModelAndView result = new ModelAndView("users_dashboard");
+        result.addObject(SDKConstants.KEY_USER_ID, userId);
+        result.addObject("tokens", accessTokens);
+        return result;
+    }
+
+    // Receive SignIn page credentials
+    @PostMapping(BASE_PATH + "/revoke")
+    public ModelAndView onSubmitCredentials(
+            @RequestParam(value = SDKConstants.KEY_USER_ID) Long userId,
+            @RequestParam(value = "access_token") String accessToken
+    ) {
+        connectorCallbackService.revokeAccountInformationConsent(String.valueOf(userId), accessToken);
+        String redirect = "redirect:" + UserDashboardController.BASE_PATH
+                + "?" + SDKConstants.KEY_USER_ID + "=" + userId;
+        return new ModelAndView(redirect);
     }
 }

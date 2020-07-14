@@ -18,8 +18,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.saltedge.connector.example.controllers;
+package com.saltedge.connector.example.controllers.consent;
 
+import com.saltedge.connector.example.controllers.UserBaseController;
 import com.saltedge.connector.sdk.SDKConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,8 +33,8 @@ import javax.validation.constraints.NotEmpty;
 
 @Controller
 @RequestMapping
-public class UserAuthorizeController extends UserBaseController {
-    private static Logger log = LoggerFactory.getLogger(UserAuthorizeController.class);
+public class UserOAuthAuthController extends UserBaseController {
+    private static Logger log = LoggerFactory.getLogger(UserOAuthAuthController.class);
     public final static String TYPE_ACCOUNTS = "accounts";
     public final static String TYPE_PAYMENTS = "payments";
     private final static String BASE_PATH = "/oauth/authorize";
@@ -87,7 +88,7 @@ public class UserAuthorizeController extends UserBaseController {
     }
 
     private ModelAndView createSignInModel(String sessionType) {
-        ModelAndView result = new ModelAndView("user_sign_in");
+        ModelAndView result = new ModelAndView("user_oauth_sign_in");
         result.addObject("input_title", createInputTitle(sessionType));
         result.addObject(SESSION_TYPE, sessionType);
         return result;

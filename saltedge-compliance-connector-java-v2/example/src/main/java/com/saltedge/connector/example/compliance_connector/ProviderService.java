@@ -22,7 +22,7 @@ package com.saltedge.connector.example.compliance_connector;
 
 import com.saltedge.connector.example.compliance_connector.collector.AccountsCollector;
 import com.saltedge.connector.example.compliance_connector.config.AuthorizationTypes;
-import com.saltedge.connector.example.controllers.UserAuthorizeController;
+import com.saltedge.connector.example.controllers.consent.UserOAuthAuthController;
 import com.saltedge.connector.example.model.*;
 import com.saltedge.connector.example.model.repository.*;
 import com.saltedge.connector.sdk.SDKConstants;
@@ -81,7 +81,7 @@ public class ProviderService implements ProviderServiceAbs {
     ) {
         try {
             return getAuthorizationPageUrlWithQueryParam(
-                    UserAuthorizeController.ACCOUNTS_BASE_PATH,
+                    UserOAuthAuthController.ACCOUNTS_BASE_PATH,
                     new AbstractMap.SimpleImmutableEntry<>(SDKConstants.KEY_SESSION_SECRET, sessionSecret)
             );
         } catch (Exception e) {
@@ -219,7 +219,7 @@ public class ProviderService implements ProviderServiceAbs {
     public String getPaymentAuthorizationPageUrl(@NotEmpty String paymentId) {
         try {
             return getAuthorizationPageUrlWithQueryParam(
-                    UserAuthorizeController.PAYMENTS_BASE_PATH,
+                    UserOAuthAuthController.PAYMENTS_BASE_PATH,
                     new AbstractMap.SimpleImmutableEntry<>(SDKConstants.KEY_PAYMENT_ID, paymentId)
             );
         } catch (Exception e) {

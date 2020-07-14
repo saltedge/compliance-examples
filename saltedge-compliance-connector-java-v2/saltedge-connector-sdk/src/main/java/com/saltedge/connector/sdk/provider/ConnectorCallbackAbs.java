@@ -25,6 +25,7 @@ import com.saltedge.connector.sdk.api.models.ProviderConsents;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -100,6 +101,14 @@ public interface ConnectorCallbackAbs {
      * @return returnUrl string for final redirection of Authorization session (in browser) back to TPP side.
      */
     String onAccountInformationAuthorizationFail(@NotEmpty String sessionSecret);
+
+    /**
+     * Collect list of access tokens of active consents
+     *
+     * @param userId unique identifier of authenticated User
+     * @return list of access tokens of active consents
+     */
+    List<String> getActiveAccessTokens(@NotEmpty String userId);
 
     /**
      * Revoke Account information consent associated with userId and accessToken

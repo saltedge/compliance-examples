@@ -20,28 +20,17 @@
  */
 package com.saltedge.connector.sdk.callback.services;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.saltedge.connector.sdk.SDKConstants;
 import com.saltedge.connector.sdk.callback.CallbackRestClient;
-import com.saltedge.connector.sdk.callback.mapping.BaseCallbackRequest;
-import com.saltedge.connector.sdk.tools.JsonTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.HttpServerErrorException;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.client.UnknownHttpStatusCodeException;
 
 import javax.validation.constraints.NotEmpty;
+import java.util.HashMap;
 
 /**
  * Token Endpoints allow Connector to perform operations like getting the list of all tokens created by a specific PSU
@@ -61,9 +50,10 @@ public class TokensCallbackService extends CallbackRestClient {
     @Async
     public void sendRevokeTokenCallback(@NotEmpty String accessToken) {
         String url = createCallbackRequestUrl(SDKConstants.CALLBACK_BASE_PATH + "/tokens/revoke");
-        LinkedMultiValueMap<String, String> headers = createCallbackRequestHeaders(null);
+        HashMap params = new HashMap<String, String>();
+        LinkedMultiValueMap<String, String> headers = createCallbackRequestHeaders(params);
         headers.add("Token", accessToken);
-        printPayload(url, headers, null);
+        printPayload(url, headers, params);
         doCallbackRequest(url, headers);
     }
 

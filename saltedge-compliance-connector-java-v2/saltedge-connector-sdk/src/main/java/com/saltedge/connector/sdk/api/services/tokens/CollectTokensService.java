@@ -18,30 +18,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.saltedge.connector.example.controllers;
+package com.saltedge.connector.sdk.api.services.tokens;
 
-import com.saltedge.connector.example.compliance_connector.ProviderService;
-import com.saltedge.connector.sdk.provider.ConnectorCallbackAbs;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
+import com.saltedge.connector.sdk.models.Token;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
 
-@Controller
-@RequestMapping(IndexController.BASE_PATH)
-public class IndexController {
-    public final static String BASE_PATH = "/";
-    private static Logger log = LoggerFactory.getLogger(IndexController.class);
-    @Autowired
-    private ProviderService providerService;
-    @Autowired
-    private ConnectorCallbackAbs providerCallback;
+import java.util.List;
+import java.util.stream.Collectors;
 
-    @GetMapping
-    public ModelAndView index() {
-        return new ModelAndView("redirect:" + UserAuthController.BASE_PATH);
+@Service
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+public class CollectTokensService extends TokensBaseService {
+    public List<String> collectActiveAccessTokensByUserId(String userId) {
+        return tokensRepository.findAllByUserId(userId).stream()
+                .filter(item -> item.status == Token.Status.CONFIRMED)
+                .map(item -> item.accessToken)
+                .collect(Collectors.toList());
     }
 }
