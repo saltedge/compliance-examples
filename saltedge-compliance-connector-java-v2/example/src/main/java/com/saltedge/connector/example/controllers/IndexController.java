@@ -42,6 +42,6 @@ public class IndexController {
 
     @GetMapping
     public ModelAndView index() {
-        return new ModelAndView("redirect:" + UserAuthorizeController.ACCOUNTS_BASE_PATH);
+        return new ModelAndView("redirect:" + UserAuthController.BASE_PATH);
     }
 }

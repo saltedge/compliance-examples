@@ -20,6 +20,7 @@
  */
 package com.saltedge.connector.sdk.callback;
 
+import com.saltedge.connector.sdk.SDKConstants;
 import com.saltedge.connector.sdk.callback.services.TokensCallbackService;
 import com.saltedge.connector.sdk.config.ApplicationProperties;
 import org.assertj.core.util.Lists;
@@ -69,11 +70,13 @@ public class TokensCallbackServiceTest {
         verify(restTemplate).exchange(urlCaptor.capture(), eq(HttpMethod.POST), entityCaptor.capture(), eq(Object.class));
 
         assertThat(urlCaptor.getValue()).isEqualTo("http://localhost/api/connectors/v2/tokens/revoke");
-        assertThat(entityCaptor.getValue().getHeaders().get("X-HTTP-Method-Override")).isEqualTo(Lists.list("PATCH"));
-        assertThat(entityCaptor.getValue().getHeaders().getAccept()).isEqualTo(Lists.list(MediaType.APPLICATION_JSON));
-        assertThat(entityCaptor.getValue().getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON);
-        assertThat(entityCaptor.getValue().getHeaders().get("App-id")).isEqualTo(Lists.list("QWERTY"));
-        assertThat(entityCaptor.getValue().getHeaders().get("App-secret")).isEqualTo(Lists.list("ASDFG"));
-        assertThat(entityCaptor.getValue().getHeaders().get("Token").get(0)).startsWith("accessToken");
+        HttpHeaders headers = entityCaptor.getValue().getHeaders();
+        assertThat(headers.get("X-HTTP-Method-Override")).isEqualTo(Lists.list("PATCH"));
+        assertThat(headers.getAccept()).isEqualTo(Lists.list(MediaType.APPLICATION_JSON));
+        assertThat(headers.getContentType()).isEqualTo(MediaType.APPLICATION_JSON);
+        assertThat(headers.get("App-id")).isEqualTo(Lists.list("QWERTY"));
+        assertThat(headers.get("App-secret")).isEqualTo(Lists.list("ASDFG"));
+        assertThat(headers.get("Token").get(0)).isEqualTo("accessToken");
+        assertThat(headers.get(SDKConstants.HEADER_AUTHORIZATION).get(0)).startsWith("Bearer ");
     }
 }

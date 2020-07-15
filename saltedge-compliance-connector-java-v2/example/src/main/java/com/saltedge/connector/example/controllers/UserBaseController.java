@@ -42,8 +42,6 @@ abstract public class UserBaseController {
     @Autowired
     protected ConnectorCallbackAbs connectorCallbackService;
     @Autowired
-    protected ConnectorCallbackAbs providerCallback;
-    @Autowired
     protected UsersRepository usersRepository;
     @Autowired
     protected PaymentsRepository paymentsRepository;

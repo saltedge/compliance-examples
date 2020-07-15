@@ -22,8 +22,11 @@ package com.saltedge.connector.sdk.models;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 public interface TokensRepository extends JpaRepository<Token, Long> {
     Token findFirstBySessionSecret(String sessionSecret);
     Token findFirstByAccessToken(String accessToken);
     Token findFirstByUserIdAndAccessToken(String userId, String accessToken);
+    List<Token> findAllByUserId(String userId);
 }

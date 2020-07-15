@@ -24,6 +24,7 @@ import com.saltedge.connector.sdk.SDKConstants;
 import com.saltedge.connector.sdk.api.models.ProviderConsents;
 import com.saltedge.connector.sdk.api.models.err.NotFound;
 import com.saltedge.connector.sdk.api.models.err.Unauthorized;
+import com.saltedge.connector.sdk.api.services.tokens.CollectTokensService;
 import com.saltedge.connector.sdk.api.services.tokens.ConfirmTokenService;
 import com.saltedge.connector.sdk.api.services.tokens.RevokeTokenService;
 import com.saltedge.connector.sdk.callback.mapping.SessionSuccessCallbackRequest;
@@ -38,6 +39,7 @@ import org.springframework.validation.annotation.Validated;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -50,6 +52,8 @@ import java.util.Map;
 public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
     @Autowired
     private ConfirmTokenService confirmTokenService;
+    @Autowired
+    private CollectTokensService collectTokensService;
     @Autowired
     private RevokeTokenService revokeTokenService;
     @Autowired
@@ -129,6 +133,17 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
         Token token = revokeTokenService.revokeTokenBySessionSecret(sessionSecret);
         sessionsCallbackService.sendFailCallback(sessionSecret, new Unauthorized.AccessDenied());
         return (token == null) ? null : token.tppRedirectUrl;
+    }
+
+    /**
+     * Collect list of access tokens of active consents
+     *
+     * @param userId unique identifier of authenticated User
+     * @return list of access tokens of active consents
+     */
+    @Override
+    public List<String> getActiveAccessTokens(@NotEmpty String userId) {
+        return collectTokensService.collectActiveAccessTokensByUserId(userId);
     }
 
     /**
