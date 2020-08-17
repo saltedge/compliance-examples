@@ -176,7 +176,7 @@ Target application should be compatible with [following requirements](#Applicati
     * `accessToken` unique access identifier;  
   
   
-## [Api Documentation](https://priora.banksalt.com/docs/aspsp/v2)
+## [Api Documentation](https://priora.saltedge.com/docs/aspsp/v2)
   
 ---
 ## For SDK developers  
