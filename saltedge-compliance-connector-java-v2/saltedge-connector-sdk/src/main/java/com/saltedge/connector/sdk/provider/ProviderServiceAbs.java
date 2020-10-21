@@ -24,7 +24,6 @@ import com.saltedge.connector.sdk.api.models.*;
 import com.saltedge.connector.sdk.models.CardTransactionsPage;
 import com.saltedge.connector.sdk.models.TransactionsPage;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.data.util.Pair;
 
 import javax.validation.constraints.NotEmpty;
 import java.time.LocalDate;
@@ -55,7 +54,7 @@ public interface ProviderServiceAbs {
 
     /**
      * Provides url of provider's authorization page
-     * designated for authorization session of new Account Information Session
+     * designated for authorization of new Consent to access Account Information data
      *
      * @param sessionSecret create consent session secret.
      *                      should be returned on authentication success or fail.

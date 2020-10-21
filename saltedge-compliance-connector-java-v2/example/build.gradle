@@ -6,7 +6,10 @@ plugins {
 
 group 'com.saltedge.connector.example'
 version '1.0.0'
-sourceCompatibility = 1.8
+
+compileJava {
+    sourceCompatibility = 1.8
+}
 
 repositories {
     mavenCentral()
