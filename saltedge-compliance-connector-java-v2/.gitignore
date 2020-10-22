@@ -2,3 +2,5 @@
 .gradle/
 build/
 *.iml
+/compliance-connector-sdk/gradle.properties
+*.gpg

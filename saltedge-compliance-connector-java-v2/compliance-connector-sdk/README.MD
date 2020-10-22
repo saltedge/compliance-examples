@@ -25,7 +25,7 @@ Target application should be compatible with [following requirements](#Applicati
   3. Build and run application on target device or emulator
 
 #### Add as JAR library
-copy jar file `saltedge-connector-sdk-x.x.x-all.jar` 
+copy jar file `compliance-connector-sdk-x.x.x-all.jar` 
 from `https://github.com/saltedge/compliance-examples/tree/master/saltedge-compliance-connector-java-v2/out/`
 to your project
 
@@ -40,7 +40,7 @@ Add Salt Edge maven repository to application's build.gradle
 ```
 Add Connector SDK dependency to application build.gradle
 ```groovy
-  implementation ('com.saltedge.connector.sdk:saltedge-connector-sdk:x.x.x') {
+  implementation ('com.saltedge.connector.sdk:compliance-connector-sdk:x.x.x') {
     transitive = true
   }
 ```

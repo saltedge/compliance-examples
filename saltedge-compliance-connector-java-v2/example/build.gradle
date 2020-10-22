@@ -28,7 +28,7 @@ dependencies {
     implementation 'com.h2database:h2:1.4.200'
     implementation 'joda-time:joda-time:2.10.5'
 
-    implementation project(':saltedge-connector-sdk')
+    implementation project(':compliance-connector-sdk')
 
     testCompile group: 'junit', name: 'junit', version: '4.12'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
