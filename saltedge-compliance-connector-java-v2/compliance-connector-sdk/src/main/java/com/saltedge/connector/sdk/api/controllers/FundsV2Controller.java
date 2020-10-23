@@ -55,6 +55,10 @@ public class FundsV2Controller extends BaseV2Controller {
     /**
      * Checks whether a specific amount is available at point of time of the request on an account addressed by IBAN
      * or other available identifiers.
+     *
+     * @param request FundsConfirmationRequest
+     * @param token Token
+     * @return response
      */
     @PostMapping
     public ResponseEntity<FundsConfirmationResponse> checkFunds(

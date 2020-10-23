@@ -4,11 +4,11 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '5.2.0'
     id 'org.springframework.boot' version '2.2.2.RELEASE'
     id 'io.spring.dependency-management' version '1.0.8.RELEASE'
-    id 'io.codearte.nexus-staging'
+    id 'com.bmuschko.nexus' version '2.3.1'
 }
 
 group 'com.saltedge.connector.sdk'
-version '2.4.1'
+version '2.4.2'
 
 compileJava {
     sourceCompatibility = 1.8
@@ -16,6 +16,7 @@ compileJava {
 
 repositories {
     mavenCentral()
+    jcenter()
 }
 
 bootJar {
@@ -27,17 +28,16 @@ jar {
 }
 
 dependencies {
-    def jjwtVersion = '0.11.1'
-
     implementation 'org.jetbrains:annotations:16.0.2'
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
-    shadow "io.jsonwebtoken:jjwt-api:$jjwtVersion"
+    def jjwtVersion = '0.11.1'
+    implementation "io.jsonwebtoken:jjwt-api:$jjwtVersion"
     runtime "io.jsonwebtoken:jjwt-impl:$jjwtVersion", "io.jsonwebtoken:jjwt-jackson:$jjwtVersion"
-    shadow "io.jsonwebtoken:jjwt-impl:$jjwtVersion"
-    shadow "io.jsonwebtoken:jjwt-jackson:$jjwtVersion"
+    implementation "io.jsonwebtoken:jjwt-impl:$jjwtVersion"
+    implementation "io.jsonwebtoken:jjwt-jackson:$jjwtVersion"
 
     testImplementation "io.jsonwebtoken:jjwt-api:$jjwtVersion"
     testImplementation "io.jsonwebtoken:jjwt-jackson:$jjwtVersion"
@@ -66,8 +66,6 @@ uploadShadow {
 }
 
 // UPLOAD JAR TO MAVEN CENTRAL REPO
-apply plugin: 'com.bmuschko.nexus'
-
 archivesBaseName = project.name
 
 modifyPom {
