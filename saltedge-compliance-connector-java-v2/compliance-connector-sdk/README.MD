@@ -1,3 +1,4 @@
+![Maven Central](https://img.shields.io/maven-central/v/com.saltedge.connector.sdk/compliance-connector-sdk?style=for-the-badge)  
 # Salt Edge Compliance Connector SDK (v2)
   
 This codebase contains SDK module built on Spring Boot Framework, 
@@ -24,26 +25,29 @@ Target application should be compatible with [following requirements](#Applicati
   2. In IntelliJ IDE Import module `File/New/Import Module...` in your project
   3. Build and run application on target device or emulator
 
-#### Add as JAR library
-copy jar file `compliance-connector-sdk-x.x.x-all.jar` 
-from `https://github.com/saltedge/compliance-examples/tree/master/saltedge-compliance-connector-java-v2/out/`
-to your project
-
 #### Add as Maven dependency  
-Add Salt Edge maven repository to application's build.gradle
+Add Maven Central repository to application's build.gradle
 ```groovy
  repositories {
-    maven {
-      url 'https://raw.github.com/saltedge/compliance-examples/master/maven-repo/'
-    }
+    mavenCentral()
   }
-```
+```  
 Add Connector SDK dependency to application build.gradle
 ```groovy
-  implementation ('com.saltedge.connector.sdk:compliance-connector-sdk:x.x.x') {
-    transitive = true
-  }
-```
+  implementation 'com.saltedge.connector.sdk:compliance-connector-sdk:x.x.x'
+```  
+SDK requires next third-party dependencies:  
+```groovy
+  implementation 'org.springframework.boot:spring-boot-starter'
+  implementation 'org.springframework.boot:spring-boot-starter-web'
+  implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+  def jjwtVersion = '0.11.1'
+  implementation "io.jsonwebtoken:jjwt-api:$jjwtVersion"
+  runtime "io.jsonwebtoken:jjwt-impl:$jjwtVersion", "io.jsonwebtoken:jjwt-jackson:$jjwtVersion"
+  implementation "io.jsonwebtoken:jjwt-impl:$jjwtVersion"
+  implementation "io.jsonwebtoken:jjwt-jackson:$jjwtVersion"
+```  
     
 ### 2. Setup application as [described before](#example-application-quick-setup).
 
