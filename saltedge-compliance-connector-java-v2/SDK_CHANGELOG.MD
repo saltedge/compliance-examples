@@ -1,5 +1,13 @@
 # Salt Edge Compliance Connector SDK Changelog
 
+## 2.4.3 (2020-11-02)
+### Change:  
+- add targetCompatibility 1.8
+
+## 2.4.2 (2020-10-23)
+### Change:  
+- Non-fat JAR
+
 ## 2.4.1 (2020-07-15)
 ### Change:  
 - Fix payload format in token revoke callback request.
