@@ -45,7 +45,7 @@ import java.util.Map;
 public class PrioraRequestResolver implements HandlerMethodArgumentResolver {
     @Autowired
     ApplicationProperties applicationProperties;
-    private ObjectMapper mapper = JsonTools.createDefaultMapper();
+    private final ObjectMapper mapper = JsonTools.createDefaultMapper();
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {//TODO TRY TO USE ONLY PARENT CLASS

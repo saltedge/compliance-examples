@@ -9,6 +9,7 @@ version '1.0.0'
 
 compileJava {
     sourceCompatibility = 1.8
+    targetCompatibility = 1.8
 }
 
 repositories {
@@ -29,10 +30,10 @@ dependencies {
     implementation 'joda-time:joda-time:2.10.5'
 
     // COMPLIANCE-CONNECTOR-SDK AS LOCAL MODULE
-//    implementation project(':compliance-connector-sdk')
+    implementation project(':compliance-connector-sdk')
 
     // COMPLIANCE-CONNECTOR-SDK AS MAVEN CENTRAL DEPENDENCY
-    implementation 'com.saltedge.connector.sdk:compliance-connector-sdk:2.4.2'
+//    implementation 'com.saltedge.connector.sdk:compliance-connector-sdk:2.4.2'
     def jjwtVersion = '0.11.1'
     implementation "io.jsonwebtoken:jjwt-api:$jjwtVersion"
     runtime "io.jsonwebtoken:jjwt-impl:$jjwtVersion", "io.jsonwebtoken:jjwt-jackson:$jjwtVersion"

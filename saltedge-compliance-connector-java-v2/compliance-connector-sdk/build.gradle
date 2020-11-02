@@ -12,6 +12,7 @@ version '2.4.2'
 
 compileJava {
     sourceCompatibility = 1.8
+    targetCompatibility = 1.8
 }
 
 repositories {
