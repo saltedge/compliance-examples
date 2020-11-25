@@ -6,11 +6,11 @@
 
 ## 2.4.2 (2020-10-23)
 ### Change:  
-- Non-fat JAR
+- First Non-fat JAR
 
 ## 2.4.1 (2020-07-15)
 ### Change:  
-- Fix payload format in token revoke callback request.
+- Fix payload format in `token revoke` callback request.
 
 ## 2.4.0 (2020-06-12)
 ### Add:  

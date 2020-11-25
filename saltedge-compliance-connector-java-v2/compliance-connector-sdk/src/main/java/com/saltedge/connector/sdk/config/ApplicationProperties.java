@@ -37,6 +37,7 @@ import java.security.PublicKey;
  * Example of application.yml
  * connector:
  *   private_key_name: connector_private_prod.pem
+ *   private_key_pem: -----BEGIN PRIVATE KEY-----\nXXXXX\n-----END PRIVATE KEY-----
  *   priora:
  *     app_code: spring_connector_example
  *     app_id: xxxxxxxxx
@@ -45,14 +46,18 @@ import java.security.PublicKey;
  *     public_key_name: priora_public_prod.pem
  */
 @Configuration
-@EnableConfigurationProperties(ApplicationProperties.class)
-@ConfigurationProperties("connector")
+//@EnableConfigurationProperties(ApplicationProperties.class)
+@ConfigurationProperties(prefix = "connector")
 public class ApplicationProperties {
     /**
      * Name of Connector's private key file in PEM format
      */
-    @NotBlank
     private String privateKeyName;
+
+    /**
+     * Connector's private key string in PEM format
+     */
+    private String privateKeyPem;
 
     /**
      * Salt Edge Compliance related params
@@ -81,7 +86,11 @@ public class ApplicationProperties {
 
     public PrivateKey getPrivateKey() {
         if (privateKey == null) {
-            privateKey = KeyTools.convertPemStringToPrivateKey(ResourceTools.readKeyFile(privateKeyName));
+            if (privateKeyName != null && !privateKeyName.trim().isEmpty()) {
+                privateKey = KeyTools.convertPemStringToPrivateKey(ResourceTools.readKeyFile(privateKeyName));
+            } else if (privateKeyPem != null && !privateKeyPem.trim().isEmpty()) {
+                privateKey = KeyTools.convertPemStringToPrivateKey(privateKeyPem);
+            }
         }
         return privateKey;
     }
@@ -90,12 +99,20 @@ public class ApplicationProperties {
         return privateKeyName;
     }
 
+    public String getPrivateKeyPem() {
+        return privateKeyPem;
+    }
+
     public PublicKey getPrioraPublicKey() {
         return getPriora().getPrioraPublicKey();
     }
 
     public void setPrivateKeyName(String privateKeyName) {
         this.privateKeyName = privateKeyName;
+    }
+
+    public void setPrivateKeyPem(String privateKeyPem) {
+        this.privateKeyPem = privateKeyPem;
     }
 
     public void setPriora(PrioraProperties priora) {

@@ -3,9 +3,9 @@
   
 This codebase contains SDK module built on Spring Boot Framework, 
 which is the set of tools for simplification of communication between ASPSP/Bank and Salt Edge PSD2 Compliance Solution.    
-The SDK module implements the Salt Edge PSD2 Connector v2 API compatible with **Berlin Group NextGenPSD2 XS2A API**.
+The SDK module implements the Salt Edge PSD2 Connector v2 API compatible with **Berlin Group NextGenPSD2 XS2A API**.  
 [See how to add SDK](#SDK-Integration)  
-**Last stable version of SDK library is "2.4.1".**   
+When you migrate to the new version of Salt Edge Compliance Connector SDK, please read carefully [CHANGELOG](../SDK_CHANGELOG.MD) since many changes have been made.  
   
 ## Application Requirements
   
@@ -20,22 +20,20 @@ Target application should be compatible with [following requirements](#Applicati
 
 ### 1. Add SDK to target application.
 
-#### Add as project module
-  1. Fork this repository
-  2. In IntelliJ IDE Import module `File/New/Import Module...` in your project
-  3. Build and run application on target device or emulator
-
-#### Add as Maven dependency  
+#### Add as Maven dependency
+Find last stable version of SDK in ![Maven Central](https://mvnrepository.com/artifact/com.saltedge.connector.sdk/compliance-connector-sdk).  
+    
 Add Maven Central repository to application's build.gradle
 ```groovy
  repositories {
     mavenCentral()
   }
 ```  
-Add Connector SDK dependency to application build.gradle
+Add SDK dependency to `build.gradle` of application  
 ```groovy
   implementation 'com.saltedge.connector.sdk:compliance-connector-sdk:x.x.x'
 ```  
+
 SDK requires next third-party dependencies:  
 ```groovy
   implementation 'org.springframework.boot:spring-boot-starter'
@@ -49,7 +47,12 @@ SDK requires next third-party dependencies:
   implementation "io.jsonwebtoken:jjwt-jackson:$jjwtVersion"
 ```  
     
-### 2. Setup application as [described before](#example-application-quick-setup).
+#### Add as project module
+  1. Fork this repository
+  2. In IntelliJ IDE Import module `File/New/Import Module...` in your project
+  3. Build and run application on target device or emulator
+    
+### 2. Setup application as [described before](../example/README.MD#example-application-quick-setup).
 
 ### 3. Add SDK package (`com.saltedge.connector.sdk`) to component scan annotation in Application class.
 
@@ -62,10 +65,12 @@ SDK requires next third-party dependencies:
   }
 ```
     
-### 4. Add `extra` field to `Payment` entity of application.
+### 4. Store extra data of payment.
   
 The Connector will pass extra data on Payment creation and will require it back at the end of the Payment authentication.
-Add `extra` field (if not exist) for storing extra data from Salt Edge Compliance solution (e.g. `prioraPaymentId`).  
+Add `extra` field (if not exist) for storing extra data from Salt Edge Compliance solution (e.g. `prioraPaymentId`) to `Payment` entity of application.  
+  
+**_This solution of storing of extra payment data is not mandatory and can be implemented in another convenient way._**     
   
 ### 5. Create a service designated for providing information to and receiving events from `Salt Edge PSD2 Compliance`:  
 
@@ -113,7 +118,7 @@ See template [ExampleProviderService.java](ExampleProviderService.java)
   * **param** `currency` of payment order
   * **param** `description` of payment order
   * **param** `extraData` hash object
-  * **return** unique identifier of payment or null if payment is not initiated
+  * **return** unique identifier of payment or null if payment not initiated
   
 * `getPaymentAuthorizationPageUrl(...)` - return URL of authorization page for payment;
   * **param** `paymentId` unique identifier of payment order for which is required authorization
@@ -166,4 +171,4 @@ Just pass next steps:
 ## [LICENSE](../LICENSE.txt)
 
 ---
-Copyright © 2020 Salt Edge. https://www.saltedge.com
+Copyright © 2020 Salt Edge. www.saltedge.com

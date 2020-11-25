@@ -27,6 +27,7 @@ import com.saltedge.connector.sdk.config.PrioraProperties;
 import com.saltedge.connector.sdk.tools.JsonTools;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -40,6 +41,7 @@ import org.springframework.web.client.UnknownHttpStatusCodeException;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.PrivateKey;
 
 /**
  * Base rest client for Salt Edge Compliance callbacks
@@ -48,7 +50,8 @@ public abstract class CallbackRestClient {
     @Autowired
     public ApplicationProperties applicationProperties;
     @Autowired
-    public RestTemplate restTemplate;
+    @Qualifier("saltEdgeCallbackRestTemplateBean")
+    public RestTemplate callbackRestTemplate;
 
     protected ObjectMapper mapper = JsonTools.createDefaultMapper();
 
@@ -71,11 +74,15 @@ public abstract class CallbackRestClient {
         headersMap.add(HttpHeaders.CONTENT_TYPE, "application/json");
         headersMap.add("App-id", applicationProperties.getPrioraAppId());
         headersMap.add("App-secret", applicationProperties.getPrioraAppSecret());
-        if (requestData != null) {
+
+        PrivateKey privateKey = applicationProperties.getPrivateKey();
+        if (requestData != null && privateKey != null) {
             headersMap.add(
-                    SDKConstants.HEADER_AUTHORIZATION,
-                    JsonTools.createAuthorizationHeaderValue(requestData, applicationProperties.getPrivateKey())
+              SDKConstants.HEADER_AUTHORIZATION,
+              JsonTools.createAuthorizationHeaderValue(requestData, privateKey)
             );
+        } else if (privateKey == null) {
+            getLogger().error("Can not create Authorization header: no private key");
         }
         return headersMap;
     }
@@ -83,7 +90,7 @@ public abstract class CallbackRestClient {
     public void doCallbackRequest(String url, LinkedMultiValueMap<String, String> headers) {
         try {
             headers.add("X-HTTP-Method-Override", "PATCH");
-            ResponseEntity<Object> response = restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(headers), Object.class);
+            ResponseEntity<Object> response = callbackRestTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(headers), Object.class);
         } catch (HttpClientErrorException e) {
             e.printStackTrace();
             getLogger().error("HttpClientErrorException:", e);
@@ -110,6 +117,7 @@ public abstract class CallbackRestClient {
     }
 
     @Bean
+    @Qualifier("saltEdgeCallbackRestTemplateBean")
     public RestTemplate createRestTemplate() {
         return new RestTemplate();
     }
