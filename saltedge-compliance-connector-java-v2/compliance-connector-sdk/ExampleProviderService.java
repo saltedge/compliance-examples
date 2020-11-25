@@ -101,7 +101,7 @@ public class ExampleProviderService implements ProviderServiceAbs {
     /**
      * Provides current currencies exchange rates of Bank.
      * Used by SDK on Confirm Funds flow.
-     * (https://priora.saltedge.com/docs/aspsp/v1/connector_endpoints#connectorendpoints-payments-checkfunds)
+     * (https://priora.saltedge.com/docs/aspsp/v2/piis#piis-connector_endpoints-funds_confirmations)
      *
      * @return list of ExchangeRate objects
      * @see ExchangeRate
@@ -145,7 +145,7 @@ public class ExampleProviderService implements ProviderServiceAbs {
     /**
      * Return accounts information of user.
      * Serves accounts endpoint
-     * (https://priora.saltedge.com/docs/aspsp/v2/connector_endpoints#connectorendpoints-accounts-get)
+     * (https://priora.saltedge.com/docs/aspsp/v2/ais#ais-connector_endpoints-accounts-get)
      *
      * @param userId User identifier on Provider side
      * @return list of Account objects
@@ -171,7 +171,7 @@ public class ExampleProviderService implements ProviderServiceAbs {
     /**
      * Provides transactions which belong to an account of user.
      * Serves transactions endpoint
-     * (https://priora.saltedge.com/docs/aspsp/v2/connector_endpoints#accounts-transactions)
+     * (https://priora.saltedge.com/docs/aspsp/v2/ais#ais-connector_endpoints-accounts-transactions)
      *
      * @param userId User identifier on Provider side
      * @param accountId Account identifier on Provider side
@@ -207,7 +207,7 @@ public class ExampleProviderService implements ProviderServiceAbs {
     /**
      * Provides card accounts information of user.
      * Serves accounts endpoint
-     * (https://priora.saltedge.com/docs/aspsp/v2/connector_endpoints#card-accounts-get)
+     * (https://priora.saltedge.com/docs/aspsp/v2/ais#ais-connector_endpoints-card_accounts-get)
      *
      * @param userId User identifier on Provider side
      * @return list of CardAccount objects
@@ -237,7 +237,7 @@ public class ExampleProviderService implements ProviderServiceAbs {
     /**
      * Provides transactions which belong to a card account of user.
      * Serves transactions endpoint
-     * (https://priora.saltedge.com/docs/aspsp/v2/connector_endpoints#card-accounts-transactions)
+     * (https://priora.saltedge.com/docs/aspsp/v2/ais#ais-connector_endpoints-card_accounts-transactions)
      *
      * @param userId User identifier on Provider side
      * @param accountId Account identifier on Provider side
@@ -274,7 +274,8 @@ public class ExampleProviderService implements ProviderServiceAbs {
 
     /**
      * Initiate a payment order.
-     * Serves payment endpoint (https://priora.saltedge.com/docs/aspsp/v2/connector_endpoints#payments-create)
+     * Serves payment endpoint
+     * (https://priora.saltedge.com/docs/aspsp/v2/pis#pis-connector_endpoints-payments-create)
      *
      * @param creditorIban of payment order
      * @param creditorName of payment order
@@ -302,6 +303,7 @@ public class ExampleProviderService implements ProviderServiceAbs {
     /**
      * Provides url of provider's authorization page
      * designated for authorization session of new Payment Initiation Session
+     * (https://priora.saltedge.com/docs/aspsp/v2/pis#pis-connector_endpoints-payments-create)
      *
      * @param paymentId unique identifier of payment order for which is required authorization
      * @return URL string
@@ -322,6 +324,7 @@ public class ExampleProviderService implements ProviderServiceAbs {
      * Prepare Autorization page url.
      * Host url can be stored as environment parameter
      * Path of Autorization page can be stored in Controller.
+     *
      * Replace fake code.
      *
      * @return Autorization page url string

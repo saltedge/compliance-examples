@@ -33,7 +33,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * Controller is responsible for receiving validation errors of responses which Connector sends to Salt Edge PSD2 Compliance Solution
+ * Controller is responsible for receiving validation errors of responses which Connector sends to Salt Edge PSD2 Compliance Solution.
+ * https://priora.saltedge.com/docs/aspsp/v2/ais#ais-connector_endpoints-errors
  */
 @RestController
 @RequestMapping(ErrorsV2Controller.BASE_PATH)

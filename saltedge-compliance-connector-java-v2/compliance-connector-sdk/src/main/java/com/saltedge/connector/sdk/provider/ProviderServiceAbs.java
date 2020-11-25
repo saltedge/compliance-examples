@@ -71,7 +71,7 @@ public interface ProviderServiceAbs {
 
     /**
      * Return accounts information of user.
-     * Serves accounts endpoint (https://priora.saltedge.com/docs/aspsp/v2/connector_endpoints#accounts-get)
+     * Serves accounts endpoint (https://priora.saltedge.com/docs/aspsp/v2/ais#ais-connector_endpoints-accounts-get)
      *
      * @param userId User identifier on Provider side
      * @return list of Account objects
@@ -81,7 +81,7 @@ public interface ProviderServiceAbs {
 
     /**
      * Provides transactions which belong to an account of user.
-     * Serves transactions endpoint (https://priora.saltedge.com/docs/aspsp/v2/connector_endpoints#accounts-transactions)
+     * Serves transactions endpoint (https://priora.saltedge.com/docs/aspsp/v2/ais#ais-connector_endpoints-accounts-transactions)
      *
      * @param userId User identifier on Provider side
      * @param accountId Account identifier on Provider side
@@ -104,7 +104,7 @@ public interface ProviderServiceAbs {
 
     /**
      * Provides card accounts information of user.
-     * Serves accounts endpoint (https://priora.saltedge.com/docs/aspsp/v2/connector_endpoints#card-accounts-get)
+     * Serves accounts endpoint (https://priora.saltedge.com/docs/aspsp/v2/ais#ais-connector_endpoints-card_accounts-get)
      *
      * @param userId User identifier on Provider side
      * @return list of CardAccount objects
@@ -114,7 +114,7 @@ public interface ProviderServiceAbs {
 
     /**
      * Provides transactions which belong to a card account of user.
-     * Serves transactions endpoint (https://priora.saltedge.com/docs/aspsp/v2/connector_endpoints#card-accounts-transactions)
+     * Serves transactions endpoint (https://priora.saltedge.com/docs/aspsp/v2/ais#ais-connector_endpoints-card_accounts-transactions)
      *
      * @param userId User identifier on Provider side
      * @param accountId Account identifier on Provider side
@@ -137,7 +137,7 @@ public interface ProviderServiceAbs {
 
     /**
      * Initiate a payment order.
-     * Serves payment endpoint (https://priora.saltedge.com/docs/aspsp/v2/connector_endpoints#payments-create)
+     * Serves payment endpoint (https://priora.saltedge.com/docs/aspsp/v2/pis#pis-connector_endpoints-payments)
      *
      * @param creditorIban of payment order
      * @param creditorName of payment order

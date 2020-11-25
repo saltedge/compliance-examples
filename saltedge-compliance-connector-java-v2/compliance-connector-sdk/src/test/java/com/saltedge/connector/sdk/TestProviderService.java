@@ -58,7 +58,7 @@ public class TestProviderService implements ProviderServiceAbs {
     }
 
     @Override
-    public TransactionsPage getTransactionsOfAccount(String userId, String accountId, LocalDate fromDate, LocalDate toDate, String fromId) {
+    public TransactionsPage getTransactionsOfAccount(String userId, String accountId, @NotNull LocalDate fromDate, @NotNull LocalDate toDate, String fromId) {
         return null;
     }
 
@@ -68,7 +68,7 @@ public class TestProviderService implements ProviderServiceAbs {
     }
 
     @Override
-    public CardTransactionsPage getTransactionsOfCardAccount(@NotEmpty String userId, @NotEmpty String accountId, LocalDate fromDate, LocalDate toDate, String fromId) {
+    public CardTransactionsPage getTransactionsOfCardAccount(@NotEmpty String userId, @NotEmpty String accountId, @NotNull LocalDate fromDate, @NotNull LocalDate toDate, String fromId) {
         return null;
     }
 

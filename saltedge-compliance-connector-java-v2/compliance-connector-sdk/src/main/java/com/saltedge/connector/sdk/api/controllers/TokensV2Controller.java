@@ -43,6 +43,7 @@ import javax.validation.Valid;
  * Controller is responsible for implementing authentication and authorization of Customer.
  * Process of token creation starts once Customer grants his consent to TTP.
  * At the end of authorization, Connector should issue an access_token which can be used for further actions.
+ * https://priora.saltedge.com/docs/aspsp/v2/ais#ais-connector_endpoints-tokens
  */
 @RestController
 @RequestMapping(TokensV2Controller.BASE_PATH)

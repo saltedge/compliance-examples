@@ -38,7 +38,7 @@ import javax.validation.Valid;
 /**
  * This controller are responsible for creating payment orders on behalf of Customer via TPP interface.
  * Process of payment creation starts once Customer fills a payment template form and submits the request.
- * https://priora.saltedge.com/docs/aspsp/v2/connector_endpoints#payments
+ * https://priora.saltedge.com/docs/aspsp/v2/pis#pis-connector_endpoints-payments
  */
 @RestController
 @RequestMapping(PaymentsV2Controller.BASE_PATH)

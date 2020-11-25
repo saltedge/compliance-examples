@@ -44,7 +44,7 @@ import javax.validation.constraints.NotNull;
 
 /**
  * This controller is responsible for fetching account information for Account Information Service.
- * https://priora.saltedge.com/docs/aspsp/v2/connector_endpoints#accounts
+ * https://priora.saltedge.com/docs/aspsp/v2/ais#ais-connector_endpoints-accounts
  */
 @RestController
 @RequestMapping(AccountsV2Controller.BASE_PATH)
