@@ -35,6 +35,8 @@ import java.security.PublicKey;
  * Configuration properties from application.yml
  *
  * Example of application.yml
+ * spring:
+ *   profiles: dev
  * connector:
  *   private_key_name: connector_private_prod.pem
  *   private_key_pem: -----BEGIN PRIVATE KEY-----\nXXXXX\n-----END PRIVATE KEY-----

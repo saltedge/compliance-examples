@@ -6,6 +6,7 @@ Add support for the FPS (Faster Payment Service)
 - Add `sort_code` field to the Account.
 - Create ParticipantAddress class
 - Create ProviderServiceAbs.createFPSPayment(...)
+- Add support of private key as string in configuration
 
 ### Change:  
 - Move `name` field from Transaction.ParticipantDetails.Account to the Transaction.ParticipantDetails.

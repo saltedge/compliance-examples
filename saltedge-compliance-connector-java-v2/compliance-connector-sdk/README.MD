@@ -103,7 +103,26 @@ See interface [ProviderServiceAbs.java](src/main/java/com/saltedge/connector/sdk
       
 * `revokeAccountInformationConsent(userId, accessToken)`- Revoke Account information consent associated with userId and accessToken;
   * `userId` unique identifier of Provider's system User (Customer);
-  * `accessToken` unique access identifier;  
+  * `accessToken` unique access identifier;
+  
+### 7. Configuration  
+Configuration properties application.yml  
+```yaml
+spring:
+  profiles: prod
+connector:
+  private_key_name: connector_private_prod.pem
+  private_key_pem: -----BEGIN PRIVATE KEY-----\nXXXXX\n-----END PRIVATE KEY-----
+  priora:
+    app_code: XXXXXXXXXX
+    app_id: YYYYYYYYY
+    app_secret: ZZZZZZZZZZ
+    base_url: https://priora.saltedge.com/
+    public_key_name: priora_public_prod.pem
+```   
+
+Set `private_key_name` or `private_key_pem`.  
+  
   
 ## [Api Documentation](https://priora.banksalt.com/docs/aspsp/v2)
   
