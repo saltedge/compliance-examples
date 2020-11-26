@@ -74,59 +74,14 @@ Add `extra` field (if not exist) for storing extra data from Salt Edge Complianc
   
 ### 5. Create a service designated for providing information to and receiving events from `Salt Edge PSD2 Compliance`:  
 
-This service should create on application class which implement `ProviderServiceAbs` interface and should have `@Service` annotation because it is auto-wired in SDK;  
-See template [ExampleProviderService.java](ExampleProviderService.java)  
-  
-* `getAuthorizationTypes(...)` - return list of registered [Authorization types](https://priora.saltedge.com/providers/settings#authorization_types);
-  
-* `getExchangeRates()` - return list of Exchange rates for today;
-  
-* `getAccountInformationAuthorizationPageUrl(...)` - return URL of authorization page for oAuth authorization of User and consent for accounts information;
-  * **param** `sessionSecret` create consent session secret. should be returned on authentication success or fail.
-  * **param** `userConsentIsRequired` if true then user consent for Account Information (balances, transactions) is required and should be returned on authentication success.
-  * **return** URL string
-
-* `getAccountsOfUser(...)` - return accounts list of User;
-  * **param** `userId` User identifier on Provider side
-  * **return** list of Account objects
-
-* `getTransactionsOfAccount(...)` - provides transactions which belong to an account of user.;
-  * **param** `userId` User identifier on Provider side
-  * **param** `accountId` Account identifier on Provider side
-  * **param** `fromDate` Specifies the starting date, from which transactions should be fetched. This value can be set to 90 days ago by default.
-  * **param** `toDate` Specifies the ending date, to which transactions should be fetched. This value will always be the today’s date.
-  * **param** `fromId` Specifies the ID of page for Pageable request.
-  * **return** page object with list of Transaction objects and next page id
-  
-* `getCardAccountsOfUser(...)` - return list of card accounts of User;
-  * **param** `userId` User identifier on Provider side
-  * **return** list of Card Account objects
-  
-* `getTransactionsOfCardAccount(...)` - provides transactions which belong to a card account of user;
-  * **param** `userId` User identifier on Provider side
-  * **param** `accountId` Account identifier on Provider side
-  * **param** `fromDate` Specifies the starting date, from which transactions should be fetched. This value can be set to 90 days ago by default.
-  * **param** `toDate` Specifies the ending date, to which transactions should be fetched. This value will always be the today’s date.
-  * **param** `fromId` Specifies the ID of page for Pageable request.
-  * **return** page object with list of CardTransaction objects and next page id
-  
-* `createPayment(...)` - create a payment order and return payment id or null
-  * **param** `creditorIban` of payment order
-  * **param** `creditorName` of payment order
-  * **param** `debtorIban` of payment order
-  * **param** `amount` of payment order
-  * **param** `currency` of payment order
-  * **param** `description` of payment order
-  * **param** `extraData` hash object
-  * **return** unique identifier of payment or null if payment not initiated
-  
-* `getPaymentAuthorizationPageUrl(...)` - return URL of authorization page for payment;
-  * **param** `paymentId` unique identifier of payment order for which is required authorization
-  * **return** URL string    
-    
+This service should create on application class which implement `ProviderServiceAbs` interface and should have `@Service` annotation because it is auto-wired in SDK;
+See interface [ProviderServiceAbs.java](src/main/java/com/saltedge/connector/sdk/provider/ProviderServiceAbs.java)  
+See template [ExampleProviderService.java](ExampleProviderService.java)       
     
 ### 6. Use Connector's SDK callback service `ConnectorSDKCallbackService` for callback communication (e.g. notifying SDK about events):
 
+See interface [ProviderServiceAbs.java](src/main/java/com/saltedge/connector/sdk/provider/ConnectorSDKCallbackService.java)
+  
 * `isUserConsentRequired(sessionSecret)` - check if User Consent (Bank Offered Consent) is required for authorization session determined by sessionSecret:
   * `sessionSecret` unique authorization secret code passed to application via `getAccountInformationAuthorizationPageUrl(...)`;
 
@@ -150,23 +105,8 @@ See template [ExampleProviderService.java](ExampleProviderService.java)
   * `userId` unique identifier of Provider's system User (Customer);
   * `accessToken` unique access identifier;  
   
-  
 ## [Api Documentation](https://priora.banksalt.com/docs/aspsp/v2)
   
----
-## For SDK developers  
- 
-### How to upload SDK changes  
-If you are developer and have made changes to this SDK then you will need to deploy that changes.  
-Just pass next steps:  
-  * Update SDK version in `build.gradle`
-  * Run gradle task `uploadShadow`
-  ```bash
-  ./gradlew uploadShadow
-  ```
-  * Commit 
-  * Make a pull-request to repository
-   
 ---
 ## [LICENSE](../LICENSE.txt)
 

@@ -273,28 +273,68 @@ public class ExampleProviderService implements ProviderServiceAbs {
     }
 
     /**
-     * Initiate a payment order.
-     * Serves payment endpoint
-     * (https://priora.saltedge.com/docs/aspsp/v2/pis#pis-connector_endpoints-payments-create)
+     * Initiate a SEPA payment order.
+     * Serves payment endpoint (https://priora.saltedge.com/docs/aspsp/v2/pis#pis-connector_endpoints-payments)
+     * If SEPA payment not supported return null.
      *
-     * @param creditorIban of payment order
-     * @param creditorName of payment order
-     * @param debtorIban of payment order
-     * @param amount of payment order
-     * @param currency of payment order
-     * @param description of payment order
-     * @param extraData hash object
-     * @return unique identifier of payment or null if payment is not initiated
+     * @param paymentProduct The addressed payment product. Allowed values: sepa-credit-transfers, instant-sepa-credit-transfers, target-2-payments, internal-transfer
+     * @param creditorIban International Bank Account Number of creditor
+     * @param creditorBic Bank Identifier Code of creditor
+     * @param creditorName Name of creditor
+     * @param debtorIban International Bank Account Number of debtor
+     * @param debtorBic Bank Identifier Code of debtor
+     * @param amount Amount of payment order
+     * @param currency Currency code of payment order
+     * @param description Description of payment order
+     * @param extraData Extra data of payment order
+     * @return Unique identifier of payment or null if payment is not initiated
      */
-    @Override
-    public String createPayment(
-            @NotEmpty String creditorIban,
-            @NotEmpty String creditorName,
-            @NotEmpty String debtorIban,
-            @NotEmpty String amount,
-            @NotEmpty String currency,
-            String description,
-            @NotNull Map<String, String> extraData
+    String createPayment(
+      @NotEmpty String paymentProduct,
+      @NotEmpty String creditorIban,
+      String creditorBic,
+      @NotEmpty String creditorName,
+      ParticipantAddress creditorAddress,
+      @NotEmpty String debtorIban,
+      String debtorBic,
+      @NotEmpty String amount,
+      @NotEmpty String currency,
+      String description,
+      @NotNull Map<String, String> extraData
+    ) {
+        String fakePaymentId = "1"
+        return fakePaymentId;
+    }
+
+    /**
+     * Initiate a FPS (Faster Payment Service) payment order.
+     * Serves payment endpoint (https://priora.saltedge.com/docs/aspsp/v2/pis#pis-connector_endpoints-payments)
+     * If FPS payment not supported return null.
+     *
+     * @param paymentProduct The addressed payment product. Allowed values: faster-payment-service
+     * @param creditorBban Basic Bank Account Number of creditor
+     * @param creditorSortCode Number code (which is used by British and Irish banks) of creditor.
+     * @param creditorName Name of creditor
+     * @param debtorBban Basic Bank Account Number of debtor
+     * @param debtorSortCode Number code (which is used by British and Irish banks) of debtor.
+     * @param amount Amount of payment order
+     * @param currency Currency code of payment order
+     * @param description Description of payment order
+     * @param extraData Extra data of payment order
+     * @return Unique identifier of payment or null if payment is not initiated
+     */
+    String createFPSPayment(
+      @NotEmpty String paymentProduct,
+      @NotEmpty String creditorBban,
+      @NotEmpty String creditorSortCode,
+      @NotEmpty String creditorName,
+      ParticipantAddress creditorAddress,
+      @NotEmpty String debtorBban,
+      @NotEmpty String debtorSortCode,
+      @NotEmpty String amount,
+      @NotEmpty String currency,
+      String description,
+      @NotNull Map<String, String> extraData
     ) {
         String fakePaymentId = "1"
         return fakePaymentId;
