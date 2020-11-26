@@ -40,7 +40,7 @@ SDK requires next third-party dependencies:
   implementation 'org.springframework.boot:spring-boot-starter-web'
   implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
-  def jjwtVersion = '0.11.1'
+  def jjwtVersion = '0.11.2'
   implementation "io.jsonwebtoken:jjwt-api:$jjwtVersion"
   runtime "io.jsonwebtoken:jjwt-impl:$jjwtVersion", "io.jsonwebtoken:jjwt-jackson:$jjwtVersion"
   implementation "io.jsonwebtoken:jjwt-impl:$jjwtVersion"

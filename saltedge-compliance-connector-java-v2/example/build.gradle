@@ -30,15 +30,15 @@ dependencies {
     implementation 'joda-time:joda-time:2.10.5'
 
     // COMPLIANCE-CONNECTOR-SDK AS LOCAL MODULE
-//    implementation project(':compliance-connector-sdk')
+    implementation project(':compliance-connector-sdk')
 
     // COMPLIANCE-CONNECTOR-SDK AS MAVEN CENTRAL DEPENDENCY
-    implementation 'com.saltedge.connector.sdk:compliance-connector-sdk:2.4.2'
-    def jjwtVersion = '0.11.1'
-    implementation "io.jsonwebtoken:jjwt-api:$jjwtVersion"
-    runtime "io.jsonwebtoken:jjwt-impl:$jjwtVersion", "io.jsonwebtoken:jjwt-jackson:$jjwtVersion"
-    implementation "io.jsonwebtoken:jjwt-impl:$jjwtVersion"
-    implementation "io.jsonwebtoken:jjwt-jackson:$jjwtVersion"
+//    implementation 'com.saltedge.connector.sdk:compliance-connector-sdk:2.4.2'
+//    def jjwtVersion = '0.11.2'
+//    implementation "io.jsonwebtoken:jjwt-api:$jjwtVersion"
+//    runtime "io.jsonwebtoken:jjwt-impl:$jjwtVersion", "io.jsonwebtoken:jjwt-jackson:$jjwtVersion"
+//    implementation "io.jsonwebtoken:jjwt-impl:$jjwtVersion"
+//    implementation "io.jsonwebtoken:jjwt-jackson:$jjwtVersion"
 
     testCompile group: 'junit', name: 'junit', version: '4.12'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'

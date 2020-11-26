@@ -186,33 +186,54 @@ public class ProviderService implements ProviderServiceAbs {
 
     @Override
     public String createPayment(
-            @NotEmpty String creditorIban,
-            @NotEmpty String creditorName,
-            @NotEmpty String debtorIban,
-            @NotEmpty String amount,
-            @NotEmpty String currency,
-            String description,
-            @NotNull Map<String, String> extraData
+      @NotEmpty String paymentProduct,
+      @NotEmpty String creditorIban,
+      String creditorBic,
+      @NotEmpty String creditorName,
+      ParticipantAddress creditorAddress,
+      @NotEmpty String debtorIban,
+      String debtorBic,
+      @NotEmpty String amount,
+      @NotEmpty String currency,
+      String description,
+      @NotNull Map<String, String> extraData
     ) {
         Double amountValue = ConnectorServiceTools.getAmountValue(amount);
         if (amountValue == null) throw new BadRequest.InvalidAttributeValue("amount");
         AccountEntity debtorAccount = ConnectorServiceTools.findDebtorAccount(accountsRepository, debtorIban);
         if (debtorAccount == null) throw new BadRequest.InvalidAttributeValue("debtor account");
         PaymentEntity payment = paymentsRepository.save(
-                new PaymentEntity(
-                        debtorAccount.id,
-                        debtorIban,
-                        creditorIban,
-                        creditorName,
-                        PaymentEntity.Status.PENDING,
-                        amountValue,
-                        currency,
-                        description,
-                        extraData
-                )
+          new PaymentEntity(
+            debtorAccount.id,
+            debtorIban,
+            creditorIban,
+            creditorName,
+            PaymentEntity.Status.PENDING,
+            amountValue,
+            currency,
+            description,
+            extraData
+          )
         );
         paymentsRepository.save(payment);
         return payment.id.toString();
+    }
+
+    @Override
+    public String createFPSPayment(
+      @NotEmpty String paymentProduct,
+      @NotEmpty String creditorBban,
+      @NotEmpty String creditorSortCode,
+      @NotEmpty String creditorName,
+      ParticipantAddress creditorAddress,
+      @NotEmpty String debtorBban,
+      @NotEmpty String debtorSortCode,
+      @NotEmpty String amount,
+      @NotEmpty String currency,
+      String description,
+      @NotNull Map<String, String> extraData
+    ) {
+        return null;
     }
 
     @Override

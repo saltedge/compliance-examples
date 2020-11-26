@@ -2,6 +2,7 @@
 
 ## 2.5.0 (2020-11-26)
 Add support for the FPS (Faster Payment Service)  
+
 ### Add:  
 - Add `sort_code` field to the Account.
 - Create ParticipantAddress class
@@ -10,11 +11,12 @@ Add support for the FPS (Faster Payment Service)
 
 ### Change:  
 - Move `name` field from Transaction.ParticipantDetails.Account to the Transaction.ParticipantDetails.
-- Modified ProviderServiceAbs.createPayment(...)   
+- Modify ProviderServiceAbs.createPayment(...)
+- Update JJWT version up to 0.11.2   
   
 ## 2.4.3 (2020-11-02)
 ### Change:  
-- add targetCompatibility 1.8
+- Add targetCompatibility 1.8
 
 ## 2.4.2 (2020-10-23)
 ### Change:  
