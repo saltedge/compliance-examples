@@ -21,6 +21,7 @@
 package com.saltedge.connector.sdk.api.services;
 
 import com.saltedge.connector.sdk.SDKConstants;
+import com.saltedge.connector.sdk.api.models.PaymentOrder;
 import com.saltedge.connector.sdk.api.models.err.HttpErrorParams;
 import com.saltedge.connector.sdk.api.models.err.NotFound;
 import com.saltedge.connector.sdk.api.models.requests.CreatePaymentRequest;
@@ -38,54 +39,84 @@ import javax.validation.constraints.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Service designated for creating payment orders.
+ * https://priora.saltedge.com/docs/aspsp/v2/pis#pis-connector_endpoints-payments
+ */
 @Service
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class PaymentsService extends BaseService {
-    private static Logger log = LoggerFactory.getLogger(PaymentsService.class);
+  private static Logger log = LoggerFactory.getLogger(PaymentsService.class);
 
-    @Async
-    public void createPayment(@NotNull CreatePaymentRequest paymentRequest) {
-        try {
-            String paymentId = providerService.createPayment(
-                    paymentRequest.paymentOrder.creditorAccount.getIban(),
-                    paymentRequest.paymentOrder.creditorName,
-                    paymentRequest.paymentOrder.debtorAccount.getIban(),
-                    paymentRequest.paymentOrder.instructedAmount.amount,
-                    paymentRequest.paymentOrder.instructedAmount.currency,
-                    paymentRequest.paymentOrder.remittanceInformationUnstructured,
-                    createExtraData(
-                            paymentRequest.sessionSecret,
-                            paymentRequest.returnToUrl,
-                            paymentRequest.paymentOrder.endToEndIdentification
-                    )
-            );
-            if (StringUtils.isEmpty(paymentId)) {
-                callbackService.sendFailCallback(paymentRequest.sessionSecret, new NotFound.PaymentNotCreated());
-            } else {
-                SessionUpdateCallbackRequest params = new SessionUpdateCallbackRequest(
-                        providerService.getPaymentAuthorizationPageUrl(paymentId),
-                        SDKConstants.STATUS_REDIRECT
-                );
-                callbackService.sendUpdateCallback(paymentRequest.sessionSecret, params);
-            }
-        } catch (Exception e) {
-            log.error("PaymentsService.createPayment:", e);
-            RuntimeException failException = (e instanceof HttpErrorParams)
-                    ? (RuntimeException) e : new NotFound.PaymentNotCreated();
-            callbackService.sendFailCallback(paymentRequest.sessionSecret, failException);
-        }
-    }
+  @Async
+  public void createPayment(@NotNull CreatePaymentRequest paymentRequest) {
+    try {
+      PaymentOrder order = paymentRequest.getPaymentOrder();
+      Map<String, String> extraData = createExtraData(
+        paymentRequest.sessionSecret,
+        paymentRequest.returnToUrl,
+        order.endToEndIdentification
+      );
 
-    private Map<String, String> createExtraData(
-            @NotEmpty String sessionSecret,
-            String returnToUrl,
-            String endToEndIdentification) {
-        HashMap<String, String> result = new HashMap<>();
-        result.put(SDKConstants.KEY_SESSION_SECRET, sessionSecret);
-        if (!StringUtils.isEmpty(returnToUrl)) result.put(SDKConstants.KEY_RETURN_TO_URL, returnToUrl);
-        if (!StringUtils.isEmpty(endToEndIdentification)) {
-            result.put(SDKConstants.KEY_END_TO_END_IDENTIFICATION, endToEndIdentification);
-        }
-        return result;
+      String paymentId;
+      if (paymentRequest.getPaymentProduct().equals("faster-payment-service")) {
+        paymentId = providerService.createFPSPayment(
+          paymentRequest.getPaymentProduct(),
+          order.getCreditorAccount().getBban(),
+          order.getCreditorAccount().getSortCode(),
+          order.getCreditorName(),
+          order.getCreditorAddress(),
+          order.getDebtorAccount().getBban(),
+          order.getDebtorAccount().getSortCode(),
+          order.getInstructedAmount().getAmount(),
+          order.getInstructedAmount().getCurrency(),
+          order.getRemittanceInformationUnstructured(),
+          extraData
+        );
+      } else {
+        paymentId = providerService.createPayment(
+          paymentRequest.getPaymentProduct(),
+          order.getCreditorAccount().getIban(),
+          order.getCreditorAccount().getBic(),
+          order.getCreditorName(),
+          order.getCreditorAddress(),
+          order.getDebtorAccount().getIban(),
+          order.getDebtorAccount().getBic(),
+          order.getInstructedAmount().getAmount(),
+          order.getInstructedAmount().getCurrency(),
+          order.getRemittanceInformationUnstructured(),
+          extraData
+        );
+      }
+
+      if (StringUtils.isEmpty(paymentId)) {
+        callbackService.sendFailCallback(paymentRequest.sessionSecret, new NotFound.PaymentNotCreated());
+      } else {
+        SessionUpdateCallbackRequest params = new SessionUpdateCallbackRequest(
+          providerService.getPaymentAuthorizationPageUrl(paymentId),
+          SDKConstants.STATUS_REDIRECT
+        );
+        callbackService.sendUpdateCallback(paymentRequest.sessionSecret, params);
+      }
+    } catch (Exception e) {
+      log.error("PaymentsService.createPayment:", e);
+      RuntimeException failException = (e instanceof HttpErrorParams)
+        ? (RuntimeException) e : new NotFound.PaymentNotCreated();
+      callbackService.sendFailCallback(paymentRequest.sessionSecret, failException);
     }
+  }
+
+  private Map<String, String> createExtraData(
+    @NotEmpty String sessionSecret,
+    String returnToUrl,
+    String endToEndIdentification
+  ) {
+    HashMap<String, String> result = new HashMap<>();
+    result.put(SDKConstants.KEY_SESSION_SECRET, sessionSecret);
+    if (!StringUtils.isEmpty(returnToUrl)) result.put(SDKConstants.KEY_RETURN_TO_URL, returnToUrl);
+    if (!StringUtils.isEmpty(endToEndIdentification)) {
+      result.put(SDKConstants.KEY_END_TO_END_IDENTIFICATION, endToEndIdentification);
+    }
+    return result;
+  }
 }

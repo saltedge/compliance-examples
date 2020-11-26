@@ -5,8 +5,8 @@ Is designated to demonstrate (simulate) communication between ASPSP/Bank and TPP
 _This application is just a Proof Of Concept._  
 [See how to setup application](example/README.MD).  
   
-This codebase contains SDK module which is the set of tools for simplification of communication between ASPSP/Bank and Priora PSD2 Compliance Solution.    
-The SDK module implements the Priora Connector v2 API compatible with **Berlin Group NextGenPSD2 XS2A API**.
+This codebase contains SDK module which is the set of tools for simplification of communication between ASPSP/Bank and Salt Edge PSD2 Compliance Solution.    
+The SDK module implements the Salt Edge PSD2 Compliance v2 API compatible with **Berlin Group NextGenPSD2 XS2A API**.
 [See how to add SDK to your application](compliance-connector-sdk/README.MD)  
   
 > `Priora` is the alias of Salt Edge PSD2 Compliance Solution

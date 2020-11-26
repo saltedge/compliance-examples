@@ -27,26 +27,89 @@ import static com.saltedge.connector.sdk.SDKConstants.KEY_ACCOUNT;
 import static com.saltedge.connector.sdk.SDKConstants.KEY_NAME;
 
 /**
- * Creditor/Debtor details.
+ * Creditor/Debtor address.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ParticipantDetails {
-  /**
-   * Name of the creditor if a "Debited" transaction or name of the debtor if a "Credited" transaction. Optional field.
-   */
-  @JsonProperty(KEY_NAME)
-  public String name;
+public class ParticipantAddress {
 
   /**
-   * Wrapper of creditor/debtor account data
+   * Street of Creditor/Debtor
    */
-  @JsonProperty(KEY_ACCOUNT)
-  public ParticipantAccount account;
+  @JsonProperty("street_name")
+  private String street;
 
-  public ParticipantDetails() {
+  /**
+   * Building number of Creditor/Debtor
+   */
+  @JsonProperty("building_number")
+  private String buildingNumber;
+
+  /**
+   * City of Creditor/Debtor
+   */
+  @JsonProperty("town_name")
+  private String town;
+
+  /**
+   * Postal code of Creditor/Debtor
+   */
+  @JsonProperty("post_code")
+  private String postCode;
+
+  /**
+   * Country code of Creditor/Debtor
+   */
+  @JsonProperty("country")
+  private String country;
+
+  public ParticipantAddress() {
   }
 
-  public ParticipantDetails(ParticipantAccount account) {
-    this.account = account;
+  public ParticipantAddress(String street, String buildingNumber, String town, String postCode, String country) {
+    this.street = street;
+    this.buildingNumber = buildingNumber;
+    this.town = town;
+    this.postCode = postCode;
+    this.country = country;
+  }
+
+  public String getStreet() {
+    return street;
+  }
+
+  public void setStreet(String street) {
+    this.street = street;
+  }
+
+  public String getBuildingNumber() {
+    return buildingNumber;
+  }
+
+  public void setBuildingNumber(String buildingNumber) {
+    this.buildingNumber = buildingNumber;
+  }
+
+  public String getTown() {
+    return town;
+  }
+
+  public void setTown(String town) {
+    this.town = town;
+  }
+
+  public String getPostCode() {
+    return postCode;
+  }
+
+  public void setPostCode(String postCode) {
+    this.postCode = postCode;
+  }
+
+  public String getCountry() {
+    return country;
+  }
+
+  public void setCountry(String country) {
+    this.country = country;
   }
 }

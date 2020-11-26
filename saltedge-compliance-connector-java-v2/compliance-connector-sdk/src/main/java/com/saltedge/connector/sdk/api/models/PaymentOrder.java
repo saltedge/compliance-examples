@@ -36,63 +36,119 @@ import static com.saltedge.connector.sdk.SDKConstants.KEY_INSTRUCTED_AMOUNT;
  */
 @JsonIgnoreProperties
 public class PaymentOrder {
-    /**
-     * Creditor data.
-     */
-    @JsonProperty("creditor_account")
-    @RequestAccountConstraint
-    public Account creditorAccount;
+  /**
+   * Creditor account data.
+   */
+  @JsonProperty("creditor_account")
+  @RequestAccountConstraint
+  public Account creditorAccount;
 
-    /**
-     * Creditor full name.
-     */
-    @JsonProperty("creditor_name")
-    @NotEmpty
-    public String creditorName;
+  /**
+   * Creditor full name.
+   */
+  @JsonProperty("creditor_name")
+  @NotEmpty
+  public String creditorName;
 
-    /**
-     * Debtor data.
-     */
-    @JsonProperty("debtor_account")
-    @RequestAccountConstraint
-    public Account debtorAccount;
+  /**
+   * Creditor address.
+   */
+  @JsonProperty("creditor_address")
+  public ParticipantAddress creditorAddress;
 
-    /**
-     * Amount and currency.
-     */
-    @JsonProperty(KEY_INSTRUCTED_AMOUNT)
-    @NotNull
-    @Valid
-    public Amount instructedAmount;
+  /**
+   * Debtor account data.
+   */
+  @JsonProperty("debtor_account")
+  @RequestAccountConstraint
+  public Account debtorAccount;
 
-    /**
-     * Payment identifier on TPP side.
-     */
-    @JsonProperty(KEY_END_TO_END_IDENTIFICATION)
-    public String endToEndIdentification;
+  /**
+   * Amount and currency.
+   */
+  @JsonProperty(KEY_INSTRUCTED_AMOUNT)
+  @NotNull
+  @Valid
+  public Amount instructedAmount;
 
-    /**
-     * Payment description.
-     */
-    @JsonProperty("remittance_information_unstructured")
-    public String remittanceInformationUnstructured;
+  /**
+   * Payment identifier on TPP side.
+   */
+  @JsonProperty(KEY_END_TO_END_IDENTIFICATION)
+  public String endToEndIdentification;
 
-    public PaymentOrder() {
-    }
+  /**
+   * Payment description.
+   */
+  @JsonProperty("remittance_information_unstructured")
+  public String remittanceInformationUnstructured;
 
-    public PaymentOrder(
-            @NotNull Account creditorAccount,
-            @NotEmpty String creditorName,
-            @NotNull Account debtorAccount,
-            @NotNull Amount instructedAmount,
-            String endToEndIdentification,
-            String remittanceInformationUnstructured
-    ) {
-        this.creditorAccount = creditorAccount;
-        this.creditorName = creditorName;
-        this.debtorAccount = debtorAccount;
-        this.instructedAmount = instructedAmount;
-        this.endToEndIdentification = endToEndIdentification;
-        this.remittanceInformationUnstructured = remittanceInformationUnstructured;
-    }
+  public PaymentOrder() {
+  }
+
+  public PaymentOrder(Account creditorAccount, @NotEmpty String creditorName, ParticipantAddress creditorAddress, Account debtorAccount, @NotNull @Valid Amount instructedAmount, String endToEndIdentification, String remittanceInformationUnstructured) {
+    this.creditorAccount = creditorAccount;
+    this.creditorName = creditorName;
+    this.creditorAddress = creditorAddress;
+    this.debtorAccount = debtorAccount;
+    this.instructedAmount = instructedAmount;
+    this.endToEndIdentification = endToEndIdentification;
+    this.remittanceInformationUnstructured = remittanceInformationUnstructured;
+  }
+
+  public Account getCreditorAccount() {
+    return creditorAccount;
+  }
+
+  public void setCreditorAccount(Account creditorAccount) {
+    this.creditorAccount = creditorAccount;
+  }
+
+  public String getCreditorName() {
+    return creditorName;
+  }
+
+  public void setCreditorName(String creditorName) {
+    this.creditorName = creditorName;
+  }
+
+  public ParticipantAddress getCreditorAddress() {
+    return creditorAddress;
+  }
+
+  public void setCreditorAddress(ParticipantAddress creditorAddress) {
+    this.creditorAddress = creditorAddress;
+  }
+
+  public Account getDebtorAccount() {
+    return debtorAccount;
+  }
+
+  public void setDebtorAccount(Account debtorAccount) {
+    this.debtorAccount = debtorAccount;
+  }
+
+  public Amount getInstructedAmount() {
+    return instructedAmount;
+  }
+
+  public void setInstructedAmount(Amount instructedAmount) {
+    this.instructedAmount = instructedAmount;
+  }
+
+  public String getEndToEndIdentification() {
+    return endToEndIdentification;
+  }
+
+  public void setEndToEndIdentification(String endToEndIdentification) {
+    this.endToEndIdentification = endToEndIdentification;
+  }
+
+  public String getRemittanceInformationUnstructured() {
+    return remittanceInformationUnstructured;
+  }
+
+  public void setRemittanceInformationUnstructured(String remittanceInformationUnstructured) {
+    this.remittanceInformationUnstructured = remittanceInformationUnstructured;
+  }
 }

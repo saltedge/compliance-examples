@@ -33,25 +33,41 @@ import javax.validation.constraints.NotEmpty;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties
 public class Amount {
-    /**
-     * Amount value.
-     */
-    @JsonProperty(SDKConstants.KEY_AMOUNT)
-    @NotEmpty
-    public String amount;
+  /**
+   * Amount value.
+   */
+  @JsonProperty(SDKConstants.KEY_AMOUNT)
+  @NotEmpty
+  public String amount;
 
-    /**
-     * Currency code of balance (ISO 4217).
-     */
-    @JsonProperty(SDKConstants.KEY_CURRENCY)
-    @NotEmpty
-    public String currency;
+  /**
+   * Currency code of balance (ISO 4217).
+   */
+  @JsonProperty(SDKConstants.KEY_CURRENCY)
+  @NotEmpty
+  public String currency;
 
-    public Amount() {
-    }
+  public Amount() {
+  }
 
-    public Amount(String amount, String currency) {
-        this.amount = amount;
-        this.currency = currency;
-    }
+  public Amount(String amount, String currency) {
+    this.amount = amount;
+    this.currency = currency;
+  }
+
+  public String getAmount() {
+    return amount;
+  }
+
+  public void setAmount(String amount) {
+    this.amount = amount;
+  }
+
+  public String getCurrency() {
+    return currency;
+  }
+
+  public void setCurrency(String currency) {
+    this.currency = currency;
+  }
 }

@@ -30,6 +30,7 @@ import com.saltedge.connector.sdk.api.models.requests.CreatePaymentRequest;
 import com.saltedge.connector.sdk.api.models.requests.DefaultRequest;
 import com.saltedge.connector.sdk.api.models.responses.ErrorResponse;
 import com.saltedge.connector.sdk.config.ApplicationProperties;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -53,109 +54,114 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class PaymentsV2ControllerIntegrationTests extends ControllerIntegrationTests {
 
-    @Before
-    public void setUp() {
-        seedTokensRepository();
-        callbackService.applicationProperties = new ApplicationProperties();
-    }
+  @Before
+  public void setUp() {
+    seedTokensRepository();
+    callbackService.applicationProperties = new ApplicationProperties();
+  }
 
-    @Test
-    public void givenHeaderWithValidAuthorization_whenCreatePayment_thenReturnOK() {
-        // given
-        Account creditorAccount = new Account();
-        creditorAccount.setIban("iban1");
-        Account debtorAccount = new Account();
-        debtorAccount.setIban("iban2");
-        CreatePaymentRequest request = new CreatePaymentRequest(
-                "appName",
-                "providerCode",
-                "returnToUrl",
-                new PaymentOrder(
-                        creditorAccount,
-                        "creditorName",
-                        debtorAccount,
-                        new Amount("1.0", "USD"),
-                        "endToEndIdentification",
-                        "remittanceInformationUnstructured"
-                )
-        );
-        request.sessionSecret = "sessionSecret";
-        String auth = TestTools.createAuthorizationHeaderValue(request, TestTools.getInstance().getRsaPrivateKey());
-        LinkedMultiValueMap<String, String> headers = createHeaders();
-        headers.add(SDKConstants.HEADER_AUTHORIZATION, auth);
+  @Test
+  public void givenHeaderWithValidAuthorization_whenCreatePayment_thenReturnOK() {
+    // given
+    Account creditorAccount = new Account();
+    creditorAccount.setIban("iban1");
+    Account debtorAccount = new Account();
+    debtorAccount.setIban("iban2");
+    CreatePaymentRequest request = new CreatePaymentRequest(
+      "appName",
+      "providerCode",
+      "returnToUrl",
+      new PaymentOrder(
+        creditorAccount,
+        "creditorName",
+        null,
+        debtorAccount,
+        new Amount("1.0", "USD"),
+        "endToEndIdentification",
+        "remittanceInformationUnstructured"
+      ),
+      "sepa-credit-transfers"
+    );
+    request.sessionSecret = "sessionSecret";
+    String auth = TestTools.createAuthorizationHeaderValue(request, TestTools.getInstance().getRsaPrivateKey());
+    LinkedMultiValueMap<String, String> headers = createHeaders();
+    headers.add(SDKConstants.HEADER_AUTHORIZATION, auth);
 
-        // when
-        ResponseEntity<EmptyJsonModel> response = testRestTemplate.exchange(
-                createURLWithPort(PaymentsV2Controller.BASE_PATH),
-                HttpMethod.POST,
-                new HttpEntity<>(headers),
-                EmptyJsonModel.class
-        );
+    // when
+    ResponseEntity<EmptyJsonModel> response = testRestTemplate.exchange(
+      createURLWithPort(PaymentsV2Controller.BASE_PATH),
+      HttpMethod.POST,
+      new HttpEntity<>(headers),
+      EmptyJsonModel.class
+    );
 
-        // then
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    }
+    // then
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+  }
 
-    @Test
-    public void givenHeaderWithInvalidPayload_whenCreatePayment_thenReturnBadRequestError() {
-        // given
-        CreatePaymentRequest request = new CreatePaymentRequest();
-        request.sessionSecret = "sessionSecret";
-        String auth = TestTools.createAuthorizationHeaderValue(request, TestTools.getInstance().getRsaPrivateKey());
-        LinkedMultiValueMap<String, String> headers = createHeaders();
-        headers.add(SDKConstants.HEADER_AUTHORIZATION, auth);
+  @Test
+  public void givenHeaderWithInvalidPayload_whenCreatePayment_thenReturnBadRequestError() {
+    // given
+    CreatePaymentRequest request = new CreatePaymentRequest();
+    request.sessionSecret = "sessionSecret";
+    String auth = TestTools.createAuthorizationHeaderValue(request, TestTools.getInstance().getRsaPrivateKey());
+    LinkedMultiValueMap<String, String> headers = createHeaders();
+    headers.add(SDKConstants.HEADER_AUTHORIZATION, auth);
 
-        // when
-        ResponseEntity<ErrorResponse> response = testRestTemplate.exchange(
-                createURLWithPort(PaymentsV2Controller.BASE_PATH),
-                HttpMethod.POST,
-                new HttpEntity<>(headers),
-                ErrorResponse.class
-        );
+    // when
+    ResponseEntity<ErrorResponse> response = testRestTemplate.exchange(
+      createURLWithPort(PaymentsV2Controller.BASE_PATH),
+      HttpMethod.POST,
+      new HttpEntity<>(headers),
+      ErrorResponse.class
+    );
 
-        // then
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-        assertThat(response.getBody().errorClass).isEqualTo("WrongRequestFormat");
-    }
+    // then
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    Assert.assertNotNull(response.getBody());
+    assertThat(response.getBody().errorClass).isEqualTo("WrongRequestFormat");
+  }
 
-    @Test
-    public void givenHeaderWithExpiredSignature_whenMakeRequest_thenReturnJWTExpiredSignature() {
-        // given
-        String auth = TestTools.createAuthorizationHeaderValue(
-                new DefaultRequest("sessionSecret"),
-                TestTools.getInstance().getRsaPrivateKey(),
-                Instant.now().minus(1, ChronoUnit.MINUTES)
-        );
-        LinkedMultiValueMap<String, String> headers = createHeaders();
-        headers.add(SDKConstants.HEADER_AUTHORIZATION, auth);
+  @Test
+  public void givenHeaderWithExpiredSignature_whenMakeRequest_thenReturnJWTExpiredSignature() {
+    // given
+    String auth = TestTools.createAuthorizationHeaderValue(
+      new DefaultRequest("sessionSecret"),
+      TestTools.getInstance().getRsaPrivateKey(),
+      Instant.now().minus(1, ChronoUnit.MINUTES)
+    );
+    LinkedMultiValueMap<String, String> headers = createHeaders();
+    headers.add(SDKConstants.HEADER_AUTHORIZATION, auth);
 
-        // when
-        ResponseEntity<ErrorResponse> response = doCreatePaymentRequestForError(headers);
+    // when
+    ResponseEntity<ErrorResponse> response = doCreatePaymentRequestForError(headers);
 
-        // then
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-        assertThat(response.getBody().errorClass).isEqualTo("JWTExpiredSignature");
-        assertThat(response.getBody().errorMessage).isEqualTo("JWT Expired Signature.");
-    }
+    // then
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    Assert.assertNotNull(response.getBody());
+    assertThat(response.getBody().errorClass).isEqualTo("JWTExpiredSignature");
+    assertThat(response.getBody().errorMessage).isEqualTo("JWT Expired Signature.");
+  }
 
-    @Test
-    public void givenHeaderWithInvalidAuthorizationsHeader_whenMakeRequest_thenReturnJWTDecodeError() {
-        // given
-        LinkedMultiValueMap<String, String> headers = createHeaders();
-        headers.add(SDKConstants.HEADER_AUTHORIZATION, "Bearer ABCDEFGH1234567890");
+  @Test
+  public void givenHeaderWithInvalidAuthorizationsHeader_whenMakeRequest_thenReturnJWTDecodeError() {
+    // given
+    LinkedMultiValueMap<String, String> headers = createHeaders();
+    headers.add(SDKConstants.HEADER_AUTHORIZATION, "Bearer ABCDEFGH1234567890");
 
-        // when
-        ResponseEntity<ErrorResponse> response = doCreatePaymentRequestForError(headers);
+    // when
+    ResponseEntity<ErrorResponse> response = doCreatePaymentRequestForError(headers);
 
-        // then
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-        assertThat(response.getBody().errorClass).isEqualTo("JWTDecodeError");
-        assertThat(response.getBody().errorMessage).isEqualTo("JWT strings must contain exactly 2 period characters. Found: 0");
-    }
+    // then
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    Assert.assertNotNull(response.getBody());
+    assertThat(response.getBody().errorClass).isEqualTo("JWTDecodeError");
+    assertThat(response.getBody().errorMessage).isEqualTo("JWT strings must contain exactly 2 period characters. Found: 0");
+  }
 
-    private ResponseEntity<ErrorResponse> doCreatePaymentRequestForError(LinkedMultiValueMap<String, String> headers) {
-        return testRestTemplate.exchange(
-                createURLWithPort(PaymentsV2Controller.BASE_PATH), HttpMethod.POST, new HttpEntity<>(headers), ErrorResponse.class
-        );
-    }
+  private ResponseEntity<ErrorResponse> doCreatePaymentRequestForError(LinkedMultiValueMap<String, String> headers) {
+    return testRestTemplate.exchange(
+      createURLWithPort(PaymentsV2Controller.BASE_PATH), HttpMethod.POST, new HttpEntity<>(headers), ErrorResponse.class
+    );
+  }
 }

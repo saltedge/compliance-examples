@@ -73,7 +73,12 @@ public class TestProviderService implements ProviderServiceAbs {
     }
 
     @Override
-    public String createPayment(@NotEmpty String creditorIban, @NotEmpty String creditorName, @NotEmpty String debtorIban, @NotEmpty String amount, @NotEmpty String currency, String description, @NotNull Map<String, String> extraData) {
+    public String createPayment(@NotEmpty String paymentProduct, @NotEmpty String creditorIban, String creditorBic, @NotEmpty String creditorName, ParticipantAddress creditorAddress, @NotEmpty String debtorIban, String debtorBic, @NotEmpty String amount, @NotEmpty String currency, String description, @NotNull Map<String, String> extraData) {
+        return null;
+    }
+
+    @Override
+    public String createFPSPayment(@NotEmpty String paymentProduct, @NotEmpty String creditorBban, @NotEmpty String creditorSortCode, @NotEmpty String creditorName, ParticipantAddress creditorAddress, @NotEmpty String debtorBban, @NotEmpty String debtorSortCode, @NotEmpty String amount, @NotEmpty String currency, String description, @NotNull Map<String, String> extraData) {
         return null;
     }
 

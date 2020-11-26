@@ -1,5 +1,16 @@
 # Salt Edge Compliance Connector SDK Changelog
 
+## 2.5.0 (2020-11-26)
+Add support for the FPS (Faster Payment Service)  
+### Add:  
+- Add `sort_code` field to the Account.
+- Create ParticipantAddress class
+- Create ProviderServiceAbs.createFPSPayment(...)
+
+### Change:  
+- Move `name` field from Transaction.ParticipantDetails.Account to the Transaction.ParticipantDetails.
+- Modified ProviderServiceAbs.createPayment(...)   
+  
 ## 2.4.3 (2020-11-02)
 ### Change:  
 - add targetCompatibility 1.8
