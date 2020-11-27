@@ -3,9 +3,9 @@
   
 This codebase contains SDK module built on Spring Boot Framework, 
 which is the set of tools for simplification of communication between ASPSP/Bank and Salt Edge PSD2 Compliance Solution.    
-The SDK module implements the Salt Edge PSD2 Connector v2 API compatible with **Berlin Group NextGenPSD2 XS2A API**.
+The SDK module implements the Salt Edge PSD2 Connector v2 API compatible with **Berlin Group NextGenPSD2 XS2A API**.  
 [See how to add SDK](#SDK-Integration)  
-**Last stable version of SDK library is "2.4.1".**   
+When you migrate to the new version of Salt Edge Compliance Connector SDK, please read carefully [CHANGELOG](../SDK_CHANGELOG.MD) since many changes have been made.  
   
 ## Application Requirements
   
@@ -20,36 +20,39 @@ Target application should be compatible with [following requirements](#Applicati
 
 ### 1. Add SDK to target application.
 
-#### Add as project module
-  1. Fork this repository
-  2. In IntelliJ IDE Import module `File/New/Import Module...` in your project
-  3. Build and run application on target device or emulator
-
-#### Add as Maven dependency  
+#### Add as Maven dependency
+Find last stable version of SDK in ![Maven Central](https://mvnrepository.com/artifact/com.saltedge.connector.sdk/compliance-connector-sdk).  
+    
 Add Maven Central repository to application's build.gradle
 ```groovy
  repositories {
     mavenCentral()
   }
 ```  
-Add Connector SDK dependency to application build.gradle
+Add SDK dependency to `build.gradle` of application  
 ```groovy
   implementation 'com.saltedge.connector.sdk:compliance-connector-sdk:x.x.x'
 ```  
+
 SDK requires next third-party dependencies:  
 ```groovy
   implementation 'org.springframework.boot:spring-boot-starter'
   implementation 'org.springframework.boot:spring-boot-starter-web'
   implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
-  def jjwtVersion = '0.11.1'
+  def jjwtVersion = '0.11.2'
   implementation "io.jsonwebtoken:jjwt-api:$jjwtVersion"
   runtime "io.jsonwebtoken:jjwt-impl:$jjwtVersion", "io.jsonwebtoken:jjwt-jackson:$jjwtVersion"
   implementation "io.jsonwebtoken:jjwt-impl:$jjwtVersion"
   implementation "io.jsonwebtoken:jjwt-jackson:$jjwtVersion"
 ```  
     
-### 2. Setup application as [described before](#example-application-quick-setup).
+#### Add as project module
+  1. Fork this repository
+  2. In IntelliJ IDE Import module `File/New/Import Module...` in your project
+  3. Build and run application on target device or emulator
+    
+### 2. Setup application as [described before](../example/README.MD#example-application-quick-setup).
 
 ### 3. Add SDK package (`com.saltedge.connector.sdk`) to component scan annotation in Application class.
 
@@ -62,66 +65,23 @@ SDK requires next third-party dependencies:
   }
 ```
     
-### 4. Add `extra` field to `Payment` entity of application.
+### 4. Store extra data of payment.
   
 The Connector will pass extra data on Payment creation and will require it back at the end of the Payment authentication.
-Add `extra` field (if not exist) for storing extra data from Salt Edge Compliance solution (e.g. `prioraPaymentId`).  
+Add `extra` field (if not exist) for storing extra data from Salt Edge Compliance solution (e.g. `prioraPaymentId`) to `Payment` entity of application.  
+  
+**_This solution of storing of extra payment data is not mandatory and can be implemented in another convenient way._**     
   
 ### 5. Create a service designated for providing information to and receiving events from `Salt Edge PSD2 Compliance`:  
 
-This service should create on application class which implement `ProviderServiceAbs` interface and should have `@Service` annotation because it is auto-wired in SDK;  
-See template [ExampleProviderService.java](ExampleProviderService.java)  
-  
-* `getAuthorizationTypes(...)` - return list of registered [Authorization types](https://priora.saltedge.com/providers/settings#authorization_types);
-  
-* `getExchangeRates()` - return list of Exchange rates for today;
-  
-* `getAccountInformationAuthorizationPageUrl(...)` - return URL of authorization page for oAuth authorization of User and consent for accounts information;
-  * **param** `sessionSecret` create consent session secret. should be returned on authentication success or fail.
-  * **param** `userConsentIsRequired` if true then user consent for Account Information (balances, transactions) is required and should be returned on authentication success.
-  * **return** URL string
-
-* `getAccountsOfUser(...)` - return accounts list of User;
-  * **param** `userId` User identifier on Provider side
-  * **return** list of Account objects
-
-* `getTransactionsOfAccount(...)` - provides transactions which belong to an account of user.;
-  * **param** `userId` User identifier on Provider side
-  * **param** `accountId` Account identifier on Provider side
-  * **param** `fromDate` Specifies the starting date, from which transactions should be fetched. This value can be set to 90 days ago by default.
-  * **param** `toDate` Specifies the ending date, to which transactions should be fetched. This value will always be the today’s date.
-  * **param** `fromId` Specifies the ID of page for Pageable request.
-  * **return** page object with list of Transaction objects and next page id
-  
-* `getCardAccountsOfUser(...)` - return list of card accounts of User;
-  * **param** `userId` User identifier on Provider side
-  * **return** list of Card Account objects
-  
-* `getTransactionsOfCardAccount(...)` - provides transactions which belong to a card account of user;
-  * **param** `userId` User identifier on Provider side
-  * **param** `accountId` Account identifier on Provider side
-  * **param** `fromDate` Specifies the starting date, from which transactions should be fetched. This value can be set to 90 days ago by default.
-  * **param** `toDate` Specifies the ending date, to which transactions should be fetched. This value will always be the today’s date.
-  * **param** `fromId` Specifies the ID of page for Pageable request.
-  * **return** page object with list of CardTransaction objects and next page id
-  
-* `createPayment(...)` - create a payment order and return payment id or null
-  * **param** `creditorIban` of payment order
-  * **param** `creditorName` of payment order
-  * **param** `debtorIban` of payment order
-  * **param** `amount` of payment order
-  * **param** `currency` of payment order
-  * **param** `description` of payment order
-  * **param** `extraData` hash object
-  * **return** unique identifier of payment or null if payment is not initiated
-  
-* `getPaymentAuthorizationPageUrl(...)` - return URL of authorization page for payment;
-  * **param** `paymentId` unique identifier of payment order for which is required authorization
-  * **return** URL string    
-    
+This service should create on application class which implement `ProviderServiceAbs` interface and should have `@Service` annotation because it is auto-wired in SDK;
+See interface [ProviderServiceAbs.java](src/main/java/com/saltedge/connector/sdk/provider/ProviderServiceAbs.java)  
+See template [ExampleProviderService.java](ExampleProviderService.java)       
     
 ### 6. Use Connector's SDK callback service `ConnectorSDKCallbackService` for callback communication (e.g. notifying SDK about events):
 
+See interface [ProviderServiceAbs.java](src/main/java/com/saltedge/connector/sdk/provider/ConnectorSDKCallbackService.java)
+  
 * `isUserConsentRequired(sessionSecret)` - check if User Consent (Bank Offered Consent) is required for authorization session determined by sessionSecret:
   * `sessionSecret` unique authorization secret code passed to application via `getAccountInformationAuthorizationPageUrl(...)`;
 
@@ -143,27 +103,31 @@ See template [ExampleProviderService.java](ExampleProviderService.java)
       
 * `revokeAccountInformationConsent(userId, accessToken)`- Revoke Account information consent associated with userId and accessToken;
   * `userId` unique identifier of Provider's system User (Customer);
-  * `accessToken` unique access identifier;  
+  * `accessToken` unique access identifier;
+  
+### 7. Configuration  
+Configuration properties application.yml  
+```yaml
+spring:
+  profiles: prod
+connector:
+  private_key_name: connector_private_prod.pem
+  private_key_pem: -----BEGIN PRIVATE KEY-----\nXXXXX\n-----END PRIVATE KEY-----
+  priora:
+    app_code: XXXXXXXXXX
+    app_id: YYYYYYYYY
+    app_secret: ZZZZZZZZZZ
+    base_url: https://priora.saltedge.com/
+    public_key_name: priora_public_prod.pem
+```   
+
+Set `private_key_name` or `private_key_pem`.  
   
   
 ## [Api Documentation](https://priora.banksalt.com/docs/aspsp/v2)
   
 ---
-## For SDK developers  
- 
-### How to upload SDK changes  
-If you are developer and have made changes to this SDK then you will need to deploy that changes.  
-Just pass next steps:  
-  * Update SDK version in `build.gradle`
-  * Run gradle task `uploadShadow`
-  ```bash
-  ./gradlew uploadShadow
-  ```
-  * Commit 
-  * Make a pull-request to repository
-   
----
 ## [LICENSE](../LICENSE.txt)
 
 ---
-Copyright © 2020 Salt Edge. https://www.saltedge.com
+Copyright © 2020 Salt Edge. www.saltedge.com

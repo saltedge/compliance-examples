@@ -3,10 +3,10 @@
 This codebase is a full-stack application built on Spring Boot Framework.  
 Is designated to demonstrate (simulate) communication between ASPSP/Bank and TPP/Client.  
 _This application is just a Proof Of Concept._  
-[See how to setup application](example/README.MD).
+[See how to setup application](example/README.MD).  
   
-This codebase contains SDK module which is the set of tools for simplification of communication between ASPSP/Bank and Priora PSD2 Compliance Solution.    
-The SDK module implements the Priora Connector v2 API compatible with **Berlin Group NextGenPSD2 XS2A API**.
+This codebase contains SDK module which is the set of tools for simplification of communication between ASPSP/Bank and Salt Edge PSD2 Compliance Solution.    
+The SDK module implements the Salt Edge PSD2 Compliance v2 API compatible with **Berlin Group NextGenPSD2 XS2A API**.
 [See how to add SDK to your application](compliance-connector-sdk/README.MD)  
   
 > `Priora` is the alias of Salt Edge PSD2 Compliance Solution
@@ -25,8 +25,6 @@ The SDK module implements the Priora Connector v2 API compatible with **Berlin G
   
 ## [How To Integrate Connector SDK In Your Application](compliance-connector-sdk/README.MD)  
   
----
 ## [LICENSE](LICENSE.txt)
-
 ---
-Copyright © 2020 Salt Edge. https://www.saltedge.com
+Copyright © 2020 Salt Edge. www.saltedge.com

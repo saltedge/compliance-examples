@@ -64,7 +64,7 @@ public class CreateTokenService extends TokensBaseService {
                 if (AuthMode.OAUTH == type.mode) {
                     oAuthAuthorize(token);
                 } else {
-                    throw new BadRequest.InvalidAuthorizationType();//TODO remove when embedded type will be supported by Priora Compliance
+                    throw new BadRequest.InvalidAuthorizationType();//TODO remove when embedded type will be supported by Salt Edge PSD2 Compliance
 //                    embeddedAuthorize(...);
                 }
             }
@@ -109,6 +109,6 @@ public class CreateTokenService extends TokensBaseService {
     }
 
     private void embeddedAuthorize() throws RuntimeException {
-        //TODO Implement when embedded type will be supported by Priora Compliance
+        //TODO Implement when embedded type will be supported by Salt Edge PSD2 Compliance
     }
 }

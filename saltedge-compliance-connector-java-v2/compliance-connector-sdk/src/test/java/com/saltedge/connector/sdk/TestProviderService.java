@@ -58,7 +58,7 @@ public class TestProviderService implements ProviderServiceAbs {
     }
 
     @Override
-    public TransactionsPage getTransactionsOfAccount(String userId, String accountId, LocalDate fromDate, LocalDate toDate, String fromId) {
+    public TransactionsPage getTransactionsOfAccount(String userId, String accountId, @NotNull LocalDate fromDate, @NotNull LocalDate toDate, String fromId) {
         return null;
     }
 
@@ -68,12 +68,17 @@ public class TestProviderService implements ProviderServiceAbs {
     }
 
     @Override
-    public CardTransactionsPage getTransactionsOfCardAccount(@NotEmpty String userId, @NotEmpty String accountId, LocalDate fromDate, LocalDate toDate, String fromId) {
+    public CardTransactionsPage getTransactionsOfCardAccount(@NotEmpty String userId, @NotEmpty String accountId, @NotNull LocalDate fromDate, @NotNull LocalDate toDate, String fromId) {
         return null;
     }
 
     @Override
-    public String createPayment(@NotEmpty String creditorIban, @NotEmpty String creditorName, @NotEmpty String debtorIban, @NotEmpty String amount, @NotEmpty String currency, String description, @NotNull Map<String, String> extraData) {
+    public String createPayment(@NotEmpty String paymentProduct, @NotEmpty String creditorIban, String creditorBic, @NotEmpty String creditorName, ParticipantAddress creditorAddress, @NotEmpty String debtorIban, String debtorBic, @NotEmpty String amount, @NotEmpty String currency, String description, @NotNull Map<String, String> extraData) {
+        return null;
+    }
+
+    @Override
+    public String createFPSPayment(@NotEmpty String paymentProduct, @NotEmpty String creditorBban, @NotEmpty String creditorSortCode, @NotEmpty String creditorName, ParticipantAddress creditorAddress, @NotEmpty String debtorBban, @NotEmpty String debtorSortCode, @NotEmpty String amount, @NotEmpty String currency, String description, @NotNull Map<String, String> extraData) {
         return null;
     }
 

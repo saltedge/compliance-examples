@@ -36,29 +36,29 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 
 /**
- * This controller are responsible for creating payment orders on behalf of Customer via TPP interface.
+ * REST Controller designated for creating payment orders on behalf of Customer via TPP interface.
  * Process of payment creation starts once Customer fills a payment template form and submits the request.
- * https://priora.saltedge.com/docs/aspsp/v2/connector_endpoints#payments
+ * https://priora.saltedge.com/docs/aspsp/v2/pis#pis-connector_endpoints-payments
  */
 @RestController
 @RequestMapping(PaymentsV2Controller.BASE_PATH)
 @Validated
 public class PaymentsV2Controller extends BaseV2Controller {
-    public final static String BASE_PATH = SDKConstants.API_BASE_PATH + "/payments";
-    private static Logger log = LoggerFactory.getLogger(PaymentsV2Controller.class);
-    @Autowired
-    PaymentsService paymentsService;
+  public final static String BASE_PATH = SDKConstants.API_BASE_PATH + "/payments";
+  private static Logger log = LoggerFactory.getLogger(PaymentsV2Controller.class);
+  @Autowired
+  PaymentsService paymentsService;
 
-    /**
-     * Create a payment.
-     * As a result, Connector will send a success, update or fail callback to Salt Edge PSD2 Compliance with result of the operation.
-     *
-     * @param request for token creation
-     * @return empty JSON object
-     */
-    @PostMapping
-    public ResponseEntity<EmptyJsonModel> create(@Valid CreatePaymentRequest request) {
-        paymentsService.createPayment(request);
-        return super.createEmptyOkResponseEntity();
-    }
+  /**
+   * Create a payment.
+   * As a result, Connector will send a success, update or fail callback to Salt Edge PSD2 Compliance with result of the operation.
+   *
+   * @param request for token creation
+   * @return empty JSON object
+   */
+  @PostMapping
+  public ResponseEntity<EmptyJsonModel> create(@Valid CreatePaymentRequest request) {
+    paymentsService.createPayment(request);
+    return super.createEmptyOkResponseEntity();
+  }
 }

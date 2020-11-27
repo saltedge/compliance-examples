@@ -29,32 +29,105 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+import static com.saltedge.connector.sdk.SDKConstants.KEY_APP_NAME;
+import static com.saltedge.connector.sdk.SDKConstants.KEY_PROVIDER_CODE;
+
+/**
+ * Model of Payment order request from Salt Edge to Connector
+ */
 @JsonIgnoreProperties
 public class CreatePaymentRequest extends PrioraBaseRequest {
-    @JsonProperty("app_name")
-    @NotEmpty
-    public String appName;
+  /**
+   * TPP application name.
+   */
+  @JsonProperty(KEY_APP_NAME)
+  @NotEmpty
+  public String appName;
 
-    @JsonProperty("provider_code")
-    @NotEmpty
-    public String providerCode;
+  /**
+   * Human readable Provider identifier.
+   */
+  @JsonProperty(KEY_PROVIDER_CODE)
+  @NotEmpty
+  public String providerCode;
 
-    @JsonProperty(SDKConstants.KEY_REDIRECT_URL)
-    @NotEmpty
-    public String returnToUrl;
+  /**
+   * The addressed payment product.
+   * Allowed values: sepa-credit-transfers, instant-sepa-credit-transfers, target-2-payments, faster-payment-service, internal-transfer
+   */
+  @JsonProperty("payment_product")
+  @NotEmpty
+  public String paymentProduct;
 
-    @JsonProperty("payment")
-    @NotNull
-    @Valid
-    public PaymentOrder paymentOrder;
+  /**
+   * Wrapper for payment data.
+   */
+  @JsonProperty("payment")
+  @NotNull
+  @Valid
+  public PaymentOrder paymentOrder;
 
-    public CreatePaymentRequest() {
-    }
+  /**
+   * The URL that the PSU will be redirected to after he finishes the authentication process on provider’s side.
+   */
+  @JsonProperty(SDKConstants.KEY_REDIRECT_URL)
+  @NotEmpty
+  public String returnToUrl;
 
-    public CreatePaymentRequest(@NotEmpty String appName, @NotEmpty String providerCode, @NotEmpty String returnToUrl, @NotNull @Valid PaymentOrder paymentOrder) {
-        this.appName = appName;
-        this.providerCode = providerCode;
-        this.returnToUrl = returnToUrl;
-        this.paymentOrder = paymentOrder;
-    }
+  public CreatePaymentRequest() {
+  }
+
+  public CreatePaymentRequest(
+    @NotEmpty String appName,
+    @NotEmpty String providerCode,
+    @NotEmpty String returnToUrl,
+    @NotNull @Valid PaymentOrder paymentOrder,
+    @NotEmpty String paymentProduct
+  ) {
+    this.appName = appName;
+    this.providerCode = providerCode;
+    this.paymentProduct = paymentProduct;
+    this.paymentOrder = paymentOrder;
+    this.returnToUrl = returnToUrl;
+  }
+
+  public String getAppName() {
+    return appName;
+  }
+
+  public void setAppName(String appName) {
+    this.appName = appName;
+  }
+
+  public String getProviderCode() {
+    return providerCode;
+  }
+
+  public void setProviderCode(String providerCode) {
+    this.providerCode = providerCode;
+  }
+
+  public String getPaymentProduct() {
+    return paymentProduct;
+  }
+
+  public void setPaymentProduct(String paymentProduct) {
+    this.paymentProduct = paymentProduct;
+  }
+
+  public PaymentOrder getPaymentOrder() {
+    return paymentOrder;
+  }
+
+  public void setPaymentOrder(PaymentOrder paymentOrder) {
+    this.paymentOrder = paymentOrder;
+  }
+
+  public String getReturnToUrl() {
+    return returnToUrl;
+  }
+
+  public void setReturnToUrl(String returnToUrl) {
+    this.returnToUrl = returnToUrl;
+  }
 }

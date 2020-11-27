@@ -23,6 +23,7 @@ package com.saltedge.connector.sdk.api.services;
 import com.saltedge.connector.sdk.SDKConstants;
 import com.saltedge.connector.sdk.api.models.Account;
 import com.saltedge.connector.sdk.api.models.Amount;
+import com.saltedge.connector.sdk.api.models.ParticipantAddress;
 import com.saltedge.connector.sdk.api.models.PaymentOrder;
 import com.saltedge.connector.sdk.api.models.err.HttpErrorParams;
 import com.saltedge.connector.sdk.api.models.requests.CreatePaymentRequest;
@@ -49,6 +50,8 @@ public class PaymentsServiceTests extends BaseServicesTests {
 	@Autowired
 	protected PaymentsService testService;
 
+	private final ParticipantAddress address = new ParticipantAddress("street", "house number", "Toronto", "CA1234", "CA");
+
 	@Override
 	@Before
 	public void setUp() throws Exception {
@@ -63,9 +66,13 @@ public class PaymentsServiceTests extends BaseServicesTests {
 		extra.put(SDKConstants.KEY_RETURN_TO_URL, "redirectUrl");
 		extra.put(SDKConstants.KEY_END_TO_END_IDENTIFICATION, "endToEndIdentification");
 		given(providerService.createPayment(
+			"sepa-credit-transfers",
 				"creditorAccountIban",
+			"creditorAccountBic",
 				"creditorName",
+			address,
 				"debtorAccountIban",
+			"debtorAccountBic",
 				"1.0",
 				"USD",
 				"remittanceInformationUnstructured",
@@ -90,9 +97,13 @@ public class PaymentsServiceTests extends BaseServicesTests {
 		extra.put(SDKConstants.KEY_RETURN_TO_URL, "redirectUrl");
 		extra.put(SDKConstants.KEY_END_TO_END_IDENTIFICATION, "endToEndIdentification");
 		given(providerService.createPayment(
+			"sepa-credit-transfers",
 				"creditorAccountIban",
+			"creditorAccountBic",
 				"creditorName",
+			address,
 				"debtorAccountIban",
+			"debtorAccountBic",
 				"1.0",
 				"USD",
 				"remittanceInformationUnstructured",
@@ -105,9 +116,13 @@ public class PaymentsServiceTests extends BaseServicesTests {
 
 		// then
 		verify(providerService).createPayment(
+			"sepa-credit-transfers",
 				"creditorAccountIban",
+			"creditorAccountBic",
 				"creditorName",
+			address,
 				"debtorAccountIban",
+			"debtorAccountBic",
 				"1.0",
 				"USD",
 				"remittanceInformationUnstructured",
@@ -119,11 +134,58 @@ public class PaymentsServiceTests extends BaseServicesTests {
 		assertThat(callbackCaptor.getValue().redirectUrl).isEqualTo("http://example.com?payment_id=payment1");
 	}
 
+	@Test
+	public void givenFPSRequest_whenCreatePayment_thenSaveTokenAndSendSessionsUpdateCallback() {
+		// given
+		HashMap<String, String> extra = new HashMap<>();
+		extra.put(SDKConstants.KEY_SESSION_SECRET, "sessionSecret");
+		extra.put(SDKConstants.KEY_RETURN_TO_URL, "redirectUrl");
+		extra.put(SDKConstants.KEY_END_TO_END_IDENTIFICATION, "endToEndIdentification");
+		given(providerService.createFPSPayment(
+			"faster-payment-service",
+			"creditorAccountBban",
+			"creditorAccountSortCode",
+			"creditorName",
+			address,
+			"debtorAccountBban",
+			"debtorAccountSortCode",
+			"1.0",
+			"USD",
+			"remittanceInformationUnstructured",
+			extra
+		)).willReturn("payment1");
+		given(providerService.getPaymentAuthorizationPageUrl("payment1")).willReturn("http://example.com?payment_id=payment1");
+
+		// when
+		testService.createPayment(createFPSPaymentRequest());
+
+		// then
+		verify(providerService).createFPSPayment(
+			"faster-payment-service",
+			"creditorAccountBban",
+			"creditorAccountSortCode",
+			"creditorName",
+			address,
+			"debtorAccountBban",
+			"debtorAccountSortCode",
+			"1.0",
+			"USD",
+			"remittanceInformationUnstructured",
+			extra
+		);
+		final ArgumentCaptor<SessionUpdateCallbackRequest> callbackCaptor = ArgumentCaptor.forClass(SessionUpdateCallbackRequest.class);
+		verify(sessionsCallbackService).sendUpdateCallback(eq("sessionSecret"), callbackCaptor.capture());
+		assertThat(callbackCaptor.getValue().status).isEqualTo(SDKConstants.STATUS_REDIRECT);
+		assertThat(callbackCaptor.getValue().redirectUrl).isEqualTo("http://example.com?payment_id=payment1");
+	}
+
 	private CreatePaymentRequest createPaymentRequest() {
 		Account creditorAccount = new Account();
 		creditorAccount.setIban("creditorAccountIban");
+		creditorAccount.setBic("creditorAccountBic");
 		Account debtorAccount = new Account();
 		debtorAccount.setIban("debtorAccountIban");
+		debtorAccount.setBic("debtorAccountBic");
 		CreatePaymentRequest result = new CreatePaymentRequest(
 				"tppAppName",
 				"providerCode",
@@ -131,11 +193,39 @@ public class PaymentsServiceTests extends BaseServicesTests {
 				new PaymentOrder(
 						creditorAccount,
 						"creditorName",
+						address,
 						debtorAccount,
 						new Amount("1.0", "USD"),
 						"endToEndIdentification",
 						"remittanceInformationUnstructured"
-				)
+				),
+			"sepa-credit-transfers"
+		);
+		result.sessionSecret = "sessionSecret";
+		return result;
+	}
+
+	private CreatePaymentRequest createFPSPaymentRequest() {
+		Account creditorAccount = new Account();
+		creditorAccount.setBban("creditorAccountBban");
+		creditorAccount.setSortCode("creditorAccountSortCode");
+		Account debtorAccount = new Account();
+		debtorAccount.setBban("debtorAccountBban");
+		debtorAccount.setSortCode("debtorAccountSortCode");
+		CreatePaymentRequest result = new CreatePaymentRequest(
+			"tppAppName",
+			"providerCode",
+			"redirectUrl",
+			new PaymentOrder(
+				creditorAccount,
+				"creditorName",
+				address,
+				debtorAccount,
+				new Amount("1.0", "USD"),
+				"endToEndIdentification",
+				"remittanceInformationUnstructured"
+			),
+			"faster-payment-service"
 		);
 		result.sessionSecret = "sessionSecret";
 		return result;

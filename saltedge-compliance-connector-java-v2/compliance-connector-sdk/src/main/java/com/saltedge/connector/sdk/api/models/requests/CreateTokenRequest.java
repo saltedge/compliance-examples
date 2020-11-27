@@ -28,11 +28,9 @@ import com.saltedge.connector.sdk.api.models.ProviderConsents;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-
 import java.time.LocalDate;
 
-import static com.saltedge.connector.sdk.SDKConstants.KEY_ACCESS;
-import static com.saltedge.connector.sdk.SDKConstants.KEY_REDIRECT_URL;
+import static com.saltedge.connector.sdk.SDKConstants.*;
 
 /**
  * https://priora.saltedge.com/docs/aspsp/v2/connector_endpoints#tokens-create
@@ -49,7 +47,7 @@ public class CreateTokenRequest extends PrioraBaseRequest {
     /**
      * TPP application name.
      */
-    @JsonProperty("app_name")
+    @JsonProperty(KEY_APP_NAME)
     @NotBlank
     public String tppAppName;
 

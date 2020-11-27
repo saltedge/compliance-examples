@@ -47,7 +47,7 @@ import javax.validation.constraints.NotNull;
  * This controller is responsible for fetching card account information for Account Information Service.
  * Card account Information Endpoints are responsible for the access to card account identification data
  * and card account transactions history.
- * https://priora.saltedge.com/docs/aspsp/v2/connector_endpoints#card-accounts
+ * https://priora.saltedge.com/docs/aspsp/v2/ais#ais-connector_endpoints-card_accounts
  */
 @RestController
 @RequestMapping(CardAccountsV2Controller.BASE_PATH)

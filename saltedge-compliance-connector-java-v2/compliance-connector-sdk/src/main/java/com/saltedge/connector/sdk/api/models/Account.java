@@ -36,215 +36,240 @@ import java.util.Map;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Account {
-    /**
-     * Account identifier on Provider
-     */
-    @JsonProperty(SDKConstants.KEY_ID)
-    private String id;
+  /**
+   * Account identifier on Provider
+   */
+  @JsonProperty(SDKConstants.KEY_ID)
+  private String id;
 
-    /**
-     * Human readable account name
-     */
-    @JsonProperty(SDKConstants.KEY_NAME)
-    private String name;
+  /**
+   * Human readable account name
+   */
+  @JsonProperty(SDKConstants.KEY_NAME)
+  private String name;
 
-    @JsonProperty(SDKConstants.KEY_BALANCES)
-    private List<AccountBalance> balances;
+  @JsonProperty(SDKConstants.KEY_BALANCES)
+  private List<AccountBalance> balances;
 
-    /**
-     * ExternalCashAccountType1Code from ISO 20022 (https://www.iso20022.org/).
-     * Allowed values: CACC, CASH, CISH, COMM, CPAC, LLSV, LOAN, MGLD, MOMA, NREX, ODFT, ONDP, OTHR, SACC, SLRY, SVGS, TAXE, TRAN, TRAS
-     */
-    @JsonProperty("cash_account_type")
-    private String cashAccountType;
+  /**
+   * ExternalCashAccountType1Code from ISO 20022 (https://www.iso20022.org/).
+   * Allowed values: CACC, CASH, CISH, COMM, CPAC, LLSV, LOAN, MGLD, MOMA, NREX, ODFT, ONDP, OTHR, SACC, SLRY, SVGS, TAXE, TRAN, TRAS
+   */
+  @JsonProperty("cash_account_type")
+  private String cashAccountType;
 
-    /**
-     * Currency code of account (ISO 4217).
-     */
-    @NotBlank
-    @JsonProperty(SDKConstants.KEY_CURRENCY)
-    private String currencyCode;
+  /**
+   * Currency code of account (ISO 4217).
+   */
+  @NotBlank
+  @JsonProperty(SDKConstants.KEY_CURRENCY)
+  private String currencyCode;
 
-    /**
-     * Basic Bank Account Number
-     */
-    @JsonProperty(SDKConstants.KEY_BBAN)
-    private String bban;
+  /**
+   * A number uniquely identifying a subscription in a Global System for Mobile communications or a Universal Mobile Telecommunications System mobile network.
+   */
+  @JsonProperty(SDKConstants.KEY_MSISDN)
+  private String msisdn;
 
-    /**
-     * Bank Identifier Code
-     */
-    @JsonProperty(SDKConstants.KEY_BIC)
-    private String bic;
+  /**
+   * Product Name of the Bank for this account, proprietary definition.
+   */
+  @JsonProperty(SDKConstants.KEY_PRODUCT)
+  private String product;
 
-    /**
-     * International Bank Account Number
-     */
-    @JsonProperty(SDKConstants.KEY_IBAN)
-    private String iban;
+  /**
+   * Current status of the account. Allowed values: enabled, deleted, blocked
+   */
+  @JsonProperty(SDKConstants.KEY_STATUS)
+  private String status;
 
-    /**
-     * A number uniquely identifying a subscription in a Global System for Mobile communications or a Universal Mobile Telecommunications System mobile network.
-     */
-    @JsonProperty(SDKConstants.KEY_MSISDN)
-    private String msisdn;
+  /**
+   * Any additional information deemed relevant to a account
+   */
+  @JsonProperty(SDKConstants.KEY_EXTRA)
+  private Map<String, String> extra;
 
-    /**
-     * Product Name of the Bank for this account, proprietary definition.
-     */
-    @JsonProperty(SDKConstants.KEY_PRODUCT)
-    private String product;
+  /**
+   * Basic Bank Account Number
+   */
+  @JsonProperty(SDKConstants.KEY_BBAN)
+  private String bban;
 
-    /**
-     * Current status of the account. Allowed values: enabled, deleted, blocked
-     */
-    @JsonProperty(SDKConstants.KEY_STATUS)
-    private String status;
+  /**
+   * Bank Identifier Code
+   */
+  @JsonProperty(SDKConstants.KEY_BIC)
+  private String bic;
 
-    /**
-     * Any additional information deemed relevant to a account
-     */
-    @JsonProperty(SDKConstants.KEY_EXTRA)
-    private Map<String, String> extra;
+  /**
+   * International Bank Account Number
+   */
+  @JsonProperty(SDKConstants.KEY_IBAN)
+  private String iban;
 
-    public Account() {
-    }
+  /**
+   * Number code, which is used by British and Irish banks.
+   */
+  @JsonProperty(SDKConstants.KEY_SORT_CODE)
+  private String sortCode;
 
-    public Account(
-            @NotBlank String id,
-            @NotBlank String name,
-            @NotNull List<AccountBalance> balances,
-            @NotBlank String cashAccountType,
-            @NotBlank String currencyCode
-    ) {
-        this.id = id;
-        this.name = name;
-        this.balances = balances;
-        this.cashAccountType = cashAccountType;
-        this.currencyCode = currencyCode;
-    }
+  public Account() {
+  }
 
-    /**
-     * Check if `bban` or `bic` or `iban` code is not empty
-     *
-     * @return true if model contains at least one identifier
-     */
-    public boolean hasIdentifier() {
-        return !StringUtils.isEmpty(bban) || !StringUtils.isEmpty(bic) || !StringUtils.isEmpty(iban);
-    }
+  public Account(
+    @NotBlank String id,
+    @NotBlank String name,
+    @NotNull List<AccountBalance> balances,
+    @NotBlank String cashAccountType,
+    @NotBlank String currencyCode
+  ) {
+    this.id = id;
+    this.name = name;
+    this.balances = balances;
+    this.cashAccountType = cashAccountType;
+    this.currencyCode = currencyCode;
+  }
 
-    /**
-     * Check if `bban` or `bic` or `iban` is equal to account code
-     *
-     * @param accountCode unique account code (can be iban or bban or bic)
-     * @return true if one of identifiers is equal to accountCode param
-     */
-    public boolean containsAccountIdentifier(@NotEmpty String accountCode) {
-        if (StringUtils.isEmpty(accountCode)) return false;
-        return accountCode.equals(iban) || accountCode.equals(bban) || accountCode.equals(bic);
-    }
+  /**
+   * Check if `bban` or `bic` or `iban` or `sort_code` field is not empty
+   *
+   * @return true if model contains at least one identifier
+   */
+  public boolean hasIdentifier() {
+    return !StringUtils.isEmpty(bban)
+      || !StringUtils.isEmpty(bic)
+      || !StringUtils.isEmpty(iban)
+      || !StringUtils.isEmpty(sortCode);
+  }
 
-    public AccountBalance getBalance(@NotEmpty String balanceType) {
-        if (balances == null || balances.isEmpty() || StringUtils.isEmpty(balanceType)) return null;
-        return balances.stream()
-                .filter(model -> balanceType.equals(model.type))
-                .findFirst()
-                .orElse(null);
-    }
+  /**
+   * Check if `bban` or `bic` or `iban` or `sort_code` field is equal to account code
+   *
+   * @param accountCode an unique account code (can be iban or bban or bic or sort_code)
+   * @return true if one of identifiers is equal to accountCode param
+   */
+  public boolean containsAccountIdentifier(@NotEmpty String accountCode) {
+    if (StringUtils.isEmpty(accountCode)) return false;
+    return accountCode.equals(iban) || accountCode.equals(bban) || accountCode.equals(bic) || accountCode.equals(sortCode);
+  }
 
-    public String getId() {
-        return id;
-    }
 
-    public void setId(@NotBlank String id) {
-        this.id = id;
-    }
+  /**
+   * Find first Account balance object by it type.
+   *
+   * @param balanceType unique type code of account balance
+   * @return AccountBalance object
+   * @see AccountBalance
+   */
+  public AccountBalance getBalance(@NotEmpty String balanceType) {
+    if (balances == null || balances.isEmpty() || StringUtils.isEmpty(balanceType)) return null;
+    return balances.stream()
+      .filter(model -> balanceType.equals(model.type))
+      .findFirst()
+      .orElse(null);
+  }
 
-    public String getName() {
-        return name;
-    }
+  public String getId() {
+    return id;
+  }
 
-    public void setName(@NotBlank String name) {
-        this.name = name;
-    }
+  public void setId(@NotBlank String id) {
+    this.id = id;
+  }
 
-    public List<AccountBalance> getBalances() {
-        return balances;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public void setBalances(List<AccountBalance> balances) {
-        this.balances = balances;
-    }
+  public void setName(@NotBlank String name) {
+    this.name = name;
+  }
 
-    public String getCashAccountType() {
-        return cashAccountType;
-    }
+  public List<AccountBalance> getBalances() {
+    return balances;
+  }
 
-    public void setCashAccountType(@NotBlank String cashAccountType) {
-        this.cashAccountType = cashAccountType;
-    }
+  public void setBalances(List<AccountBalance> balances) {
+    this.balances = balances;
+  }
 
-    public String getCurrencyCode() {
-        return currencyCode;
-    }
+  public String getCashAccountType() {
+    return cashAccountType;
+  }
 
-    public void setCurrencyCode(@NotBlank String currencyCode) {
-        this.currencyCode = currencyCode;
-    }
+  public void setCashAccountType(@NotBlank String cashAccountType) {
+    this.cashAccountType = cashAccountType;
+  }
 
-    public String getBban() {
-        return bban;
-    }
+  public String getCurrencyCode() {
+    return currencyCode;
+  }
 
-    public void setBban(String bban) {
-        this.bban = bban;
-    }
+  public void setCurrencyCode(@NotBlank String currencyCode) {
+    this.currencyCode = currencyCode;
+  }
 
-    public String getBic() {
-        return bic;
-    }
+  public String getBban() {
+    return bban;
+  }
 
-    public void setBic(String bic) {
-        this.bic = bic;
-    }
+  public void setBban(String bban) {
+    this.bban = bban;
+  }
 
-    public String getIban() {
-        return iban;
-    }
+  public String getBic() {
+    return bic;
+  }
 
-    public void setIban(String iban) {
-        this.iban = iban;
-    }
+  public void setBic(String bic) {
+    this.bic = bic;
+  }
 
-    public String getMsisdn() {
-        return msisdn;
-    }
+  public String getIban() {
+    return iban;
+  }
 
-    public void setMsisdn(String msisdn) {
-        this.msisdn = msisdn;
-    }
+  public void setIban(String iban) {
+    this.iban = iban;
+  }
 
-    public String getProduct() {
-        return product;
-    }
+  public String getSortCode() {
+    return sortCode;
+  }
 
-    public void setProduct(String product) {
-        this.product = product;
-    }
+  public void setSortCode(String sortCode) {
+    this.sortCode = sortCode;
+  }
 
-    public String getStatus() {
-        return status;
-    }
+  public String getMsisdn() {
+    return msisdn;
+  }
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
+  public void setMsisdn(String msisdn) {
+    this.msisdn = msisdn;
+  }
 
-    public Map<String, String> getExtra() {
-        return extra;
-    }
+  public String getProduct() {
+    return product;
+  }
 
-    public void setExtra(Map<String, String> extra) {
-        this.extra = extra;
-    }
+  public void setProduct(String product) {
+    this.product = product;
+  }
+
+  public String getStatus() {
+    return status;
+  }
+
+  public void setStatus(String status) {
+    this.status = status;
+  }
+
+  public Map<String, String> getExtra() {
+    return extra;
+  }
+
+  public void setExtra(Map<String, String> extra) {
+    this.extra = extra;
+  }
 }

@@ -41,7 +41,7 @@ import javax.validation.constraints.NotNull;
 /**
  * This controller are responsible for checking whether a specific amount is available at point of time of the request
  * on an account addressed by IBAN or other available identifiers.
- * https://priora.saltedge.com/docs/aspsp/v2/connector_endpoints#funds-confirmations
+ * https://priora.saltedge.com/docs/aspsp/v2/piis#piis-connector_endpoints-funds_confirmations
  */
 @RestController
 @RequestMapping(FundsV2Controller.BASE_PATH)

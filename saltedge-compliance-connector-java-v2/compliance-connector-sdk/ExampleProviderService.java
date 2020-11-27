@@ -101,7 +101,7 @@ public class ExampleProviderService implements ProviderServiceAbs {
     /**
      * Provides current currencies exchange rates of Bank.
      * Used by SDK on Confirm Funds flow.
-     * (https://priora.saltedge.com/docs/aspsp/v1/connector_endpoints#connectorendpoints-payments-checkfunds)
+     * (https://priora.saltedge.com/docs/aspsp/v2/piis#piis-connector_endpoints-funds_confirmations)
      *
      * @return list of ExchangeRate objects
      * @see ExchangeRate
@@ -145,7 +145,7 @@ public class ExampleProviderService implements ProviderServiceAbs {
     /**
      * Return accounts information of user.
      * Serves accounts endpoint
-     * (https://priora.saltedge.com/docs/aspsp/v2/connector_endpoints#connectorendpoints-accounts-get)
+     * (https://priora.saltedge.com/docs/aspsp/v2/ais#ais-connector_endpoints-accounts-get)
      *
      * @param userId User identifier on Provider side
      * @return list of Account objects
@@ -171,7 +171,7 @@ public class ExampleProviderService implements ProviderServiceAbs {
     /**
      * Provides transactions which belong to an account of user.
      * Serves transactions endpoint
-     * (https://priora.saltedge.com/docs/aspsp/v2/connector_endpoints#accounts-transactions)
+     * (https://priora.saltedge.com/docs/aspsp/v2/ais#ais-connector_endpoints-accounts-transactions)
      *
      * @param userId User identifier on Provider side
      * @param accountId Account identifier on Provider side
@@ -207,7 +207,7 @@ public class ExampleProviderService implements ProviderServiceAbs {
     /**
      * Provides card accounts information of user.
      * Serves accounts endpoint
-     * (https://priora.saltedge.com/docs/aspsp/v2/connector_endpoints#card-accounts-get)
+     * (https://priora.saltedge.com/docs/aspsp/v2/ais#ais-connector_endpoints-card_accounts-get)
      *
      * @param userId User identifier on Provider side
      * @return list of CardAccount objects
@@ -237,7 +237,7 @@ public class ExampleProviderService implements ProviderServiceAbs {
     /**
      * Provides transactions which belong to a card account of user.
      * Serves transactions endpoint
-     * (https://priora.saltedge.com/docs/aspsp/v2/connector_endpoints#card-accounts-transactions)
+     * (https://priora.saltedge.com/docs/aspsp/v2/ais#ais-connector_endpoints-card_accounts-transactions)
      *
      * @param userId User identifier on Provider side
      * @param accountId Account identifier on Provider side
@@ -273,27 +273,68 @@ public class ExampleProviderService implements ProviderServiceAbs {
     }
 
     /**
-     * Initiate a payment order.
-     * Serves payment endpoint (https://priora.saltedge.com/docs/aspsp/v2/connector_endpoints#payments-create)
+     * Initiate a SEPA payment order.
+     * Serves payment endpoint (https://priora.saltedge.com/docs/aspsp/v2/pis#pis-connector_endpoints-payments)
+     * If SEPA payment not supported return null.
      *
-     * @param creditorIban of payment order
-     * @param creditorName of payment order
-     * @param debtorIban of payment order
-     * @param amount of payment order
-     * @param currency of payment order
-     * @param description of payment order
-     * @param extraData hash object
-     * @return unique identifier of payment or null if payment is not initiated
+     * @param paymentProduct The addressed payment product. Allowed values: sepa-credit-transfers, instant-sepa-credit-transfers, target-2-payments, internal-transfer
+     * @param creditorIban International Bank Account Number of creditor
+     * @param creditorBic Bank Identifier Code of creditor
+     * @param creditorName Name of creditor
+     * @param debtorIban International Bank Account Number of debtor
+     * @param debtorBic Bank Identifier Code of debtor
+     * @param amount Amount of payment order
+     * @param currency Currency code of payment order
+     * @param description Description of payment order
+     * @param extraData Extra data of payment order
+     * @return Unique identifier of payment or null if payment is not initiated
      */
-    @Override
-    public String createPayment(
-            @NotEmpty String creditorIban,
-            @NotEmpty String creditorName,
-            @NotEmpty String debtorIban,
-            @NotEmpty String amount,
-            @NotEmpty String currency,
-            String description,
-            @NotNull Map<String, String> extraData
+    String createPayment(
+      @NotEmpty String paymentProduct,
+      @NotEmpty String creditorIban,
+      String creditorBic,
+      @NotEmpty String creditorName,
+      ParticipantAddress creditorAddress,
+      @NotEmpty String debtorIban,
+      String debtorBic,
+      @NotEmpty String amount,
+      @NotEmpty String currency,
+      String description,
+      @NotNull Map<String, String> extraData
+    ) {
+        String fakePaymentId = "1"
+        return fakePaymentId;
+    }
+
+    /**
+     * Initiate a FPS (Faster Payment Service) payment order.
+     * Serves payment endpoint (https://priora.saltedge.com/docs/aspsp/v2/pis#pis-connector_endpoints-payments)
+     * If FPS payment not supported return null.
+     *
+     * @param paymentProduct The addressed payment product. Allowed values: faster-payment-service
+     * @param creditorBban Basic Bank Account Number of creditor
+     * @param creditorSortCode Number code (which is used by British and Irish banks) of creditor.
+     * @param creditorName Name of creditor
+     * @param debtorBban Basic Bank Account Number of debtor
+     * @param debtorSortCode Number code (which is used by British and Irish banks) of debtor.
+     * @param amount Amount of payment order
+     * @param currency Currency code of payment order
+     * @param description Description of payment order
+     * @param extraData Extra data of payment order
+     * @return Unique identifier of payment or null if payment is not initiated
+     */
+    String createFPSPayment(
+      @NotEmpty String paymentProduct,
+      @NotEmpty String creditorBban,
+      @NotEmpty String creditorSortCode,
+      @NotEmpty String creditorName,
+      ParticipantAddress creditorAddress,
+      @NotEmpty String debtorBban,
+      @NotEmpty String debtorSortCode,
+      @NotEmpty String amount,
+      @NotEmpty String currency,
+      String description,
+      @NotNull Map<String, String> extraData
     ) {
         String fakePaymentId = "1"
         return fakePaymentId;
@@ -302,6 +343,7 @@ public class ExampleProviderService implements ProviderServiceAbs {
     /**
      * Provides url of provider's authorization page
      * designated for authorization session of new Payment Initiation Session
+     * (https://priora.saltedge.com/docs/aspsp/v2/pis#pis-connector_endpoints-payments-create)
      *
      * @param paymentId unique identifier of payment order for which is required authorization
      * @return URL string
@@ -322,6 +364,7 @@ public class ExampleProviderService implements ProviderServiceAbs {
      * Prepare Autorization page url.
      * Host url can be stored as environment parameter
      * Path of Autorization page can be stored in Controller.
+     *
      * Replace fake code.
      *
      * @return Autorization page url string

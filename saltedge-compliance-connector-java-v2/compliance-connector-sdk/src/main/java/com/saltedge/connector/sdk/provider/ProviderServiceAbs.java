@@ -32,138 +32,171 @@ import java.util.Map;
 
 /**
  * Interface for communication between Compliance Connector SDK and Provider/ASPSP application.
- * Service Provider application should implement `@Service` which `implements ProviderApi`
+ * Service Provider application should implement `@Service` which `implements ProviderServiceAbs`
  */
 public interface ProviderServiceAbs {
-    /**
-     * Provides Authorization Types registered in `Dashboard/Settings/Authorization types` for Customer.
-     * (https://priora.saltedge.com/providers/settings#authorization_types)
-     *
-     * @return list of AuthorizationType objects
-     * @see AuthorizationType
-     */
-    List<AuthorizationType> getAuthorizationTypes();
+  /**
+   * Provides Authorization Types registered in `Dashboard/Settings/Authorization types` for Customer.
+   * (https://priora.saltedge.com/providers/settings#authorization_types)
+   *
+   * @return List of AuthorizationType objects
+   * @see AuthorizationType
+   */
+  List<AuthorizationType> getAuthorizationTypes();
 
-    /**
-     * Provides current currencies exchange rates
-     *
-     * @return list of ExchangeRate objects
-     * @see ExchangeRate
-     */
-    List<ExchangeRate> getExchangeRates();
+  /**
+   * Provides current currencies exchange rates.
+   *
+   * @return List of ExchangeRate objects
+   * @see ExchangeRate
+   */
+  List<ExchangeRate> getExchangeRates();
 
-    /**
-     * Provides url of provider's authorization page
-     * designated for authorization of new Consent to access Account Information data
-     *
-     * @param sessionSecret create consent session secret.
-     *                      should be returned on authentication success or fail.
-     * @param userConsentIsRequired if true then user consent for Account Information (balances, transactions) is required
-     *                              and should be returned on authentication success.
-     * @see ConnectorSDKCallbackService#onAccountInformationAuthorizationSuccess
-     * @see ConnectorSDKCallbackService#onAccountInformationAuthorizationFail
-     * @return URL string
-     */
-    String getAccountInformationAuthorizationPageUrl(
-            @NotEmpty String sessionSecret,
-            boolean userConsentIsRequired
-    );
+  /**
+   * Provides url of provider's authorization page designated for authorization of new Consent to access Account Information data
+   *
+   * @param sessionSecret Secret of create consent session. Should be returned on authentication success or fail.
+   * @param userConsentIsRequired Flag that indicates if user consent for Account Information (balances, transactions) is required and should be returned on authentication success.
+   * @return URL string
+   * @see ConnectorSDKCallbackService#onAccountInformationAuthorizationSuccess
+   * @see ConnectorSDKCallbackService#onAccountInformationAuthorizationFail
+   */
+  String getAccountInformationAuthorizationPageUrl(
+    @NotEmpty String sessionSecret,
+    boolean userConsentIsRequired
+  );
 
-    /**
-     * Return accounts information of user.
-     * Serves accounts endpoint (https://priora.saltedge.com/docs/aspsp/v2/connector_endpoints#accounts-get)
-     *
-     * @param userId User identifier on Provider side
-     * @return list of Account objects
-     * @see Account
-     */
-    List<Account> getAccountsOfUser(@NotEmpty String userId);
+  /**
+   * Return accounts information of user.
+   * Serves accounts endpoint (https://priora.saltedge.com/docs/aspsp/v2/ais#ais-connector_endpoints-accounts-get)
+   *
+   * @param userId User identifier on Provider side
+   * @return List of Account objects
+   * @see Account
+   */
+  List<Account> getAccountsOfUser(@NotEmpty String userId);
 
-    /**
-     * Provides transactions which belong to an account of user.
-     * Serves transactions endpoint (https://priora.saltedge.com/docs/aspsp/v2/connector_endpoints#accounts-transactions)
-     *
-     * @param userId User identifier on Provider side
-     * @param accountId Account identifier on Provider side
-     * @param fromDate Specifies the starting date, from which transactions should be fetched.
-     *                 This value can be set to 90 days ago by default.
-     * @param toDate Specifies the ending date, to which transactions should be fetched.
-     *               This value will always be the today’s date.
-     * @param fromId Specifies the ID of page for Pageable request.
-     * @return page object with list of Transaction objects and next page id
-     * @see Transaction
-     * @see TransactionsPage
-     */
-    TransactionsPage getTransactionsOfAccount(
-            @NotEmpty String userId,
-            @NotEmpty String accountId,
-            @NotNull LocalDate fromDate,
-            @NotNull LocalDate toDate,
-            String fromId
-    );
+  /**
+   * Provides transactions which belong to an account of user.
+   * Serves transactions endpoint (https://priora.saltedge.com/docs/aspsp/v2/ais#ais-connector_endpoints-accounts-transactions)
+   *
+   * @param userId User identifier on Provider side
+   * @param accountId Account identifier on Provider side
+   * @param fromDate Starting date, from which transactions should be fetched. Value can be set to 90 days ago by default.
+   * @param toDate Ending date, to which transactions should be fetched. Value will always be the today’s date.
+   * @param fromId ID of page for Pageable request.
+   * @return Page object with list of Transaction objects and next page id
+   * @see Transaction
+   * @see TransactionsPage
+   */
+  TransactionsPage getTransactionsOfAccount(
+    @NotEmpty String userId,
+    @NotEmpty String accountId,
+    @NotNull LocalDate fromDate,
+    @NotNull LocalDate toDate,
+    String fromId
+  );
 
-    /**
-     * Provides card accounts information of user.
-     * Serves accounts endpoint (https://priora.saltedge.com/docs/aspsp/v2/connector_endpoints#card-accounts-get)
-     *
-     * @param userId User identifier on Provider side
-     * @return list of CardAccount objects
-     * @see CardAccount
-     */
-    List<CardAccount> getCardAccountsOfUser(@NotEmpty String userId);
+  /**
+   * Provides card accounts information of user.
+   * Serves accounts endpoint (https://priora.saltedge.com/docs/aspsp/v2/ais#ais-connector_endpoints-card_accounts-get)
+   *
+   * @param userId User identifier on Provider side
+   * @return List of CardAccount objects
+   * @see CardAccount
+   */
+  List<CardAccount> getCardAccountsOfUser(@NotEmpty String userId);
 
-    /**
-     * Provides transactions which belong to a card account of user.
-     * Serves transactions endpoint (https://priora.saltedge.com/docs/aspsp/v2/connector_endpoints#card-accounts-transactions)
-     *
-     * @param userId User identifier on Provider side
-     * @param accountId Account identifier on Provider side
-     * @param fromDate Specifies the starting date, from which transactions should be fetched.
-     *                 This value can be set to 90 days ago by default.
-     * @param toDate Specifies the ending date, to which transactions should be fetched.
-     *               This value will always be the today’s date.
-     * @param fromId Specifies the ID of page for Pageable request.
-     * @return page object with list of CardTransaction objects and next page id
-     * @see CardTransaction
-     * @see CardTransactionsPage
-     */
-    CardTransactionsPage getTransactionsOfCardAccount(
-            @NotEmpty String userId,
-            @NotEmpty String accountId,
-            @NotNull LocalDate fromDate,
-            @NotNull LocalDate toDate,
-            String fromId
-    );
+  /**
+   * Provides transactions which belong to a card account of user.
+   * Serves transactions endpoint (https://priora.saltedge.com/docs/aspsp/v2/ais#ais-connector_endpoints-card_accounts-transactions)
+   *
+   * @param userId User identifier on Provider side
+   * @param accountId An account identifier on Provider side
+   * @param fromDate Starting date, from which transactions should be fetched. Value can be set to 90 days ago by default.
+   * @param toDate Ending date, to which transactions should be fetched. Value will always be the today’s date.
+   * @param fromId ID of page for Pageable request.
+   * @return Page object with list of CardTransaction objects and next page id
+   * @see CardTransaction
+   * @see CardTransactionsPage
+   */
+  CardTransactionsPage getTransactionsOfCardAccount(
+    @NotEmpty String userId,
+    @NotEmpty String accountId,
+    @NotNull LocalDate fromDate,
+    @NotNull LocalDate toDate,
+    String fromId
+  );
 
-    /**
-     * Initiate a payment order.
-     * Serves payment endpoint (https://priora.saltedge.com/docs/aspsp/v2/connector_endpoints#payments-create)
-     *
-     * @param creditorIban of payment order
-     * @param creditorName of payment order
-     * @param debtorIban of payment order
-     * @param amount of payment order
-     * @param currency of payment order
-     * @param description of payment order
-     * @param extraData hash object
-     * @return unique identifier of payment or null if payment is not initiated
-     */
-    String createPayment(
-            @NotEmpty String creditorIban,
-            @NotEmpty String creditorName,
-            @NotEmpty String debtorIban,
-            @NotEmpty String amount,
-            @NotEmpty String currency,
-            String description,
-            @NotNull Map<String, String> extraData
-    );
+  /**
+   * Initiate a SEPA payment order.
+   * Serves payment endpoint (https://priora.saltedge.com/docs/aspsp/v2/pis#pis-connector_endpoints-payments)
+   * If SEPA payment not supported return null.
+   *
+   * @param paymentProduct The addressed payment product. Allowed values: sepa-credit-transfers, instant-sepa-credit-transfers, target-2-payments, internal-transfer
+   * @param creditorIban International Bank Account Number of creditor
+   * @param creditorBic Bank Identifier Code of creditor
+   * @param creditorName Name of creditor
+   * @param debtorIban International Bank Account Number of debtor
+   * @param debtorBic Bank Identifier Code of debtor
+   * @param amount Amount of payment order
+   * @param currency Currency code of payment order
+   * @param description Description of payment order
+   * @param extraData Extra data of payment order
+   * @return Unique identifier of payment or null if payment is not initiated
+   */
+  String createPayment(
+    @NotEmpty String paymentProduct,
+    @NotEmpty String creditorIban,
+    String creditorBic,
+    @NotEmpty String creditorName,
+    ParticipantAddress creditorAddress,
+    @NotEmpty String debtorIban,
+    String debtorBic,
+    @NotEmpty String amount,
+    @NotEmpty String currency,
+    String description,
+    @NotNull Map<String, String> extraData
+  );
 
-    /**
-     * Provides url of provider's authorization page
-     * designated for authorization session of new Payment Initiation Session
-     *
-     * @param paymentId unique identifier of payment order for which is required authorization
-     * @return URL string
-     */
-    String getPaymentAuthorizationPageUrl(@NotEmpty String paymentId);
+
+  /**
+   * Initiate a FPS (Faster Payment Service) payment order.
+   * Serves payment endpoint (https://priora.saltedge.com/docs/aspsp/v2/pis#pis-connector_endpoints-payments)
+   * If FPS payment not supported return null.
+   *
+   * @param paymentProduct The addressed payment product. Allowed values: faster-payment-service
+   * @param creditorBban Basic Bank Account Number of creditor
+   * @param creditorSortCode Number code (which is used by British and Irish banks) of creditor.
+   * @param creditorName Name of creditor
+   * @param debtorBban Basic Bank Account Number of debtor
+   * @param debtorSortCode Number code (which is used by British and Irish banks) of debtor.
+   * @param amount Amount of payment order
+   * @param currency Currency code of payment order
+   * @param description Description of payment order
+   * @param extraData Extra data of payment order
+   * @return Unique identifier of payment or null if payment is not initiated
+   */
+  String createFPSPayment(
+    @NotEmpty String paymentProduct,
+    @NotEmpty String creditorBban,
+    @NotEmpty String creditorSortCode,
+    @NotEmpty String creditorName,
+    ParticipantAddress creditorAddress,
+    @NotEmpty String debtorBban,
+    @NotEmpty String debtorSortCode,
+    @NotEmpty String amount,
+    @NotEmpty String currency,
+    String description,
+    @NotNull Map<String, String> extraData
+  );
+
+  /**
+   * Provides url of provider's authorization page
+   * designated for authorization session of new Payment Initiation Session
+   *
+   * @param paymentId Unique identifier of payment order for which is required authorization
+   * @return URL string
+   */
+  String getPaymentAuthorizationPageUrl(@NotEmpty String paymentId);
 }

@@ -74,9 +74,10 @@ public class PrioraRequestResolver implements HandlerMethodArgumentResolver {
     private <T> T parsePayloadAndValidate(String authorization, Class<T> clazz) throws BadRequest.JWTExpiredSignature, BadRequest.JWTDecodeError {
         try {
             String bearerToken = authorization.replace("Bearer ", "");
-            Jws<Claims> claims = Jwts.parser()
-                    .setSigningKey(applicationProperties.getPrioraPublicKey())
-                    .parseClaimsJws(bearerToken);
+            Jws<Claims> claims = Jwts.parserBuilder()
+              .setSigningKey(applicationProperties.getPrioraPublicKey())
+              .build()
+              .parseClaimsJws(bearerToken);
             return mapper.convertValue(claims.getBody().get(SDKConstants.KEY_DATA, Map.class), clazz);
         } catch (ExpiredJwtException e) {
             throw new BadRequest.JWTExpiredSignature();
