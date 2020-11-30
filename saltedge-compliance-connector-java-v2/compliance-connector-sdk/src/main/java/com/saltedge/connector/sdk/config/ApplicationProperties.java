@@ -23,10 +23,8 @@ package com.saltedge.connector.sdk.config;
 import com.saltedge.connector.sdk.tools.KeyTools;
 import com.saltedge.connector.sdk.tools.ResourceTools;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.security.PrivateKey;
 import java.security.PublicKey;
@@ -48,7 +46,6 @@ import java.security.PublicKey;
  *     public_key_name: priora_public_prod.pem
  */
 @Configuration
-//@EnableConfigurationProperties(ApplicationProperties.class)
 @ConfigurationProperties(prefix = "connector")
 public class ApplicationProperties {
     /**

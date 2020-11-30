@@ -1,6 +1,6 @@
 # Salt Edge Compliance Connector SDK Changelog
 
-## 2.5.0 (2020-11-26)
+## 2.5.0 (2020-11-30)
 Add support for the FPS (Faster Payment Service)  
 
 ### Add:  
@@ -12,6 +12,7 @@ Add support for the FPS (Faster Payment Service)
 ### Change:  
 - Move `name` field from Transaction.ParticipantDetails.Account to the Transaction.ParticipantDetails.
 - Modify ProviderServiceAbs.createPayment(...)
+- Modify ConnectorSDKCallbackService (Add `paymentProduct` param)
 - Update JJWT version up to 0.11.2   
   
 ## 2.4.3 (2020-11-02)

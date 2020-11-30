@@ -51,8 +51,10 @@ public class ConnectorTypeConverters {
                 account.nature,
                 account.currencyCode
         );
-        result.setBban(account.number);
         result.setIban(account.iban);
+        result.setBic(account.bic);
+        result.setBban(account.bban);
+        result.setSortCode(account.sortCode);
         result.setMsisdn(user.phone);
         result.setProduct(account.nature);
         result.setStatus(account.status);
@@ -148,7 +150,7 @@ public class ConnectorTypeConverters {
 
     public static ParticipantDetails createParticipantDetails(AccountEntity account) {
         ParticipantAccount participantAccount = new ParticipantAccount();
-        participantAccount.bban = account.number;
+        participantAccount.bban = account.bban;
         participantAccount.currencyCode = account.currencyCode;
         participantAccount.iban = account.iban;
         participantAccount.maskedPan = maskPan(account.pan);

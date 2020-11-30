@@ -60,9 +60,9 @@ public class ConnectorServiceTools {
 
     }
 
-    public static AccountEntity findDebtorAccount(AccountsRepository accountsRepository, String iban) {
-        if (StringUtils.isEmpty(iban)) return null;
-        return accountsRepository.findFirstByIban(iban);
+    public static AccountEntity findDebtorAccount(AccountsRepository accountsRepository, String identifier) {
+        if (StringUtils.isEmpty(identifier)) return null;
+        return accountsRepository.findFirstByIbanOrBban(identifier, identifier);
     }
 
     public static boolean isExemptPayment(PaymentEntity payment) {

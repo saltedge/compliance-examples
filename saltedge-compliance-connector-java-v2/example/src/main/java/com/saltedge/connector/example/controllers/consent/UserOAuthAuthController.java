@@ -31,6 +31,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.constraints.NotEmpty;
 
+import static com.saltedge.connector.example.controllers.consent.UserConsentController.CONSENT_BASE_PATH;
+
 @Controller
 @RequestMapping
 public class UserOAuthAuthController extends UserBaseController {
@@ -60,11 +62,12 @@ public class UserOAuthAuthController extends UserBaseController {
     @PostMapping(BASE_PATH + "/{" + SESSION_TYPE + "}")
     public ModelAndView onSubmitCredentials(
             @PathVariable(SESSION_TYPE) @NotEmpty String sessionType,
-            @RequestParam(value = SDKConstants.KEY_SESSION_SECRET, required = false) String sessionSecret,
-            @RequestParam(value = SDKConstants.KEY_PAYMENT_ID, required = false) String paymentId,
+            @RequestParam(value = SDKConstants.KEY_SESSION_SECRET, required = false) String sessionSecret,//AIS session secret
+            @RequestParam(value = SDKConstants.KEY_PAYMENT_ID, required = false) String paymentId,//PIS
             @RequestParam String username,
             @RequestParam String password
     ) {
+        // If no valid params
         if ((!TYPE_PAYMENTS.equals(sessionType) && !TYPE_ACCOUNTS.equals(sessionType))
                 || (StringUtils.isEmpty(sessionSecret) && StringUtils.isEmpty(paymentId))
         ) {
@@ -75,12 +78,16 @@ public class UserOAuthAuthController extends UserBaseController {
         Long userId = findUser(username, password);
         if (userId == null) return createSignInModel(sessionType).addObject("error", "Invalid credentials.");
 
-        //Redirect to bank Offered Consent Page
-        if (connectorCallbackService.isUserConsentRequired(sessionSecret)) {
-            ModelAndView result = new ModelAndView("redirect:/oauth/consent/"+sessionType);
+
+        if (TYPE_PAYMENTS.equals(sessionType)) {
+            ModelAndView result = new ModelAndView("redirect:" + CONSENT_BASE_PATH + sessionType);
             result.addObject(SDKConstants.KEY_USER_ID, userId);
-            if (TYPE_PAYMENTS.equals(sessionType)) result.addObject(SDKConstants.KEY_PAYMENT_ID, paymentId);
-            if (TYPE_ACCOUNTS.equals(sessionType)) result.addObject(SDKConstants.KEY_SESSION_SECRET, sessionSecret);
+            result.addObject(SDKConstants.KEY_PAYMENT_ID, paymentId);
+            return result;
+        } else if (connectorCallbackService.isUserConsentRequired(sessionSecret)) {//Redirect to bank Offered Consent Page
+            ModelAndView result = new ModelAndView("redirect:" + CONSENT_BASE_PATH + sessionType);
+            result.addObject(SDKConstants.KEY_USER_ID, userId);
+            result.addObject(SDKConstants.KEY_SESSION_SECRET, sessionSecret);
             return result;
         } else {
             return onAccountInformationAuthorizationSuccess(sessionSecret, String.valueOf(userId), null);

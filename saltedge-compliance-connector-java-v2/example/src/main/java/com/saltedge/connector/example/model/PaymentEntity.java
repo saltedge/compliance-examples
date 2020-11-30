@@ -30,86 +30,87 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
+import static com.saltedge.connector.sdk.SDKConstants.PAYMENT_PRODUCT_FASTER_PAYMENT_SERVICE;
+
 @Entity(name = "Payment")
 @Table(name = "Payment")
 public class PaymentEntity extends BaseEntity implements Serializable {
 
-    @Column(name = "description", nullable = false)
-    public String description;
+  @Column(name = "description", nullable = false)
+  public String description;
 
-    @Column(name = "status", nullable = false)
-    public Status status = Status.PENDING;
+  @Column(name = "status", nullable = false)
+  public PaymentStatus status = PaymentStatus.PENDING;
 
-    @Column(name = "amount", nullable = false)
-    public double amount;
+  @Column(name = "amount", nullable = false)
+  public double amount;
 
-    @Column(name = "total", nullable = false)
-    public double total;
+  @Column(name = "total", nullable = false)
+  public double total;
 
-    @Column(name = "currency")
-    public String currency;
+  @Column(name = "currency")
+  public String currency;
 
-    @Column(name = "account_id", nullable = false)
-    public Long accountId;
+  @Column(name = "account_id", nullable = false)
+  public Long accountId;
 
-    @Column(name = "fees", nullable = false)
-    @Convert(converter = FeesConverter.class)
-    public List<Fee> fees;
+  @Column(name = "fees", nullable = false)
+  @Convert(converter = FeesConverter.class)
+  public List<Fee> fees;
 
-    @Column(name = "payment_attributes", nullable = false)//TODO investigate usage
-    @Convert(converter = ObjectMapConverter.class)
-    public Map<String, String> paymentAttributes;
+  @Column(name = "payment_attributes", nullable = false)//TODO investigate usage
+  @Convert(converter = ObjectMapConverter.class)
+  public Map<String, String> paymentAttributes;
 
-    @Column(name = "extra", nullable = false)
-    @Convert(converter = StringMapConverter.class)
-    public Map<String, String> extra;
+  @Column(name = "extra", nullable = false)
+  @Convert(converter = StringMapConverter.class)
+  public Map<String, String> extra;
 
-    @Column(name = "confirmation_code")
-    public String confirmationCode;
+  @Column(name = "confirmation_code")
+  public String confirmationCode;
 
-    @Column(name = "from_iban")
-    public String fromIban;
+  @Column(name = "from_iban")
+  public String fromIban;
 
-    @Column(name = "to_iban")
-    public String toIban;
+  @Column(name = "from_bic")
+  public String fromBic;
 
-    @Column(name = "to_account_name")
-    public String toAccountName;
+  @Column(name = "from_bban")
+  public String fromBban;
 
-    @ManyToOne
-    @JoinColumn
-    public UserEntity user;
+  @Column(name = "from_sort_code")
+  public String fromSortCode;
 
-    public PaymentEntity() {
-    }
+  @Column(name = "to_iban")
+  public String toIban;
 
-    public PaymentEntity(
-            Long fromAccountId,
-            String debtorIban,
-            String creditorIban,
-            String creditorName,
-            Status status,
-            double amount,
-            String currency,
-            String description,
-            Map<String, String> extraData
-    ) {
-        this.accountId = fromAccountId;
-        this.fromIban = debtorIban;
-        this.toIban = creditorIban;
-        this.toAccountName = creditorName;
-        this.status = status;
-        this.amount = amount;
-        this.currency = currency;
-        this.description = description;
-        this.extra = extraData;
-    }
+  @Column(name = "to_bic")
+  public String toBic;
 
-    public enum Status {
-        PENDING, CONFIRMED, FAILED, CLOSED
-    }
+  @Column(name = "to_bban")
+  public String toBban;
 
-    public boolean isConfirmed() {
-        return PaymentEntity.Status.CONFIRMED.equals(status);
-    }
+  @Column(name = "to_sort_code")
+  public String toSortCode;
+
+  @Column(name = "to_account_name")
+  public String toAccountName;
+
+  @Column(name = "payment_product", nullable = false)
+  public String paymentProduct;
+
+  @ManyToOne
+  @JoinColumn
+  public UserEntity user;
+
+  public PaymentEntity() {
+  }
+
+  public boolean isConfirmed() {
+    return PaymentStatus.CONFIRMED.equals(status);
+  }
+
+  public boolean isFps() {
+    return PAYMENT_PRODUCT_FASTER_PAYMENT_SERVICE.equals(paymentProduct);
+  }
 }

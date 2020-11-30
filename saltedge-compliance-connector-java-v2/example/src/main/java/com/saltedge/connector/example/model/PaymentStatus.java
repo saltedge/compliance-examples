@@ -18,16 +18,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.saltedge.connector.example.model.repository;
+package com.saltedge.connector.example.model;
 
-import com.saltedge.connector.example.model.AccountEntity;
-import org.springframework.data.jpa.repository.JpaRepository;
-
-import java.util.List;
-import java.util.Optional;
-
-public interface AccountsRepository extends JpaRepository<AccountEntity, Long> {
-    AccountEntity findFirstByIbanOrBban(String iban, String bban);
-    Optional<AccountEntity> findFirstByIdAndUserId(Long id, Long userId);
-    List<AccountEntity> findByUserId(Long userId);
+public enum PaymentStatus {
+  PENDING, CONFIRMED, FAILED, CLOSED
 }
