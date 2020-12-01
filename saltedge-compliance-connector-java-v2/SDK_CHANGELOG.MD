@@ -1,6 +1,6 @@
 # Salt Edge Compliance Connector SDK Changelog
 
-## 2.5.0 (2020-11-30)
+## 2.5.0 (2020-12-01)
 Add support for the FPS (Faster Payment Service)  
 
 ### Add:  

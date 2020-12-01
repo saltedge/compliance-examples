@@ -13,8 +13,8 @@
         <h3 class="centered">${input_title}</h3>
         <div class="form-container">
             <form method="post" action="/oauth/authorize/${session_type}">
-                <p>Username: <input type="text" name="username">
-                <p>Password: <input type="password" name="password">
+                <p>Username [username]: <input type="text" name="username">
+                <p>Password [secret]: <input type="password" name="password">
                 <#if session_secret??><input type="hidden" name="session_secret" value="${session_secret}"></#if>
                 <#if payment_id??><input type="hidden" name="payment_id" value="${payment_id}"></#if>
                 <p><input type="submit" value="Sign In" class="submit">

@@ -177,16 +177,21 @@ public class DatabaseInitializer {
         if (fromDate.isAfter(toDate)) return;
         for (LocalDate date = fromDate; (date.isBefore(toDate) || date.isEqual(toDate)); date = date.plusDays(1)) {
             double amount = -(double) date.getDayOfMonth();
-            transactionsRepository.save(new TransactionEntity(
-                    String.format("%.2f", amount),
-                    account.currencyCode,
-                    "Payment " + amount + " " + account.currencyCode + "(Account:" + account.id + ")",
-                    date,
-                    "booked",
-                    new ArrayList<>(),
-                    new HashMap<>(),
-                    account
-            ));
+            TransactionEntity transaction = new TransactionEntity(
+              String.format("%.2f", amount),
+              account.currencyCode,
+              "Payment " + amount + " " + account.currencyCode + "(Account:" + account.id + ")",
+              date,
+              "booked",
+              new ArrayList<>(),
+              new HashMap<>(),
+              account
+            );
+            transaction.toIban = "GB29NWBK60161331926819";
+            transaction.toAccountName = "Test Creditor Account";
+            transaction.toCurrencyCode = "EUR";
+            transaction.postDate = date;
+            transactionsRepository.save(transaction);
         }
     }
 
