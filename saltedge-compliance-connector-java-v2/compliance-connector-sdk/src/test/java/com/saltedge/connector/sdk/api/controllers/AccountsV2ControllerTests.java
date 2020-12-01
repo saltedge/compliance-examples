@@ -111,13 +111,13 @@ public class AccountsV2ControllerTests {
 
     private List<Transaction> getTestTransactionsData() throws ParseException {
         ArrayList<Transaction> result = new ArrayList<>();
-        result.add(new Transaction(
-                "t1",
-                "100.00",
-                "EUR",
-                "booked",
-                LocalDate.parse("2020-01-01")
-        ));
+        Transaction transaction = new Transaction();
+        transaction.setId("t1");
+        transaction.setAmount("100.0");
+        transaction.setCurrencyCode("EUR");
+        transaction.setStatus("booked");
+        transaction.setBookingDate(LocalDate.parse("2020-01-01"));
+        result.add(transaction);
         return result;
     }
 }

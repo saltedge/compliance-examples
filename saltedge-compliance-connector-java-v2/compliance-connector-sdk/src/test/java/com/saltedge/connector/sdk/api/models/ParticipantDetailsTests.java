@@ -31,7 +31,10 @@ public class ParticipantDetailsTests {
 
 		assertThat(model.account).isNull();
 
-		model = new ParticipantDetails(new ParticipantAccount("bban", "EUR", "iban", "****", "+(1) 1234567", "1234", "name"));
+		model = new ParticipantDetails(
+			"name",
+			new ParticipantAccount("bban", "EUR", "iban", "****", "+(1) 1234567", "1234", "name")
+		);
 
 		assertThat(model.account.bban).isEqualTo("bban");
 		assertThat(model.account.currencyCode).isEqualTo("EUR");
