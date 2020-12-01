@@ -18,30 +18,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.saltedge.connector.sdk.api.models;
+package com.saltedge.connector.example.model;
 
-import org.junit.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
-public class ParticipantDetailsTests {
-	@Test
-	public void constructorTest() {
-		ParticipantDetails model = new ParticipantDetails();
-
-		assertThat(model.account).isNull();
-
-		model = new ParticipantDetails(
-			"name",
-			new ParticipantAccount("bban", "EUR", "iban", "****", "+(1) 1234567", "1234", "name")
-		);
-
-		assertThat(model.account.bban).isEqualTo("bban");
-		assertThat(model.account.currencyCode).isEqualTo("EUR");
-		assertThat(model.account.iban).isEqualTo("iban");
-		assertThat(model.account.maskedPan).isEqualTo("****");
-		assertThat(model.account.msisdn).isEqualTo("+(1) 1234567");
-		assertThat(model.account.pan).isEqualTo("1234");
-		assertThat(model.account.name).isEqualTo("name");
-	}
+public enum PaymentStatus {
+  PENDING, CONFIRMED, FAILED, CLOSED
 }

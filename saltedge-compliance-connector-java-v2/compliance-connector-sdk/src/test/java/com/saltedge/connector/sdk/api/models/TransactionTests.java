@@ -49,7 +49,12 @@ public class TransactionTests {
 
 	@Test
 	public void constructorTest2() {
-		Transaction model = new Transaction("id", "1.0", "EUR", "active", LocalDate.parse("2019-11-18"));
+		Transaction model = new Transaction();
+		model.setId("id");
+		model.setAmount("1.0");
+		model.setCurrencyCode("EUR");
+		model.setStatus("active");
+		model.setValueDate(LocalDate.parse("2019-11-18"));
 
 		assertThat(model.getId()).isEqualTo("id");
 		assertThat(model.getAmount()).isEqualTo("1.0");
@@ -66,7 +71,12 @@ public class TransactionTests {
 
 	@Test
 	public void serializationTest() throws JsonProcessingException {
-		Transaction model = new Transaction("id", "1.0", "EUR", "active", LocalDate.parse("2019-11-18"));
+		Transaction model = new Transaction();
+		model.setId("id");
+		model.setAmount("1.0");
+		model.setCurrencyCode("EUR");
+		model.setStatus("active");
+		model.setValueDate(LocalDate.parse("2019-11-18"));
 
 		ObjectMapper mapper = JsonTools.createDefaultMapper();
 		String json = mapper.writeValueAsString(model);

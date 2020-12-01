@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface AccountsRepository extends JpaRepository<AccountEntity, Long> {
-    AccountEntity findFirstByIban(String iban);
+    AccountEntity findFirstByIbanOrBban(String iban, String bban);
     Optional<AccountEntity> findFirstByIdAndUserId(Long id, Long userId);
     List<AccountEntity> findByUserId(Long userId);
 }

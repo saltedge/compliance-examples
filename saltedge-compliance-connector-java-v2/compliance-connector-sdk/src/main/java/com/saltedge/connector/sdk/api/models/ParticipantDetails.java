@@ -46,7 +46,8 @@ public class ParticipantDetails {
   public ParticipantDetails() {
   }
 
-  public ParticipantDetails(ParticipantAccount account) {
+  public ParticipantDetails(String name, ParticipantAccount account) {
+    this.name = name;
     this.account = account;
   }
 }

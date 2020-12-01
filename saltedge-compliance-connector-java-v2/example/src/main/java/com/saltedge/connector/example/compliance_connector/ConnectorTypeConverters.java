@@ -51,8 +51,10 @@ public class ConnectorTypeConverters {
                 account.nature,
                 account.currencyCode
         );
-        result.setBban(account.number);
         result.setIban(account.iban);
+        result.setBic(account.bic);
+        result.setBban(account.bban);
+        result.setSortCode(account.sortCode);
         result.setMsisdn(user.phone);
         result.setProduct(account.nature);
         result.setStatus(account.status);
@@ -84,25 +86,26 @@ public class ConnectorTypeConverters {
             List<TransactionEntity> transactions
     ) {
         return transactions.stream()
-
                 .map(ConnectorTypeConverters::convertTransactionToTransactionsData)
                 .collect(Collectors.toList());
     }
 
     public static Transaction convertTransactionToTransactionsData(TransactionEntity transaction) {
-        Transaction result = new Transaction(
-                transaction.id.toString(),
-                transaction.amount,
-                transaction.currencyCode,
-                transaction.status,
-                transaction.madeOn
-        );
+        Transaction result = new Transaction();
+        result.setId(transaction.id.toString());
+        result.setAmount(transaction.amount);
+        result.setCurrencyCode(transaction.currencyCode);
+        result.setStatus(transaction.status);
+        result.setValueDate(transaction.madeOn);
         result.setBookingDate(transaction.postDate);
-        result.setCreditorDetails(createParticipantDetails(transaction.account));
-        result.setDebtorDetails(new ParticipantDetails(ParticipantAccount.createWithIbanAndName(
-                "GB29 NWBK 6016 1331 9268 19",
-                "Unknown payee"
-        )));
+        result.setDebtorDetails(createParticipantDetails(transaction.account));
+        result.setCreditorDetails(new ParticipantDetails(
+          transaction.toAccountName,
+          ParticipantAccount.createWithIbanAndName(
+            transaction.toIban,
+            transaction.toAccountName
+          )
+        ));
 
         List<CurrencyExchange> exchanges = new ArrayList<>();
         exchanges.add(new CurrencyExchange("", "1.0", transaction.postDate, transaction.currencyCode, transaction.currencyCode, transaction.currencyCode));
@@ -112,7 +115,10 @@ public class ConnectorTypeConverters {
         result.getExtra().ultimateCreditor = result.getCreditorDetails().account.name;
         result.getExtra().ultimateDebtor = result.getDebtorDetails().account.name;
 
-        result.setRemittanceInformation(new TransactionRemittanceInformation());
+        TransactionRemittanceInformation information = new TransactionRemittanceInformation();
+        information.structured = transaction.description;
+        information.unstructured = transaction.description;
+        result.setRemittanceInformation(information);
         return result;
     }
 
@@ -148,14 +154,14 @@ public class ConnectorTypeConverters {
 
     public static ParticipantDetails createParticipantDetails(AccountEntity account) {
         ParticipantAccount participantAccount = new ParticipantAccount();
-        participantAccount.bban = account.number;
+        participantAccount.bban = account.bban;
         participantAccount.currencyCode = account.currencyCode;
         participantAccount.iban = account.iban;
         participantAccount.maskedPan = maskPan(account.pan);
         participantAccount.msisdn = account.user.phone;
         participantAccount.pan = account.pan;
         participantAccount.name = account.name;
-        return new ParticipantDetails(participantAccount);
+        return new ParticipantDetails(account.name, participantAccount);
     }
 
     private static String maskPan(String pan) {

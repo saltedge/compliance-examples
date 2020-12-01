@@ -39,6 +39,8 @@ import javax.validation.constraints.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.saltedge.connector.sdk.SDKConstants.PAYMENT_PRODUCT_FASTER_PAYMENT_SERVICE;
+
 /**
  * Service designated for creating payment orders.
  * https://priora.saltedge.com/docs/aspsp/v2/pis#pis-connector_endpoints-payments
@@ -59,7 +61,7 @@ public class PaymentsService extends BaseService {
       );
 
       String paymentId;
-      if (paymentRequest.getPaymentProduct().equals("faster-payment-service")) {
+      if (paymentRequest.getPaymentProduct().equals(PAYMENT_PRODUCT_FASTER_PAYMENT_SERVICE)) {
         paymentId = providerService.createFPSPayment(
           paymentRequest.getPaymentProduct(),
           order.getCreditorAccount().getBban(),

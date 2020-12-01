@@ -120,12 +120,14 @@ public interface ConnectorCallbackAbs {
    * @param paymentId Unique identifier of payment
    * @param userId Unique identifier of authenticated User
    * @param paymentExtra Extra data of payment order
+   * @param paymentProduct Payment product code (Allowed values: sepa-credit-transfers, instant-sepa-credit-transfers, target-2-payments, faster-payment-service, internal-transfer)
    * @return URL string for final redirection of Payment Authorization session
    */
   String onPaymentInitiationAuthorizationSuccess(
     @NotEmpty String paymentId,
     @NotEmpty String userId,
-    @NotEmpty Map<String, String> paymentExtra
+    @NotEmpty Map<String, String> paymentExtra,
+    @NotEmpty String paymentProduct
   );
 
   /**

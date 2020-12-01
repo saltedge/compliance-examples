@@ -27,6 +27,7 @@ import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
@@ -35,91 +36,96 @@ import java.util.Map;
 @Table(name = "Account")
 public class AccountEntity extends BaseEntity implements Serializable {
 
-    @Column(name = "name", nullable = false)
-    public String name;
+  @Column(name = "name", nullable = false)
+  public String name;
 
-    @Column(name = "nature", nullable = false)
-    public String nature;
+  @Column(name = "nature", nullable = false)
+  public String nature;
 
-    @Column(name = "currency_code", nullable = false)
-    public String currencyCode;
+  @Column(name = "currency_code", nullable = false)
+  public String currencyCode;
 
-    @Column(name = SDKConstants.KEY_IBAN, nullable = false, unique = true)
-    public String iban;
+  @Column(name = SDKConstants.KEY_IBAN, nullable = false)
+  public String iban;
 
-    @Column(name = "number", nullable = false, unique = true)
-    public String number;
+  @Column(name = "bic", nullable = false)
+  public String bic;
 
-    @Column(name = "sort_code", nullable = false)
-    public String sortCode;
+  @Column(name = "bban", nullable = false)
+  public String bban;
 
-    @Column(name = "swift_code", nullable = false)
-    public String swiftCode;
+  @Column(name = "sort_code", nullable = false)
+  public String sortCode;
 
-    @Column(name = "available_amount", nullable = false)
-    public String availableAmount;
+  @Column(name = "swift_code", nullable = false)
+  public String swiftCode;
 
-    @Column(name = "balance", nullable = false)
-    public String balance;
+  @Column(name = "available_amount", nullable = false)
+  public String availableAmount;
 
-    @Column(name = "credit_limit", nullable = false)
-    public String creditLimit;
+  @Column(name = "balance", nullable = false)
+  public String balance;
 
-    @Column(name = "is_payment_account", nullable = false)
-    public Boolean isPaymentAccount;
+  @Column(name = "credit_limit", nullable = false)
+  public String creditLimit;
 
-    @Column(name = "status", nullable = false)
-    public String status;
+  @Column(name = "is_payment_account", nullable = false)
+  public Boolean isPaymentAccount;
 
-    @Column(name = "pan")
-    public String pan;
+  @Column(name = "status", nullable = false)
+  public String status;
 
-    @Column(name = "extra", nullable = false)
-    @Convert(converter = StringMapConverter.class)
-    public Map<String, String> extra;
+  @Column(name = "pan")
+  public String pan;
 
-    @ManyToOne
-    @JoinColumn
-    public UserEntity user;
+  @Column(name = "extra", nullable = false)
+  @Convert(converter = StringMapConverter.class)
+  public Map<String, String> extra;
 
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(mappedBy = "account")
-    public List<TransactionEntity> transactions;
+  @ManyToOne
+  @JoinColumn
+  public UserEntity user;
 
-    public AccountEntity() {
-    }
+  @LazyCollection(LazyCollectionOption.FALSE)
+  @OneToMany(mappedBy = "account")
+  public List<TransactionEntity> transactions;
 
-    public AccountEntity(
-            String name,
-            String nature,
-            String currencyCode,
-            String iban,
-            String number,
-            String sortCode,
-            String swiftCode,
-            String availableAmount,
-            String balance,
-            String creditLimit,
-            Boolean isPaymentAccount,
-            String status,
-            String pan,
-            Map<String, String> extra,
-            UserEntity user
-    ) {
-        this.name = name;
-        this.nature = nature;
-        this.currencyCode = currencyCode;
-        this.iban = iban;
-        this.number = number;
-        this.sortCode = sortCode;
-        this.swiftCode = swiftCode;
-        this.availableAmount = availableAmount;
-        this.balance = balance;
-        this.creditLimit = creditLimit;
-        this.isPaymentAccount = isPaymentAccount;
-        this.status = status;
-        this.pan = pan;
-        this.extra = extra;
-        this.user = user;
-    }
+  public AccountEntity() {
+  }
+
+  public AccountEntity(
+    @NotNull String name,
+    @NotNull String nature,
+    @NotNull String currencyCode,
+    @NotNull String iban,
+    @NotNull String bic,
+    @NotNull String bban,
+    @NotNull String sortCode,
+    @NotNull String swiftCode,
+    @NotNull String availableAmount,
+    @NotNull String balance,
+    @NotNull String creditLimit,
+    @NotNull Boolean isPaymentAccount,
+    @NotNull String status,
+    @NotNull String pan,
+    @NotNull Map<String, String> extra,
+    @NotNull UserEntity user
+  ) {
+    this.name = name;
+    this.nature = nature;
+    this.currencyCode = currencyCode;
+    this.iban = iban;
+    this.bic = bic;
+    this.sortCode = sortCode;
+    this.swiftCode = swiftCode;
+    this.bban = bban;
+    this.availableAmount = availableAmount;
+    this.balance = balance;
+    this.creditLimit = creditLimit;
+    this.isPaymentAccount = isPaymentAccount;
+    this.status = status;
+    this.pan = pan;
+    this.extra = extra;
+    this.user = user;
+  }
 }

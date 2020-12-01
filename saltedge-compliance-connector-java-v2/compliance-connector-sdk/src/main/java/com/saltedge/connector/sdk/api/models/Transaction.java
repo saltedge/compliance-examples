@@ -105,14 +105,6 @@ public class Transaction {
     public Transaction() {
     }
 
-    public Transaction(String id, String amount, String currencyCode, String status, LocalDate valueDate) {
-        this.id = id;
-        this.amount = amount;
-        this.currencyCode = currencyCode;
-        this.status = status;
-        this.valueDate = valueDate;
-    }
-
     public String getId() {
         return id;
     }

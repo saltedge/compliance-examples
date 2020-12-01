@@ -52,6 +52,7 @@ public class DatabaseInitializer {
     private UserEntity user;
     private AccountEntity account1;
     private AccountEntity account2;
+    private AccountEntity account3;
     private CardAccountEntity cardAccount1;
 
     @EventListener
@@ -105,10 +106,11 @@ public class DatabaseInitializer {
                     "My Payment Account 1",
                     "SLRY",//Accounts used for salary payments.
                     "EUR",
-                    "FK93RAND49838728129441",
-                    "619656551",
-                    "82-78-61",
-                    "TBNFFR21PAR",
+                    "GB46BUKB20041538290008",
+                    "BARCGB22XXX",
+                    "",
+                    "",
+                    "BUKB20041538290008",
                     "20000.00",
                     "20000.00",
                     "0.00",
@@ -123,8 +125,9 @@ public class DatabaseInitializer {
                     "CACC",//Account used to post debits and credits when no specific account has been nominated.
                     "EUR",
                     "FK93RAND49838728129442",
-                    "619656552",
-                    "82-78-62",
+                    "BARCGB22XXX",
+                    "",
+                    "",
                     "TBNFFR22PAR",
                     "10000.00",
                     "10000.00",
@@ -134,6 +137,24 @@ public class DatabaseInitializer {
                     null,
                     new HashMap<>(),
                     user
+            ));
+            account3 = accountsRepository.save(new AccountEntity(
+              "My FPS Payment Account",
+              "CACC",
+              "EUR",
+              "",
+              "",
+              "MIDL40051512345674",
+              "400515",
+              "TBNFFR22PAR",
+              "10000.00",
+              "10000.00",
+              "10000.00",
+              true,
+              "enabled",
+              null,
+              new HashMap<>(),
+              user
             ));
 
             log.info("Accounts Seeded");
@@ -156,16 +177,21 @@ public class DatabaseInitializer {
         if (fromDate.isAfter(toDate)) return;
         for (LocalDate date = fromDate; (date.isBefore(toDate) || date.isEqual(toDate)); date = date.plusDays(1)) {
             double amount = -(double) date.getDayOfMonth();
-            transactionsRepository.save(new TransactionEntity(
-                    String.format("%.2f", amount),
-                    account.currencyCode,
-                    "Payment " + amount + " " + account.currencyCode + "(Account:" + account.id + ")",
-                    date,
-                    "booked",
-                    new ArrayList<>(),
-                    new HashMap<>(),
-                    account
-            ));
+            TransactionEntity transaction = new TransactionEntity(
+              String.format("%.2f", amount),
+              account.currencyCode,
+              "Payment " + amount + " " + account.currencyCode + "(Account:" + account.id + ")",
+              date,
+              "booked",
+              new ArrayList<>(),
+              new HashMap<>(),
+              account
+            );
+            transaction.toIban = "GB29NWBK60161331926819";
+            transaction.toAccountName = "Test Creditor Account";
+            transaction.toCurrencyCode = "EUR";
+            transaction.postDate = date;
+            transactionsRepository.save(transaction);
         }
     }
 

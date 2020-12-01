@@ -249,7 +249,7 @@ public class ConnectorCallbackServiceTests {
 		HashMap<String, String> extraData = new HashMap<>();
 
 		// when
-		testService.onPaymentInitiationAuthorizationSuccess("", "user1", extraData);
+		testService.onPaymentInitiationAuthorizationSuccess("", "user1", extraData, "sepa-credit-transfers");
 	}
 
 	@Test(expected = ConstraintViolationException.class)
@@ -258,7 +258,10 @@ public class ConnectorCallbackServiceTests {
 		HashMap<String, String> extraData = new HashMap<>();
 
 		// when
-		testService.onPaymentInitiationAuthorizationSuccess("paymentId", "", extraData);
+		String result = testService.onPaymentInitiationAuthorizationSuccess("paymentId", "", extraData, "sepa-credit-transfers");
+
+		// then
+		assertThat(result).isEqualTo("");
 	}
 
 	@Test(expected = ConstraintViolationException.class)
@@ -267,7 +270,10 @@ public class ConnectorCallbackServiceTests {
 		HashMap<String, String> extraData = new HashMap<>();
 
 		// when
-		testService.onPaymentInitiationAuthorizationSuccess("paymentId", "userId", extraData);
+		String result = testService.onPaymentInitiationAuthorizationSuccess("paymentId", "userId", extraData, "sepa-credit-transfers");
+
+		// then
+		assertThat(result).isEqualTo("");
 	}
 
 	@Test
@@ -277,25 +283,55 @@ public class ConnectorCallbackServiceTests {
 		extraData.put(KEY_DESCRIPTION, "test");
 
 		// when
-		String result = testService.onPaymentInitiationAuthorizationSuccess("payment1", "user1", extraData);
+		String result = testService.onPaymentInitiationAuthorizationSuccess("payment1", "user1", extraData, "sepa-credit-transfers");
 
 		// then
 		assertThat(result).isEqualTo("");
 	}
 
 	@Test
-	public void givenExtra_whenOnPaymentInitiationAuthorizationSuccess_thenReturnRedirect() {
+	public void givenExtra_whenOnSepaPaymentInitiationAuthorizationSuccess_thenReturnRedirect() {
 		// given
 		HashMap<String, String> extraData = new HashMap<>();
 		extraData.put(SDKConstants.KEY_SESSION_SECRET, "sessionSecret");
 		extraData.put(SDKConstants.KEY_RETURN_TO_URL, "http://redirect.to");
 
 		// when
-		String result = testService.onPaymentInitiationAuthorizationSuccess("payment1", "user1", extraData);
+		String result = testService.onPaymentInitiationAuthorizationSuccess("payment1", "user1", extraData, "sepa-credit-transfers");
 
 		// then
 		assertThat(result).isEqualTo("http://redirect.to");
 		verify(sessionsCallbackService).sendSuccessCallback(eq("sessionSecret"), eq(new SessionSuccessCallbackRequest("user1", "ACTC")));
+	}
+
+	@Test
+	public void givenExtra_whenOnInstantSepaPaymentInitiationAuthorizationSuccess_thenReturnRedirect() {
+		// given
+		HashMap<String, String> extraData = new HashMap<>();
+		extraData.put(SDKConstants.KEY_SESSION_SECRET, "sessionSecret");
+		extraData.put(SDKConstants.KEY_RETURN_TO_URL, "http://redirect.to");
+
+		// when
+		String result = testService.onPaymentInitiationAuthorizationSuccess("payment1", "user1", extraData, "instant-sepa-credit-transfers");
+
+		// then
+		assertThat(result).isEqualTo("http://redirect.to");
+		verify(sessionsCallbackService).sendSuccessCallback(eq("sessionSecret"), eq(new SessionSuccessCallbackRequest("user1", "ACCC")));
+	}
+
+	@Test
+	public void givenExtra_whenOnFpsPaymentInitiationAuthorizationSuccess_thenReturnRedirect() {
+		// given
+		HashMap<String, String> extraData = new HashMap<>();
+		extraData.put(SDKConstants.KEY_SESSION_SECRET, "sessionSecret");
+		extraData.put(SDKConstants.KEY_RETURN_TO_URL, "http://redirect.to");
+
+		// when
+		String result = testService.onPaymentInitiationAuthorizationSuccess("payment1", "user1", extraData, "instant-sepa-credit-transfers");
+
+		// then
+		assertThat(result).isEqualTo("http://redirect.to");
+		verify(sessionsCallbackService).sendSuccessCallback(eq("sessionSecret"), eq(new SessionSuccessCallbackRequest("user1", "ACSC")));
 	}
 
 	@Test(expected = ConstraintViolationException.class)
