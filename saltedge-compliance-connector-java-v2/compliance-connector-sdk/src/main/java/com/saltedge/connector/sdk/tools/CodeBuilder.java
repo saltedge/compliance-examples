@@ -20,6 +20,9 @@
  */
 package com.saltedge.connector.sdk.tools;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -28,6 +31,7 @@ import java.util.Random;
 
 public class CodeBuilder {
     public static final String DEFAULT_SALT = CodeBuilder.generateRandomString(16);
+    private static final Logger log = LoggerFactory.getLogger(CodeBuilder.class);
 
     public static String generateRandomString() {
         return generateRandomString(32);
@@ -52,7 +56,7 @@ public class CodeBuilder {
         try {
             hashBytes = MessageDigest.getInstance("SHA-256").digest(hashBytes);
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         return Base64.getEncoder().withoutPadding().encodeToString(hashBytes);
     }
@@ -63,7 +67,7 @@ public class CodeBuilder {
         try {
             hashBytes = MessageDigest.getInstance("SHA-256").digest(hashBytes);
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         return Base64.getEncoder().encodeToString(hashBytes);
     }

@@ -137,7 +137,7 @@ public class ExampleProviderService implements ProviderServiceAbs {
             Arrays.stream(params).forEach(item -> builder.queryParam("session_secret", sessionSecret));
             return builder.build().toUriString();
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
             return null;
         }
     }
@@ -355,7 +355,7 @@ public class ExampleProviderService implements ProviderServiceAbs {
             Arrays.stream(params).forEach(item -> builder.queryParam("payment_id", paymentId));
             return builder.build().toUriString();
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
             return null;
         }
     }
