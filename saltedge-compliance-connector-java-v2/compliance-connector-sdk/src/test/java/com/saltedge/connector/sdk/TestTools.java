@@ -20,12 +20,15 @@
  */
 package com.saltedge.connector.sdk;
 
+import com.saltedge.connector.sdk.api.models.err.ApiExceptionsHandler;
 import com.saltedge.connector.sdk.provider.ProviderServiceAbs;
 import com.saltedge.connector.sdk.tools.JsonTools;
 import com.saltedge.connector.sdk.tools.KeyTools;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.jackson.io.JacksonSerializer;
 import org.assertj.core.util.Lists;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileNotFoundException;

@@ -63,7 +63,7 @@ public abstract class CallbackRestClient {
             URL baseUrl = priora.getPrioraBaseUrl();
             return new URL(baseUrl, path).toString();
         } catch (MalformedURLException e) {
-            e.printStackTrace();
+            getLogger().error(e.getMessage(), e);
         }
         return null;
     }
@@ -92,13 +92,10 @@ public abstract class CallbackRestClient {
             headers.add("X-HTTP-Method-Override", "PATCH");
             ResponseEntity<Object> response = callbackRestTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(headers), Object.class);
         } catch (HttpClientErrorException e) {
-            e.printStackTrace();
             getLogger().error("HttpClientErrorException:", e);
         } catch (HttpServerErrorException e) {
-            e.printStackTrace();
             getLogger().error("HttpServerErrorException:", e);
         } catch (UnknownHttpStatusCodeException e) {
-            e.printStackTrace();
             getLogger().error("UnknownHttpStatusCodeException:", e);
         }
     }
@@ -112,7 +109,7 @@ public abstract class CallbackRestClient {
                     + "\n"
             );
         } catch (Exception e) {
-            e.printStackTrace();
+            getLogger().error(e.getMessage(), e);
         }
     }
 

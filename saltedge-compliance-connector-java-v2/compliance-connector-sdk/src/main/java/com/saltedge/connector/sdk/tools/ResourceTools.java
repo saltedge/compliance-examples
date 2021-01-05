@@ -20,12 +20,20 @@
  */
 package com.saltedge.connector.sdk.tools;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.net.URL;
-import java.util.Scanner;
+import com.saltedge.connector.sdk.config.PrioraProperties;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 public class ResourceTools {
+    private static final Logger log = LoggerFactory.getLogger(ResourceTools.class);
+
     /**
      * Reads key file from `resources`
      *
@@ -33,20 +41,21 @@ public class ResourceTools {
      * @return key file content or null
      */
     public static String readKeyFile(String filename) {
-        if (filename == null) return null;
-        StringBuilder result = new StringBuilder("");
-
-        URL resURL = ResourceTools.class.getClassLoader().getResource(filename);
-        if (resURL == null) return result.toString();
-        File file = new File(resURL.getFile());
-
-        try (Scanner scanner = new Scanner(file)) {
-            while (scanner.hasNextLine()) {
-                result.append(scanner.nextLine()).append("\n");
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+        Resource fileResource = new ClassPathResource(filename);
+        try {
+            return readFromInputStream(fileResource.getInputStream());
+        } catch (IOException e) {
+            log.error(e.getMessage(), e);
+            return "";
         }
-        return result.toString();
+    }
+
+    private static String readFromInputStream(InputStream inputStream) throws IOException {
+        StringBuilder resultStringBuilder = new StringBuilder();
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
+            String line;
+            while ((line = br.readLine()) != null) resultStringBuilder.append(line).append("\n");
+        }
+        return resultStringBuilder.toString();
     }
 }

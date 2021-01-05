@@ -20,6 +20,10 @@
  */
 package com.saltedge.connector.sdk.tools;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.validation.constraints.NotNull;
 import java.security.KeyFactory;
 import java.security.PrivateKey;
 import java.security.PublicKey;
@@ -29,6 +33,8 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 
 public class KeyTools {
+    private static final Logger log = LoggerFactory.getLogger(KeyTools.class);
+
     /**
      * Generates random base64 encoded string with desired length
      *
@@ -58,7 +64,7 @@ public class KeyTools {
             X509EncodedKeySpec keySpecX509 = new X509EncodedKeySpec(Base64.getMimeDecoder().decode(keyContent));
             return kf.generatePublic(keySpecX509);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
             return null;
         }
     }
@@ -69,7 +75,7 @@ public class KeyTools {
      * @param pemString private key in PEM format
      * @return PrivateKey or null
      */
-    public static PrivateKey convertPemStringToPrivateKey(String pemString) {
+    public static PrivateKey convertPemStringToPrivateKey(@NotNull String pemString) {
         try {
             String keyContent = pemString.replace("\\n", "")
                     .replace("-----BEGIN PRIVATE KEY-----", "")
@@ -77,7 +83,7 @@ public class KeyTools {
             PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(Base64.getMimeDecoder().decode(keyContent));
             return KeyFactory.getInstance("RSA").generatePrivate(keySpec);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
             return null;
         }
     }

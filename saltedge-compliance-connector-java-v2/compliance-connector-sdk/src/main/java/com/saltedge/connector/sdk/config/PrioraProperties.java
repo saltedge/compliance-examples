@@ -22,6 +22,8 @@ package com.saltedge.connector.sdk.config;
 
 import com.saltedge.connector.sdk.tools.KeyTools;
 import com.saltedge.connector.sdk.tools.ResourceTools;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
 
 import javax.validation.constraints.NotBlank;
@@ -44,6 +46,7 @@ import java.security.PublicKey;
  */
 @Configuration
 public class PrioraProperties {
+    private static final Logger log = LoggerFactory.getLogger(PrioraProperties.class);
     /**
      * Registered Connector code
      * (https://priora.saltedge.com/providers/settings#details)
@@ -76,8 +79,12 @@ public class PrioraProperties {
      * Name of Salt Edge Compliance public key file in PEM format.
      * By default: `priora_public_prod.pem`
      */
-    @NotBlank
     private String publicKeyName = "priora_public_prod.pem";
+
+    /**
+     * Name of Salt Edge Compliance public key string in PEM format.
+     */
+    private String publicKeyPem;
 
     private PublicKey publicKey;
 
@@ -85,14 +92,18 @@ public class PrioraProperties {
         try {
             return new URL(baseUrl);
         } catch (MalformedURLException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         return null;
     }
 
     public PublicKey getPrioraPublicKey() {
         if (publicKey == null) {
-            publicKey = KeyTools.convertPemStringToPublicKey(ResourceTools.readKeyFile(publicKeyName));
+            if (publicKeyName != null && !publicKeyName.trim().isEmpty()) {
+                publicKey = KeyTools.convertPemStringToPublicKey(ResourceTools.readKeyFile(publicKeyName));
+            } else if (publicKeyPem != null && !publicKeyPem.trim().isEmpty()) {
+                publicKey = KeyTools.convertPemStringToPublicKey(publicKeyPem);
+            }
         }
         return publicKey;
     }

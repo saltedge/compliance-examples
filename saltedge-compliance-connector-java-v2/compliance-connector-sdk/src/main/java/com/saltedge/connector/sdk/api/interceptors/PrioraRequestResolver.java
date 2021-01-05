@@ -28,6 +28,8 @@ import com.saltedge.connector.sdk.api.models.requests.*;
 import com.saltedge.connector.sdk.config.ApplicationProperties;
 import com.saltedge.connector.sdk.tools.JsonTools;
 import io.jsonwebtoken.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
@@ -43,6 +45,7 @@ import java.util.Map;
  */
 @Component
 public class PrioraRequestResolver implements HandlerMethodArgumentResolver {
+    private static final Logger log = LoggerFactory.getLogger(PrioraRequestResolver.class);
     @Autowired
     ApplicationProperties applicationProperties;
     private final ObjectMapper mapper = JsonTools.createDefaultMapper();
@@ -84,7 +87,7 @@ public class PrioraRequestResolver implements HandlerMethodArgumentResolver {
         } catch (JwtException e) {
             throw new BadRequest.JWTDecodeError(e.getMessage());
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
             throw new BadRequest.WrongRequestFormat(e.getMessage());
         }
     }

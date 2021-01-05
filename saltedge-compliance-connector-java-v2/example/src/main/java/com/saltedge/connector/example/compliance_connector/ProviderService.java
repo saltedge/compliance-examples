@@ -86,7 +86,7 @@ public class ProviderService implements ProviderServiceAbs {
         new AbstractMap.SimpleImmutableEntry<>(SDKConstants.KEY_SESSION_SECRET, sessionSecret)
       );
     } catch (Exception e) {
-      e.printStackTrace();
+      log.error(e.getMessage(), e);
       return null;
     }
   }
@@ -269,7 +269,7 @@ public class ProviderService implements ProviderServiceAbs {
         new AbstractMap.SimpleImmutableEntry<>(SDKConstants.KEY_PAYMENT_ID, paymentId)
       );
     } catch (Exception e) {
-      e.printStackTrace();
+      log.error(e.getMessage(), e);
       return null;
     }
   }

@@ -1,5 +1,13 @@
 # Salt Edge Compliance Connector SDK Changelog
 
+## 2.5.1 (2021-01-06)  
+### Add:  
+- Add `public_key_pem` field to properties
+
+### Change:
+- Refactor ResourceTools
+- Replace printStackTrace with logger
+
 ## 2.5.0 (2020-12-01)
 Add support for the FPS (Faster Payment Service)  
 
