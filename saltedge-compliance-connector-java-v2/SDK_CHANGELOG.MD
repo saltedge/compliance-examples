@@ -1,5 +1,9 @@
 # Salt Edge Compliance Connector SDK Changelog
 
+## 2.5.2 (2021-01-11)
+### Add:
+- Add a getter and a setter for `ApplicationProperties.Priora.publicKeyPem` property 
+
 ## 2.5.1 (2021-01-06)  
 ### Add:  
 - Add `public_key_pem` field to properties
@@ -73,7 +77,7 @@ Add support for the FPS (Faster Payment Service)
 
 ### Change:
 - Replaced Date object with Instant/LocalDate object
-- Updated JJWT version up to 0.11.1
+- Updated `JJWT` version up to 0.11.1
 
 ## 2.1.0 (2020-03-24)
 ### Add:
