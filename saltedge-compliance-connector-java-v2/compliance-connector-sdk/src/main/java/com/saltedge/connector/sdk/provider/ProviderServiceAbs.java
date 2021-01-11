@@ -137,6 +137,7 @@ public interface ProviderServiceAbs {
    * @param creditorIban International Bank Account Number of creditor
    * @param creditorBic Bank Identifier Code of creditor
    * @param creditorName Name of creditor
+   * @param creditorAddress Address of creditor
    * @param debtorIban International Bank Account Number of debtor
    * @param debtorBic Bank Identifier Code of debtor
    * @param amount Amount of payment order
@@ -169,6 +170,7 @@ public interface ProviderServiceAbs {
    * @param creditorBban Basic Bank Account Number of creditor
    * @param creditorSortCode Number code (which is used by British and Irish banks) of creditor.
    * @param creditorName Name of creditor
+   * @param creditorAddress Address of creditor
    * @param debtorBban Basic Bank Account Number of debtor
    * @param debtorSortCode Number code (which is used by British and Irish banks) of debtor.
    * @param amount Amount of payment order
