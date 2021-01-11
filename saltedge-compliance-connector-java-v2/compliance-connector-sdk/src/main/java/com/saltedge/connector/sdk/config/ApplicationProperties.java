@@ -67,22 +67,6 @@ public class ApplicationProperties {
 
     private PrivateKey privateKey;
 
-    public String getPrioraAppCode() {
-        return priora.getAppCode();
-    }
-
-    public String getPrioraAppId() {
-        return priora.getAppId();
-    }
-
-    public String getPrioraAppSecret() {
-        return priora.getAppSecret();
-    }
-
-    public PrioraProperties getPriora() {
-        return priora;
-    }
-
     public PrivateKey getPrivateKey() {
         if (privateKey == null) {
             if (privateKeyName != null && !privateKeyName.trim().isEmpty()) {
@@ -98,27 +82,44 @@ public class ApplicationProperties {
         return privateKeyName;
     }
 
-    public String getPrivateKeyPem() {
-        return privateKeyPem;
-    }
-
-    public PublicKey getPrioraPublicKey() {
-        return getPriora().getPrioraPublicKey();
-    }
-
     public void setPrivateKeyName(String privateKeyName) {
         this.privateKeyName = privateKeyName;
+    }
+
+    public String getPrivateKeyPem() {
+        return privateKeyPem;
     }
 
     public void setPrivateKeyPem(String privateKeyPem) {
         this.privateKeyPem = privateKeyPem;
     }
 
+    public void setPrivateKey(PrivateKey privateKey) {
+        this.privateKey = privateKey;
+    }
+
+    public PrioraProperties getPriora() {
+        return priora;
+    }
+
     public void setPriora(PrioraProperties priora) {
         this.priora = priora;
     }
 
-    public void setPrivateKey(PrivateKey privateKey) {
-        this.privateKey = privateKey;
+    public String getPrioraAppCode() {
+        return priora.getAppCode();
     }
+
+    public String getPrioraAppId() {
+        return priora.getAppId();
+    }
+
+    public String getPrioraAppSecret() {
+        return priora.getAppSecret();
+    }
+
+    public PublicKey getPrioraPublicKey() {
+        return priora.getPrioraPublicKey();
+    }
+
 }

@@ -155,4 +155,12 @@ public class PrioraProperties {
     public void setPublicKey(PublicKey publicKey) {
         this.publicKey = publicKey;
     }
+
+    public String getPublicKeyPem() {
+        return publicKeyPem;
+    }
+
+    public void setPublicKeyPem(String publicKeyPem) {
+        this.publicKeyPem = publicKeyPem;
+    }
 }
