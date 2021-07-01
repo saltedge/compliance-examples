@@ -36,7 +36,7 @@ import org.springframework.util.LinkedMultiValueMap;
  */
 @Service
 public class SessionsCallbackService extends CallbackRestClient {
-    private static Logger log = LoggerFactory.getLogger(SessionsCallbackService.class);
+    private static final Logger log = LoggerFactory.getLogger(SessionsCallbackService.class);
 
     @Async
     public void sendUpdateCallback(String sessionSecret, BaseCallbackRequest params) {
@@ -52,15 +52,14 @@ public class SessionsCallbackService extends CallbackRestClient {
 
     @Async
     public void sendFailCallback(String sessionSecret, Exception exception) {
-        BaseFailRequest params = new BaseFailRequest();
         if (exception instanceof HttpErrorParams) {
-            params.errorClass = ((HttpErrorParams) exception).getErrorClass();
-            params.errorClass = ((HttpErrorParams) exception).getErrorMessage();
+            HttpErrorParams errorParams = (HttpErrorParams) exception;
+            BaseFailRequest params = new BaseFailRequest(errorParams.getErrorClass(), errorParams.getErrorMessage());
+            sendFailCallback(sessionSecret, params);
         } else {
-            params.errorClass = exception.getClass().getSimpleName();
-            params.errorClass = exception.getMessage();
+            BaseFailRequest params = new BaseFailRequest(exception.getClass().getSimpleName(), exception.getMessage());
+            sendFailCallback(sessionSecret, params);
         }
-        sendFailCallback(sessionSecret, params);
     }
 
     @Async

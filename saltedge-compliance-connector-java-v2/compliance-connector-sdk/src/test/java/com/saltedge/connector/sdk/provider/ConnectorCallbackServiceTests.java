@@ -20,6 +20,7 @@
  */
 package com.saltedge.connector.sdk.provider;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.saltedge.connector.sdk.SDKConstants;
 import com.saltedge.connector.sdk.api.models.ProviderConsents;
 import com.saltedge.connector.sdk.api.models.err.NotFound;
@@ -30,6 +31,7 @@ import com.saltedge.connector.sdk.callback.mapping.SessionSuccessCallbackRequest
 import com.saltedge.connector.sdk.callback.services.SessionsCallbackService;
 import com.saltedge.connector.sdk.callback.services.TokensCallbackService;
 import com.saltedge.connector.sdk.models.Token;
+import com.saltedge.connector.sdk.tools.JsonTools;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatchers;
@@ -244,21 +246,9 @@ public class ConnectorCallbackServiceTests {
 	}
 
 	@Test(expected = ConstraintViolationException.class)
-	public void givenEmptyPaymentId_whenOnPaymentInitiationAuthorizationSuccess_thenThrowConstraintViolationException() {
-		// given
-		HashMap<String, String> extraData = new HashMap<>();
-
-		// when
-		testService.onPaymentInitiationAuthorizationSuccess("", "user1", extraData, "sepa-credit-transfers");
-	}
-
-	@Test(expected = ConstraintViolationException.class)
 	public void givenEmptyUserId_whenOnPaymentInitiationAuthorizationSuccess_thenThrowConstraintViolationException() {
-		// given
-		HashMap<String, String> extraData = new HashMap<>();
-
 		// when
-		String result = testService.onPaymentInitiationAuthorizationSuccess("paymentId", "", extraData, "sepa-credit-transfers");
+		String result = testService.onPaymentInitiationAuthorizationSuccess("", "", "sepa-credit-transfers");
 
 		// then
 		assertThat(result).isEqualTo("");
@@ -266,38 +256,37 @@ public class ConnectorCallbackServiceTests {
 
 	@Test(expected = ConstraintViolationException.class)
 	public void givenEmptyExtra_whenOnPaymentInitiationAuthorizationSuccess_thenThrowConstraintViolationException() {
-		// given
-		HashMap<String, String> extraData = new HashMap<>();
-
 		// when
-		String result = testService.onPaymentInitiationAuthorizationSuccess("paymentId", "userId", extraData, "sepa-credit-transfers");
+		String result = testService.onPaymentInitiationAuthorizationSuccess("userId", "", "sepa-credit-transfers");
 
 		// then
 		assertThat(result).isEqualTo("");
 	}
 
 	@Test
-	public void givenExtraWithoutSessionSecret_whenOnPaymentInitiationAuthorizationSuccess_thenReturnEmptyRedirect() {
+	public void givenExtraWithoutSessionSecret_whenOnPaymentInitiationAuthorizationSuccess_thenReturnEmptyRedirect() throws JsonProcessingException {
 		// given
 		HashMap<String, String> extraData = new HashMap<>();
 		extraData.put(KEY_DESCRIPTION, "test");
+		String extraJson = JsonTools.createDefaultMapper().writeValueAsString(extraData);
 
 		// when
-		String result = testService.onPaymentInitiationAuthorizationSuccess("payment1", "user1", extraData, "sepa-credit-transfers");
+		String result = testService.onPaymentInitiationAuthorizationSuccess("user1", extraJson, "sepa-credit-transfers");
 
 		// then
 		assertThat(result).isEqualTo("");
 	}
 
 	@Test
-	public void givenExtra_whenOnSepaPaymentInitiationAuthorizationSuccess_thenReturnRedirect() {
+	public void givenExtra_whenOnSepaPaymentInitiationAuthorizationSuccess_thenReturnRedirect() throws JsonProcessingException {
 		// given
 		HashMap<String, String> extraData = new HashMap<>();
 		extraData.put(SDKConstants.KEY_SESSION_SECRET, "sessionSecret");
 		extraData.put(SDKConstants.KEY_RETURN_TO_URL, "http://redirect.to");
+		String extraJson = JsonTools.createDefaultMapper().writeValueAsString(extraData);
 
 		// when
-		String result = testService.onPaymentInitiationAuthorizationSuccess("payment1", "user1", extraData, "sepa-credit-transfers");
+		String result = testService.onPaymentInitiationAuthorizationSuccess("user1", extraJson, "sepa-credit-transfers");
 
 		// then
 		assertThat(result).isEqualTo("http://redirect.to");
@@ -305,14 +294,15 @@ public class ConnectorCallbackServiceTests {
 	}
 
 	@Test
-	public void givenExtra_whenOnInstantSepaPaymentInitiationAuthorizationSuccess_thenReturnRedirect() {
+	public void givenExtra_whenOnInstantSepaPaymentInitiationAuthorizationSuccess_thenReturnRedirect() throws JsonProcessingException {
 		// given
 		HashMap<String, String> extraData = new HashMap<>();
 		extraData.put(SDKConstants.KEY_SESSION_SECRET, "sessionSecret");
 		extraData.put(SDKConstants.KEY_RETURN_TO_URL, "http://redirect.to");
+		String extraJson = JsonTools.createDefaultMapper().writeValueAsString(extraData);
 
 		// when
-		String result = testService.onPaymentInitiationAuthorizationSuccess("payment1", "user1", extraData, "instant-sepa-credit-transfers");
+		String result = testService.onPaymentInitiationAuthorizationSuccess("user1", extraJson, "instant-sepa-credit-transfers");
 
 		// then
 		assertThat(result).isEqualTo("http://redirect.to");
@@ -320,14 +310,15 @@ public class ConnectorCallbackServiceTests {
 	}
 
 	@Test
-	public void givenExtra_whenOnFpsPaymentInitiationAuthorizationSuccess_thenReturnRedirect() {
+	public void givenExtra_whenOnFpsPaymentInitiationAuthorizationSuccess_thenReturnRedirect() throws JsonProcessingException {
 		// given
 		HashMap<String, String> extraData = new HashMap<>();
 		extraData.put(SDKConstants.KEY_SESSION_SECRET, "sessionSecret");
 		extraData.put(SDKConstants.KEY_RETURN_TO_URL, "http://redirect.to");
+		String extraJson = JsonTools.createDefaultMapper().writeValueAsString(extraData);
 
 		// when
-		String result = testService.onPaymentInitiationAuthorizationSuccess("payment1", "user1", extraData, "instant-sepa-credit-transfers");
+		String result = testService.onPaymentInitiationAuthorizationSuccess("user1", extraJson, "instant-sepa-credit-transfers");
 
 		// then
 		assertThat(result).isEqualTo("http://redirect.to");
@@ -335,32 +326,21 @@ public class ConnectorCallbackServiceTests {
 	}
 
 	@Test(expected = ConstraintViolationException.class)
-	public void givenEmptyPaymentId_whenOnPaymentInitiationAuthorizationFail_thenThrowConstraintViolationException() {
-		// given
-		HashMap<String, String> extraData = new HashMap<>();
-
-		// when
-		testService.onPaymentInitiationAuthorizationFail("", extraData);
-	}
-
-	@Test(expected = ConstraintViolationException.class)
 	public void givenEmptyExtra_whenOnPaymentInitiationAuthorizationFail_thenThrowConstraintViolationException() {
-		// given
-		HashMap<String, String> extraData = new HashMap<>();
-
 		// when
-		testService.onPaymentInitiationAuthorizationFail("payment1", extraData);
+		testService.onPaymentInitiationAuthorizationFail("");
 	}
 
 	@Test
-	public void givenExtra_whenOnPaymentInitiationAuthorizationFail_thenReturnRedirect() {
+	public void givenExtra_whenOnPaymentInitiationAuthorizationFail_thenReturnRedirect() throws JsonProcessingException {
 		// given
 		HashMap<String, String> extraData = new HashMap<>();
 		extraData.put(SDKConstants.KEY_SESSION_SECRET, "sessionSecret");
 		extraData.put(SDKConstants.KEY_RETURN_TO_URL, "http://redirect.to");
+		String extraJson = JsonTools.createDefaultMapper().writeValueAsString(extraData);
 
 		// when
-		String result = testService.onPaymentInitiationAuthorizationFail("payment1", extraData);
+		String result = testService.onPaymentInitiationAuthorizationFail(extraJson);
 
 		// then
 		assertThat(result).isEqualTo("http://redirect.to");

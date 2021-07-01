@@ -45,7 +45,7 @@ import javax.validation.Valid;
 @Validated
 public class PaymentsV2Controller extends BaseV2Controller {
   public final static String BASE_PATH = SDKConstants.API_BASE_PATH + "/payments";
-  private static Logger log = LoggerFactory.getLogger(PaymentsV2Controller.class);
+  private static final Logger log = LoggerFactory.getLogger(PaymentsV2Controller.class);
   @Autowired
   PaymentsService paymentsService;
 

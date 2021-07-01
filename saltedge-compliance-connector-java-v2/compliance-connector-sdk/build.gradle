@@ -1,14 +1,13 @@
 plugins {
     id 'java'
     id 'maven'
-    id 'com.github.johnrengelman.shadow' version '5.2.0'
     id 'org.springframework.boot' version '2.2.2.RELEASE'
     id 'io.spring.dependency-management' version '1.0.8.RELEASE'
     id 'com.bmuschko.nexus' version '2.3.1'
 }
 
 group 'com.saltedge.connector.sdk'
-version '2.5.2'
+version '2.6.0'
 
 compileJava {
     sourceCompatibility = 1.8
@@ -45,25 +44,6 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'com.h2database:h2:1.4.200'
-}
-
-// GENERATE SHADOW/FAT JAR
-shadowJar {
-    destinationDirectory = file('../out')
-    manifest {
-        attributes('Implementation-Title': project.name,
-                'Implementation-Version': project.version)
-    }
-    from sourceSets.main.allSource
-}
-
-// UPLOAD SHADOW/FAT JAR TO LOCAL/REMOTE MAVEN REPO
-uploadShadow {
-    repositories {
-        mavenDeployer {
-            repository(url: uri("${rootProject.projectDir}/../../maven-repo"))
-        }
-    }
 }
 
 // UPLOAD JAR TO MAVEN CENTRAL REPO

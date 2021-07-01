@@ -184,7 +184,7 @@ public class DatabaseInitializer {
               date,
               "booked",
               new ArrayList<>(),
-              new HashMap<>(),
+              "",
               account
             );
             transaction.toIban = "GB29NWBK60161331926819";

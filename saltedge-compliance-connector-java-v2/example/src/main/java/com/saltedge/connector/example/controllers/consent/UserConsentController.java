@@ -43,13 +43,12 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping
 public class UserConsentController extends UserBaseController {
-  private static Logger log = LoggerFactory.getLogger(UserConsentController.class);
+  private static final Logger log = LoggerFactory.getLogger(UserConsentController.class);
   public final static String CONSENT_BASE_PATH = "/oauth/consent/";
   public final static String ACCOUNTS_BASE_PATH = CONSENT_BASE_PATH + "accounts";
   public final static String PAYMENTS_BASE_PATH = CONSENT_BASE_PATH + "payments";
@@ -152,19 +151,18 @@ public class UserConsentController extends UserBaseController {
     if (!StringUtils.isEmpty(confirmAction) && payment != null) {
       processAndClosePayment(payment, userId);
       returnToUrl = connectorCallbackService.onPaymentInitiationAuthorizationSuccess(
-        paymentId.toString(),
         userId.toString(),
         payment.extra,
         payment.paymentProduct
       );
     } else {
-      Map<String, String> extra = new HashMap<>();
+      String extra = "";
       if (payment != null) {
         extra = payment.extra;
         payment.status = PaymentStatus.FAILED;
         paymentsRepository.save(payment);
       }
-      returnToUrl = connectorCallbackService.onPaymentInitiationAuthorizationFail(paymentId.toString(), extra);
+      returnToUrl = connectorCallbackService.onPaymentInitiationAuthorizationFail(extra);
     }
 
     if (returnToUrl == null) {
@@ -189,7 +187,7 @@ public class UserConsentController extends UserBaseController {
       LocalDate.now(),
       "booked",
       new ArrayList<>(),
-      new HashMap<>(),
+      "",
       account
     ));
   }

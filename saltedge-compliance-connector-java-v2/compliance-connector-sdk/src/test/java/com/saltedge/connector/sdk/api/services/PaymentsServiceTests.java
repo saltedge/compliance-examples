@@ -20,6 +20,7 @@
  */
 package com.saltedge.connector.sdk.api.services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.saltedge.connector.sdk.SDKConstants;
 import com.saltedge.connector.sdk.api.models.Account;
 import com.saltedge.connector.sdk.api.models.Amount;
@@ -28,6 +29,7 @@ import com.saltedge.connector.sdk.api.models.PaymentOrder;
 import com.saltedge.connector.sdk.api.models.err.HttpErrorParams;
 import com.saltedge.connector.sdk.api.models.requests.CreatePaymentRequest;
 import com.saltedge.connector.sdk.callback.mapping.SessionUpdateCallbackRequest;
+import com.saltedge.connector.sdk.tools.JsonTools;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -59,28 +61,30 @@ public class PaymentsServiceTests extends BaseServicesTests {
 	}
 
 	@Test
-	public void givenNullPayment_whenCreatePayment_thenSendSessionsFailCallback() {
+	public void givenNullPayment_whenCreatePayment_thenSendSessionsFailCallback() throws JsonProcessingException {
 		// given
 		HashMap<String, String> extra = new HashMap<>();
 		extra.put(SDKConstants.KEY_SESSION_SECRET, "sessionSecret");
 		extra.put(SDKConstants.KEY_RETURN_TO_URL, "redirectUrl");
 		extra.put(SDKConstants.KEY_END_TO_END_IDENTIFICATION, "endToEndIdentification");
+		String extraJson = JsonTools.createDefaultMapper().writeValueAsString(extra);
 		given(providerService.createPayment(
 			"sepa-credit-transfers",
 				"creditorAccountIban",
 			"creditorAccountBic",
 				"creditorName",
 			address,
+			"creditorAgentName",
 				"debtorAccountIban",
 			"debtorAccountBic",
 				"1.0",
 				"USD",
 				"remittanceInformationUnstructured",
-				extra
+			extraJson
 		)).willReturn(null);
 
 		// when
-		testService.createPayment(createPaymentRequest());
+		testService.createPayment(createPaymentRequest(false));
 
 		// then
 		final ArgumentCaptor<RuntimeException> captor = ArgumentCaptor.forClass(RuntimeException.class);
@@ -90,29 +94,31 @@ public class PaymentsServiceTests extends BaseServicesTests {
 	}
 
 	@Test
-	public void givenOAuthAuthType_whenCreatePayment_thenSaveTokenAndSendSessionsUpdateCallback() {
+	public void givenSepaRequest_whenCreatePayment_thenSaveTokenAndSendSessionsUpdateCallback() throws JsonProcessingException {
 		// given
 		HashMap<String, String> extra = new HashMap<>();
 		extra.put(SDKConstants.KEY_SESSION_SECRET, "sessionSecret");
 		extra.put(SDKConstants.KEY_RETURN_TO_URL, "redirectUrl");
 		extra.put(SDKConstants.KEY_END_TO_END_IDENTIFICATION, "endToEndIdentification");
+		String extraJson = JsonTools.createDefaultMapper().writeValueAsString(extra);
+		String redirectUrl = "http://example.com?payment_id=payment1";
 		given(providerService.createPayment(
 			"sepa-credit-transfers",
 				"creditorAccountIban",
 			"creditorAccountBic",
 				"creditorName",
 			address,
+			"creditorAgentName",
 				"debtorAccountIban",
 			"debtorAccountBic",
 				"1.0",
 				"USD",
 				"remittanceInformationUnstructured",
-				extra
-		)).willReturn("payment1");
-		given(providerService.getPaymentAuthorizationPageUrl("payment1")).willReturn("http://example.com?payment_id=payment1");
+			extraJson
+		)).willReturn(redirectUrl);
 
 		// when
-		testService.createPayment(createPaymentRequest());
+		testService.createPayment(createPaymentRequest(false));
 
 		// then
 		verify(providerService).createPayment(
@@ -121,43 +127,94 @@ public class PaymentsServiceTests extends BaseServicesTests {
 			"creditorAccountBic",
 				"creditorName",
 			address,
+			"creditorAgentName",
 				"debtorAccountIban",
 			"debtorAccountBic",
 				"1.0",
 				"USD",
 				"remittanceInformationUnstructured",
-				extra
+			extraJson
 		);
 		final ArgumentCaptor<SessionUpdateCallbackRequest> callbackCaptor = ArgumentCaptor.forClass(SessionUpdateCallbackRequest.class);
 		verify(sessionsCallbackService).sendUpdateCallback(eq("sessionSecret"), callbackCaptor.capture());
 		assertThat(callbackCaptor.getValue().status).isEqualTo(SDKConstants.STATUS_REDIRECT);
-		assertThat(callbackCaptor.getValue().redirectUrl).isEqualTo("http://example.com?payment_id=payment1");
+		assertThat(callbackCaptor.getValue().redirectUrl).isEqualTo(redirectUrl);
 	}
 
 	@Test
-	public void givenFPSRequest_whenCreatePayment_thenSaveTokenAndSendSessionsUpdateCallback() {
+	public void givenSepaRequestWithoutDebtor_whenCreatePayment_thenSaveTokenAndSendSessionsUpdateCallback() throws JsonProcessingException {
 		// given
 		HashMap<String, String> extra = new HashMap<>();
 		extra.put(SDKConstants.KEY_SESSION_SECRET, "sessionSecret");
 		extra.put(SDKConstants.KEY_RETURN_TO_URL, "redirectUrl");
 		extra.put(SDKConstants.KEY_END_TO_END_IDENTIFICATION, "endToEndIdentification");
+		String extraJson = JsonTools.createDefaultMapper().writeValueAsString(extra);
+		String redirectUrl = "http://example.com?payment_id=payment1";
+		given(providerService.createPayment(
+			"sepa-credit-transfers",
+			"creditorAccountIban",
+			"creditorAccountBic",
+			"creditorName",
+			address,
+			"creditorAgentName",
+			null,
+			null,
+			"1.0",
+			"USD",
+			"remittanceInformationUnstructured",
+			extraJson
+		)).willReturn(redirectUrl);
+
+		// when
+		testService.createPayment(createPaymentRequest(true));
+
+		// then
+		verify(providerService).createPayment(
+			"sepa-credit-transfers",
+			"creditorAccountIban",
+			"creditorAccountBic",
+			"creditorName",
+			address,
+			"creditorAgentName",
+			null,
+			null,
+			"1.0",
+			"USD",
+			"remittanceInformationUnstructured",
+			extraJson
+		);
+		final ArgumentCaptor<SessionUpdateCallbackRequest> callbackCaptor = ArgumentCaptor.forClass(SessionUpdateCallbackRequest.class);
+		verify(sessionsCallbackService).sendUpdateCallback(eq("sessionSecret"), callbackCaptor.capture());
+		assertThat(callbackCaptor.getValue().status).isEqualTo(SDKConstants.STATUS_REDIRECT);
+		assertThat(callbackCaptor.getValue().redirectUrl).isEqualTo(redirectUrl);
+	}
+
+	@Test
+	public void givenFPSRequest_whenCreatePayment_thenSaveTokenAndSendSessionsUpdateCallback() throws JsonProcessingException {
+		// given
+		HashMap<String, String> extra = new HashMap<>();
+		extra.put(SDKConstants.KEY_SESSION_SECRET, "sessionSecret");
+		extra.put(SDKConstants.KEY_RETURN_TO_URL, "redirectUrl");
+		extra.put(SDKConstants.KEY_END_TO_END_IDENTIFICATION, "endToEndIdentification");
+		String extraJson = JsonTools.createDefaultMapper().writeValueAsString(extra);
+		String redirectUrl = "http://example.com?payment_id=payment1";
 		given(providerService.createFPSPayment(
 			"faster-payment-service",
 			"creditorAccountBban",
 			"creditorAccountSortCode",
 			"creditorName",
 			address,
+			"creditorAgentName",
 			"debtorAccountBban",
 			"debtorAccountSortCode",
 			"1.0",
 			"USD",
 			"remittanceInformationUnstructured",
-			extra
-		)).willReturn("payment1");
-		given(providerService.getPaymentAuthorizationPageUrl("payment1")).willReturn("http://example.com?payment_id=payment1");
+			extraJson
+		)).willReturn(redirectUrl);
 
 		// when
-		testService.createPayment(createFPSPaymentRequest());
+		testService.createPayment(createFPSPaymentRequest(false));
 
 		// then
 		verify(providerService).createFPSPayment(
@@ -166,20 +223,21 @@ public class PaymentsServiceTests extends BaseServicesTests {
 			"creditorAccountSortCode",
 			"creditorName",
 			address,
+			"creditorAgentName",
 			"debtorAccountBban",
 			"debtorAccountSortCode",
 			"1.0",
 			"USD",
 			"remittanceInformationUnstructured",
-			extra
+			extraJson
 		);
 		final ArgumentCaptor<SessionUpdateCallbackRequest> callbackCaptor = ArgumentCaptor.forClass(SessionUpdateCallbackRequest.class);
 		verify(sessionsCallbackService).sendUpdateCallback(eq("sessionSecret"), callbackCaptor.capture());
 		assertThat(callbackCaptor.getValue().status).isEqualTo(SDKConstants.STATUS_REDIRECT);
-		assertThat(callbackCaptor.getValue().redirectUrl).isEqualTo("http://example.com?payment_id=payment1");
+		assertThat(callbackCaptor.getValue().redirectUrl).isEqualTo(redirectUrl);
 	}
 
-	private CreatePaymentRequest createPaymentRequest() {
+	private CreatePaymentRequest createPaymentRequest(Boolean skipDebtorAccount) {
 		Account creditorAccount = new Account();
 		creditorAccount.setIban("creditorAccountIban");
 		creditorAccount.setBic("creditorAccountBic");
@@ -194,7 +252,8 @@ public class PaymentsServiceTests extends BaseServicesTests {
 						creditorAccount,
 						"creditorName",
 						address,
-						debtorAccount,
+					"creditorAgentName",
+					skipDebtorAccount ? null : debtorAccount,
 						new Amount("1.0", "USD"),
 						"endToEndIdentification",
 						"remittanceInformationUnstructured"
@@ -205,7 +264,7 @@ public class PaymentsServiceTests extends BaseServicesTests {
 		return result;
 	}
 
-	private CreatePaymentRequest createFPSPaymentRequest() {
+	private CreatePaymentRequest createFPSPaymentRequest(Boolean skipDebtorAccount) {
 		Account creditorAccount = new Account();
 		creditorAccount.setBban("creditorAccountBban");
 		creditorAccount.setSortCode("creditorAccountSortCode");
@@ -220,13 +279,15 @@ public class PaymentsServiceTests extends BaseServicesTests {
 				creditorAccount,
 				"creditorName",
 				address,
-				debtorAccount,
+				"creditorAgentName",
+				skipDebtorAccount ? null : debtorAccount,
 				new Amount("1.0", "USD"),
 				"endToEndIdentification",
 				"remittanceInformationUnstructured"
 			),
 			"faster-payment-service"
 		);
+		result.sessionSecret = "sessionSecret";
 		result.sessionSecret = "sessionSecret";
 		return result;
 	}

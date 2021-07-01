@@ -69,4 +69,5 @@ public class SDKConstants {
     public final static String KEY_APP_NAME = "app_name";
 
     public final static String PAYMENT_PRODUCT_FASTER_PAYMENT_SERVICE = "faster-payment-service";
+    public final static String PAYMENT_PRODUCT_INSTANT_SEPA_CREDIT_TRANSFERS = "instant-sepa-credit-transfers";
 }

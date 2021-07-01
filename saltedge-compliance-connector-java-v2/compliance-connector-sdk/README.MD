@@ -68,7 +68,7 @@ SDK requires next third-party dependencies:
 ### 4. Store extra data of payment.
   
 The Connector will pass extra data on Payment creation and will require it back at the end of the Payment authentication.
-Add `extra` field (if not exist) for storing extra data from Salt Edge Compliance solution (e.g. `prioraPaymentId`) to `Payment` entity of application.  
+Add `extra` field (if not exist) for storing extra data from Salt Edge Compliance solution (e.g. `endToEndIdentification`) to `Payment` entity of application.  
   
 **_This solution of storing of extra payment data is not mandatory and can be implemented in another convenient way._**     
   
@@ -80,7 +80,7 @@ See template [ExampleProviderService.java](ExampleProviderService.java)
     
 ### 6. Use Connector's SDK callback service `ConnectorSDKCallbackService` for callback communication (e.g. notifying SDK about events):
 
-See interface [ProviderServiceAbs.java](src/main/java/com/saltedge/connector/sdk/provider/ConnectorSDKCallbackService.java)
+See interface [ConnectorCallbackAbs.java](src/main/java/com/saltedge/connector/sdk/provider/ConnectorSDKCallbackService.java)
   
 * `isUserConsentRequired(sessionSecret)` - check if User Consent (Bank Offered Consent) is required for authorization session determined by sessionSecret:
   * `sessionSecret` unique authorization secret code passed to application via `getAccountInformationAuthorizationPageUrl(...)`;
@@ -93,12 +93,10 @@ See interface [ProviderServiceAbs.java](src/main/java/com/saltedge/connector/sdk
 * `onAccountInformationAuthorizationFail(sessionSecret)`- notify SDK about the failed authorization:  
   * `sessionSecret` unique authorization secret code passed to application via `getAccountInformationAuthorizationPageUrl(...)`;
       
-* `onPaymentInitiationAuthorizationSuccess(paymentId, userId, extra)` - notify SDK about the successful authorization if User for AIS flow:  
-  * `paymentId` unique payment id;  
+* `onPaymentInitiationAuthorizationSuccess(paymentId, userId, extra)` - notify SDK about the successful authorization if User for AIS flow:
   * `userId` unique identifier of Provider's system User (Customer);  
   * `extra` extra data from authenticated Payment passed to application via `getPaymentAuthorizationPageUrl(...)`;  
-  * `onPaymentInitiationAuthorizationFail(paymentId, extra)`- notify SDK about the failed authorization:  
-  * `paymentId` unique payment id;
+* `onPaymentInitiationAuthorizationFail(paymentId, extra)`- notify SDK about the failed authorization:  
   * `extra` extra data from authenticated Payment passed to application via `getPaymentAuthorizationPageUrl(...)`;
       
 * `revokeAccountInformationConsent(userId, accessToken)`- Revoke Account information consent associated with userId and accessToken;

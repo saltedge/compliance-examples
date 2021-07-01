@@ -75,6 +75,7 @@ public class PaymentsV2ControllerIntegrationTests extends ControllerIntegrationT
         creditorAccount,
         "creditorName",
         null,
+        "creditorAgentName",
         debtorAccount,
         new Amount("1.0", "USD"),
         "endToEndIdentification",
