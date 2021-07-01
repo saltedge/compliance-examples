@@ -28,7 +28,6 @@ import org.jetbrains.annotations.NotNull;
 import javax.validation.constraints.NotEmpty;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Interface for communication between Compliance Connector SDK and Provider/ASPSP application.
@@ -138,13 +137,15 @@ public interface ProviderServiceAbs {
    * @param creditorBic Bank Identifier Code of creditor
    * @param creditorName Name of creditor
    * @param creditorAddress Address of creditor
-   * @param debtorIban International Bank Account Number of debtor
-   * @param debtorBic Bank Identifier Code of debtor
+   * @param creditorAgentName Creditor bank name
+   * @param debtorIban International Bank Account Number of debtor. Parameter is optional, depends on payment product.
+   * @param debtorBic Bank Identifier Code of debtor. Parameter is optional, depends on payment product.
    * @param amount Amount of payment order
    * @param currency Currency code of payment order
    * @param description Description of payment order
-   * @param extraData Extra data of payment order
-   * @return Unique identifier of payment or null if payment is not initiated
+   * @param extraData Extra data of payment order. Attention: should be saved in payment model.
+   *
+   * @return URL string of provider's authorization page designated for authorization of new Payment Initiation Session
    */
   String createPayment(
     @NotEmpty String paymentProduct,
@@ -152,14 +153,14 @@ public interface ProviderServiceAbs {
     String creditorBic,
     @NotEmpty String creditorName,
     ParticipantAddress creditorAddress,
-    @NotEmpty String debtorIban,
+    String creditorAgentName,
+    String debtorIban,
     String debtorBic,
     @NotEmpty String amount,
     @NotEmpty String currency,
     String description,
-    @NotNull Map<String, String> extraData
+    @NotNull String extraData
   );
-
 
   /**
    * Initiate a FPS (Faster Payment Service) payment order.
@@ -171,13 +172,15 @@ public interface ProviderServiceAbs {
    * @param creditorSortCode Number code (which is used by British and Irish banks) of creditor.
    * @param creditorName Name of creditor
    * @param creditorAddress Address of creditor
+   * @param creditorAgentName Creditor bank name
    * @param debtorBban Basic Bank Account Number of debtor
    * @param debtorSortCode Number code (which is used by British and Irish banks) of debtor.
    * @param amount Amount of payment order
    * @param currency Currency code of payment order
    * @param description Description of payment order
-   * @param extraData Extra data of payment order
-   * @return Unique identifier of payment or null if payment is not initiated
+   * @param extraData Extra data of payment order. Attention: should be saved in payment model.
+   *
+   * @return URL string of provider's authorization page designated for authorization of new Payment Initiation Session
    */
   String createFPSPayment(
     @NotEmpty String paymentProduct,
@@ -185,20 +188,12 @@ public interface ProviderServiceAbs {
     @NotEmpty String creditorSortCode,
     @NotEmpty String creditorName,
     ParticipantAddress creditorAddress,
-    @NotEmpty String debtorBban,
-    @NotEmpty String debtorSortCode,
+    String creditorAgentName,
+    String debtorBban,
+    String debtorSortCode,
     @NotEmpty String amount,
     @NotEmpty String currency,
     String description,
-    @NotNull Map<String, String> extraData
+    @NotNull String extraData
   );
-
-  /**
-   * Provides url of provider's authorization page
-   * designated for authorization session of new Payment Initiation Session
-   *
-   * @param paymentId Unique identifier of payment order for which is required authorization
-   * @return URL string
-   */
-  String getPaymentAuthorizationPageUrl(@NotEmpty String paymentId);
 }

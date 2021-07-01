@@ -22,7 +22,6 @@ package com.saltedge.connector.example.model;
 
 import com.saltedge.connector.example.model.converter.FeesConverter;
 import com.saltedge.connector.example.model.converter.ObjectMapConverter;
-import com.saltedge.connector.example.model.converter.StringMapConverter;
 import com.saltedge.connector.sdk.models.BaseEntity;
 
 import javax.persistence.*;
@@ -63,8 +62,7 @@ public class PaymentEntity extends BaseEntity implements Serializable {
   public Map<String, String> paymentAttributes;
 
   @Column(name = "extra", nullable = false)
-  @Convert(converter = StringMapConverter.class)
-  public Map<String, String> extra;
+  public String extra;
 
   @Column(name = "confirmation_code")
   public String confirmationCode;

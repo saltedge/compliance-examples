@@ -1,5 +1,18 @@
 # Salt Edge Compliance Connector SDK Changelog
 
+## 2.6.0 (2021-07-01)
+### Add:
+- add `creditorAgentName` on payment create 
+
+### Change:
+- set Debtor account params optional on payment create
+- set `extra` as string on payment create
+- set `ProviderServiceAbs.createPayment(...)` return payment authentication page url
+- set `ProviderServiceAbs.createFPSPayment(...)` return payment authentication page url
+
+### Remove:
+- remove `ProviderServiceAbs.getPaymentAuthorizationPageUrl(...)`
+
 ## 2.5.2 (2021-01-11)
 ### Add:
 - Add a getter and a setter for `ApplicationProperties.Priora.publicKeyPem` property 

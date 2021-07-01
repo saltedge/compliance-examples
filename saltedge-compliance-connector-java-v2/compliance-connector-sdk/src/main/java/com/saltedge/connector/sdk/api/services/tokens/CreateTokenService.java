@@ -69,9 +69,9 @@ public class CreateTokenService extends TokensBaseService {
                 }
             }
         } catch (Exception e) {
-            log.error("AuthorizeTokenService.startAuthorization:", e);
-            RuntimeException failException = (e instanceof HttpErrorParams) ? (RuntimeException) e : new NotFound.AccountNotFound();
-            callbackService.sendFailCallback(params.sessionSecret, failException);
+            log.error("CreateTokenService.startAuthorization:", e);
+            if (e instanceof HttpErrorParams) callbackService.sendFailCallback(params.sessionSecret, e);
+            else callbackService.sendFailCallback(params.sessionSecret, new NotFound.AccountNotFound());
         }
     }
 

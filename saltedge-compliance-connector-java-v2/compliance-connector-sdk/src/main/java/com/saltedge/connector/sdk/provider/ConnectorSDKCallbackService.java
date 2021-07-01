@@ -20,6 +20,8 @@
  */
 package com.saltedge.connector.sdk.provider;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.saltedge.connector.sdk.SDKConstants;
 import com.saltedge.connector.sdk.api.models.ProviderConsents;
 import com.saltedge.connector.sdk.api.models.err.NotFound;
@@ -31,6 +33,9 @@ import com.saltedge.connector.sdk.callback.mapping.SessionSuccessCallbackRequest
 import com.saltedge.connector.sdk.callback.services.SessionsCallbackService;
 import com.saltedge.connector.sdk.callback.services.TokensCallbackService;
 import com.saltedge.connector.sdk.models.Token;
+import com.saltedge.connector.sdk.tools.JsonTools;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -39,10 +44,12 @@ import org.springframework.validation.annotation.Validated;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static com.saltedge.connector.sdk.SDKConstants.PAYMENT_PRODUCT_FASTER_PAYMENT_SERVICE;
+import static com.saltedge.connector.sdk.SDKConstants.PAYMENT_PRODUCT_INSTANT_SEPA_CREDIT_TRANSFERS;
 
 /**
  * Class for call back communication from Provider application to Connector SDK Module.
@@ -53,6 +60,7 @@ import static com.saltedge.connector.sdk.SDKConstants.PAYMENT_PRODUCT_FASTER_PAY
 @Service
 @Validated
 public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
+  private static final Logger log = LoggerFactory.getLogger(ConnectorSDKCallbackService.class);
   @Autowired
   private ConfirmTokenService confirmTokenService;
   @Autowired
@@ -155,10 +163,7 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
    * @return true if revoke order is saved
    */
   @Override
-  public boolean revokeAccountInformationConsent(
-    @NotEmpty String userId,
-    @NotEmpty String accessToken
-  ) {
+  public boolean revokeAccountInformationConsent(@NotEmpty String userId, @NotEmpty String accessToken) {
     Token token = revokeTokenService.revokeTokenByUserIdAndAccessToken(userId, accessToken);
     if (token != null && token.status == Token.Status.REVOKED)
       tokensCallbackService.sendRevokeTokenCallback(accessToken);
@@ -168,54 +173,64 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
   /**
    * Provider notify Connector Module about oAuth success authentication and user consent for payment
    *
-   * @param paymentId Unique identifier of payment
    * @param userId Unique identifier of authenticated User
-   * @param paymentExtra Extra data of payment order
+   * @param paymentExtra Extra data of payment order, provided in `ProviderServiceAbs.createPayment(...)`
    * @param paymentProduct Payment product code (Allowed values: sepa-credit-transfers, instant-sepa-credit-transfers, target-2-payments, faster-payment-service, internal-transfer)
    * @return returnUrl string for final redirection of Payment Authorization session
    */
   @Override
   public String onPaymentInitiationAuthorizationSuccess(
-    @NotEmpty String paymentId,
     @NotEmpty String userId,
-    @NotEmpty Map<String, String> paymentExtra,
+    @NotEmpty String paymentExtra,
     @NotEmpty String paymentProduct
   ) {
-    String sessionSecret = paymentExtra.get(SDKConstants.KEY_SESSION_SECRET);
+    Map<String, String> paymentExtraMap = parseExtra(paymentExtra);
+
+    String sessionSecret = paymentExtraMap.get(SDKConstants.KEY_SESSION_SECRET);
     String status = getStatusOfPaymentProduct(paymentProduct);
     SessionSuccessCallbackRequest params = new SessionSuccessCallbackRequest(userId, status);
     if (!StringUtils.isEmpty(sessionSecret)) sessionsCallbackService.sendSuccessCallback(sessionSecret, params);
-    String returnToUrl = paymentExtra.get(SDKConstants.KEY_RETURN_TO_URL);
-    return returnToUrl == null ? "" : returnToUrl;
+
+    return paymentExtraMap.getOrDefault(SDKConstants.KEY_RETURN_TO_URL, "");
   }
 
   /**
    * Provider should notify Connector Module about oAuth authentication fail or Payment confirmation deny
    *
-   * @param paymentId of payment
    * @param paymentExtra extra data of payment order
    * @return returnUrl string for final redirection of Payment Authorization session
    */
   @Override
   public String onPaymentInitiationAuthorizationFail(
-    @NotEmpty String paymentId,
-    @NotEmpty Map<String, String> paymentExtra
+    @NotEmpty String paymentExtra
   ) {
-    String sessionSecret = paymentExtra.get(SDKConstants.KEY_SESSION_SECRET);
+    Map<String, String> paymentExtraMap = parseExtra(paymentExtra);
+
+    String sessionSecret = paymentExtraMap.get(SDKConstants.KEY_SESSION_SECRET);
     if (!StringUtils.isEmpty(sessionSecret)) {
       sessionsCallbackService.sendFailCallback(sessionSecret, new NotFound.PaymentNotCreated());
     }
-    String returnToUrl = paymentExtra.get(SDKConstants.KEY_RETURN_TO_URL);
-    return returnToUrl == null ? "" : returnToUrl;
+
+    return paymentExtraMap.getOrDefault(SDKConstants.KEY_RETURN_TO_URL, "");
   }
 
   private String getStatusOfPaymentProduct(@NotEmpty String paymentProduct) {
-    if (paymentProduct.equals(PAYMENT_PRODUCT_FASTER_PAYMENT_SERVICE)) {
-      return "ACSC";
-    } else if (paymentProduct.equals("instant-sepa-credit-transfers")) {
-      return "ACCC";
-    } else {
-      return "ACTC";
+    switch (paymentProduct) {
+      case PAYMENT_PRODUCT_FASTER_PAYMENT_SERVICE:
+        return "ACSC";
+      case PAYMENT_PRODUCT_INSTANT_SEPA_CREDIT_TRANSFERS:
+        return "ACCC";
+      default:
+        return "ACTC";
     }
+  }
+
+  private Map<String, String> parseExtra(String paymentExtraJson) {
+    try {
+      return JsonTools.createDefaultMapper().readValue(paymentExtraJson, new TypeReference<Map<String, String>>() {});
+    } catch (JsonProcessingException e) {
+      log.error("ConnectorSDKCallbackService.parseExtra", e);
+    }
+    return new HashMap<>();
   }
 }

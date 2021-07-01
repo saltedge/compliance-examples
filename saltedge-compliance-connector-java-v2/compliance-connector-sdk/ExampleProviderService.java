@@ -348,7 +348,6 @@ public class ExampleProviderService implements ProviderServiceAbs {
      * @param paymentId unique identifier of payment order for which is required authorization
      * @return URL string
      */
-    @Override
     public String getPaymentAuthorizationPageUrl(@NotEmpty String paymentId) {
         try {
             UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(getAutorizationPageUrl());

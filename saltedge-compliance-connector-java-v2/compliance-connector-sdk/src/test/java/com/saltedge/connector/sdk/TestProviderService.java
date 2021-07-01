@@ -30,7 +30,6 @@ import org.springframework.stereotype.Service;
 import javax.validation.constraints.NotEmpty;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class TestProviderService implements ProviderServiceAbs {
@@ -73,17 +72,12 @@ public class TestProviderService implements ProviderServiceAbs {
     }
 
     @Override
-    public String createPayment(@NotEmpty String paymentProduct, @NotEmpty String creditorIban, String creditorBic, @NotEmpty String creditorName, ParticipantAddress creditorAddress, @NotEmpty String debtorIban, String debtorBic, @NotEmpty String amount, @NotEmpty String currency, String description, @NotNull Map<String, String> extraData) {
+    public String createPayment(String paymentProduct, String creditorIban, String creditorBic, String creditorName, ParticipantAddress creditorAddress, String creditorAgentName, String debtorIban, String debtorBic, String amount, String currency, String description, @NotNull String extraData) {
         return null;
     }
 
     @Override
-    public String createFPSPayment(@NotEmpty String paymentProduct, @NotEmpty String creditorBban, @NotEmpty String creditorSortCode, @NotEmpty String creditorName, ParticipantAddress creditorAddress, @NotEmpty String debtorBban, @NotEmpty String debtorSortCode, @NotEmpty String amount, @NotEmpty String currency, String description, @NotNull Map<String, String> extraData) {
-        return null;
-    }
-
-    @Override
-    public String getPaymentAuthorizationPageUrl(@NotEmpty String paymentId) {
+    public String createFPSPayment(String paymentProduct, String creditorBban, String creditorSortCode, String creditorName, ParticipantAddress creditorAddress, String creditorAgentName, String debtorBban, String debtorSortCode, String amount, String currency, String description, @NotNull String extraData) {
         return null;
     }
 }

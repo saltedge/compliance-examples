@@ -21,14 +21,12 @@
 package com.saltedge.connector.example.model;
 
 import com.saltedge.connector.example.model.converter.FeesConverter;
-import com.saltedge.connector.example.model.converter.StringMapConverter;
 import com.saltedge.connector.sdk.models.BaseEntity;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 
 @Entity(name = "Transaction")
 @Table(name = "Transaction")
@@ -67,8 +65,7 @@ public class TransactionEntity extends BaseEntity implements Serializable {
     public List<Fee> fees;
 
     @Column(name = "extra", nullable = false)
-    @Convert(converter = StringMapConverter.class)
-    public Map<String, String> extra;
+    public String paymentExtra;
 
     @ManyToOne
     @JoinColumn
@@ -84,7 +81,7 @@ public class TransactionEntity extends BaseEntity implements Serializable {
             LocalDate madeOn,
             String status,
             List<Fee> fees,
-            Map<String, String> extra,
+            String paymentExtra,
             AccountEntity account
     ) {
         this.amount = amount;
@@ -93,7 +90,7 @@ public class TransactionEntity extends BaseEntity implements Serializable {
         this.madeOn = madeOn;
         this.status = status;
         this.fees = fees;
-        this.extra = extra;
+        this.paymentExtra = paymentExtra;
         this.account = account;
     }
 }

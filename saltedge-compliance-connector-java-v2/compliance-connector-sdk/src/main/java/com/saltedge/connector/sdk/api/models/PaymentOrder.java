@@ -60,7 +60,6 @@ public class PaymentOrder {
    * Debtor account data.
    */
   @JsonProperty("debtor_account")
-  @RequestAccountConstraint
   public Account debtorAccount;
 
   /**
@@ -83,13 +82,21 @@ public class PaymentOrder {
   @JsonProperty("remittance_information_unstructured")
   public String remittanceInformationUnstructured;
 
+  /**
+   * Creditor bank name.
+   */
+  @JsonProperty("creditor_agent_name")
+  @NotEmpty
+  public String creditorAgentName;
+
   public PaymentOrder() {
   }
 
-  public PaymentOrder(Account creditorAccount, @NotEmpty String creditorName, ParticipantAddress creditorAddress, Account debtorAccount, @NotNull @Valid Amount instructedAmount, String endToEndIdentification, String remittanceInformationUnstructured) {
+  public PaymentOrder(Account creditorAccount, @NotEmpty String creditorName, ParticipantAddress creditorAddress, String creditorAgentName, Account debtorAccount, @NotNull @Valid Amount instructedAmount, String endToEndIdentification, String remittanceInformationUnstructured) {
     this.creditorAccount = creditorAccount;
     this.creditorName = creditorName;
     this.creditorAddress = creditorAddress;
+    this.creditorAgentName = creditorAgentName;
     this.debtorAccount = debtorAccount;
     this.instructedAmount = instructedAmount;
     this.endToEndIdentification = endToEndIdentification;
@@ -150,5 +157,13 @@ public class PaymentOrder {
 
   public void setRemittanceInformationUnstructured(String remittanceInformationUnstructured) {
     this.remittanceInformationUnstructured = remittanceInformationUnstructured;
+  }
+
+  public String getCreditorAgentName() {
+    return creditorAgentName;
+  }
+
+  public void setCreditorAgentName(String creditorAgentName) {
+    this.creditorAgentName = creditorAgentName;
   }
 }

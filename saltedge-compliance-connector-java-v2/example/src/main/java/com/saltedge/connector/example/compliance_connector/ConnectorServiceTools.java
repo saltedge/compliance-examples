@@ -46,7 +46,7 @@ public class ConnectorServiceTools {
         transaction.madeOn = LocalDate.now();
         transaction.status = "posted";
         transaction.fees = payment.fees;
-        transaction.extra = payment.extra;
+        transaction.paymentExtra = payment.extra;
         transaction.account = account;
         transactionsRepository.save(transaction);
     }

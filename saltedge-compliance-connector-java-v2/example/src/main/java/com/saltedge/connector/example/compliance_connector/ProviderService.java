@@ -58,7 +58,7 @@ import java.util.function.Supplier;
 @Service
 @Validated
 public class ProviderService implements ProviderServiceAbs {
-  private static Logger log = LoggerFactory.getLogger(ProviderService.class);
+  private static final Logger log = LoggerFactory.getLogger(ProviderService.class);
   public static int PAGE_SIZE = 30;
   @Autowired
   private Environment env;
@@ -192,12 +192,13 @@ public class ProviderService implements ProviderServiceAbs {
     String creditorBic,
     @NotEmpty String creditorName,
     ParticipantAddress creditorAddress,
-    @NotEmpty String debtorIban,
+    String creditorAgentName,
+    String debtorIban,
     String debtorBic,
     @NotEmpty String amount,
     @NotEmpty String currency,
     String description,
-    @NotNull Map<String, String> extraData
+    @NotNull String extraData
   ) {
     Double amountValue = ConnectorServiceTools.getAmountValue(amount);
     if (amountValue == null) throw new BadRequest.InvalidAttributeValue("amount");
@@ -220,7 +221,7 @@ public class ProviderService implements ProviderServiceAbs {
     paymentEntity.toBic = creditorBic;
 
     PaymentEntity payment = paymentsRepository.save(paymentEntity);
-    return payment.id.toString();
+    return getPaymentAuthorizationPageUrl(payment.id.toString());
   }
 
   @Override
@@ -230,12 +231,13 @@ public class ProviderService implements ProviderServiceAbs {
     @NotEmpty String creditorSortCode,
     @NotEmpty String creditorName,
     ParticipantAddress creditorAddress,
-    @NotEmpty String debtorBban,
-    @NotEmpty String debtorSortCode,
+    String creditorAgentName,
+    String debtorBban,
+    String debtorSortCode,
     @NotEmpty String amount,
     @NotEmpty String currency,
     String description,
-    @NotNull Map<String, String> extraData
+    @NotNull String extraData
   ) {
     Double amountValue = ConnectorServiceTools.getAmountValue(amount);
     if (amountValue == null) throw new BadRequest.InvalidAttributeValue("amount");
@@ -258,15 +260,14 @@ public class ProviderService implements ProviderServiceAbs {
     paymentEntity.toSortCode = creditorSortCode;
 
     PaymentEntity payment = paymentsRepository.save(paymentEntity);
-    return payment.id.toString();
+    return getPaymentAuthorizationPageUrl(payment.id.toString());
   }
 
-  @Override
-  public String getPaymentAuthorizationPageUrl(@NotEmpty String paymentId) {
+  private String getPaymentAuthorizationPageUrl(String paymentId) {
     try {
       return getAuthorizationPageUrlWithQueryParam(
         UserOAuthAuthController.PAYMENTS_BASE_PATH,
-        new AbstractMap.SimpleImmutableEntry<>(SDKConstants.KEY_PAYMENT_ID, paymentId)
+        new AbstractMap.SimpleImmutableEntry<String, String>(SDKConstants.KEY_PAYMENT_ID, paymentId)
       );
     } catch (Exception e) {
       log.error(e.getMessage(), e);

@@ -20,12 +20,15 @@
  */
 package com.saltedge.connector.sdk.api.services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.saltedge.connector.sdk.SDKConstants;
+import com.saltedge.connector.sdk.api.models.Account;
 import com.saltedge.connector.sdk.api.models.PaymentOrder;
 import com.saltedge.connector.sdk.api.models.err.HttpErrorParams;
 import com.saltedge.connector.sdk.api.models.err.NotFound;
 import com.saltedge.connector.sdk.api.models.requests.CreatePaymentRequest;
 import com.saltedge.connector.sdk.callback.mapping.SessionUpdateCallbackRequest;
+import com.saltedge.connector.sdk.tools.JsonTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -37,7 +40,7 @@ import org.springframework.util.StringUtils;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.HashMap;
-import java.util.Map;
+import java.util.Optional;
 
 import static com.saltedge.connector.sdk.SDKConstants.PAYMENT_PRODUCT_FASTER_PAYMENT_SERVICE;
 
@@ -48,42 +51,47 @@ import static com.saltedge.connector.sdk.SDKConstants.PAYMENT_PRODUCT_FASTER_PAY
 @Service
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class PaymentsService extends BaseService {
-  private static Logger log = LoggerFactory.getLogger(PaymentsService.class);
+  private static final Logger log = LoggerFactory.getLogger(PaymentsService.class);
 
   @Async
   public void createPayment(@NotNull CreatePaymentRequest paymentRequest) {
     try {
       PaymentOrder order = paymentRequest.getPaymentOrder();
-      Map<String, String> extraData = createExtraData(
+      String extraData = createExtraData(
         paymentRequest.sessionSecret,
         paymentRequest.returnToUrl,
         order.endToEndIdentification
       );
 
-      String paymentId;
+      Account debtorAccount = order.getDebtorAccount();
+      Optional<Account> optDebtorAccount = Optional.ofNullable(debtorAccount);
+
+      String paymentAuthenticationUrl;
       if (paymentRequest.getPaymentProduct().equals(PAYMENT_PRODUCT_FASTER_PAYMENT_SERVICE)) {
-        paymentId = providerService.createFPSPayment(
+        paymentAuthenticationUrl = providerService.createFPSPayment(
           paymentRequest.getPaymentProduct(),
           order.getCreditorAccount().getBban(),
           order.getCreditorAccount().getSortCode(),
           order.getCreditorName(),
           order.getCreditorAddress(),
-          order.getDebtorAccount().getBban(),
-          order.getDebtorAccount().getSortCode(),
+          order.getCreditorAgentName(),
+          optDebtorAccount.map(Account::getBban).orElse(null),
+          optDebtorAccount.map(Account::getSortCode).orElse(null),
           order.getInstructedAmount().getAmount(),
           order.getInstructedAmount().getCurrency(),
           order.getRemittanceInformationUnstructured(),
           extraData
         );
       } else {
-        paymentId = providerService.createPayment(
+        paymentAuthenticationUrl = providerService.createPayment(
           paymentRequest.getPaymentProduct(),
           order.getCreditorAccount().getIban(),
           order.getCreditorAccount().getBic(),
           order.getCreditorName(),
           order.getCreditorAddress(),
-          order.getDebtorAccount().getIban(),
-          order.getDebtorAccount().getBic(),
+          order.getCreditorAgentName(),
+          optDebtorAccount.map(Account::getIban).orElse(null),
+          optDebtorAccount.map(Account::getBic).orElse(null),
           order.getInstructedAmount().getAmount(),
           order.getInstructedAmount().getCurrency(),
           order.getRemittanceInformationUnstructured(),
@@ -91,34 +99,33 @@ public class PaymentsService extends BaseService {
         );
       }
 
-      if (StringUtils.isEmpty(paymentId)) {
+      if (StringUtils.isEmpty(paymentAuthenticationUrl)) {
         callbackService.sendFailCallback(paymentRequest.sessionSecret, new NotFound.PaymentNotCreated());
       } else {
         SessionUpdateCallbackRequest params = new SessionUpdateCallbackRequest(
-          providerService.getPaymentAuthorizationPageUrl(paymentId),
+          paymentAuthenticationUrl,
           SDKConstants.STATUS_REDIRECT
         );
         callbackService.sendUpdateCallback(paymentRequest.sessionSecret, params);
       }
     } catch (Exception e) {
       log.error("PaymentsService.createPayment:", e);
-      RuntimeException failException = (e instanceof HttpErrorParams)
-        ? (RuntimeException) e : new NotFound.PaymentNotCreated();
-      callbackService.sendFailCallback(paymentRequest.sessionSecret, failException);
+      if (e instanceof HttpErrorParams) callbackService.sendFailCallback(paymentRequest.sessionSecret, e);
+      else callbackService.sendFailCallback(paymentRequest.sessionSecret, new NotFound.PaymentNotCreated());
     }
   }
 
-  private Map<String, String> createExtraData(
+  private String createExtraData(
     @NotEmpty String sessionSecret,
     String returnToUrl,
     String endToEndIdentification
-  ) {
+  ) throws JsonProcessingException {
     HashMap<String, String> result = new HashMap<>();
     result.put(SDKConstants.KEY_SESSION_SECRET, sessionSecret);
     if (!StringUtils.isEmpty(returnToUrl)) result.put(SDKConstants.KEY_RETURN_TO_URL, returnToUrl);
     if (!StringUtils.isEmpty(endToEndIdentification)) {
       result.put(SDKConstants.KEY_END_TO_END_IDENTIFICATION, endToEndIdentification);
     }
-    return result;
+    return JsonTools.createDefaultMapper().writeValueAsString(result);
   }
 }

@@ -31,4 +31,11 @@ public class BaseFailRequest extends BaseCallbackRequest {
 
     @JsonProperty(SDKConstants.KEY_ERROR_MESSAGE)
     public String errorMessage;
+
+    public BaseFailRequest() { }
+
+    public BaseFailRequest(String errorClass, String errorMessage) {
+        this.errorClass = errorClass;
+        this.errorMessage = errorMessage;
+    }
 }

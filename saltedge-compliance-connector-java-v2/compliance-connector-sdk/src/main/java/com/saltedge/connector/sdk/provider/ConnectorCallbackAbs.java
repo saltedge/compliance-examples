@@ -117,25 +117,22 @@ public interface ConnectorCallbackAbs {
   /**
    * Provider notify Connector Module about oAuth success authentication and user consent for payment
    *
-   * @param paymentId Unique identifier of payment
    * @param userId Unique identifier of authenticated User
-   * @param paymentExtra Extra data of payment order
+   * @param paymentExtra Extra data of payment order, provided in `ProviderServiceAbs.createPayment(...)`
    * @param paymentProduct Payment product code (Allowed values: sepa-credit-transfers, instant-sepa-credit-transfers, target-2-payments, faster-payment-service, internal-transfer)
    * @return URL string for final redirection of Payment Authorization session
    */
   String onPaymentInitiationAuthorizationSuccess(
-    @NotEmpty String paymentId,
     @NotEmpty String userId,
-    @NotEmpty Map<String, String> paymentExtra,
+    @NotEmpty String paymentExtra,
     @NotEmpty String paymentProduct
   );
 
   /**
    * Provider should notify Connector Module about oAuth authentication fail or Payment confirmation deny
    *
-   * @param paymentId Unique identifier of payment
-   * @param paymentExtra Extra data of payment order
+   * @param paymentExtra Extra data of payment order, provided in `ProviderServiceAbs.createPayment(...)`
    * @return URL string for final redirection of Payment Authorization session
    */
-  String onPaymentInitiationAuthorizationFail(@NotEmpty String paymentId, @NotEmpty Map<String, String> paymentExtra);
+  String onPaymentInitiationAuthorizationFail(@NotEmpty String paymentExtra);
 }

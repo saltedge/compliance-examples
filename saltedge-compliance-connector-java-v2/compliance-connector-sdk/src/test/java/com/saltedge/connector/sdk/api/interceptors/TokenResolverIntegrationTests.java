@@ -56,7 +56,7 @@ public class TokenResolverIntegrationTests {
     ApplicationProperties applicationProperties;
     @Autowired
     TokensRepository tokensRepository;
-    private TestRestTemplate testRestTemplate = new TestRestTemplate();
+    private final TestRestTemplate testRestTemplate = new TestRestTemplate();
 
     @Test
     public void givenHeaderWithNoAccessToken_whenMakeRequest_thenReturnAccessTokenMissing() {
@@ -96,8 +96,8 @@ public class TokenResolverIntegrationTests {
         ResponseEntity<ErrorResponse> response = doRequest(headers);
 
         // then
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
         assertThat(response.getBody().errorClass).isEqualTo("TokenExpired");
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
     }
 
     @Before
