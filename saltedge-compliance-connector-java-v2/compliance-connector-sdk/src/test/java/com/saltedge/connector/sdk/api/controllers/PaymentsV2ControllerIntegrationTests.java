@@ -22,10 +22,7 @@ package com.saltedge.connector.sdk.api.controllers;
 
 import com.saltedge.connector.sdk.SDKConstants;
 import com.saltedge.connector.sdk.TestTools;
-import com.saltedge.connector.sdk.api.models.Account;
-import com.saltedge.connector.sdk.api.models.Amount;
-import com.saltedge.connector.sdk.api.models.EmptyJsonModel;
-import com.saltedge.connector.sdk.api.models.PaymentOrder;
+import com.saltedge.connector.sdk.api.models.*;
 import com.saltedge.connector.sdk.api.models.requests.CreatePaymentRequest;
 import com.saltedge.connector.sdk.api.models.requests.DefaultRequest;
 import com.saltedge.connector.sdk.api.models.responses.ErrorResponse;
@@ -61,7 +58,47 @@ public class PaymentsV2ControllerIntegrationTests extends ControllerIntegrationT
   }
 
   @Test
-  public void givenHeaderWithValidAuthorization_whenCreatePayment_thenReturnOK() {
+  public void givenValidRequest_whenCreatePayment_thenReturnOK() {
+    // given
+    Account creditorAccount = new Account();
+    creditorAccount.setIban("iban1");
+    Account debtorAccount = new Account();
+    debtorAccount.setIban("iban2");
+    CreatePaymentRequest request = new CreatePaymentRequest(
+      "appName",
+      "providerCode",
+      "returnToUrl",
+      new PaymentOrder(
+        creditorAccount,
+        "creditorName",
+        new ParticipantAddress("CA"),
+        "creditorAgentName",
+        debtorAccount,
+        new Amount("1.0", "USD"),
+        "endToEndIdentification",
+        "remittanceInformationUnstructured"
+      ),
+      "sepa-credit-transfers"
+    );
+    request.sessionSecret = "sessionSecret";
+    String auth = TestTools.createAuthorizationHeaderValue(request, TestTools.getInstance().getRsaPrivateKey());
+    LinkedMultiValueMap<String, String> headers = createHeaders();
+    headers.add(SDKConstants.HEADER_AUTHORIZATION, auth);
+
+    // when
+    ResponseEntity<EmptyJsonModel> response = testRestTemplate.exchange(
+      createURLWithPort(PaymentsV2Controller.BASE_PATH),
+      HttpMethod.POST,
+      new HttpEntity<>(headers),
+      EmptyJsonModel.class
+    );
+
+    // then
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+  }
+
+  @Test
+  public void givenMinimalValidRequest_whenCreatePayment_thenReturnOK() {
     // given
     Account creditorAccount = new Account();
     creditorAccount.setIban("iban1");
@@ -75,11 +112,11 @@ public class PaymentsV2ControllerIntegrationTests extends ControllerIntegrationT
         creditorAccount,
         "creditorName",
         null,
-        "creditorAgentName",
-        debtorAccount,
+        null,
+        null,
         new Amount("1.0", "USD"),
         "endToEndIdentification",
-        "remittanceInformationUnstructured"
+        null
       ),
       "sepa-credit-transfers"
     );
