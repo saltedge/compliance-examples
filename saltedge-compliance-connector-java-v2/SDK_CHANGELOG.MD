@@ -1,5 +1,9 @@
 # Salt Edge Compliance Connector SDK Changelog
 
+## 2.6.1 (2021-07-01)
+### Change:
+- fix payment validation scheme
+  
 ## 2.6.0 (2021-07-01)
 ### Add:
 - add `creditorAgentName` on payment create 
