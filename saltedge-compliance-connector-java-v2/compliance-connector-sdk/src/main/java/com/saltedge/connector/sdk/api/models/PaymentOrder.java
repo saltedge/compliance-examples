@@ -74,6 +74,7 @@ public class PaymentOrder {
    * Payment identifier on TPP side.
    */
   @JsonProperty(KEY_END_TO_END_IDENTIFICATION)
+  @NotEmpty
   public String endToEndIdentification;
 
   /**
@@ -86,7 +87,6 @@ public class PaymentOrder {
    * Creditor bank name.
    */
   @JsonProperty("creditor_agent_name")
-  @NotEmpty
   public String creditorAgentName;
 
   public PaymentOrder() {

@@ -65,6 +65,10 @@ public class ParticipantAddress {
   public ParticipantAddress() {
   }
 
+  public ParticipantAddress(String country) {
+    this.country = country;
+  }
+
   public ParticipantAddress(String street, String buildingNumber, String town, String postCode, String country) {
     this.street = street;
     this.buildingNumber = buildingNumber;
