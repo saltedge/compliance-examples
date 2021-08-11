@@ -1,0 +1,51 @@
+plugins {
+    id 'java'
+    id 'java-library'
+    id 'org.springframework.boot'
+    id 'io.spring.dependency-management'
+    id 'maven'
+    id 'com.bmuschko.nexus' version '2.3.1'
+}
+
+group 'org.saltedge.connector.sdk'
+version '1.0.0'
+
+repositories {
+    mavenCentral()
+}
+
+bootJar {
+    enabled = false
+}
+
+jar {
+    enabled = true
+}
+
+dependencies {
+    def springVersion = '2.5.3'
+    implementation 'org.jetbrains:annotations:21.0.1'
+    implementation "org.springframework.boot:spring-boot-starter:$springVersion"
+    implementation "org.springframework.boot:spring-boot-starter-web:$springVersion"
+    implementation "org.springframework.boot:spring-boot-starter-freemarker:$springVersion"
+    implementation "org.springframework.boot:spring-boot-starter-data-jpa:$springVersion"
+    implementation "org.springframework.boot:spring-boot-starter-validation:$springVersion"
+
+    def jjwtVersion = '0.11.2'
+    implementation "io.jsonwebtoken:jjwt-api:$jjwtVersion"
+    runtime "io.jsonwebtoken:jjwt-impl:$jjwtVersion", "io.jsonwebtoken:jjwt-jackson:$jjwtVersion"
+    implementation "io.jsonwebtoken:jjwt-impl:$jjwtVersion"
+    implementation "io.jsonwebtoken:jjwt-jackson:$jjwtVersion"
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.2'
+
+    testImplementation "io.jsonwebtoken:jjwt-api:$jjwtVersion"
+    testImplementation "io.jsonwebtoken:jjwt-jackson:$jjwtVersion"
+    testImplementation "org.springframework.boot:spring-boot-starter-test:$springVersion"
+    testImplementation 'com.h2database:h2:1.4.200'
+}
+
+test {
+    useJUnitPlatform()
+}

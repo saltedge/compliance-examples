@@ -1,0 +1,12 @@
+spring:
+  profiles: prod
+connector:
+  private_key_name: connector_private_prod.pem
+  private_key_pem: -----BEGIN PRIVATE KEY----- -----END PRIVATE KEY-----
+  private_key_file_path: /Users/test/connector_private_prod.pem
+  priora:
+    app_code: spring_connector_example_md
+    app_id: xxxxxxxxx
+    app_secret: xxxxxxxxx
+    base_url: https://priora.saltedge.com/
+    public_key_name: priora_public_prod.pem
