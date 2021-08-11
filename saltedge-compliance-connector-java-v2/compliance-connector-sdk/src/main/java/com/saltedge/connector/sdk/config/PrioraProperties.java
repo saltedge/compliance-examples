@@ -25,6 +25,7 @@ import com.saltedge.connector.sdk.tools.ResourceTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.util.StringUtils;
 
 import javax.validation.constraints.NotBlank;
 import java.net.MalformedURLException;
@@ -43,6 +44,8 @@ import java.security.PublicKey;
  *     app_secret: xxxxxxxxx
  *     base_url: https://priora.saltedge.com/
  *     public_key_name: priora_public_prod.pem
+ *     public_key_pem: -----BEGIN PUBLIC KEY-----\nXXXXX\n-----END PUBLIC KEY-----
+ *     public_key_file_path: /Users/bank/priora_public_prod.pem
  */
 @Configuration
 public class PrioraProperties {
@@ -76,15 +79,22 @@ public class PrioraProperties {
     private String baseUrl = "https://priora.saltedge.com/";
 
     /**
-     * Name of Salt Edge Compliance public key file in PEM format.
-     * By default: `priora_public_prod.pem`
+     * Path in application resources of public key file of Salt Edge Compliance Service (PEM format).
+     * Use for JWT signature
      */
-    private String publicKeyName = "priora_public_prod.pem";
+    private String publicKeyName;
 
     /**
-     * Name of Salt Edge Compliance public key string in PEM format.
+     * Public key string of Salt Edge Compliance Service (PEM format).
+     * Use for JWT signature
      */
     private String publicKeyPem;
+
+    /**
+     * Path in file system of public key file of Salt Edge Compliance Service (PEM format).
+     * Use for JWT signature
+     */
+    private String publicKeyFilePath;
 
     private PublicKey publicKey;
 
@@ -99,10 +109,12 @@ public class PrioraProperties {
 
     public PublicKey getPrioraPublicKey() {
         if (publicKey == null) {
-            if (publicKeyName != null && !publicKeyName.trim().isEmpty()) {
-                publicKey = KeyTools.convertPemStringToPublicKey(ResourceTools.readKeyFile(publicKeyName));
-            } else if (publicKeyPem != null && !publicKeyPem.trim().isEmpty()) {
+            if (StringUtils.hasText(publicKeyName)) {
+                publicKey = KeyTools.convertPemStringToPublicKey(ResourceTools.readResourceFile(publicKeyName));
+            } else if (StringUtils.hasText(publicKeyPem)) {
                 publicKey = KeyTools.convertPemStringToPublicKey(publicKeyPem);
+            } else if (StringUtils.hasText(publicKeyFilePath)) {
+                publicKey = KeyTools.convertPemStringToPublicKey(ResourceTools.readFile(publicKeyFilePath));
             }
         }
         return publicKey;
@@ -146,6 +158,14 @@ public class PrioraProperties {
 
     public void setPublicKeyName(String publicKeyName) {
         this.publicKeyName = publicKeyName;
+    }
+
+    public String getPublicKeyFilePath() {
+        return publicKeyFilePath;
+    }
+
+    public void setPublicKeyFilePath(String publicKeyFilePath) {
+        this.publicKeyFilePath = publicKeyFilePath;
     }
 
     public PublicKey getPublicKey() {

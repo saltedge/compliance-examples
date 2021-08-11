@@ -24,6 +24,7 @@ import com.saltedge.connector.sdk.tools.KeyTools;
 import com.saltedge.connector.sdk.tools.ResourceTools;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.util.StringUtils;
 
 import javax.validation.constraints.NotNull;
 import java.security.PrivateKey;
@@ -38,6 +39,7 @@ import java.security.PublicKey;
  * connector:
  *   private_key_name: connector_private_prod.pem
  *   private_key_pem: -----BEGIN PRIVATE KEY-----\nXXXXX\n-----END PRIVATE KEY-----
+ *   private_key_file_path: /Users/bank/connector_private_prod.pem
  *   priora:
  *     app_code: spring_connector_example
  *     app_id: xxxxxxxxx
@@ -49,14 +51,22 @@ import java.security.PublicKey;
 @ConfigurationProperties(prefix = "connector")
 public class ApplicationProperties {
     /**
-     * Name of Connector's private key file in PEM format
+     * Path in application resources of private key file of Connector/ASPSP application (PEM format)
+     * Use for JWT signature
      */
     private String privateKeyName;
 
     /**
-     * Connector's private key string in PEM format
+     * Private key string of Connector/ASPSP application (PEM format)
+     * Use for JWT signature
      */
     private String privateKeyPem;
+
+    /**
+     * Path in file system of private key file of Connector/ASPSP application (PEM format)
+     * Use for JWT signature
+     */
+    private String privateKeyFilePath;
 
     /**
      * Salt Edge Compliance related params
@@ -67,16 +77,7 @@ public class ApplicationProperties {
 
     private PrivateKey privateKey;
 
-    public PrivateKey getPrivateKey() {
-        if (privateKey == null) {
-            if (privateKeyName != null && !privateKeyName.trim().isEmpty()) {
-                privateKey = KeyTools.convertPemStringToPrivateKey(ResourceTools.readKeyFile(privateKeyName));
-            } else if (privateKeyPem != null && !privateKeyPem.trim().isEmpty()) {
-                privateKey = KeyTools.convertPemStringToPrivateKey(privateKeyPem);
-            }
-        }
-        return privateKey;
-    }
+    //Getters and Setters
 
     public String getPrivateKeyName() {
         return privateKeyName;
@@ -92,6 +93,27 @@ public class ApplicationProperties {
 
     public void setPrivateKeyPem(String privateKeyPem) {
         this.privateKeyPem = privateKeyPem;
+    }
+
+    public String getPrivateKeyFilePath() {
+        return privateKeyFilePath;
+    }
+
+    public void setPrivateKeyFilePath(String privateKeyFilePath) {
+        this.privateKeyFilePath = privateKeyFilePath;
+    }
+
+    public PrivateKey getPrivateKey() {
+        if (privateKey == null) {
+            if (StringUtils.hasText(privateKeyName)) {
+                privateKey = KeyTools.convertPemStringToPrivateKey(ResourceTools.readResourceFile(privateKeyName));
+            } else if (StringUtils.hasText(privateKeyPem)) {
+                privateKey = KeyTools.convertPemStringToPrivateKey(privateKeyPem);
+            } else if (StringUtils.hasText(privateKeyFilePath)) {
+                privateKey = KeyTools.convertPemStringToPrivateKey(ResourceTools.readFile(privateKeyFilePath));
+            }
+        }
+        return privateKey;
     }
 
     public void setPrivateKey(PrivateKey privateKey) {

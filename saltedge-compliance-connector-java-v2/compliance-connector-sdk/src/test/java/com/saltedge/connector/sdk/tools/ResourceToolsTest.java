@@ -28,7 +28,7 @@ public class ResourceToolsTest {
 	@Test
 	public void readKeyFileTest() {
 		assertThat(new ResourceTools()).isNotNull();
-		assertThat(ResourceTools.readKeyFile("param-param.pem")).isEmpty();
-		assertThat(ResourceTools.readKeyFile("test_public_key.pem")).startsWith("-----BEGIN PUBLIC KEY-----");
+		assertThat(ResourceTools.readResourceFile("param-param.pem")).isEmpty();
+		assertThat(ResourceTools.readResourceFile("test_public_key.pem")).startsWith("-----BEGIN PUBLIC KEY-----");
 	}
 }
