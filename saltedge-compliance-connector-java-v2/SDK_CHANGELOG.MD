@@ -1,5 +1,11 @@
 # Salt Edge Compliance Connector SDK Changelog
 
+## 2.7.0 (2021-08-12)
+### Add:
+- Add `private_key_file_path` field to properties
+- Add `public_key_file_path` field to properties
+- Add `org.springframework.boot:spring-boot-starter-validation` dependency
+
 ## 2.6.1 (2021-07-01)
 ### Change:
 - fix payment validation scheme
