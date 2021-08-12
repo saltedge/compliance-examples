@@ -20,6 +20,7 @@
  */
 package com.saltedge.connector.ob.sdk.api.models.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -52,6 +53,7 @@ public class AuthorizationCreateRequest {
    * Authorization code expiration datetime.
    * Default value: 1 minute from now
    */
+  @JsonFormat(shape = JsonFormat.Shape.STRING)
   @JsonProperty("auth_code_exp")
   public Instant authCodeExp;
 

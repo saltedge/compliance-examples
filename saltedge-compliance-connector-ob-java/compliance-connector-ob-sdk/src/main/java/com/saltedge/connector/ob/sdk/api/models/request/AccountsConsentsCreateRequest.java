@@ -24,6 +24,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.saltedge.connector.ob.sdk.api.models.CustomInstantDeserializer;
 
 import javax.validation.constraints.NotEmpty;
 import java.time.Instant;
@@ -65,25 +67,28 @@ public class AccountsConsentsCreateRequest extends CreateBaseRequest {
 
     /**
      * Specified date and time the permissions will expire.
-     * If this is not populated, the permissions will be open ended.
+     * If this is not populated, the permissions will be open-ended.
      */
-    @JsonFormat(shape = JsonFormat.Shape.STRING)
+//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss 'UTC'")
+    @JsonDeserialize(using = CustomInstantDeserializer.class)
     @JsonProperty("expiration_date_time")
     public Instant expirationDateTime;
 
     /**
      * Specified start date and time for the transaction query period.
-     * If this is not populated, the start date will be open ended, and data will be returned from the earliest available transaction.
+     * If this is not populated, the start date will be open-ended, and data will be returned from the earliest available transaction.
      */
-    @JsonFormat(shape = JsonFormat.Shape.STRING)
+//    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    @JsonDeserialize(using = CustomInstantDeserializer.class)
     @JsonProperty("transaction_from_date_time")
     public Instant transactionFrom;
 
     /**
      * Specified end date and time for the transaction query period.
-     * If this is not populated, the end date will be open ended, and data will be returned to the latest available transaction.
+     * If this is not populated, the end date will be open-ended, and data will be returned to the latest available transaction.
      */
-    @JsonFormat(shape = JsonFormat.Shape.STRING)
+//    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    @JsonDeserialize(using = CustomInstantDeserializer.class)
     @JsonProperty("transaction_to_date_time")
     public Instant transactionTo;
 }

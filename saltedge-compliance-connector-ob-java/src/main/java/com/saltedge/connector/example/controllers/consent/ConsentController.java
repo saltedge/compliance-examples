@@ -41,6 +41,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
+//https://connector.saltedge.com/spring_bank_ob/ob/v1/oauth2/authorize
 @Controller
 @RequestMapping
 public class ConsentController extends BaseController {
@@ -55,6 +56,7 @@ public class ConsentController extends BaseController {
     @GetMapping(AUTHENTICATION_PATH)
     public ModelAndView showLogin(HttpServletRequest request) {
         String requestURL = request.getRequestURL().toString();
+        if (requestURL.startsWith("http://")) requestURL = requestURL.replaceFirst("http://", "https://");
         String authCode = UUID.randomUUID().toString();
 
         String redirectUri = connectorSDKService.onUserInitiateConsentAuthorization(requestURL, authCode, null);

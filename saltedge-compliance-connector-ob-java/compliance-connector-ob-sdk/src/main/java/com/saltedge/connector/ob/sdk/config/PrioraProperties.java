@@ -25,6 +25,7 @@ import com.saltedge.connector.ob.sdk.tools.ResourceTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.util.StringUtils;
 
 import javax.validation.constraints.NotBlank;
 import java.net.MalformedURLException;
@@ -76,15 +77,19 @@ public class PrioraProperties {
     private String baseUrl = "https://priora.saltedge.com/";
 
     /**
-     * Name of Salt Edge Compliance public key file in PEM format.
-     * By default: `priora_public_prod.pem`
+     * Path in resources of Salt Edge Compliance public key file in PEM format.
      */
-    private String publicKeyName = "priora_public_prod.pem";
+    private String publicKeyName;
 
     /**
-     * Name of Salt Edge Compliance public key string in PEM format.
+     * Public key string in PEM format of Salt Edge Compliance.
      */
     private String publicKeyPem;
+
+    /**
+     * Path in file system of Salt Edge Compliance public key file in PEM format.
+     */
+    private String publicKeyFilePath;
 
     private PublicKey publicKey;
 
@@ -99,10 +104,12 @@ public class PrioraProperties {
 
     public PublicKey getPrioraPublicKey() {
         if (publicKey == null) {
-            if (publicKeyName != null && !publicKeyName.trim().isEmpty()) {
+            if (StringUtils.hasText(publicKeyName)) {
                 publicKey = KeyTools.convertPemStringToPublicKey(ResourceTools.readResourceFile(publicKeyName));
-            } else if (publicKeyPem != null && !publicKeyPem.trim().isEmpty()) {
+            } else if (StringUtils.hasText(publicKeyPem)) {
                 publicKey = KeyTools.convertPemStringToPublicKey(publicKeyPem);
+            } else if (StringUtils.hasText(publicKeyFilePath)) {
+                publicKey = KeyTools.convertPemStringToPublicKey(ResourceTools.readFile(publicKeyFilePath));
             }
         }
         return publicKey;

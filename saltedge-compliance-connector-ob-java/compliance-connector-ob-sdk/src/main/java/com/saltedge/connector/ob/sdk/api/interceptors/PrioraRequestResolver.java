@@ -23,9 +23,9 @@ package com.saltedge.connector.ob.sdk.api.interceptors;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.saltedge.connector.ob.sdk.SDKConstants;
 import com.saltedge.connector.ob.sdk.api.ApiConstants;
-import com.saltedge.connector.ob.sdk.api.models.response.EmptyJsonResponse;
 import com.saltedge.connector.ob.sdk.api.models.errors.BadRequest;
-import com.saltedge.connector.ob.sdk.api.models.request.PrioraBaseRequest;
+import com.saltedge.connector.ob.sdk.api.models.request.*;
+import com.saltedge.connector.ob.sdk.api.models.response.EmptyJsonResponse;
 import com.saltedge.connector.ob.sdk.config.ApplicationProperties;
 import com.saltedge.connector.ob.sdk.tools.JsonTools;
 import io.jsonwebtoken.*;
@@ -39,6 +39,8 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -54,9 +56,22 @@ public class PrioraRequestResolver implements HandlerMethodArgumentResolver {
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
         Class<?> type = parameter.getParameterType();
-        return type.equals(PrioraBaseRequest.class)
-          || type.getSuperclass().equals(PrioraBaseRequest.class)
-          || type.equals(EmptyJsonResponse.class);
+        log.info("PrioraRequestResolver.supportsParameter type:"+type.getTypeName() + " super:" + type.getGenericSuperclass().getTypeName());
+        List<Class<? extends PrioraBaseRequest>> supportedTypes = Arrays.asList(
+          AccountsConsentsCreateRequest.class,
+          ConsentsRevokeRequest.class,
+          CreateBaseRequest.class,
+          TransactionsIndexRequest.class,
+          DefaultRequest.class,
+          ErrorsRequest.class,
+          FundsConfirmationRequest.class,
+          FundsConsentsCreateRequest.class,
+          PaymentConsentsCreateRequest.class,
+          PaymentCreateRequest.class,
+          PaymentFundsConfirmationRequest.class,
+          PaymentUpdateRequest.class
+        );
+        return supportedTypes.contains(type) || type.equals(EmptyJsonResponse.class);
     }
 
     @Override

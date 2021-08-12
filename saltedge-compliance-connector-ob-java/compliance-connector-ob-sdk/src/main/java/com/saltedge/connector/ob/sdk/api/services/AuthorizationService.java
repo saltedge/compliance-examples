@@ -45,9 +45,18 @@ import java.util.List;
 public class AuthorizationService extends BaseService {
     private static final Logger log = LoggerFactory.getLogger(AuthorizationService.class);
 
+    /**
+     *
+     * @param authorizeUrl
+     * @param authCode
+     * @param authCodeExp
+     * @return redirectUri or null
+     */
     public String createAuthorization(@NotEmpty String authorizeUrl, @NotEmpty String authCode, Instant authCodeExp) {
         try {
-            AuthorizationsCreateResponse response = callbackService.createAuthorization(new AuthorizationCreateRequest(authorizeUrl, authCode, authCodeExp));
+            AuthorizationsCreateResponse response = callbackService.createAuthorization(
+              new AuthorizationCreateRequest(authorizeUrl, authCode, authCodeExp)
+            );
             if (StringUtils.hasText(response.data.redirectUri)) {
                 return response.data.redirectUri;
             } else {
@@ -63,6 +72,14 @@ public class AuthorizationService extends BaseService {
         return null;
     }
 
+    /**
+     *
+     * @param authCode
+     * @param userId
+     * @param operationStatus
+     * @param accountIdentifiers
+     * @return redirectUri or null
+     */
     public String updateAuthorization(
       @NotEmpty String authCode,
       @NotEmpty String userId,

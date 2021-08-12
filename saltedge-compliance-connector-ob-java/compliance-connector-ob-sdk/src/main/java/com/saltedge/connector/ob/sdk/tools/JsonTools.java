@@ -63,7 +63,7 @@ public class JsonTools {
                 .serializeToJsonWith(new JacksonSerializer<>(createDefaultMapper()))
                 .claim(SDKConstants.KEY_DATA, requestData)
                 .signWith(key)
-                .setExpiration(Date.from(Instant.now().plus(1, ChronoUnit.MINUTES)))
+                .setExpiration(Date.from(Instant.now().plus(2, ChronoUnit.MINUTES)))
                 .compact();
     }
 }

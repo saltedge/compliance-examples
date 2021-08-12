@@ -18,30 +18,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.saltedge.connector.ob.sdk.config;
+package com.saltedge.connector.ob.sdk.api.models;
 
-import com.saltedge.connector.ob.sdk.api.interceptors.ConsentResolver;
-import com.saltedge.connector.ob.sdk.api.interceptors.PrioraRequestResolver;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.web.method.support.HandlerMethodArgumentResolver;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonDeserializer;
 
-import java.util.List;
+import java.io.IOException;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 
-/**
- * Configuration of interceptors
- */
-@Configuration
-public class InterceptorsAppConfig implements WebMvcConfigurer {
-    @Autowired
-    private PrioraRequestResolver prioraRequestResolver;
-    @Autowired
-    private ConsentResolver consentResolver;
+//TODO remove
+public class CustomInstantDeserializer extends JsonDeserializer<Instant> {
+
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(ZoneOffset.UTC);
 
     @Override
-    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(prioraRequestResolver);
-        resolvers.add(consentResolver);
+    public Instant deserialize(JsonParser jp, DeserializationContext ctx) {
+        try {
+            String trimmedText = jp.getText().replace(" UTC", "").trim();
+            return parseInstant(trimmedText);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private Instant parseInstant(String value) {
+        LocalDateTime ldt = LocalDateTime.from(formatter.parse(value));
+        return Instant.from(ldt.atZone(ZoneOffset.UTC));
     }
 }

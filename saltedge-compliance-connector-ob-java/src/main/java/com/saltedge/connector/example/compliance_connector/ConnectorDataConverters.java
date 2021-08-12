@@ -44,8 +44,8 @@ public class ConnectorDataConverters {
         ArrayList<ObAccountIdentifier> identifiers = new ArrayList<>();
         identifiers.add(new ObAccountIdentifier(
           "UK.OBIE.SortCodeAccountNumber",
-          account.bban,
-          account.bban,
+          account.accountNumber,
+          account.accountNumber,
           account.sortCode
         ));
 
@@ -62,7 +62,7 @@ public class ConnectorDataConverters {
           null,
           "processing",
           identifiers,
-          new ObAccountIdentifier("UK.OBIE.SortCodeAccountNumber", account.bban),
+          new ObAccountIdentifier("UK.OBIE.SortCodeAccountNumber", account.accountNumber),
           balances
         );
     }

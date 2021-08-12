@@ -21,6 +21,7 @@
 package com.saltedge.connector.example.compliance_connector;
 
 import com.saltedge.connector.example.model.AccountEntity;
+import com.saltedge.connector.example.model.PaymentEntity;
 import com.saltedge.connector.example.model.TransactionEntity;
 import com.saltedge.connector.example.model.UserEntity;
 import com.saltedge.connector.example.model.repository.AccountsRepository;
@@ -28,6 +29,7 @@ import com.saltedge.connector.example.model.repository.PaymentsRepository;
 import com.saltedge.connector.example.model.repository.TransactionsRepository;
 import com.saltedge.connector.example.model.repository.UsersRepository;
 import com.saltedge.connector.example.services.FundsConfirmationService;
+import com.saltedge.connector.example.services.PaymentsService;
 import com.saltedge.connector.ob.sdk.api.models.errors.NotFound;
 import com.saltedge.connector.ob.sdk.provider.ProviderServiceAbs;
 import com.saltedge.connector.ob.sdk.provider.dto.account.ObAccount;
@@ -74,10 +76,13 @@ public class ComplianceConnectorService implements ProviderServiceAbs {
   @Autowired
   private PaymentsRepository paymentsRepository;
   @Autowired
+  private PaymentsService paymentsService;
+  @Autowired
   private FundsConfirmationService fundsService;
 
   @Override
   public List<ObAccount> getAccountsOfUser(@NotEmpty String userId) {
+    log.info("ComplianceConnectorService.getAccountsOfUser");
     UserEntity user = findAndValidateUser(userId);
     List<AccountEntity> accounts = accountsRepository.findByUserId(user.id);
     return ConnectorDataConverters.convertAccountsToAccountData(accounts, user);
@@ -91,6 +96,7 @@ public class ComplianceConnectorService implements ProviderServiceAbs {
     @NotNull LocalDate toDate,
     String fromId
   ) {
+    log.info("ComplianceConnectorService.getTransactionsOfAccount");
     UserEntity user = findAndValidateUser(userId);
     AccountEntity account = accountsRepository.findFirstByIdAndUserId(Long.parseLong(accountId), user.id)
       .orElseThrow((Supplier<RuntimeException>) NotFound.AccountNotFound::new);
@@ -114,6 +120,7 @@ public class ComplianceConnectorService implements ProviderServiceAbs {
 
   @Override
   public boolean confirmFunds(String userId, @NotNull ObAccountIdentifier debtorAccount, @NotNull ObAmount amount) {
+    log.info("ComplianceConnectorService.confirmFunds");
     try {
       UserEntity user = findAndValidateUser(userId);
       return fundsService.confirmFunds(debtorAccount, amount);
@@ -125,57 +132,15 @@ public class ComplianceConnectorService implements ProviderServiceAbs {
 
   @Override
   public String initiatePayment(String userId, @NotNull ObPaymentInitiationData params) {
-//    Double amountValue = ConnectorServiceTools.getAmountValue(amount);
-//    if (amountValue == null) throw new BadRequest.InvalidAttributeValue("amount");
-//    AccountEntity debtorAccount = ConnectorServiceTools.findDebtorAccount(accountsRepository, debtorIban);
-//    if (debtorAccount == null) throw new BadRequest.InvalidAttributeValue("debtor account");
-//
-//    PaymentEntity paymentEntity = new PaymentEntity();
-//    paymentEntity.status = PaymentStatus.PENDING;
-//    paymentEntity.amount = amountValue;
-//    paymentEntity.currency = currency;
-//    paymentEntity.description = description;
-//    paymentEntity.extra = extraData;
-//    paymentEntity.accountId = debtorAccount.id;
-//    paymentEntity.toAccountName = creditorName;
-//    paymentEntity.paymentProduct = paymentProduct;
-//
-//    paymentEntity.fromIban = debtorIban;
-//    paymentEntity.fromBic = debtorBic;
-//    paymentEntity.toIban = creditorIban;
-//    paymentEntity.toBic = creditorBic;
-//
-//    PaymentEntity payment = paymentsRepository.save(paymentEntity);
-//    return getPaymentAuthorizationPageUrl(payment.id.toString());
-    return null;
+    log.info("ComplianceConnectorService.initiatePayment");
+    UserEntity user = findAndValidateUser(userId);
+    PaymentEntity savedPayment = paymentsRepository.save(new PaymentEntity());
+    paymentsService.initPayment(savedPayment.id, params);
+    return String.valueOf(savedPayment.id);
   }
-
-//  private String getPaymentAuthorizationPageUrl(String paymentId) {
-//    try {
-//      return getAuthorizationPageUrlWithQueryParam(
-//        ConsentController.PAYMENTS_BASE_PATH,
-//        new AbstractMap.SimpleImmutableEntry<String, String>(SDKConstants.KEY_PAYMENT_ID, paymentId)
-//      );
-//    } catch (Exception e) {
-//      log.error(e.getMessage(), e);
-//      return null;
-//    }
-//  }
 
   private UserEntity findAndValidateUser(@NotNull String userId) {
     return usersRepository.findById(Long.valueOf(userId))
       .orElseThrow((Supplier<RuntimeException>) NotFound.UserNotFound::new);
   }
-
-//  @SafeVarargs
-//  private final String getAuthorizationPageUrlWithQueryParam(
-//    @NotEmpty String path,
-//    @NotNull AbstractMap.SimpleImmutableEntry<String, String>... params
-//  ) {
-//    String urlString = env.getProperty("app.url");
-//    if (urlString == null) return null;
-//    UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(urlString).path(path);
-//    Arrays.stream(params).forEach(item -> builder.queryParam(item.getKey(), item.getValue()));
-//    return builder.build().toUriString();
-//  }
 }

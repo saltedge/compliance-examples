@@ -70,7 +70,7 @@ public class Consent extends BaseJpaEntity implements Serializable {
     public List<String> accountIdentifiers;
 
     //AIS initial data
-    @Column(name = "permissions")
+    @Column(name = "permissions", length = 4096)
     @Convert(converter = StringListConverter.class)
     public List<String> permissions;
 
@@ -84,7 +84,7 @@ public class Consent extends BaseJpaEntity implements Serializable {
     public Instant transactionTo;
 
     //PIS initial data
-    @Column(name = "payment")
+    @Column(name = "payment", length = 4096)
     @Convert(converter = PaymentInitiationDataConverter.class)
     public ObPaymentInitiationData payment;
 
@@ -95,7 +95,7 @@ public class Consent extends BaseJpaEntity implements Serializable {
     public String paymentId;
 
     //PIIS initial data
-    @Column(name = "debtor_account")
+    @Column(name = "debtor_account", length = 4096)
     @Convert(converter = AccountIdentifierConverter.class)
     public ObAccountIdentifier debtorAccount;
 

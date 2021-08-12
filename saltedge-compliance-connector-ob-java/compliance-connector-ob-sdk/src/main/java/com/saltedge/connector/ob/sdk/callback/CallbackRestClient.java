@@ -71,8 +71,8 @@ public abstract class CallbackRestClient {
         LinkedMultiValueMap<String, String> headersMap = new LinkedMultiValueMap<>();
         headersMap.add(HttpHeaders.ACCEPT, "application/json");
         headersMap.add(HttpHeaders.CONTENT_TYPE, "application/jwt");
-        headersMap.add("App-id", applicationProperties.getPrioraAppId());
-        headersMap.add("App-secret", applicationProperties.getPrioraAppSecret());
+        headersMap.add("App-Id", applicationProperties.getPrioraAppId());
+        headersMap.add("App-Secret", applicationProperties.getPrioraAppSecret());
         return headersMap;
     }
 

@@ -35,7 +35,7 @@ import java.time.Instant;
 import java.util.List;
 
 /**
- * SDK service with actions for .//TODO
+ * SDK service with actions for callback communications from ASPSP to Compliance Service.
  *
  */
 @Service
@@ -57,6 +57,7 @@ public class ConnectorSDKService {
    * @return error redirect URL or null
    */
   public String onUserInitiateConsentAuthorization(@NotEmpty String authorizeUrl, @NotEmpty String authCode, Instant authCodeExp) {
+    log.info("ConnectorSDKService.onUserInitiateConsentAuthorization(authorizeUrl:" + authorizeUrl + " authCode:" + authCode + ")");
     return authorizationService.createAuthorization(authorizeUrl, authCode, authCodeExp);
   }
 
@@ -71,23 +72,28 @@ public class ConnectorSDKService {
    * @return returnUrl string for final redirection of Authorization session (in browser) back to TPP side.
    */
   public String onConsentApprove(@NotEmpty String authCode, @NotEmpty String userId) {
+    log.info("ConnectorSDKService.onConsentApprove(userId:" + userId + " authCode:" + authCode + ")");
     return authorizationService.updateAuthorization(authCode, userId, "approved", null);
   }
 
   public String onConsentApprove(@NotEmpty String authCode, @NotEmpty String userId, List<String> accountIdentifiers) {
+    log.info("ConnectorSDKService.onConsentApprove(userId:" + userId + " authCode:" + authCode + ")");
     return authorizationService.updateAuthorization(authCode, userId, "approved", accountIdentifiers);
   }
 
   public String onConsentDeny(@NotEmpty String authCode, @NotEmpty String userId) {
+    log.info("ConnectorSDKService.onConsentDeny(userId:" + userId + " authCode:" + authCode + ")");
     return authorizationService.updateAuthorization(authCode, userId, "denied", null);
   }
 
   /**
    * Update the status of just created payment
    *
-   * @param paymentId unique identifier of payment
+   * @param paymentId unique payment identifier
+   * @param status of payment.Values: Pending, Rejected, AcceptedSettlementInProcess, AcceptedSettlementCompleted
    */
   public void onPaymentStatusUpdate(@NotEmpty String paymentId, @NotEmpty String status) {
+    log.info("ConnectorSDKService.onPaymentStatusUpdate(paymentId:" + paymentId + " status:" + status + ")");
     paymentService.updatePayment(paymentId, status);
   }
 }

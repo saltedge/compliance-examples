@@ -29,7 +29,7 @@ import javax.validation.constraints.NotBlank;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties
-public class PaymentUpdateRequest {
+public class PaymentUpdateRequest extends PrioraBaseRequest {
 
     /**
      * PSU identifier on Connector side. Used to map PSU resource on Salt Edge PSD2 Compliance side to Connector one

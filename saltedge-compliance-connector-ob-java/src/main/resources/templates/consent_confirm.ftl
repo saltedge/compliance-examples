@@ -30,7 +30,7 @@
           <h5 class="black-text">${title}</h5>
           <#if error??>
             <p><span class="red-text">${error}</span></p>
-          </#else>
+          <#else>
             <p><span class="black-text">${description}</span></p>
             <#if identifier??>
               <p><span class="black-text">Identifier: ${identifier}</span></p>
