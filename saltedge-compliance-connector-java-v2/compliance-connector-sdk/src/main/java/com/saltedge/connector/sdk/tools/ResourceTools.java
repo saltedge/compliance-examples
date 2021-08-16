@@ -20,30 +20,45 @@
  */
 package com.saltedge.connector.sdk.tools;
 
-import com.saltedge.connector.sdk.config.PrioraProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class ResourceTools {
     private static final Logger log = LoggerFactory.getLogger(ResourceTools.class);
 
     /**
-     * Reads key file from `resources`
+     * Read file from `resources`
      *
-     * @param filename name of file
-     * @return key file content or null
+     * @param path of file in application resources
+     * @return file content or null
      */
-    public static String readKeyFile(String filename) {
-        Resource fileResource = new ClassPathResource(filename);
+    public static String readResourceFile(String path) {
         try {
+            Resource fileResource = new ClassPathResource(path);
             return readFromInputStream(fileResource.getInputStream());
+        } catch (IOException e) {
+            log.error(e.getMessage(), e);
+            return "";
+        }
+    }
+
+    /**
+     * Read file from file system
+     *
+     * @param path of file in file system
+     * @return file content or null
+     */
+    public static String readFile(String path) {
+        try {
+            File file = new File(path);
+            return readFromPath(file.toPath());
         } catch (IOException e) {
             log.error(e.getMessage(), e);
             return "";
@@ -53,6 +68,15 @@ public class ResourceTools {
     private static String readFromInputStream(InputStream inputStream) throws IOException {
         StringBuilder resultStringBuilder = new StringBuilder();
         try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
+            String line;
+            while ((line = br.readLine()) != null) resultStringBuilder.append(line).append("\n");
+        }
+        return resultStringBuilder.toString();
+    }
+
+    private static String readFromPath(Path inputPath) throws IOException {
+        StringBuilder resultStringBuilder = new StringBuilder();
+        try (BufferedReader br = Files.newBufferedReader(inputPath, StandardCharsets.UTF_8)) {
             String line;
             while ((line = br.readLine()) != null) resultStringBuilder.append(line).append("\n");
         }

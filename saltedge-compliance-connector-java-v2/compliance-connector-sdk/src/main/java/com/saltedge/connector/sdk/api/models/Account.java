@@ -136,10 +136,10 @@ public class Account {
    * @return true if model contains at least one identifier
    */
   public boolean hasIdentifier() {
-    return !StringUtils.isEmpty(bban)
-      || !StringUtils.isEmpty(bic)
-      || !StringUtils.isEmpty(iban)
-      || !StringUtils.isEmpty(sortCode);
+    return StringUtils.hasText(bban)
+      || StringUtils.hasText(bic)
+      || StringUtils.hasText(iban)
+      || StringUtils.hasText(sortCode);
   }
 
   /**
@@ -149,8 +149,8 @@ public class Account {
    * @return true if one of identifiers is equal to accountCode param
    */
   public boolean containsAccountIdentifier(@NotEmpty String accountCode) {
-    if (StringUtils.isEmpty(accountCode)) return false;
-    return accountCode.equals(iban) || accountCode.equals(bban) || accountCode.equals(bic) || accountCode.equals(sortCode);
+    if (StringUtils.hasText(accountCode)) return accountCode.equals(iban) || accountCode.equals(bban) || accountCode.equals(bic) || accountCode.equals(sortCode);
+    else return false;
   }
 
 
