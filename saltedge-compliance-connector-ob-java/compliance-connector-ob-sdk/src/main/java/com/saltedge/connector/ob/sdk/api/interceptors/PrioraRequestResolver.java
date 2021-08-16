@@ -56,7 +56,6 @@ public class PrioraRequestResolver implements HandlerMethodArgumentResolver {
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
         Class<?> type = parameter.getParameterType();
-        log.info("PrioraRequestResolver.supportsParameter type:"+type.getTypeName() + " super:" + type.getGenericSuperclass().getTypeName());
         List<Class<? extends PrioraBaseRequest>> supportedTypes = Arrays.asList(
           AccountsConsentsCreateRequest.class,
           ConsentsRevokeRequest.class,

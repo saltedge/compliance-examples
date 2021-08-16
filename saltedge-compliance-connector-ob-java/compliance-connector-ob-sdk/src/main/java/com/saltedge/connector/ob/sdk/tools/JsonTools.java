@@ -21,6 +21,7 @@
 package com.saltedge.connector.ob.sdk.tools;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -59,11 +60,21 @@ public class JsonTools {
      */
     public static String createAuthorizationPayloadValue(Object requestData, PrivateKey key) {
         if (key == null) return "";
-        return "Bearer " + Jwts.builder()
+        //"Bearer " +
+        return Jwts.builder()
                 .serializeToJsonWith(new JacksonSerializer<>(createDefaultMapper()))
                 .claim(SDKConstants.KEY_DATA, requestData)
                 .signWith(key)
                 .setExpiration(Date.from(Instant.now().plus(2, ChronoUnit.MINUTES)))
                 .compact();
+    }
+
+    public static <T> T parseObject(String json, Class<T> clazz) {
+        try {
+            return JsonTools.createDefaultMapper().readValue(json, clazz);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

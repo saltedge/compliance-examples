@@ -51,6 +51,7 @@ import org.springframework.validation.annotation.Validated;
 import javax.validation.constraints.NotEmpty;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -82,10 +83,15 @@ public class ComplianceConnectorService implements ProviderServiceAbs {
 
   @Override
   public List<ObAccount> getAccountsOfUser(@NotEmpty String userId) {
-    log.info("ComplianceConnectorService.getAccountsOfUser");
+    log.info("ComplianceConnectorService.getAccountsOfUser for user:" + userId);
     UserEntity user = findAndValidateUser(userId);
-    List<AccountEntity> accounts = accountsRepository.findByUserId(user.id);
-    return ConnectorDataConverters.convertAccountsToAccountData(accounts, user);
+    try {
+      List<AccountEntity> accounts = accountsRepository.findByUserId(user.id);
+      return ConnectorDataConverters.convertAccountsToAccountData(accounts, user);
+    } catch (Exception e) {
+      log.error("getAccountsOfUser", e);
+      return Collections.emptyList();
+    }
   }
 
   @Override

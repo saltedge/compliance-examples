@@ -56,5 +56,22 @@ public class AuthorizationsUpdateResponse {
             this.status = status;
             this.accessToken = accessToken;
         }
+
+        @Override
+        public String toString() {
+            return "Data{" +
+              "authorizationId='" + authorizationId + '\'' +
+              ", status='" + status + '\'' +
+              ", accessToken='" + accessToken + '\'' +
+              ", redirectUri='" + redirectUri + '\'' +
+              '}';
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "AuthorizationsUpdateResponse{" +
+          "data=" + data +
+          '}';
     }
 }

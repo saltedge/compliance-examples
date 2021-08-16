@@ -56,5 +56,22 @@ public class AuthorizationsCreateResponse {
             this.consentId = consentId;
             this.accessToken = accessToken;
         }
+
+        @Override
+        public String toString() {
+            return "Data{" +
+              "authorizationId='" + authorizationId + '\'' +
+              ", consentId='" + consentId + '\'' +
+              ", accessToken='" + accessToken + '\'' +
+              ", redirectUri='" + redirectUri + '\'' +
+              '}';
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "AuthorizationsCreateResponse{" +
+          "data=" + data +
+          '}';
     }
 }

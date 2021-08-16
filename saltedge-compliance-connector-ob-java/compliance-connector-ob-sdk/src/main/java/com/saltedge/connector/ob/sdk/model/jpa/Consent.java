@@ -154,7 +154,8 @@ public class Consent extends BaseJpaEntity implements Serializable {
     }
 
     public boolean isAuthorised() {
-        return "Authorised".equalsIgnoreCase(status) && StringUtils.hasText(userId);
+        return ("Authorised".equalsIgnoreCase(status) || "approved".equalsIgnoreCase(status))
+          && StringUtils.hasText(userId);
     }
 
     public boolean isConsumed() {
@@ -162,7 +163,7 @@ public class Consent extends BaseJpaEntity implements Serializable {
     }
 
     public boolean isRejected() {
-        return "Rejected".equalsIgnoreCase(status);
+        return "Rejected".equalsIgnoreCase(status) || "denied".equalsIgnoreCase(status);
     }
 
     public boolean isRevoked() {

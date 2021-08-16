@@ -23,7 +23,7 @@ package com.saltedge.connector.ob.sdk.api.controllers;
 import com.saltedge.connector.ob.sdk.api.ApiConstants;
 import com.saltedge.connector.ob.sdk.api.models.request.PaymentCreateRequest;
 import com.saltedge.connector.ob.sdk.api.models.response.EmptyJsonResponse;
-import com.saltedge.connector.ob.sdk.api.services.PaymentService;
+import com.saltedge.connector.ob.sdk.api.services.ObPaymentService;
 import com.saltedge.connector.ob.sdk.model.jpa.Consent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,13 +43,13 @@ import javax.validation.constraints.NotNull;
  * https://priora.saltedge.com/docs/aspsp/ob/pis#connector-endpoints-payments-payments-payment
  */
 @RestController
-@RequestMapping(PaymentsController.BASE_PATH)
+@RequestMapping(ObPaymentsController.BASE_PATH)
 @Validated
-public class PaymentsController extends BaseController {
+public class ObPaymentsController extends ObBaseController {
     public final static String BASE_PATH = ApiConstants.API_BASE_PATH + "/payments";
-    private static final Logger log = LoggerFactory.getLogger(PaymentsController.class);
+    private static final Logger log = LoggerFactory.getLogger(ObPaymentsController.class);
     @Autowired
-    private PaymentService paymentService;
+    private ObPaymentService paymentService;
 
     /**
      * Create an access token with a set of access rights, named scopes.

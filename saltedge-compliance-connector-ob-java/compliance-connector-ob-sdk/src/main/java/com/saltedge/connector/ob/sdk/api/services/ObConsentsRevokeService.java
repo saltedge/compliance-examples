@@ -20,12 +20,7 @@
  */
 package com.saltedge.connector.ob.sdk.api.services;
 
-import com.saltedge.connector.ob.sdk.api.models.request.PaymentCreateRequest;
-import com.saltedge.connector.ob.sdk.api.models.request.PaymentUpdateRequest;
 import com.saltedge.connector.ob.sdk.model.jpa.Consent;
-import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.scheduling.annotation.Async;
@@ -35,34 +30,11 @@ import javax.validation.constraints.NotEmpty;
 
 @Service
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public
-class PaymentService extends BaseService {
-    private static final Logger log = LoggerFactory.getLogger(PaymentService.class);
-
+public class ObConsentsRevokeService extends ObBaseService {
     @Async
-    public void initiatePayment(@NotNull Consent consent, @NotNull PaymentCreateRequest params) {
-        try {
-            consent.payment = params.paymentInitiation;
-            consent.compliancePaymentId = params.compliancePaymentId;
-            consent.paymentId = providerService.initiatePayment(consent.userId, params.paymentInitiation);
-            consentsRepository.save(consent);
-        } catch (Exception e) {
-            log.error("PaymentCreateService.createPayment:", e);
-        }
-    }
-
-    @Async
-    public void updatePayment(@NotEmpty String paymentId, @NotEmpty String status) {
-        try {
-            Consent consent = consentsRepository.findFirstByPaymentId(paymentId);
-            if (consent != null) {
-                callbackService.updatePayment(
-                  paymentId,
-                  new PaymentUpdateRequest(consent.consentId, status, consent.tppName)
-                );
-            }
-        } catch (Exception e) {
-            log.error("PaymentService.updatePayment:", e);
-        }
+    public void revokeConsent(@NotEmpty String consentId) {
+        Consent consent = consentsRepository.findFirstByConsentId(consentId);
+        consent.status = "Revoked";
+        consentsRepository.save(consent);
     }
 }

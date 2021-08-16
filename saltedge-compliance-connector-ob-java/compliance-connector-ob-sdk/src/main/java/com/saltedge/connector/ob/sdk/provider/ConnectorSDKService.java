@@ -20,13 +20,14 @@
  */
 package com.saltedge.connector.ob.sdk.provider;
 
-import com.saltedge.connector.ob.sdk.api.services.AuthorizationService;
-import com.saltedge.connector.ob.sdk.api.services.PaymentService;
+import com.saltedge.connector.ob.sdk.api.services.ObAuthorizationService;
+import com.saltedge.connector.ob.sdk.api.services.ObPaymentService;
 import com.saltedge.connector.ob.sdk.model.jpa.Consent;
 import com.saltedge.connector.ob.sdk.model.jpa.ConsentsRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -38,6 +39,7 @@ import java.util.List;
  * SDK service with actions for callback communications from ASPSP to Compliance Service.
  *
  */
+@Lazy
 @Service
 @Validated
 public class ConnectorSDKService {
@@ -45,9 +47,9 @@ public class ConnectorSDKService {
   @Autowired
   private ConsentsRepository consentsRepository;
   @Autowired
-  private AuthorizationService authorizationService;
+  private ObAuthorizationService authorizationService;
   @Autowired
-  private PaymentService paymentService;
+  private ObPaymentService paymentService;
 
   /**
    *
@@ -62,6 +64,7 @@ public class ConnectorSDKService {
   }
 
   public Consent getConsent(String authCode) {
+    log.info("ConnectorSDKService.getConsent(authCode:" + authCode + ")");
     return consentsRepository.findFirstByAuthCode(authCode);
   }
 

@@ -20,21 +20,23 @@
  */
 package com.saltedge.connector.example.services;
 
-import com.saltedge.connector.example.model.repository.PaymentsRepository;
 import com.saltedge.connector.ob.sdk.provider.ConnectorSDKService;
 import com.saltedge.connector.ob.sdk.provider.dto.payment.ObPaymentInitiationData;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Scope;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Service
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class PaymentsService {
   private static final Logger log = LoggerFactory.getLogger(PaymentsService.class);
-  @Autowired
-  private PaymentsRepository paymentsRepository;
+  @Lazy
   @Autowired
   private ConnectorSDKService connectorSDKService;
 
@@ -42,6 +44,7 @@ public class PaymentsService {
   public void initPayment(@NotNull Long paymentId, @NotNull ObPaymentInitiationData params) {
     try {
       connectorSDKService.onPaymentStatusUpdate(String.valueOf(paymentId), "AcceptedSettlementCompleted");
+
 //    Double amountValue = ConnectorServiceTools.getAmountValue(amount);
 //    if (amountValue == null) throw new BadRequest.InvalidAttributeValue("amount");
 //    AccountEntity debtorAccount = ConnectorServiceTools.findDebtorAccount(accountsRepository, debtorIban);

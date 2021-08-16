@@ -28,7 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 /**
  * Base service for consents and payments services
  */
-public abstract class BaseService {
+public abstract class ObBaseService {
     @Autowired
     protected ConnectorCallbackService callbackService;
     @Autowired

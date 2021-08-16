@@ -20,7 +20,7 @@
  */
 package com.saltedge.connector.ob.sdk.config;
 
-import com.saltedge.connector.ob.sdk.api.interceptors.ConsentResolver;
+import com.saltedge.connector.ob.sdk.api.interceptors.ObConsentResolver;
 import com.saltedge.connector.ob.sdk.api.interceptors.PrioraRequestResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -37,7 +37,7 @@ public class InterceptorsAppConfig implements WebMvcConfigurer {
     @Autowired
     private PrioraRequestResolver prioraRequestResolver;
     @Autowired
-    private ConsentResolver consentResolver;
+    private ObConsentResolver consentResolver;
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {

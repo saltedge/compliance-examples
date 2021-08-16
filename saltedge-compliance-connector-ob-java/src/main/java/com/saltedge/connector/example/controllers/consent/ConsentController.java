@@ -37,6 +37,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -55,12 +57,17 @@ public class ConsentController extends BaseController {
     // Show Login page
     @GetMapping(AUTHENTICATION_PATH)
     public ModelAndView showLogin(HttpServletRequest request) {
-        String requestURL = request.getRequestURL().toString();
+        log.info("ConsentController.showLogin");
+        String requestURL = request.getRequestURL().toString() + "?" + request.getQueryString();
         if (requestURL.startsWith("http://")) requestURL = requestURL.replaceFirst("http://", "https://");
         String authCode = UUID.randomUUID().toString();
 
-        String redirectUri = connectorSDKService.onUserInitiateConsentAuthorization(requestURL, authCode, null);
-
+        String redirectUri = connectorSDKService.onUserInitiateConsentAuthorization(
+          requestURL,
+          authCode,
+          Instant.now().plus(10, ChronoUnit.MINUTES)
+        );
+        log.info("showLogin.redirectUri: " + redirectUri);
         if (StringUtils.hasText(redirectUri)) {
             return new ModelAndView("redirect:" + redirectUri);
         }
@@ -74,6 +81,7 @@ public class ConsentController extends BaseController {
             @RequestParam String username,
             @RequestParam String password
     ) {
+        log.info("ConsentController.onSubmitCredentials");
         // Find user by credentials
         Long userId = findUser(username, password);
 
@@ -92,6 +100,7 @@ public class ConsentController extends BaseController {
       @RequestParam(name = SDKConstants.KEY_AUTH_CODE) String authCode,
       @RequestParam(name = SDKConstants.KEY_USER_ID) Long userId
     ) {
+        log.info("ConsentController.showConsent");
         Consent consent = connectorSDKService.getConsent(authCode);
         if (consent == null) return createConsentModel(authCode, userId, "No related consent.");
 
@@ -112,11 +121,12 @@ public class ConsentController extends BaseController {
     // Receive Confirm/Deny consent
     @PostMapping(CONSENT_PATH)
     public ModelAndView onAuthorizeConsent(
-      @RequestParam(name = SDKConstants.KEY_AUTH_CODE) String authCode,
+      @RequestParam(name = "consent_auth_code") String authCode,
       @RequestParam(name = SDKConstants.KEY_USER_ID) Long userId,
       @RequestParam(name = "identifier", required = false) String identifier,
       @RequestParam(name = "action", required = false) String action
     ) {
+        log.info("ConsentController.onAuthorizeConsent authCode:" + authCode + " userId:" + userId);
         Consent consent = connectorSDKService.getConsent(authCode);
         if (consent == null) return createConsentModel(authCode, userId, "No related consent.");
 
@@ -134,7 +144,7 @@ public class ConsentController extends BaseController {
         } else {
             redirectUri = connectorSDKService.onConsentDeny(authCode, String.valueOf(userId));
         }
-
+        log.info("onAuthorizeConsent.redirectUri: " + redirectUri);
         if (redirectUri == null) {
             return createConsentModel(authCode, userId, "Can not redirect back.");
         } else {
@@ -149,6 +159,7 @@ public class ConsentController extends BaseController {
     }
 
     private ModelAndView createConsentModel(String authCode, Long userId, Consent consent, String identifier) {
+        log.info("ConsentController.createConsentModel.authCode: " + authCode + " identifier:" + identifier);
         ModelAndView result = new ModelAndView("consent_confirm");
         result.addObject(SDKConstants.KEY_USER_ID, userId);
         result.addObject(SDKConstants.KEY_AUTH_CODE, authCode);
@@ -161,6 +172,7 @@ public class ConsentController extends BaseController {
     }
 
     private ModelAndView createConsentModel(String authCode, Long userId, String error) {
+        log.info("ConsentController.createConsentModel.authCode: " + authCode + " error:" + error);
         ModelAndView result = new ModelAndView("consent_confirm");
         result.addObject(SDKConstants.KEY_USER_ID, userId);
         result.addObject(SDKConstants.KEY_AUTH_CODE, authCode);

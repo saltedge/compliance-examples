@@ -23,72 +23,76 @@ package com.saltedge.connector.ob.sdk.api.controllers;
 import com.saltedge.connector.ob.sdk.SDKConstants;
 import com.saltedge.connector.ob.sdk.api.ApiConstants;
 import com.saltedge.connector.ob.sdk.api.models.errors.NotFound;
-import com.saltedge.connector.ob.sdk.api.models.request.AccountsConsentsCreateRequest;
-import com.saltedge.connector.ob.sdk.api.models.request.ConsentsRevokeRequest;
+import com.saltedge.connector.ob.sdk.api.models.errors.Unauthorized;
+import com.saltedge.connector.ob.sdk.api.models.request.PaymentConsentsCreateRequest;
+import com.saltedge.connector.ob.sdk.api.models.request.PaymentFundsConfirmationRequest;
 import com.saltedge.connector.ob.sdk.api.models.response.EmptyJsonResponse;
-import com.saltedge.connector.ob.sdk.api.services.ConsentsCreateService;
-import com.saltedge.connector.ob.sdk.api.services.ConsentsRevokeService;
+import com.saltedge.connector.ob.sdk.api.models.response.FundsConfirmationResponse;
+import com.saltedge.connector.ob.sdk.api.services.ObConsentsCreateService;
 import com.saltedge.connector.ob.sdk.model.jpa.Consent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 /**
  * Controller is responsible for implementing authentication and authorization of Customer.
  * Process of token creation starts once Customer grants his consent to TTP.
  * At the end of authorization, Connector should issue an access_token which can be used for further actions.
- * https://priora.saltedge.com/docs/aspsp/v2/ais#ais-connector_endpoints-tokens
+ * https://priora.saltedge.com/docs/aspsp/ob/pis#connector-endpoints-payments-payments-consent
  */
 @RestController
-@RequestMapping(AccountsConsentsController.BASE_PATH)
+@RequestMapping(ObPaymentsConsentsController.BASE_PATH)
 @Validated
-public class AccountsConsentsController extends BaseController {
-    public final static String BASE_PATH = ApiConstants.API_BASE_PATH + "/consents";
-    private static final Logger log = LoggerFactory.getLogger(AccountsConsentsController.class);
+public class ObPaymentsConsentsController extends ObBaseController {
+    public final static String BASE_PATH = ApiConstants.API_BASE_PATH + "/payment_consents";
+    private static final Logger log = LoggerFactory.getLogger(ObPaymentsConsentsController.class);
     @Autowired
-    private ConsentsCreateService createService;
-    @Autowired
-    private ConsentsRevokeService revokeService;
+    private ObConsentsCreateService createService;
 
     /**
      * Create an access token with a set of access rights, named scopes.
-     * As a result, Connector should send an success, update or fail callback to Salt Edge PSD2 Compliance with the result of the operation,
+     * As a result, Connector should send a success, update or fail callback to Salt Edge PSD2 Compliance with the result of the operation,
      * be it a success, fail or request for additional steps.
      *
      * @param request for consent creation
      * @return empty JSON object
      */
     @PostMapping
-    public ResponseEntity<EmptyJsonResponse> create(@Valid AccountsConsentsCreateRequest request) {
-        createService.createAisConsent(request);
+    public ResponseEntity<EmptyJsonResponse> create(@Valid PaymentConsentsCreateRequest request) {
+        createService.createPisConsent(request);
         return super.createEmptyOkResponseEntity();
     }
 
     /**
-     * Revoke an already existing and active access token.
+     * Checks whether a specific amount is available at point of time of the request on an account addressed by IBAN or other available identifiers.
      *
-     * @param consentId unique identifier of Consent model
-     * @param request with sessionSecret
-     * @return empty JSON object
+     * @param consent linked to Access-Token header
+     * @param accountId unique id of bank account
+     * @param request data
+     * @return list of transactions data with nextId of next page
      */
-    @PatchMapping(path = "/{" + SDKConstants.KEY_CONSENT_ID + "}/revoke")
-    public ResponseEntity<EmptyJsonResponse> revoke(
-      @NotEmpty @PathVariable(name = SDKConstants.KEY_CONSENT_ID) String consentId,
+    @GetMapping(path = "/{" + SDKConstants.KEY_ACCOUNT_ID + "}/transactions")
+    public ResponseEntity<FundsConfirmationResponse> fundsConfirmation(
       @NotNull Consent consent,
-      @Valid ConsentsRevokeRequest request
+      @Valid PaymentFundsConfirmationRequest request
     ) {
-        if (consentId.equals(consent.consentId)) {
-            revokeService.revokeConsent(consentId);
-            return super.createEmptyOkResponseEntity();
-        } else {
-            throw new NotFound.ConsentNotFound();
-        }
+        if (!consent.isPisConsent()) throw new Unauthorized.AccessDenied();
+        if (consent.payment.debtorAccount == null || consent.payment.instructedAmount == null) throw new NotFound.PaymentNotFound();
+        boolean fundsAvailable = providerService.confirmFunds(
+          consent.userId,
+          consent.payment.debtorAccount,
+          consent.payment.instructedAmount
+        );
+        return new ResponseEntity<>(new FundsConfirmationResponse(fundsAvailable), HttpStatus.OK);
     }
 }

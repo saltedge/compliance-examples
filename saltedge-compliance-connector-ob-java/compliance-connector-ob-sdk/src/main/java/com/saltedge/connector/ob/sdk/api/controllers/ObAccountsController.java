@@ -23,12 +23,13 @@ package com.saltedge.connector.ob.sdk.api.controllers;
 import com.saltedge.connector.ob.sdk.SDKConstants;
 import com.saltedge.connector.ob.sdk.api.ApiConstants;
 import com.saltedge.connector.ob.sdk.api.models.request.DefaultRequest;
-import com.saltedge.connector.ob.sdk.provider.dto.account.Meta;
-import com.saltedge.connector.ob.sdk.provider.dto.account.TransactionsPage;
 import com.saltedge.connector.ob.sdk.api.models.request.TransactionsIndexRequest;
 import com.saltedge.connector.ob.sdk.api.models.response.AccountsResponse;
 import com.saltedge.connector.ob.sdk.api.models.response.TransactionsIndexResponse;
 import com.saltedge.connector.ob.sdk.model.jpa.Consent;
+import com.saltedge.connector.ob.sdk.provider.dto.account.Meta;
+import com.saltedge.connector.ob.sdk.provider.dto.account.ObAccount;
+import com.saltedge.connector.ob.sdk.provider.dto.account.TransactionsPage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -42,17 +43,18 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * This controller is responsible for fetching list of accounts belonging to a PSU and transactions.
  * https://priora.saltedge.com/docs/aspsp/ob/ais#connector-endpoints-accounts
  */
 @RestController
-@RequestMapping(AccountsController.BASE_PATH)
+@RequestMapping(ObAccountsController.BASE_PATH)
 @Validated
-public class AccountsController extends BaseController {
+public class ObAccountsController extends ObBaseController {
     public final static String BASE_PATH = ApiConstants.API_BASE_PATH + "/accounts";
-    private static final Logger log = LoggerFactory.getLogger(AccountsController.class);
+    private static final Logger log = LoggerFactory.getLogger(ObAccountsController.class);
 
     /**
      * Fetch list of accounts belonging to a PSU and all relevant information about them.
@@ -63,7 +65,10 @@ public class AccountsController extends BaseController {
      */
     @GetMapping
     public ResponseEntity<AccountsResponse> accountsIndex(@NotNull Consent consent, @Valid DefaultRequest request) {
-        return new ResponseEntity<>(new AccountsResponse(providerService.getAccountsOfUser(consent.userId)), HttpStatus.OK);
+        log.info("ObAccountsController.accountsIndex for user:" + consent.userId);
+        List<ObAccount> accounts = providerService.getAccountsOfUser(consent.userId);
+        AccountsResponse response = new AccountsResponse(accounts);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     /**

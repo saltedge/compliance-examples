@@ -31,7 +31,7 @@ import org.springframework.http.ResponseEntity;
 /**
  * Base controller
  */
-abstract class BaseController {
+abstract class ObBaseController {
     @Autowired
     protected ProviderServiceAbs providerService;
 

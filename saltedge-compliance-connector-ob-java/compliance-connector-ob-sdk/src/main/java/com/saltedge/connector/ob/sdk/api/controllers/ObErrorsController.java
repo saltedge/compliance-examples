@@ -37,10 +37,10 @@ import org.springframework.web.bind.annotation.RestController;
  * https://priora.saltedge.com/docs/aspsp/ob/ais#connector-endpoints-errors-errors-create
  */
 @RestController
-@RequestMapping(ErrorsController.BASE_PATH)
-public class ErrorsController extends BaseController {
+@RequestMapping(ObErrorsController.BASE_PATH)
+public class ObErrorsController extends ObBaseController {
     public final static String BASE_PATH = ApiConstants.API_BASE_PATH + "/errors";
-    private static final Logger log = LoggerFactory.getLogger(ErrorsController.class);
+    private static final Logger log = LoggerFactory.getLogger(ObErrorsController.class);
 
     /**
      * This endpoint is responsible for receiving validation errors of responses which Connector sends to Salt Edge PSD2 Compliance Solution

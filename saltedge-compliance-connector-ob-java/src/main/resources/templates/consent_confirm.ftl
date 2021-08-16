@@ -38,20 +38,25 @@
           </#if>
           <p><span class="black-text">Auth code: ${auth_code}</span></p>
 
-          <form class="col s12" method="post">
-            <center>
-              <div class='row'>
-                <button type='submit' name='action' value='deny' class='col s4 btn btn-large waves-effect red'>Deny</button>
-                <span class='col s4'></span>
-                <button type='submit' name='action' value='confirm' class='col s4 btn btn-large waves-effect indigo'>Confirm</button>
-                <input type="hidden" name="auth_code" value="${auth_code}">
-                <input type="hidden" name="user_id" value="${user_id}">
-                <#if identifier??>
-                  <input type="hidden" name="identifier" value="${identifier}">
-                </#if>
-              </div>
-            </center>
-          </form>
+          <#if error??>
+            <p><span class="red-text">Nothing to confirm</span></p>
+          <#else>
+            <form class="col s12" method="post">
+              <center>
+                <div class='row'>
+                  <button type='submit' name='action' value='deny' class='col s4 btn btn-large waves-effect red'>Deny</button>
+                  <span class='col s4'></span>
+                  <button type='submit' name='action' value='confirm' class='col s4 btn btn-large waves-effect indigo'>Confirm</button>
+
+                  <input type="hidden" name="user_id" value="${user_id}">
+                  <input type="hidden" name="consent_auth_code" value="${auth_code}">
+                  <#if identifier??>
+                    <input type="hidden" name="identifier" value="${identifier}">
+                  </#if>
+                </div>
+              </center>
+            </form>
+          </#if>
         </div>
       </div>
     </center>

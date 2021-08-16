@@ -34,8 +34,8 @@ import org.springframework.stereotype.Service;
 @Service
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public
-class ConsentsCreateService extends BaseService {
-    private static final Logger log = LoggerFactory.getLogger(ConsentsCreateService.class);
+class ObConsentsCreateService extends ObBaseService {
+    private static final Logger log = LoggerFactory.getLogger(ObConsentsCreateService.class);
 
     @Async
     public void createAisConsent(AccountsConsentsCreateRequest consentsCreateParams) {

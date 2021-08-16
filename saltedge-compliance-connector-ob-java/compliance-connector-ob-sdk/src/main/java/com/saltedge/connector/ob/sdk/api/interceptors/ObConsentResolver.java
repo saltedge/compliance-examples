@@ -41,7 +41,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
  * Search Consent model by Access-Token string and checks if Consent is expired
  */
 @Component
-public class ConsentResolver implements HandlerMethodArgumentResolver {
+public class ObConsentResolver implements HandlerMethodArgumentResolver {
     @Autowired
     private ConsentsRepository repository;
 
@@ -64,7 +64,6 @@ public class ConsentResolver implements HandlerMethodArgumentResolver {
             if (!consent.isAuthorised()) throw new Unauthorized.ConsentUnauthorized();
             if (consent.permissionsExpired()) throw new Unauthorized.ConsentExpired();
             return consent;
-
         } else throw new BadRequest.AccessTokenMissing();
     }
 }

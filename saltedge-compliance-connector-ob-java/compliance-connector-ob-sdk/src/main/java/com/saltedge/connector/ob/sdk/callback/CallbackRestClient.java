@@ -88,7 +88,7 @@ public abstract class CallbackRestClient {
         }
     }
 
-    public <T> T doCallbackRequest(String url, HttpMethod method, LinkedMultiValueMap<String, String> headers, String payload, Class<T> clazz) {
+    public <T> Response<T> doCallbackRequest(String url, HttpMethod method, LinkedMultiValueMap<String, String> headers, String payload, Class<T> clazz) {
         try {
             if (method == HttpMethod.PATCH) {
                 headers.add("X-HTTP-Method-Override", "PATCH");
@@ -96,15 +96,19 @@ public abstract class CallbackRestClient {
             }
             HttpEntity<String> request = new HttpEntity<>(payload, headers);
             ResponseEntity<T> response = callbackRestTemplate.exchange(url, method, request, clazz);
-            return response.getBody();
+            getLogger().info("doCallbackRequest: response status:" + response.getStatusCodeValue() + ", body: " + response.getBody().toString());
+            return new Response<T>(response.getBody());
         } catch (HttpClientErrorException e) {
             getLogger().error("HttpClientErrorException:", e);
+            if (e.getStatusCode().is4xxClientError()) {
+                return new Response<T>(e.getResponseBodyAsString());
+            }
         } catch (HttpServerErrorException e) {
             getLogger().error("HttpServerErrorException:", e);
         } catch (UnknownHttpStatusCodeException e) {
             getLogger().error("UnknownHttpStatusCodeException:", e);
         }
-        return null;
+        return new Response<T>("");
     }
 
     public void printPayload(String url, HttpMethod method, LinkedMultiValueMap<String, String> headers, Object params, String payload) {
@@ -126,5 +130,25 @@ public abstract class CallbackRestClient {
     @Qualifier("saltEdgeCallbackRestTemplateBean")
     public RestTemplate createRestTemplate() {
         return new RestTemplate();
+    }
+
+    public static class Response<T> {
+        public T success;
+        public String error;
+
+        public Response(T success) {
+            this.success = success;
+            this.error = null;
+        }
+
+        public Response(String error) {
+            this.success = null;
+            this.error = error;
+        }
+
+        public Response(T success, String error) {
+            this.success = success;
+            this.error = error;
+        }
     }
 }

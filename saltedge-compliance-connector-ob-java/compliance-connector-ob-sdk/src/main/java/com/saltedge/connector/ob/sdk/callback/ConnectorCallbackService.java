@@ -27,6 +27,7 @@ import com.saltedge.connector.ob.sdk.api.models.request.PaymentUpdateRequest;
 import com.saltedge.connector.ob.sdk.api.models.response.AuthorizationsCreateResponse;
 import com.saltedge.connector.ob.sdk.api.models.response.AuthorizationsUpdateResponse;
 import com.saltedge.connector.ob.sdk.api.models.response.EmptyJsonResponse;
+import com.saltedge.connector.ob.sdk.tools.JsonTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpMethod;
@@ -43,12 +44,22 @@ public class ConnectorCallbackService extends CallbackRestClient {
 
     public AuthorizationsCreateResponse createAuthorization(AuthorizationCreateRequest params) {
         String url = getAuthorizationsUrl("");
-        return sendCallback(url, HttpMethod.POST, params, AuthorizationsCreateResponse.class);
+        Response<AuthorizationsCreateResponse> response = sendCallback(url, HttpMethod.POST, params, AuthorizationsCreateResponse.class);
+        if (StringUtils.hasText(response.error)) {
+            log.info("ConnectorCallbackService.createAuthorization.error: " + response.error);
+            return JsonTools.parseObject(response.error, AuthorizationsCreateResponse.class);
+        }
+        return response.success;
     }
 
     public AuthorizationsUpdateResponse updateAuthorization(String authorizationId, AuthorizationUpdateRequest params) {
         String url = getAuthorizationsUrl(authorizationId);
-        return sendCallback(url, HttpMethod.PUT, params, AuthorizationsUpdateResponse.class);
+        Response<AuthorizationsUpdateResponse> response = sendCallback(url, HttpMethod.PUT, params, AuthorizationsUpdateResponse.class);
+        if (StringUtils.hasText(response.error)) {
+            log.info("ConnectorCallbackService.updateAuthorization.error: " + response.error);
+            return JsonTools.parseObject(response.error, AuthorizationsUpdateResponse.class);
+        }
+        return response.success;
     }
 
     public void updatePayment(String paymentId, PaymentUpdateRequest params) {
@@ -71,7 +82,7 @@ public class ConnectorCallbackService extends CallbackRestClient {
         return createCallbackRequestUrl(ApiConstants.CALLBACK_BASE_PATH + "/payments" + idPath);
     }
 
-    private <T> T sendCallback(String url, HttpMethod method, Object params, Class<T> clazz) {
+    private <T> Response<T> sendCallback(String url, HttpMethod method, Object params, Class<T> clazz) {
         LinkedMultiValueMap<String, String> headers = createCallbackRequestHeaders();
         String payload = createJwtPayload(params);
         printPayload(url, method, headers, params, payload);

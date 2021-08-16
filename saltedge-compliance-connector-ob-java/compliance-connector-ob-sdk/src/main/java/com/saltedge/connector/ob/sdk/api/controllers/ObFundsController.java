@@ -42,11 +42,11 @@ import javax.validation.constraints.NotNull;
  * https://priora.saltedge.com/docs/aspsp/ob/piis#connector-endpoints-funds-confirmation-fundscheck-get
  */
 @RestController
-@RequestMapping(FundsController.BASE_PATH)
+@RequestMapping(ObFundsController.BASE_PATH)
 @Validated
-public class FundsController extends BaseController {
+public class ObFundsController extends ObBaseController {
     public final static String BASE_PATH = ApiConstants.API_BASE_PATH + "/funds_check";
-    private static final Logger log = LoggerFactory.getLogger(FundsController.class);
+    private static final Logger log = LoggerFactory.getLogger(ObFundsController.class);
 
     /**
      * Fetch list of accounts belonging to a PSU and all relevant information about them.

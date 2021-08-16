@@ -26,8 +26,8 @@ import com.saltedge.connector.ob.sdk.api.models.errors.NotFound;
 import com.saltedge.connector.ob.sdk.api.models.request.ConsentsRevokeRequest;
 import com.saltedge.connector.ob.sdk.api.models.request.FundsConsentsCreateRequest;
 import com.saltedge.connector.ob.sdk.api.models.response.EmptyJsonResponse;
-import com.saltedge.connector.ob.sdk.api.services.ConsentsCreateService;
-import com.saltedge.connector.ob.sdk.api.services.ConsentsRevokeService;
+import com.saltedge.connector.ob.sdk.api.services.ObConsentsCreateService;
+import com.saltedge.connector.ob.sdk.api.services.ObConsentsRevokeService;
 import com.saltedge.connector.ob.sdk.model.jpa.Consent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,13 +49,13 @@ import javax.validation.constraints.NotNull;
 @RestController
 @RequestMapping(FundsConsentsController.BASE_PATH)
 @Validated
-public class FundsConsentsController extends BaseController {
+public class FundsConsentsController extends ObBaseController {
     public final static String BASE_PATH = ApiConstants.API_BASE_PATH + "/funds_check_consents";
     private static final Logger log = LoggerFactory.getLogger(FundsConsentsController.class);
     @Autowired
-    private ConsentsCreateService createService;
+    private ObConsentsCreateService createService;
     @Autowired
-    private ConsentsRevokeService revokeService;
+    private ObConsentsRevokeService revokeService;
 
     /**
      * Create an access token with a set of access rights, named scopes.

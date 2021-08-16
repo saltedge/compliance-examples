@@ -25,6 +25,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.saltedge.connector.ob.sdk.SDKConstants;
 import com.saltedge.connector.ob.sdk.TestTools;
 import com.saltedge.connector.ob.sdk.api.models.request.AccountsConsentsCreateRequest;
+import com.saltedge.connector.ob.sdk.api.models.request.AuthorizationCreateRequest;
+import com.saltedge.connector.ob.sdk.api.models.response.AuthorizationsCreateResponse;
 import com.saltedge.connector.ob.sdk.api.models.response.ErrorResponse;
 import org.junit.jupiter.api.Test;
 
@@ -97,7 +99,18 @@ public class JsonToolsTest {
 	public void createAuthorizationPayloadValueTest() {
 		PrivateKey privateKey = TestTools.getInstance().getRsaPrivateKey();
 
-		assertThat(JsonTools.createAuthorizationPayloadValue(new ErrorResponse(), privateKey)).startsWith("Bearer ");
-		assertThat(JsonTools.createAuthorizationPayloadValue(new ErrorResponse(), null)).isEqualTo("");
+		AuthorizationCreateRequest testObject = new AuthorizationCreateRequest(
+			"http://53573063cd00.ngrok.io/consent/auth",
+			"8a3c233b-ddc6-4a97-a9e1-c18d8a427c70",
+			null
+		);
+
+		String payload = JsonTools.createAuthorizationPayloadValue(testObject, privateKey);
+
+		assertThat(payload).startsWith("Bearer ");
+
+		payload = JsonTools.createAuthorizationPayloadValue(new ErrorResponse(), null);
+
+		assertThat(payload).isEqualTo("");
 	}
 }

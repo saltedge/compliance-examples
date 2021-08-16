@@ -34,7 +34,6 @@ import org.springframework.util.StringUtils;
 
 import javax.validation.constraints.NotEmpty;
 import java.time.Instant;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -42,8 +41,8 @@ import java.util.List;
  */
 @Service
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class AuthorizationService extends BaseService {
-    private static final Logger log = LoggerFactory.getLogger(AuthorizationService.class);
+public class ObAuthorizationService extends ObBaseService {
+    private static final Logger log = LoggerFactory.getLogger(ObAuthorizationService.class);
 
     /**
      *
@@ -57,6 +56,10 @@ public class AuthorizationService extends BaseService {
             AuthorizationsCreateResponse response = callbackService.createAuthorization(
               new AuthorizationCreateRequest(authorizeUrl, authCode, authCodeExp)
             );
+            if (response == null || response.data == null) {
+                log.error("ObAuthorizationService.createAuthorization: response.data is null");
+                return null;
+            }
             if (StringUtils.hasText(response.data.redirectUri)) {
                 return response.data.redirectUri;
             } else {

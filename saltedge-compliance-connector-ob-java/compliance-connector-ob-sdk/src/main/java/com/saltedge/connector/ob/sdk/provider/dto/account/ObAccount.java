@@ -20,7 +20,6 @@
  */
 package com.saltedge.connector.ob.sdk.provider.dto.account;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.saltedge.connector.ob.sdk.SDKConstants;
@@ -33,7 +32,6 @@ import java.util.List;
  * Open Banking Account information
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties
 public class ObAccount {
   /**
    * Account identifier on Provider
@@ -88,7 +86,7 @@ public class ObAccount {
   /**
    * The nickname of the account, assigned by the account owner in order to provide an additional means of identification of the account.
    */
-  @JsonProperty(SDKConstants.KEY_DESCRIPTION)
+  @JsonProperty("nickname")
   public String nickname;
 
   /**
@@ -113,7 +111,7 @@ public class ObAccount {
    * Details to identify an account.
    */
   @JsonProperty("account")
-  public List<ObAccountIdentifier> identifiers;
+  public List<ObAccountIdentifier> accountIdentifiers;
 
   /**
    * Party that manages the account on behalf of the account owner, that manages the registration and booking of entries on the account, calculates balances on the account and provides information about the account.
@@ -146,12 +144,12 @@ public class ObAccount {
     this.openingDate = openingDate;
     this.maturityDate = maturityDate;
     this.switchStatus = switchStatus;
-    this.identifiers = identifiers;
+    this.accountIdentifiers = identifiers;
     this.servicer = servicer;
     this.balances = balances;
   }
 
   public boolean hasIdentifier() {
-    return !identifiers.isEmpty();
+    return !accountIdentifiers.isEmpty();
   }
 }
