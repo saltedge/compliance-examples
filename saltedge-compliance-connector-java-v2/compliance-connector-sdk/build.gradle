@@ -37,20 +37,18 @@ dependencies {
 
     def jjwtVersion = '0.11.2'
     implementation "io.jsonwebtoken:jjwt-api:$jjwtVersion"
-    runtime "io.jsonwebtoken:jjwt-impl:$jjwtVersion", "io.jsonwebtoken:jjwt-jackson:$jjwtVersion"
+    runtimeOnly "io.jsonwebtoken:jjwt-impl:$jjwtVersion", "io.jsonwebtoken:jjwt-jackson:$jjwtVersion"
     implementation "io.jsonwebtoken:jjwt-impl:$jjwtVersion"
     implementation "io.jsonwebtoken:jjwt-jackson:$jjwtVersion"
 
     testImplementation "io.jsonwebtoken:jjwt-api:$jjwtVersion"
     testImplementation "io.jsonwebtoken:jjwt-jackson:$jjwtVersion"
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testImplementation group: 'junit', name: 'junit', version: '4.12'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'com.h2database:h2:1.4.200'
 }
 
 // UPLOAD JAR TO MAVEN CENTRAL REPO
-archivesBaseName = project.name
-
 modifyPom {
     project {
         name 'compliance-connector-sdk'
@@ -93,3 +91,5 @@ nexus {
     repositoryUrl = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
     snapshotRepositoryUrl = 'https://oss.sonatype.org/content/repositories/snapshots/'
 }
+
+archivesBaseName = project.name
