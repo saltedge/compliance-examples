@@ -1,3 +1,4 @@
 rootProject.name = 'saltedge-compliance-connector'
+rootProject.buildFileName = 'build.gradle'
 include 'compliance-connector-sdk'
 include 'example'
