@@ -24,16 +24,13 @@ import com.saltedge.connector.sdk.SDKConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-
-import javax.validation.constraints.NotEmpty;
 
 @Controller
 @RequestMapping
 public class UserAuthController extends UserBaseController {
-    private static Logger log = LoggerFactory.getLogger(UserAuthController.class);
+    private static final Logger log = LoggerFactory.getLogger(UserAuthController.class);
     public final static String BASE_PATH = "/users/auth";
 
     // Show SignIn page

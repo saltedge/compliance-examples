@@ -18,30 +18,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.saltedge.connector.example.controllers;
+package com.saltedge.connector.example.model.repository;
 
-import com.saltedge.connector.example.compliance_connector.ProviderService;
-import com.saltedge.connector.sdk.provider.ConnectorCallbackAbs;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
+import com.saltedge.connector.example.model.TransactionEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-@Controller
-@RequestMapping(IndexController.BASE_PATH)
-public class IndexController {
-    public final static String BASE_PATH = "/";
-    private static Logger log = LoggerFactory.getLogger(IndexController.class);
-    @Autowired
-    private ProviderService providerService;
-    @Autowired
-    private ConnectorCallbackAbs providerCallback;
+import java.time.LocalDate;
 
-    @GetMapping
-    public ModelAndView index() {
-        return new ModelAndView("redirect:" + UserAuthController.BASE_PATH);
-    }
+public interface TransactionsRepository extends JpaRepository<TransactionEntity, Long> {
+    Page<TransactionEntity> findByAccountIdAndMadeOnBetween(Long accountId, LocalDate fromDate, LocalDate toDate, Pageable pageable);
 }

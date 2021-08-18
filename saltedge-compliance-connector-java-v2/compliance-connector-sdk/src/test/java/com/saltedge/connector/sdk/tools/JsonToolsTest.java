@@ -24,10 +24,18 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.saltedge.connector.sdk.SDKConstants;
 import com.saltedge.connector.sdk.TestTools;
+import com.saltedge.connector.sdk.api.models.Account;
+import com.saltedge.connector.sdk.api.models.Meta;
+import com.saltedge.connector.sdk.api.models.Transaction;
+import com.saltedge.connector.sdk.api.models.responses.AccountsResponse;
+import com.saltedge.connector.sdk.api.models.responses.TransactionsResponse;
 import com.saltedge.connector.sdk.callback.mapping.BaseFailRequest;
+import org.assertj.core.util.Lists;
 import org.junit.Test;
 
 import java.security.PrivateKey;
+import java.util.Collections;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -57,5 +65,25 @@ public class JsonToolsTest {
 
 		assertThat(JsonTools.createAuthorizationHeaderValue(new BaseFailRequest(), privateKey)).startsWith("Bearer ");
 		assertThat(JsonTools.createAuthorizationHeaderValue(new BaseFailRequest(), null)).isEqualTo("");
+	}
+
+	@Test
+	public void serializationTest_AccountsResponse() throws JsonProcessingException {
+		ObjectMapper mapper = JsonTools.createDefaultMapper();
+		List<Account> accounts = Lists.list(new Account("id", "name", Collections.emptyList(), "CACC", "EUR"));
+		AccountsResponse model = new AccountsResponse(accounts);
+		String jsonString = mapper.writeValueAsString(model);
+
+		assertThat(jsonString).startsWith("{");
+	}
+
+	@Test
+	public void serializationTest_TransactionsResponse() throws JsonProcessingException {
+		ObjectMapper mapper = JsonTools.createDefaultMapper();
+		List<Transaction> transactions = Lists.list(new Transaction());
+		TransactionsResponse model = new TransactionsResponse(transactions, new Meta());
+		String jsonString = mapper.writeValueAsString(model);
+
+		assertThat(jsonString).startsWith("{");
 	}
 }
