@@ -2,6 +2,8 @@ spring:
   profiles: prod
 connector:
   private_key_name: connector_private_prod.pem
+  private_key_pem: -----BEGIN PRIVATE KEY-----\nXXXXX\n-----END PRIVATE KEY-----
+  private_key_file_path: /Users/bank/connector_private_prod.pem
   priora:
     app_code: spring_connector_example_md
     app_id: xxxxxxxxx

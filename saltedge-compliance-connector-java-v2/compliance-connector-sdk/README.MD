@@ -111,6 +111,7 @@ spring:
 connector:
   private_key_name: connector_private_prod.pem
   private_key_pem: -----BEGIN PRIVATE KEY-----\nXXXXX\n-----END PRIVATE KEY-----
+  private_key_file_path: /Users/bank/connector_private_prod.pem
   priora:
     app_code: XXXXXXXXXX
     app_id: YYYYYYYYY
@@ -118,10 +119,11 @@ connector:
     base_url: https://priora.saltedge.com/
     public_key_name: priora_public_prod.pem
     public_key_pem: -----BEGIN PUBLIC KEY-----\nXXXXX\n-----END PUBLIC KEY-----
+    public_key_file_path: /Users/bank/priora_public_prod.pem
 ```   
 
-Set one of the field for the private key (`private_key_name` or `private_key_pem`).
-Set one of the field for the public key (`public_key_name` or `public_key_pem`).
+Set one of the field for the private key (`private_key_name`, `private_key_pem` or `public_key_file_path`).
+Set one of the field for the public key (`public_key_name`, `public_key_pem` or `public_key_file_path`).
   
   
 ## [Api Documentation](https://priora.banksalt.com/docs/aspsp/v2)
