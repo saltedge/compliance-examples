@@ -32,7 +32,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotEmpty;
+import java.security.InvalidParameterException;
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -59,12 +61,10 @@ public class ConnectorSDKService {
    * @return error redirect URL or null
    */
   public String onUserInitiateConsentAuthorization(@NotEmpty String authorizeUrl, @NotEmpty String authCode, Instant authCodeExp) {
-    log.info("ConnectorSDKService.onUserInitiateConsentAuthorization(authorizeUrl:" + authorizeUrl + " authCode:" + authCode + ")");
     return authorizationService.createAuthorization(authorizeUrl, authCode, authCodeExp);
   }
 
   public Consent getConsent(String authCode) {
-    log.info("ConnectorSDKService.getConsent(authCode:" + authCode + ")");
     return consentsRepository.findFirstByAuthCode(authCode);
   }
 
@@ -75,28 +75,30 @@ public class ConnectorSDKService {
    * @return returnUrl string for final redirection of Authorization session (in browser) back to TPP side.
    */
   public String onConsentApprove(@NotEmpty String authCode, @NotEmpty String userId) {
-    log.info("ConnectorSDKService.onConsentApprove(userId:" + userId + " authCode:" + authCode + ")");
     return authorizationService.updateAuthorization(authCode, userId, "approved", null);
   }
 
   public String onConsentApprove(@NotEmpty String authCode, @NotEmpty String userId, List<String> accountIdentifiers) {
-    log.info("ConnectorSDKService.onConsentApprove(userId:" + userId + " authCode:" + authCode + ")");
     return authorizationService.updateAuthorization(authCode, userId, "approved", accountIdentifiers);
   }
 
   public String onConsentDeny(@NotEmpty String authCode, @NotEmpty String userId) {
-    log.info("ConnectorSDKService.onConsentDeny(userId:" + userId + " authCode:" + authCode + ")");
     return authorizationService.updateAuthorization(authCode, userId, "denied", null);
   }
 
   /**
    * Update the status of just created payment
    *
-   * @param paymentId unique payment identifier
-   * @param status of payment.Values: Pending, Rejected, AcceptedSettlementInProcess, AcceptedSettlementCompleted
+   * @param paymentId unique payment identifier of Provider
+   * @param status of payment.Values: Pending, Rejected, AcceptedSettlementInProcess, AcceptedCreditSettlementCompleted
    */
   public void onPaymentStatusUpdate(@NotEmpty String paymentId, @NotEmpty String status) {
-    log.info("ConnectorSDKService.onPaymentStatusUpdate(paymentId:" + paymentId + " status:" + status + ")");
-    paymentService.updatePayment(paymentId, status);
+    if (validPaymentStatuses.contains(status)) {
+      paymentService.updatePayment(paymentId, status);
+    } else {
+      throw new InvalidParameterException("onPaymentStatusUpdate: status " + status + " is invalid.");
+    }
   }
+
+  private final List<String> validPaymentStatuses = Arrays.asList("Pending", "Rejected", "AcceptedSettlementInProcess", "AcceptedCreditSettlementCompleted");
 }

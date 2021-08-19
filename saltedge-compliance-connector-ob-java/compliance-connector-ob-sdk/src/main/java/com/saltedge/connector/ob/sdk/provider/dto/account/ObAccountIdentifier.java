@@ -20,6 +20,7 @@
  */
 package com.saltedge.connector.ob.sdk.provider.dto.account;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -63,6 +64,9 @@ public class ObAccountIdentifier {
   @JsonProperty("secondary_identification")
   public String secondaryIdentification;
 
+  public ObAccountIdentifier() {
+  }
+
   public ObAccountIdentifier(String schemeName, String identification) {
     this.schemeName = schemeName;
     this.identification = identification;
@@ -75,12 +79,14 @@ public class ObAccountIdentifier {
     this.secondaryIdentification = secondaryIdentification;
   }
 
+  @JsonIgnore
   public boolean isIban() {
     return "UK.OBIE.IBAN".equals(schemeName);
   }
 
+  @JsonIgnore
   public boolean isAccountNumber() {
-    return "UK.OBIE.IBAN".equals(schemeName);
+    return "UK.OBIE.SortCodeAccountNumber".equals(schemeName);
   }
 
   @Override

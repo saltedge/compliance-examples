@@ -20,6 +20,9 @@
  */
 package com.saltedge.connector.example.services;
 
+import com.saltedge.connector.example.model.PaymentEntity;
+import com.saltedge.connector.example.model.PaymentStatus;
+import com.saltedge.connector.example.model.repository.PaymentsRepository;
 import com.saltedge.connector.ob.sdk.provider.ConnectorSDKService;
 import com.saltedge.connector.ob.sdk.provider.dto.payment.ObPaymentInitiationData;
 import org.jetbrains.annotations.NotNull;
@@ -39,36 +42,39 @@ public class PaymentsService {
   @Lazy
   @Autowired
   private ConnectorSDKService connectorSDKService;
+  @Autowired
+  private PaymentsRepository paymentsRepository;
+
+  public Long initiatePayment(ObPaymentInitiationData params) {
+    try {
+      PaymentEntity paymentEntity = new PaymentEntity();
+      paymentEntity.status = PaymentStatus.PENDING;
+      paymentEntity.amount = params.instructedAmount.amount;
+      paymentEntity.currency = params.instructedAmount.currency;
+      paymentEntity.description = params.remittanceInformation.unstructured;
+      paymentEntity.paymentProduct = params.creditorAccount.schemeName;
+
+      paymentEntity.fromAccountNumber = params.debtorAccount.identification;
+      paymentEntity.fromSortCode = params.debtorAccount.secondaryIdentification;
+      paymentEntity.toAccountNumber = params.creditorAccount.identification;
+      paymentEntity.toSortCode = params.creditorAccount.secondaryIdentification;
+
+      PaymentEntity savedPayment = paymentsRepository.save(paymentEntity);
+      return savedPayment.id;
+    } catch (Exception e) {
+      log.error("PaymentsService", e);
+      return null;
+    }
+
+  }
 
   @Async
-  public void initPayment(@NotNull Long paymentId, @NotNull ObPaymentInitiationData params) {
+  public void processPayment(@NotNull Long paymentId, @NotNull ObPaymentInitiationData params) {
     try {
-      connectorSDKService.onPaymentStatusUpdate(String.valueOf(paymentId), "AcceptedSettlementCompleted");
-
-//    Double amountValue = ConnectorServiceTools.getAmountValue(amount);
-//    if (amountValue == null) throw new BadRequest.InvalidAttributeValue("amount");
-//    AccountEntity debtorAccount = ConnectorServiceTools.findDebtorAccount(accountsRepository, debtorIban);
-//    if (debtorAccount == null) throw new BadRequest.InvalidAttributeValue("debtor account");
-//
-//    PaymentEntity paymentEntity = new PaymentEntity();
-//    paymentEntity.status = PaymentStatus.PENDING;
-//    paymentEntity.amount = amountValue;
-//    paymentEntity.currency = currency;
-//    paymentEntity.description = description;
-//    paymentEntity.extra = extraData;
-//    paymentEntity.accountId = debtorAccount.id;
-//    paymentEntity.toAccountName = creditorName;
-//    paymentEntity.paymentProduct = paymentProduct;
-//
-//    paymentEntity.fromIban = debtorIban;
-//    paymentEntity.fromBic = debtorBic;
-//    paymentEntity.toIban = creditorIban;
-//    paymentEntity.toBic = creditorBic;
-//
-//    PaymentEntity payment = paymentsRepository.save(paymentEntity);
-//    return getPaymentAuthorizationPageUrl(payment.id.toString());
+      Thread.sleep(1000);
+      connectorSDKService.onPaymentStatusUpdate(String.valueOf(paymentId), "AcceptedCreditSettlementCompleted");
     } catch (Exception e) {
-      log.error("PaymentsService.initPayment:", e);
+      log.error("PaymentsService.processPayment:", e);
     }
   }
 }

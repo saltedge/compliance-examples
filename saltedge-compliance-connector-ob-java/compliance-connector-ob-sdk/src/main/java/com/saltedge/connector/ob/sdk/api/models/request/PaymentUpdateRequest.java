@@ -35,7 +35,7 @@ public class PaymentUpdateRequest extends PrioraBaseRequest {
      * PSU identifier on Connector side. Used to map PSU resource on Salt Edge PSD2 Compliance side to Connector one
      */
     @NotBlank
-    @JsonProperty(SDKConstants.KEY_USER_ID)
+    @JsonProperty(SDKConstants.KEY_CONSENT_ID)
     public String consentId;
 
     /**
@@ -56,7 +56,7 @@ public class PaymentUpdateRequest extends PrioraBaseRequest {
     public PaymentUpdateRequest() {
     }
 
-    public PaymentUpdateRequest(String consentId, String status, String tppAppName) {
+    public PaymentUpdateRequest(@NotBlank String consentId, @NotBlank String status, @NotBlank String tppAppName) {
         this.consentId = consentId;
         this.status = status;
         this.tppAppName = tppAppName;

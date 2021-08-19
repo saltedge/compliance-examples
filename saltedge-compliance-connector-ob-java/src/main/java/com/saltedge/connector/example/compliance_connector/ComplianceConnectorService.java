@@ -21,11 +21,9 @@
 package com.saltedge.connector.example.compliance_connector;
 
 import com.saltedge.connector.example.model.AccountEntity;
-import com.saltedge.connector.example.model.PaymentEntity;
 import com.saltedge.connector.example.model.TransactionEntity;
 import com.saltedge.connector.example.model.UserEntity;
 import com.saltedge.connector.example.model.repository.AccountsRepository;
-import com.saltedge.connector.example.model.repository.PaymentsRepository;
 import com.saltedge.connector.example.model.repository.TransactionsRepository;
 import com.saltedge.connector.example.model.repository.UsersRepository;
 import com.saltedge.connector.example.services.FundsConfirmationService;
@@ -74,8 +72,6 @@ public class ComplianceConnectorService implements ProviderServiceAbs {
   private AccountsRepository accountsRepository;
   @Autowired
   private TransactionsRepository transactionsRepository;
-  @Autowired
-  private PaymentsRepository paymentsRepository;
   @Autowired
   private PaymentsService paymentsService;
   @Autowired
@@ -126,7 +122,6 @@ public class ComplianceConnectorService implements ProviderServiceAbs {
 
   @Override
   public boolean confirmFunds(String userId, @NotNull ObAccountIdentifier debtorAccount, @NotNull ObAmount amount) {
-    log.info("ComplianceConnectorService.confirmFunds");
     try {
       UserEntity user = findAndValidateUser(userId);
       return fundsService.confirmFunds(debtorAccount, amount);
@@ -138,11 +133,11 @@ public class ComplianceConnectorService implements ProviderServiceAbs {
 
   @Override
   public String initiatePayment(String userId, @NotNull ObPaymentInitiationData params) {
-    log.info("ComplianceConnectorService.initiatePayment");
     UserEntity user = findAndValidateUser(userId);
-    PaymentEntity savedPayment = paymentsRepository.save(new PaymentEntity());
-    paymentsService.initPayment(savedPayment.id, params);
-    return String.valueOf(savedPayment.id);
+
+    Long paymentId = paymentsService.initiatePayment(params);
+    paymentsService.processPayment(paymentId, params);//Async
+    return String.valueOf(paymentId);
   }
 
   private UserEntity findAndValidateUser(@NotNull String userId) {

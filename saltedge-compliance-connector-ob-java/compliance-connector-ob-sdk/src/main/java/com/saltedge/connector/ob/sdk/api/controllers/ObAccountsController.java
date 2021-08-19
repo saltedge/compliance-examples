@@ -85,6 +85,7 @@ public class ObAccountsController extends ObBaseController {
       @NotEmpty @PathVariable(name = SDKConstants.KEY_ACCOUNT_ID) String accountId,
       @Valid TransactionsIndexRequest request
     ) {
+        log.info("ObAccountsController.transactionsIndexOfAccount of user:" + consent.userId + " of Account: " + accountId);
         TransactionsPage resultPage = providerService.getTransactionsOfAccount(
           consent.userId,
           accountId,

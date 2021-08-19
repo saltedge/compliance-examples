@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Open Banking Transaction data
+ * Compliance Open Banking Transaction data
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties
@@ -85,6 +85,7 @@ public class ObTransaction {
      */
     @NotNull
     @JsonProperty("booking_date_time")
+//    public String bookingDateTime;//TODO REMOVE
     public Instant bookingDateTime;
 
     /**

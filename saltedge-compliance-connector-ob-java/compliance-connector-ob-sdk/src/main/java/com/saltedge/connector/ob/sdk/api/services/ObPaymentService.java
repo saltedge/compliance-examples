@@ -51,15 +51,23 @@ class ObPaymentService extends ObBaseService {
         }
     }
 
+    /**
+     * Update the status of just created payment
+     *
+     * @param paymentId unique payment identifier of Provider
+     * @param status of payment.Values: Pending, Rejected, AcceptedSettlementInProcess, AcceptedCreditSettlementCompleted
+     */
     @Async
     public void updatePayment(@NotEmpty String paymentId, @NotEmpty String status) {
         try {
             Consent consent = consentsRepository.findFirstByPaymentId(paymentId);
             if (consent != null) {
                 callbackService.updatePayment(
-                  paymentId,
+                    consent.compliancePaymentId,
                   new PaymentUpdateRequest(consent.consentId, status, consent.tppName)
                 );
+            } else {
+                log.error("PaymentService.updatePayment: Consent by paymentId " + paymentId + " not found");
             }
         } catch (Exception e) {
             log.error("PaymentService.updatePayment:", e);

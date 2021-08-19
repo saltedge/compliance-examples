@@ -81,7 +81,7 @@ public class ObPaymentsConsentsController extends ObBaseController {
      * @param request data
      * @return list of transactions data with nextId of next page
      */
-    @GetMapping(path = "/{" + SDKConstants.KEY_ACCOUNT_ID + "}/transactions")
+    @GetMapping(path = "/funds_confirmation")
     public ResponseEntity<FundsConfirmationResponse> fundsConfirmation(
       @NotNull Consent consent,
       @Valid PaymentFundsConfirmationRequest request

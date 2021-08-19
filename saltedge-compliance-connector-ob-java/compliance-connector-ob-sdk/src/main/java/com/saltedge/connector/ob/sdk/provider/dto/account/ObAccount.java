@@ -20,11 +20,13 @@
  */
 package com.saltedge.connector.ob.sdk.provider.dto.account;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.saltedge.connector.ob.sdk.SDKConstants;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.Instant;
 import java.util.List;
 
@@ -39,19 +41,6 @@ public class ObAccount {
   @NotEmpty
   @JsonProperty(SDKConstants.KEY_ID)
   public String id;
-
-  /**
-   * Specifies the status of account resource in code form.
-   * Allowed values: Enabled, Disabled, Deleted, ProForma, Pending
-   */
-  @JsonProperty(SDKConstants.KEY_STATUS)
-  public String status;
-
-  /**
-   * Date and time at which the resource status was updated.
-   */
-  @JsonProperty("status_update_date_time")
-  public Instant statusUpdatedAt;
 
   /**
    * Identification of the currency in which the account is held (ISO 4217).
@@ -76,6 +65,26 @@ public class ObAccount {
   @NotEmpty
   @JsonProperty("account_sub_type")
   public String accountSubType;
+
+  /**
+   * Details to identify an account.
+   */
+  @JsonProperty("balances")
+  @NotNull
+  public List<ObBalance> balances;
+
+  /**
+   * Specifies the status of account resource in code form.
+   * Allowed values: Enabled, Disabled, Deleted, ProForma, Pending
+   */
+  @JsonProperty(SDKConstants.KEY_STATUS)
+  public String status;
+
+  /**
+   * Date and time at which the resource status was updated.
+   */
+  @JsonProperty("status_update_date_time")
+  public Instant statusUpdatedAt;
 
   /**
    * Specifies the description of the account type.
@@ -119,26 +128,42 @@ public class ObAccount {
   @JsonProperty("servicer")
   public ObAccountIdentifier servicer;
 
-  /**
-   * Details to identify an account.
-   */
-  @JsonProperty("balances")
-  public List<ObBalance> balances;
-
-  public ObAccount(String id, String currencyCode, String accountType, String accountSubType) {
+  public ObAccount(
+          @NotEmpty String id,
+          @NotEmpty String currencyCode,
+          @NotEmpty String accountType,
+          @NotEmpty String accountSubType,
+          @NotNull List<ObBalance> balances
+  ) {
     this.id = id;
     this.currencyCode = currencyCode;
     this.accountType = accountType;
     this.accountSubType = accountSubType;
   }
 
-  public ObAccount(String id, String status, Instant statusUpdatedAt, String currencyCode, String accountType, String accountSubType, String description, String nickname, Instant openingDate, Instant maturityDate, String switchStatus, List<ObAccountIdentifier> identifiers, ObAccountIdentifier servicer, List<ObBalance> balances) {
+  public ObAccount(
+          @NotEmpty String id,
+          @NotEmpty String currencyCode,
+          @NotEmpty String accountType,
+          @NotEmpty String accountSubType,
+          @NotNull List<ObBalance> balances,
+          String status,
+          Instant statusUpdatedAt,
+          String description,
+          String nickname,
+          Instant openingDate,
+          Instant maturityDate,
+          String switchStatus,
+          List<ObAccountIdentifier> identifiers,
+          ObAccountIdentifier servicer
+  ) {
     this.id = id;
-    this.status = status;
-    this.statusUpdatedAt = statusUpdatedAt;
     this.currencyCode = currencyCode;
     this.accountType = accountType;
     this.accountSubType = accountSubType;
+    this.balances = balances;
+    this.status = status;
+    this.statusUpdatedAt = statusUpdatedAt;
     this.description = description;
     this.nickname = nickname;
     this.openingDate = openingDate;
@@ -146,9 +171,9 @@ public class ObAccount {
     this.switchStatus = switchStatus;
     this.accountIdentifiers = identifiers;
     this.servicer = servicer;
-    this.balances = balances;
   }
 
+  @JsonIgnore
   public boolean hasIdentifier() {
     return !accountIdentifiers.isEmpty();
   }

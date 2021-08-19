@@ -61,6 +61,7 @@ public class ObBalance {
     /**
      * Date of the balance.
      */
+    @NotNull
     @JsonProperty("date_time")
     public Instant dateTime;
 
@@ -70,20 +71,14 @@ public class ObBalance {
     @JsonProperty("credit_line")
     public CreditLine creditLine;
 
-    public ObBalance(ObAmount amount, String creditDebitIndicator, String type) {
-        this.amount = amount;
-        this.creditDebitIndicator = creditDebitIndicator;
-        this.type = type;
-    }
-
-    public ObBalance(ObAmount amount, String creditDebitIndicator, String type, Instant dateTime) {
+    public ObBalance(@NotNull ObAmount amount, @NotEmpty String creditDebitIndicator, @NotEmpty String type, @NotNull Instant dateTime) {
         this.amount = amount;
         this.creditDebitIndicator = creditDebitIndicator;
         this.type = type;
         this.dateTime = dateTime;
     }
 
-    public ObBalance(ObAmount amount, String creditDebitIndicator, String type, Instant dateTime, CreditLine creditLine) {
+    public ObBalance(@NotNull ObAmount amount, @NotEmpty String creditDebitIndicator, @NotEmpty String type, @NotNull Instant dateTime, CreditLine creditLine) {
         this.amount = amount;
         this.creditDebitIndicator = creditDebitIndicator;
         this.type = type;
@@ -113,6 +108,9 @@ public class ObBalance {
          */
         @JsonProperty(SDKConstants.KEY_TYPE)
         public String type;
+
+        public CreditLine() {
+        }
 
         public CreditLine(Boolean included) {
             this.included = included;

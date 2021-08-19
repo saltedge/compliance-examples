@@ -27,7 +27,7 @@
       <div class="container">
         <div class="z-depth-1 grey lighten-4 row" style="display: inline-block; padding: 24px 24px 24px 24px; border: 1px solid #EEE;">
 
-          <h5 class="indigo-text">Sign in into your account to confirm consent</h5>
+          <h5 class="indigo-text">Sign in and confirm consent</h5>
           <p><span class="blue-text">Auth code: ${auth_code}</span></p>
 
           <form class="col s12" method="post">

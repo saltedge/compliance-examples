@@ -95,7 +95,6 @@ public class DatabaseInitializer {
         } else {
             log.info("Users Seeding Not Required");
             return usersRepository.findAll().get(0);
-
         }
     }
 
@@ -115,7 +114,7 @@ public class DatabaseInitializer {
                 "20000.00",
                 "0.00",
                 true,
-                "enabled",
+                "Enabled",
                 null,
                 new HashMap<>(),
                 user
@@ -134,7 +133,7 @@ public class DatabaseInitializer {
                 "10000.00",
                 "10000.00",
                 true,
-                "enabled",
+                "Enabled",
                 null,
                 new HashMap<>(),
                 user
@@ -153,7 +152,7 @@ public class DatabaseInitializer {
                 "10000.00",
                 "10000.00",
                 true,
-                "enabled",
+                "Enabled",
                 null,
                 new HashMap<>(),
                 user
@@ -184,7 +183,7 @@ public class DatabaseInitializer {
               account.currencyCode,
               "Payment " + amount + " " + account.currencyCode + "(Account:" + account.id + ")",
               date,
-              "booked",
+              "Booked",
               new ArrayList<>(),
               "",
               account

@@ -33,33 +33,33 @@ import java.util.Map;
 @Table(name = "Payment")
 public class PaymentEntity extends BaseEntity implements Serializable {
 
-  @Column(name = "description", nullable = false)
+  @Column(name = "description")
   public String description;
 
   @Column(name = "status", nullable = false)
   public PaymentStatus status = PaymentStatus.PENDING;
 
-  @Column(name = "amount", nullable = false)
-  public double amount;
+  @Column(name = "amount")
+  public String amount;
 
-  @Column(name = "total", nullable = false)
+  @Column(name = "total")
   public double total;
 
   @Column(name = "currency")
   public String currency;
 
-  @Column(name = "account_id", nullable = false)
+  @Column(name = "account_id")
   public Long accountId;
 
-  @Column(name = "fees", nullable = false)
+  @Column(name = "fees")
   @Convert(converter = FeesConverter.class)
   public List<Fee> fees;
 
-  @Column(name = "payment_attributes", nullable = false)//TODO investigate usage
+  @Column(name = "payment_attributes")
   @Convert(converter = ObjectMapConverter.class)
   public Map<String, String> paymentAttributes;
 
-  @Column(name = "extra", nullable = false)
+  @Column(name = "extra")
   public String extra;
 
   @Column(name = "confirmation_code")
@@ -71,8 +71,8 @@ public class PaymentEntity extends BaseEntity implements Serializable {
   @Column(name = "from_bic")
   public String fromBic;
 
-  @Column(name = "from_bban")
-  public String fromBban;
+  @Column(name = "from_account_name")
+  public String fromAccountNumber;
 
   @Column(name = "from_sort_code")
   public String fromSortCode;
@@ -83,8 +83,8 @@ public class PaymentEntity extends BaseEntity implements Serializable {
   @Column(name = "to_bic")
   public String toBic;
 
-  @Column(name = "to_bban")
-  public String toBban;
+  @Column(name = "to_account_number")
+  public String toAccountNumber;
 
   @Column(name = "to_sort_code")
   public String toSortCode;
@@ -92,7 +92,7 @@ public class PaymentEntity extends BaseEntity implements Serializable {
   @Column(name = "to_account_name")
   public String toAccountName;
 
-  @Column(name = "payment_product", nullable = false)
+  @Column(name = "payment_product")
   public String paymentProduct;
 
   @ManyToOne

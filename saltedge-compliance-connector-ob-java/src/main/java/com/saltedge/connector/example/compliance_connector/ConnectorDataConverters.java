@@ -30,40 +30,44 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Data adapter between DB format and required by Compliance SDK.
+ * Some data are faked.
+ */
 public class ConnectorDataConverters {
 
     public static List<ObAccount> convertAccountsToAccountData(List<AccountEntity> accounts, UserEntity user) {
         return accounts.stream().map(account -> convertAccountToAccountData(account, user)).collect(Collectors.toList());
     }
 
-    public static ObAccount convertAccountToAccountData(AccountEntity account, UserEntity user) {
+    public static ObAccount convertAccountToAccountData(AccountEntity accountEntry, UserEntity user) {
         ArrayList<ObBalance> balances = new ArrayList<>();
-        balances.add(new ObBalance(new ObAmount(account.availableAmount, account.currencyCode), "debit", "InterimAvailable"));
-        balances.add(new ObBalance(new ObAmount(account.balance, account.currencyCode), "debit", "openingAvailable"));
+        balances.add(new ObBalance(new ObAmount(accountEntry.availableAmount, accountEntry.currencyCode), "debit", "InterimAvailable", accountEntry.getUpdatedAt().toInstant()));
+        balances.add(new ObBalance(new ObAmount(accountEntry.balance, accountEntry.currencyCode), "debit", "openingAvailable", accountEntry.getUpdatedAt().toInstant()));
 
         ArrayList<ObAccountIdentifier> identifiers = new ArrayList<>();
         identifiers.add(new ObAccountIdentifier(
-          "UK.OBIE.SortCodeAccountNumber",
-          account.accountNumber,
-          account.accountNumber,
-          account.sortCode
+            "UK.OBIE.SortCodeAccountNumber",
+            accountEntry.accountNumber,
+            accountEntry.accountNumber,
+            accountEntry.sortCode
         ));
 
         return new ObAccount(
-          account.id.toString(),
-          account.status,
-          account.getUpdatedAt().toInstant(),
-          account.currencyCode,
-          account.accountType,
-          account.accountSubType,
-          account.status,
-          account.name,
-          account.getCreatedAt().toInstant(),
-          null,
-          "processing",
-          identifiers,
-          new ObAccountIdentifier("UK.OBIE.SortCodeAccountNumber", account.accountNumber),
-          balances
+            accountEntry.id.toString(),
+            accountEntry.currencyCode,
+            accountEntry.accountType,
+            accountEntry.accountSubType,
+            balances,
+            accountEntry.status,
+            accountEntry.getUpdatedAt().toInstant(),
+            accountEntry.name + " / " + accountEntry.accountType + " / " + accountEntry.currencyCode,
+            accountEntry.name,
+            accountEntry.getCreatedAt().toInstant(),
+            accountEntry.getUpdatedAt().toInstant(),//TODO replace with null
+            "processing",
+            identifiers,
+            new ObAccountIdentifier("UK.OBIE.SortCodeAccountNumber", accountEntry.accountNumber)
         );
     }
 
@@ -77,8 +81,11 @@ public class ConnectorDataConverters {
         ObTransaction result = new ObTransaction();
         result.id = transaction.id.toString();
         result.creditDebitIndicator = transaction.amount.startsWith("-") ? "credit" : "debit";
-        result.status = transaction.status;
+
+        result.status = "Booked";//transaction.status;//TODO Capitalize
         result.bookingDateTime = transaction.madeOn.atStartOfDay().toInstant(ZoneOffset.UTC);
+//        result.bookingDateTime = "2021-08-01 09:45:04 UTC";//TODO remove
+
         result.amount = new ObAmount(transaction.amount, transaction.currencyCode);
         result.transactionInformation = transaction.description;
         result.creditorAccount = new ObAccountIdentifier(

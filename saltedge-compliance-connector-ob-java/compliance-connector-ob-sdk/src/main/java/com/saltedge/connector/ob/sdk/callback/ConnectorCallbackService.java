@@ -64,7 +64,10 @@ public class ConnectorCallbackService extends CallbackRestClient {
 
     public void updatePayment(String paymentId, PaymentUpdateRequest params) {
         String url = getPaymentsUrl(paymentId);
-        sendCallback(url, HttpMethod.PUT, params, EmptyJsonResponse.class);
+        Response<EmptyJsonResponse> response = sendCallback(url, HttpMethod.PUT, params, EmptyJsonResponse.class);
+        if (StringUtils.hasText(response.error)) {
+            log.info("ConnectorCallbackService.updatePayment.error: " + response.error);
+        }
     }
 
     @Override
