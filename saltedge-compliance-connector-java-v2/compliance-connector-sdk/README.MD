@@ -122,10 +122,11 @@ connector:
     public_key_file_path: /Users/bank/priora_public_prod.pem
 ```   
 
-Set one of the field for the private key (`private_key_name`, `private_key_pem` or `public_key_file_path`).
-Set one of the field for the public key (`public_key_name`, `public_key_pem` or `public_key_file_path`).
+Is required to be defined one of `private_key` fields and one of `public_key` fields.
   
-  
+### Notes:
+* SDK implements `ApiExceptionsHandler` which extends `ResponseEntityExceptionHandler` with order of execution `0`.  
+
 ## [Api Documentation](https://priora.banksalt.com/docs/aspsp/v2)
   
 ---

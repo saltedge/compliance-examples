@@ -24,10 +24,9 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.saltedge.connector.ob.sdk.api.models.CustomInstantDeserializer;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.Instant;
 import java.util.List;
 
@@ -61,7 +60,7 @@ public class AccountsConsentsCreateRequest extends CreateBaseRequest {
      * ReadStatementsDetail,
      * ReadDirectDebits
      */
-    @NotEmpty
+    @NotNull
     @JsonProperty("permissions")
     public List<String> permissions;
 
@@ -69,8 +68,7 @@ public class AccountsConsentsCreateRequest extends CreateBaseRequest {
      * Specified date and time the permissions will expire.
      * If this is not populated, the permissions will be open-ended.
      */
-//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss 'UTC'")
-    @JsonDeserialize(using = CustomInstantDeserializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     @JsonProperty("expiration_date_time")
     public Instant expirationDateTime;
 
@@ -78,8 +76,7 @@ public class AccountsConsentsCreateRequest extends CreateBaseRequest {
      * Specified start date and time for the transaction query period.
      * If this is not populated, the start date will be open-ended, and data will be returned from the earliest available transaction.
      */
-//    @JsonFormat(shape = JsonFormat.Shape.STRING)
-    @JsonDeserialize(using = CustomInstantDeserializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     @JsonProperty("transaction_from_date_time")
     public Instant transactionFrom;
 
@@ -87,8 +84,7 @@ public class AccountsConsentsCreateRequest extends CreateBaseRequest {
      * Specified end date and time for the transaction query period.
      * If this is not populated, the end date will be open-ended, and data will be returned to the latest available transaction.
      */
-//    @JsonFormat(shape = JsonFormat.Shape.STRING)
-    @JsonDeserialize(using = CustomInstantDeserializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     @JsonProperty("transaction_to_date_time")
     public Instant transactionTo;
 }

@@ -54,51 +54,78 @@ public class ConnectorSDKService {
   private ObPaymentService paymentService;
 
   /**
+   * Initiate Authorization creation on user redirect to authorization url (e.g. OpenID authentication page)
    *
-   * @param authorizeUrl
-   * @param authCode
-   * @param authCodeExp
-   * @return error redirect URL or null
+   * @param authorizeUrl request url enriched with custom query (from authorization controller).
+   * @param authCode random authorization session code. Minimal 16 characters.
+   * @param authCodeExp authorization session code expiration datetime (optional).
+   * @return error redirect URL or null, to return TPP back.
    */
   public String onUserInitiateConsentAuthorization(@NotEmpty String authorizeUrl, @NotEmpty String authCode, Instant authCodeExp) {
     return authorizationService.createAuthorization(authorizeUrl, authCode, authCodeExp);
   }
 
+  /**
+   * Find first Consent object by authCode
+   *
+   * @param authCode random authorization session code. Minimal 16 characters.
+   * @return Consent object or null
+   */
   public Consent getConsent(String authCode) {
     return consentsRepository.findFirstByAuthCode(authCode);
   }
 
   /**
-   * Provider notify Connector SDK Module about oAuth success authentication
-   * and provides user consent for accounts (balances/transactions)
+   * Update consent authorization status to Authorized.
+   * Send authorization info to Salt Edge Compliance Service.
    *
-   * @return returnUrl string for final redirection of Authorization session (in browser) back to TPP side.
+   * @param authCode random authorization session code. Minimal 16 characters.
+   * @param userId unique identifier of authorized user.
+   * @return final redirect URL or null, to return TPP back.
    */
   public String onConsentApprove(@NotEmpty String authCode, @NotEmpty String userId) {
     return authorizationService.updateAuthorization(authCode, userId, "approved", null);
   }
 
+  /**
+   * Update consent authorization status to Authorized.
+   * Send authorization info to Salt Edge Compliance Service.
+   *
+   * @param authCode random authorization session code. Minimal 16 characters.
+   * @param userId unique identifier of authorized user.
+   * @param accountIdentifiers collection of account identifiers selected by user on consent confirmation (optional).
+   * @return final redirect URL or null, to return TPP back.
+   */
   public String onConsentApprove(@NotEmpty String authCode, @NotEmpty String userId, List<String> accountIdentifiers) {
     return authorizationService.updateAuthorization(authCode, userId, "approved", accountIdentifiers);
   }
 
+  /**
+   * Update consent authorization status to Rejected.
+   * Send authorization info to Salt Edge Compliance Service.
+   *
+   * @param authCode random authorization session code. Minimal 16 characters.
+   * @param userId unique identifier of authorized user.
+   * @return final redirect URL or null, to return TPP back.
+   */
   public String onConsentDeny(@NotEmpty String authCode, @NotEmpty String userId) {
     return authorizationService.updateAuthorization(authCode, userId, "denied", null);
   }
 
   /**
    * Update the status of just created payment
+   * Send new payment status to Salt Edge Compliance Service.
    *
    * @param paymentId unique payment identifier of Provider
-   * @param status of payment.Values: Pending, Rejected, AcceptedSettlementInProcess, AcceptedCreditSettlementCompleted
+   * @param status of payment. Allowed values: Pending, Rejected, AcceptedSettlementInProcess, AcceptedCreditSettlementCompleted
    */
   public void onPaymentStatusUpdate(@NotEmpty String paymentId, @NotEmpty String status) {
-    if (validPaymentStatuses.contains(status)) {
+    if (VALID_PAYMENT_STATUSES.contains(status)) {
       paymentService.updatePayment(paymentId, status);
     } else {
       throw new InvalidParameterException("onPaymentStatusUpdate: status " + status + " is invalid.");
     }
   }
 
-  private final List<String> validPaymentStatuses = Arrays.asList("Pending", "Rejected", "AcceptedSettlementInProcess", "AcceptedCreditSettlementCompleted");
+  public static final List<String> VALID_PAYMENT_STATUSES = Arrays.asList("Pending", "Rejected", "AcceptedSettlementInProcess", "AcceptedCreditSettlementCompleted");
 }

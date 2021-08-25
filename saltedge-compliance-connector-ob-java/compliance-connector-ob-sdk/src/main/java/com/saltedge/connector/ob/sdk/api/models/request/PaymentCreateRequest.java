@@ -28,6 +28,7 @@ import com.saltedge.connector.ob.sdk.provider.dto.payment.ObPaymentInitiationDat
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.Objects;
 
 /**
  * @see <a href="https://priora.saltedge.com/docs/aspsp/ob/pis#connector-endpoints-payments-payments-payment">Payment Endpoints</a>
@@ -49,4 +50,17 @@ public class PaymentCreateRequest extends CreateBaseRequest {
     @NotNull
     @Valid
     public ObPaymentInitiationData paymentInitiation;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PaymentCreateRequest that = (PaymentCreateRequest) o;
+        return Objects.equals(compliancePaymentId, that.compliancePaymentId) && Objects.equals(paymentInitiation, that.paymentInitiation);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(compliancePaymentId, paymentInitiation);
+    }
 }

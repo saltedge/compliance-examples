@@ -33,18 +33,32 @@ import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotEmpty;
 
+/**
+ * Perform Payment initiation and update operations.
+ */
 @Service
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public
 class ObPaymentService extends ObBaseService {
     private static final Logger log = LoggerFactory.getLogger(ObPaymentService.class);
 
+    /**
+     * Start payment initiation.
+     * Update Consent object. Send payment initiation to Bank Core.
+     * Function is asynchronous.
+     *
+     * @param consentId unique identifier of consent in SaltEdge Compliance Service.
+     * @param params of payment.
+     */
     @Async
-    public void initiatePayment(@NotNull Consent consent, @NotNull PaymentCreateRequest params) {
+    public void initiatePayment(@NotNull String consentId, @NotNull PaymentCreateRequest params) {
         try {
+            Consent consent = consentsRepository.findFirstByConsentId(consentId);
             consent.payment = params.paymentInitiation;
             consent.compliancePaymentId = params.compliancePaymentId;
+
             consent.paymentId = providerService.initiatePayment(consent.userId, params.paymentInitiation);
+
             consentsRepository.save(consent);
         } catch (Exception e) {
             log.error("PaymentCreateService.createPayment:", e);
@@ -53,9 +67,11 @@ class ObPaymentService extends ObBaseService {
 
     /**
      * Update the status of just created payment
+     * Send new payment status to Salt Edge Compliance Service.
+     * Function is asynchronous.
      *
-     * @param paymentId unique payment identifier of Provider
-     * @param status of payment.Values: Pending, Rejected, AcceptedSettlementInProcess, AcceptedCreditSettlementCompleted
+     * @param paymentId unique payment identifier of Core
+     * @param status of payment. Allowed values: Pending, Rejected, AcceptedSettlementInProcess, AcceptedCreditSettlementCompleted
      */
     @Async
     public void updatePayment(@NotEmpty String paymentId, @NotEmpty String status) {
@@ -64,7 +80,7 @@ class ObPaymentService extends ObBaseService {
             if (consent != null) {
                 callbackService.updatePayment(
                     consent.compliancePaymentId,
-                  new PaymentUpdateRequest(consent.consentId, status, consent.tppName)
+                    new PaymentUpdateRequest(consent.consentId, status, consent.tppName)
                 );
             } else {
                 log.error("PaymentService.updatePayment: Consent by paymentId " + paymentId + " not found");

@@ -31,12 +31,21 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+/**
+ * Create new Consent object for AIS, PIS or PIIS flow.
+ */
 @Service
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public
 class ObConsentsCreateService extends ObBaseService {
     private static final Logger log = LoggerFactory.getLogger(ObConsentsCreateService.class);
 
+    /**
+     * Create new Consent object for AIS flow.
+     * Function is asynchronous.
+     *
+     * @param consentsCreateParams params for new Consent
+     */
     @Async
     public void createAisConsent(AccountsConsentsCreateRequest consentsCreateParams) {
         try {
@@ -55,6 +64,12 @@ class ObConsentsCreateService extends ObBaseService {
         }
     }
 
+    /**
+     * Create new Consent object for PIS flow.
+     * Function is asynchronous.
+     *
+     * @param consentsCreateParams params for new Consent
+     */
     @Async
     public void createPisConsent(PaymentConsentsCreateRequest consentsCreateParams) {
         try {
@@ -70,6 +85,12 @@ class ObConsentsCreateService extends ObBaseService {
         }
     }
 
+    /**
+     * Create new Consent object for PIIS flow.
+     * Function is asynchronous.
+     *
+     * @param consentsCreateParams params for new Consent
+     */
     @Async
     public void createPiisConsent(FundsConsentsCreateRequest consentsCreateParams) {
         try {

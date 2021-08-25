@@ -80,6 +80,13 @@ public abstract class BadRequest extends RuntimeException implements HttpErrorPa
         }
     }
 
+    public static class AuthorizationMissing extends BadRequest {
+        @Override
+        public String getErrorMessage() {
+            return "Authorization is missing.";
+        }
+    }
+
     public static class InvalidAuthorizationType extends BadRequest {
         @Override
         public String getErrorMessage() {

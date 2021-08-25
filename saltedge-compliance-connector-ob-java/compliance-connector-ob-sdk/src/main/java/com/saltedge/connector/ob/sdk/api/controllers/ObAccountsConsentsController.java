@@ -53,9 +53,9 @@ public class ObAccountsConsentsController extends ObBaseController {
     public final static String BASE_PATH = ApiConstants.API_BASE_PATH + "/consents";
     private static final Logger log = LoggerFactory.getLogger(ObAccountsConsentsController.class);
     @Autowired
-    private ObConsentsCreateService createService;
+    ObConsentsCreateService createService;
     @Autowired
-    private ObConsentsRevokeService revokeService;
+    ObConsentsRevokeService revokeService;
 
     /**
      * Create an access token with a set of access rights, named scopes.

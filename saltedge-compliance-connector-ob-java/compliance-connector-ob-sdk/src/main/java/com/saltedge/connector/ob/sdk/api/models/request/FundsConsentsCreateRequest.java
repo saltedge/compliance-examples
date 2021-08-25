@@ -24,8 +24,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.saltedge.connector.ob.sdk.api.models.CustomInstantDeserializer;
 import com.saltedge.connector.ob.sdk.provider.dto.account.ObAccountIdentifier;
 
 import java.time.Instant;
@@ -39,10 +37,9 @@ public class FundsConsentsCreateRequest extends CreateBaseRequest {
 
     /**
      * Specified date and time the permissions will expire.
-     * If this is not populated, the permissions will be open ended.
+     * If this is not populated, the permissions will be open-ended.
      */
-//    @JsonFormat(shape = JsonFormat.Shape.STRING)
-    @JsonDeserialize(using = CustomInstantDeserializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     @JsonProperty("expiration_date_time")
     public Instant expirationDateTime;
 

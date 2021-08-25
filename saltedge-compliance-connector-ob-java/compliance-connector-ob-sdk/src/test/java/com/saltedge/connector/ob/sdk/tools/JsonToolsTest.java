@@ -84,9 +84,9 @@ public class JsonToolsTest {
 			"      \"ReadStatementsDetail\",\n" +
 			"      \"ReadDirectDebits\"\n" +
 			"    ],\n" +
-			"    \"expiration_date_time\": \"2021-09-10 13:20:43 UTC\",\n" +
-			"    \"transaction_from_date_time\": \"2021-05-14 13:20:40 UTC\",\n" +
-			"    \"transaction_to_date_time\": \"2021-08-11 13:20:40 UTC\"\n" +
+			"    \"expiration_date_time\": \"2021-09-22T09:08:14+0000\",\n" +
+			"    \"transaction_from_date_time\": \"2021-05-26T09:08:11+0000\",\n" +
+			"    \"transaction_to_date_time\": \"2021-08-23T09:08:11+0000\"\n" +
 			"  }";
 
 		AccountsConsentsCreateRequest result = mapper.readValue(jsonString, AccountsConsentsCreateRequest.class);
@@ -107,7 +107,8 @@ public class JsonToolsTest {
 
 		String payload = JsonTools.createAuthorizationPayloadValue(testObject, privateKey);
 
-		assertThat(payload).startsWith("Bearer ");
+		assertThat(payload).doesNotStartWith("Bearer ");
+		assertThat(payload).isNotEmpty();
 
 		payload = JsonTools.createAuthorizationPayloadValue(new ErrorResponse(), null);
 

@@ -1,5 +1,9 @@
 # Salt Edge Compliance Connector SDK Changelog
 
+## 2.7.0.2 (2021-08-31)
+### Add:
+- Add execution priority order `0` for `ApiExceptionsHandler`
+
 ## 2.7.0 (2021-08-17)
 ### Add:
 - Add `private_key_file_path` field to application properties

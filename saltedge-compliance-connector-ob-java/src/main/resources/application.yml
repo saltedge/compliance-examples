@@ -1,13 +1,13 @@
 spring:
   profiles: dev
 connector:
-  private_key_name: connector_private_prod.pem
+  private_key_name: connector_private_dev.pem
   priora:
-    app_code: spring_connector_ob
-    app_id: nextgenpsd2_demobank_oauth_id
-    app_secret: nextgenpsd2_demobank_oauth_secret
+    app_code: spring_bank_ob
+    app_id: Kwk9gEHCs5kMY-tG6COr8A
+    app_secret: RCeHPhFVv6y-zB4OysBeWFYrQjNRDnSuBWak9qI8Vc4
     base_url: https://priora.banksalt.com/
-    public_key_name: priora_public_prod.pem
+    public_key_name: priora_public_dev.pem
 
 ---
 spring:
@@ -15,7 +15,7 @@ spring:
 connector:
   private_key_name: connector_private_prod.pem
   priora:
-    app_code: spring_connector_ob
+    app_code: spring_bank_ob
     app_id: Kwk9gEHCs5kMY-tG6COr8A
     app_secret: RCeHPhFVv6y-zB4OysBeWFYrQjNRDnSuBWak9qI8Vc4
     base_url: https://priora.saltedge.com/

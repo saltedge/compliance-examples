@@ -85,7 +85,6 @@ public class ObTransaction {
      */
     @NotNull
     @JsonProperty("booking_date_time")
-//    public String bookingDateTime;//TODO REMOVE
     public Instant bookingDateTime;
 
     /**

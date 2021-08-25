@@ -34,8 +34,8 @@ public class CreateBaseRequest extends PrioraBaseRequest {
     /**
      * TPP application name.
      */
-    @JsonProperty(SDKConstants.KEY_APP_NAME)
     @NotBlank
+    @JsonProperty(SDKConstants.KEY_APP_NAME)
     public String tppAppName;
 
     /**

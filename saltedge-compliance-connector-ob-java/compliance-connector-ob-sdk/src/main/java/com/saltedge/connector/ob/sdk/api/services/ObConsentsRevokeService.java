@@ -28,13 +28,24 @@ import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotEmpty;
 
+/**
+ * Revoke Consent
+ */
 @Service
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ObConsentsRevokeService extends ObBaseService {
+    /**
+     * Update status of Consent object to Revoked.
+     * Function is asynchronous.
+     *
+     * @param consentId unique identifier of consent in SaltEdge Compliance Service
+     */
     @Async
     public void revokeConsent(@NotEmpty String consentId) {
         Consent consent = consentsRepository.findFirstByConsentId(consentId);
-        consent.status = "Revoked";
-        consentsRepository.save(consent);
+        if (consent != null) {
+            consent.status = "Revoked";
+            consentsRepository.save(consent);
+        }
     }
 }

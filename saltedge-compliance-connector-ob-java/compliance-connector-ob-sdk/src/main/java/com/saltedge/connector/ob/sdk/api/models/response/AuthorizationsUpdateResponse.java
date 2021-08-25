@@ -25,11 +25,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.saltedge.connector.ob.sdk.SDKConstants;
 
 import javax.validation.constraints.NotEmpty;
+import java.util.Objects;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AuthorizationsUpdateResponse {
     @JsonProperty(SDKConstants.KEY_DATA)
     public Data data;
+
+    public AuthorizationsUpdateResponse() {
+    }
+
+    public AuthorizationsUpdateResponse(Data data) {
+        this.data = data;
+    }
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class Data {
@@ -66,6 +74,19 @@ public class AuthorizationsUpdateResponse {
               ", redirectUri='" + redirectUri + '\'' +
               '}';
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Data data = (Data) o;
+            return Objects.equals(authorizationId, data.authorizationId) && Objects.equals(status, data.status) && Objects.equals(accessToken, data.accessToken) && Objects.equals(redirectUri, data.redirectUri);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(authorizationId, status, accessToken, redirectUri);
+        }
     }
 
     @Override
@@ -73,5 +94,18 @@ public class AuthorizationsUpdateResponse {
         return "AuthorizationsUpdateResponse{" +
           "data=" + data +
           '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AuthorizationsUpdateResponse that = (AuthorizationsUpdateResponse) o;
+        return Objects.equals(data, that.data);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(data);
     }
 }

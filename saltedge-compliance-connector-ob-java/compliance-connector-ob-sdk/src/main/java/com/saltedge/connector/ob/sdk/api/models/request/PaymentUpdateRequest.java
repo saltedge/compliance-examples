@@ -26,6 +26,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.saltedge.connector.ob.sdk.SDKConstants;
 
 import javax.validation.constraints.NotBlank;
+import java.util.Objects;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties
@@ -60,5 +61,18 @@ public class PaymentUpdateRequest extends PrioraBaseRequest {
         this.consentId = consentId;
         this.status = status;
         this.tppAppName = tppAppName;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PaymentUpdateRequest that = (PaymentUpdateRequest) o;
+        return Objects.equals(consentId, that.consentId) && Objects.equals(status, that.status) && Objects.equals(tppAppName, that.tppAppName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(consentId, status, tppAppName);
     }
 }

@@ -36,7 +36,8 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.StringUtils;
 
 /**
- * Authorizations callback service
+ * Priora callback service.
+ * Send callback to CALLBACK_BASE_PATH based url
  */
 @Service
 public class ConnectorCallbackService extends CallbackRestClient {
@@ -45,8 +46,7 @@ public class ConnectorCallbackService extends CallbackRestClient {
     public AuthorizationsCreateResponse createAuthorization(AuthorizationCreateRequest params) {
         String url = getAuthorizationsUrl("");
         Response<AuthorizationsCreateResponse> response = sendCallback(url, HttpMethod.POST, params, AuthorizationsCreateResponse.class);
-        if (StringUtils.hasText(response.error)) {
-            log.info("ConnectorCallbackService.createAuthorization.error: " + response.error);
+        if (StringUtils.hasText(response.error)) {//In some cases Priora can respond with 4xx and valid payload
             return JsonTools.parseObject(response.error, AuthorizationsCreateResponse.class);
         }
         return response.success;
@@ -55,18 +55,24 @@ public class ConnectorCallbackService extends CallbackRestClient {
     public AuthorizationsUpdateResponse updateAuthorization(String authorizationId, AuthorizationUpdateRequest params) {
         String url = getAuthorizationsUrl(authorizationId);
         Response<AuthorizationsUpdateResponse> response = sendCallback(url, HttpMethod.PUT, params, AuthorizationsUpdateResponse.class);
-        if (StringUtils.hasText(response.error)) {
-            log.info("ConnectorCallbackService.updateAuthorization.error: " + response.error);
+        if (StringUtils.hasText(response.error)) {//In some cases Priora can respond with 4xx and valid payload
             return JsonTools.parseObject(response.error, AuthorizationsUpdateResponse.class);
         }
         return response.success;
     }
 
+    /**
+     * Send request to SaltEdge payment update endpoint.
+     * https://priora.saltedge.com/docs/aspsp/ob/pis#salt-edge-endpoints-payments-payments-update
+     *
+     * @param paymentId SaltEdge Compliance service unique identifier of payment
+     * @param params for payment update
+     */
     public void updatePayment(String paymentId, PaymentUpdateRequest params) {
         String url = getPaymentsUrl(paymentId);
         Response<EmptyJsonResponse> response = sendCallback(url, HttpMethod.PUT, params, EmptyJsonResponse.class);
-        if (StringUtils.hasText(response.error)) {
-            log.info("ConnectorCallbackService.updatePayment.error: " + response.error);
+        if (StringUtils.hasText(response.error)) {//In some cases Priora can respond with 4xx and valid payload
+            //TODO handle error
         }
     }
 

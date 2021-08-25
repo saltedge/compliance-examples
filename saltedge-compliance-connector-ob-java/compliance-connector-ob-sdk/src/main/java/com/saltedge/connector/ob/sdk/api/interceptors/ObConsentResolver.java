@@ -62,7 +62,7 @@ public class ObConsentResolver implements HandlerMethodArgumentResolver {
             Consent consent = repository.findFirstByAccessToken(accessToken);
             if (consent == null) throw new NotFound.ConsentNotFound();
             if (!consent.isAuthorised()) throw new Unauthorized.ConsentUnauthorized();
-            if (consent.permissionsExpired()) throw new Unauthorized.ConsentExpired();
+            if (consent.aisPermissionsExpired()) throw new Unauthorized.ConsentExpired();
             return consent;
         } else throw new BadRequest.AccessTokenMissing();
     }

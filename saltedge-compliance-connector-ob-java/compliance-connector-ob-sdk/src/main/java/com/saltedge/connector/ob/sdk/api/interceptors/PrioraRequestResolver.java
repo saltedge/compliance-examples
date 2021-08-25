@@ -28,12 +28,15 @@ import com.saltedge.connector.ob.sdk.api.models.request.*;
 import com.saltedge.connector.ob.sdk.api.models.response.EmptyJsonResponse;
 import com.saltedge.connector.ob.sdk.config.ApplicationProperties;
 import com.saltedge.connector.ob.sdk.tools.JsonTools;
+import freemarker.template.utility.StringUtil;
 import io.jsonwebtoken.*;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -75,13 +78,14 @@ public class PrioraRequestResolver implements HandlerMethodArgumentResolver {
 
     @Override
     public Object resolveArgument(
-      MethodParameter parameter,
-      ModelAndViewContainer mavContainer,
-      NativeWebRequest webRequest,
-      WebDataBinderFactory binderFactory
+        @NotNull MethodParameter parameter,
+        ModelAndViewContainer mavContainer,
+        NativeWebRequest webRequest,
+        WebDataBinderFactory binderFactory
     ) {
         String authorization = webRequest.getHeader(ApiConstants.HEADER_AUTHORIZATION);
-        return parsePayloadAndValidate(authorization, parameter.getParameterType());
+        if (StringUtils.hasText(authorization)) return parsePayloadAndValidate(authorization, parameter.getParameterType());
+        else throw new BadRequest.AuthorizationMissing();
     }
 
     private <T> T parsePayloadAndValidate(String authorization, Class<T> clazz) throws BadRequest.JWTExpiredSignature, BadRequest.JWTDecodeError {

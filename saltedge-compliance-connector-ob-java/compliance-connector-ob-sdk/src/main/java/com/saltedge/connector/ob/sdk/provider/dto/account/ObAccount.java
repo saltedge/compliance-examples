@@ -29,6 +29,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Open Banking Account information
@@ -176,5 +177,18 @@ public class ObAccount {
   @JsonIgnore
   public boolean hasIdentifier() {
     return !accountIdentifiers.isEmpty();
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    ObAccount obAccount = (ObAccount) o;
+    return Objects.equals(id, obAccount.id) && Objects.equals(currencyCode, obAccount.currencyCode) && Objects.equals(accountType, obAccount.accountType) && Objects.equals(accountSubType, obAccount.accountSubType) && Objects.equals(balances, obAccount.balances) && Objects.equals(status, obAccount.status) && Objects.equals(statusUpdatedAt, obAccount.statusUpdatedAt) && Objects.equals(description, obAccount.description) && Objects.equals(nickname, obAccount.nickname) && Objects.equals(openingDate, obAccount.openingDate) && Objects.equals(maturityDate, obAccount.maturityDate) && Objects.equals(switchStatus, obAccount.switchStatus) && Objects.equals(accountIdentifiers, obAccount.accountIdentifiers) && Objects.equals(servicer, obAccount.servicer);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, currencyCode, accountType, accountSubType, balances, status, statusUpdatedAt, description, nickname, openingDate, maturityDate, switchStatus, accountIdentifiers, servicer);
   }
 }

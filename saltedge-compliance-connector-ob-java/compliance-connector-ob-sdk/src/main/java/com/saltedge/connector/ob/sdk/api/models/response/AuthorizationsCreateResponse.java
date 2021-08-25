@@ -25,11 +25,27 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.saltedge.connector.ob.sdk.SDKConstants;
 
 import javax.validation.constraints.NotEmpty;
+import java.util.Objects;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AuthorizationsCreateResponse {
     @JsonProperty(SDKConstants.KEY_DATA)
     public Data data;
+
+    public AuthorizationsCreateResponse() {
+    }
+
+    public AuthorizationsCreateResponse(Data data) {
+        this.data = data;
+    }
+
+    public AuthorizationsCreateResponse(String authorizationId, String consentId, String accessToken) {
+        this.data = new Data(authorizationId, consentId, accessToken);
+    }
+
+    public AuthorizationsCreateResponse(String redirectUri) {
+        this.data = new Data(redirectUri);
+    }
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class Data {
@@ -57,6 +73,10 @@ public class AuthorizationsCreateResponse {
             this.accessToken = accessToken;
         }
 
+        public Data(String redirectUri) {
+            this.redirectUri = redirectUri;
+        }
+
         @Override
         public String toString() {
             return "Data{" +
@@ -66,6 +86,19 @@ public class AuthorizationsCreateResponse {
               ", redirectUri='" + redirectUri + '\'' +
               '}';
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Data data = (Data) o;
+            return Objects.equals(authorizationId, data.authorizationId) && Objects.equals(consentId, data.consentId) && Objects.equals(accessToken, data.accessToken) && Objects.equals(redirectUri, data.redirectUri);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(authorizationId, consentId, accessToken, redirectUri);
+        }
     }
 
     @Override
@@ -73,5 +106,18 @@ public class AuthorizationsCreateResponse {
         return "AuthorizationsCreateResponse{" +
           "data=" + data +
           '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AuthorizationsCreateResponse that = (AuthorizationsCreateResponse) o;
+        return Objects.equals(data, that.data);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(data);
     }
 }

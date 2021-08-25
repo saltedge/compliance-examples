@@ -1,6 +1,6 @@
 /*
  * @author Constantin Chelban (constantink@saltedge.com)
- * Copyright (c) 2021 Salt Edge.
+ * Copyright (c) 2020 Salt Edge.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,11 +18,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.saltedge.connector.ob.sdk.api.models.errors;
+package com.saltedge.connector.sdk.api.interceptors;
 
-import com.saltedge.connector.ob.sdk.api.models.response.ErrorResponse;
+import com.saltedge.connector.sdk.api.models.err.BadRequest;
+import com.saltedge.connector.sdk.api.models.err.HttpErrorParams;
+import com.saltedge.connector.sdk.api.models.err.NotFound;
+import com.saltedge.connector.sdk.api.models.err.Unauthorized;
+import com.saltedge.connector.sdk.api.models.responses.ErrorResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -37,13 +42,14 @@ import javax.validation.ConstraintViolationException;
  * Global error handler for a Spring REST API
  */
 @ControllerAdvice
+@Order(0)
 public class ApiExceptionsHandler extends ResponseEntityExceptionHandler {
     private static final Logger log = LoggerFactory.getLogger(ApiExceptionsHandler.class);
 
     @ExceptionHandler({
-      BadRequest.class,
-      NotFound.class,
-      Unauthorized.class
+            BadRequest.class,
+            NotFound.TokenNotFound.class,
+            Unauthorized.class
     })
     public ResponseEntity<ErrorResponse> handleCustomException(Exception ex, WebRequest request) {
         HttpStatus errorStatus = ex instanceof HttpErrorParams ? ((HttpErrorParams) ex).getErrorStatus() : HttpStatus.BAD_REQUEST;

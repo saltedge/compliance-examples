@@ -21,6 +21,7 @@
 package com.saltedge.connector.ob.sdk.api.controllers;
 
 import com.saltedge.connector.ob.sdk.api.ApiConstants;
+import com.saltedge.connector.ob.sdk.api.models.errors.BadRequest;
 import com.saltedge.connector.ob.sdk.api.models.request.PaymentCreateRequest;
 import com.saltedge.connector.ob.sdk.api.models.response.EmptyJsonResponse;
 import com.saltedge.connector.ob.sdk.api.services.ObPaymentService;
@@ -36,6 +37,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.util.Objects;
 
 /**
  * Controller is responsible for implementing payment creation.
@@ -49,7 +51,7 @@ public class ObPaymentsController extends ObBaseController {
     public final static String BASE_PATH = ApiConstants.API_BASE_PATH + "/payments";
     private static final Logger log = LoggerFactory.getLogger(ObPaymentsController.class);
     @Autowired
-    private ObPaymentService paymentService;
+    ObPaymentService paymentService;
 
     /**
      * Create an access token with a set of access rights, named scopes.
@@ -61,7 +63,10 @@ public class ObPaymentsController extends ObBaseController {
      */
     @PostMapping
     public ResponseEntity<EmptyJsonResponse> create(@NotNull Consent consent, @Valid PaymentCreateRequest request) {
-        paymentService.initiatePayment(consent, request);
+        if (!Objects.equals(consent.consentId, request.consentId)) {
+            throw new BadRequest.InvalidAttributeValue("PaymentCreateRequest.consent_id");
+        }
+        paymentService.initiatePayment(consent.consentId, request);
         return super.createEmptyOkResponseEntity();
     }
 }

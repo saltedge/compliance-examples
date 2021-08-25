@@ -29,6 +29,7 @@ import com.saltedge.connector.ob.sdk.SDKConstants;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.time.Instant;
+import java.util.Objects;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties
@@ -66,5 +67,18 @@ public class AuthorizationCreateRequest {
     this.authorizeUrl = authorizeUrl;
     this.authCode = authCode;
     this.authCodeExp = authCodeExp;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    AuthorizationCreateRequest that = (AuthorizationCreateRequest) o;
+    return Objects.equals(authorizeUrl, that.authorizeUrl) && Objects.equals(authCode, that.authCode) && Objects.equals(authCodeExp, that.authCodeExp);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(authorizeUrl, authCode, authCodeExp);
   }
 }

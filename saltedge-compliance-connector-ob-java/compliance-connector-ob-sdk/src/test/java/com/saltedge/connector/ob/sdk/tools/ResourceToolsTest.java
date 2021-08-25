@@ -18,20 +18,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.saltedge.connector.ob.sdk.model.jpa;
+package com.saltedge.connector.ob.sdk.tools;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.data.domain.AuditorAware;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.junit.jupiter.api.Test;
 
-import java.util.Optional;
+import static org.assertj.core.api.Assertions.assertThat;
 
-@Configuration
-@EnableJpaAuditing(auditorAwareRef = "auditorProvider")
-public class JpaAuditingConfiguration {
-    @Bean
-    public AuditorAware<String> auditorProvider() {
-        return () -> Optional.of("Salt Edge");
-    }
+public class ResourceToolsTest {
+	@Test
+	public void readKeyFileTest() {
+		assertThat(ResourceTools.readResourceFile("param-param.pem")).isEmpty();
+		assertThat(ResourceTools.readResourceFile("test_public_key.pem")).startsWith("-----BEGIN PUBLIC KEY-----");
+	}
 }

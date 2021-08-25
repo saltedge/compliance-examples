@@ -43,6 +43,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -65,8 +66,8 @@ public class ObAccountsController extends ObBaseController {
      */
     @GetMapping
     public ResponseEntity<AccountsResponse> accountsIndex(@NotNull Consent consent, @Valid DefaultRequest request) {
-        log.info("ObAccountsController.accountsIndex for user:" + consent.userId);
         List<ObAccount> accounts = providerService.getAccountsOfUser(consent.userId);
+        if (accounts == null) accounts = Collections.emptyList();
         AccountsResponse response = new AccountsResponse(accounts);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -85,7 +86,6 @@ public class ObAccountsController extends ObBaseController {
       @NotEmpty @PathVariable(name = SDKConstants.KEY_ACCOUNT_ID) String accountId,
       @Valid TransactionsIndexRequest request
     ) {
-        log.info("ObAccountsController.transactionsIndexOfAccount of user:" + consent.userId + " of Account: " + accountId);
         TransactionsPage resultPage = providerService.getTransactionsOfAccount(
           consent.userId,
           accountId,
@@ -93,6 +93,7 @@ public class ObAccountsController extends ObBaseController {
           request.toDate,
           request.fromId
         );
+        if (resultPage == null) resultPage = new TransactionsPage(Collections.emptyList(), null);
         return new ResponseEntity<>(new TransactionsIndexResponse(resultPage.transactions, new Meta(resultPage.nextId)), HttpStatus.OK);
     }
 }

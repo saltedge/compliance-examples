@@ -45,11 +45,12 @@ public class ObAuthorizationService extends ObBaseService {
     private static final Logger log = LoggerFactory.getLogger(ObAuthorizationService.class);
 
     /**
+     * Initiate Authorization creation on user redirect to authorization url (e.g. OpenID authentication page)
      *
-     * @param authorizeUrl
-     * @param authCode
-     * @param authCodeExp
-     * @return redirectUri or null
+     * @param authorizeUrl request url enriched with custom query (from authorization controller).
+     * @param authCode random authorization session code. Minimal 16 characters.
+     * @param authCodeExp authorization session code expiration datetime (optional).
+     * @return error redirect URL or null, to return TPP back.
      */
     public String createAuthorization(@NotEmpty String authorizeUrl, @NotEmpty String authCode, Instant authCodeExp) {
         try {
@@ -76,12 +77,14 @@ public class ObAuthorizationService extends ObBaseService {
     }
 
     /**
+     * Update consent authorization status. Can be approved or denied.
+     * Send authorization info to Salt Edge Compliance Service.
      *
-     * @param authCode
-     * @param userId
-     * @param operationStatus
-     * @param accountIdentifiers
-     * @return redirectUri or null
+     * @param authCode random authorization session code. Minimal 16 characters.
+     * @param userId unique identifier of authorized user.
+     * @param operationStatus current status of the operation. Allowed values: approved, denied.
+     * @param accountIdentifiers collection of account identifiers selected by user on consent confirmation (optional).
+     * @return final redirect URL or null, to return TPP back.
      */
     public String updateAuthorization(
       @NotEmpty String authCode,

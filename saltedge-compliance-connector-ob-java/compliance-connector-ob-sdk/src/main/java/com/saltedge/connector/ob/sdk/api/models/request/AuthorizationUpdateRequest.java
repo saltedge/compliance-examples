@@ -27,6 +27,7 @@ import com.saltedge.connector.ob.sdk.SDKConstants;
 
 import javax.validation.constraints.NotBlank;
 import java.util.List;
+import java.util.Objects;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties
@@ -47,18 +48,31 @@ public class AuthorizationUpdateRequest {
     @JsonProperty(SDKConstants.KEY_STATUS)
     public String status;
 
+    /**
+     * Array containing the list of payments identifiers (optional).
+     */
     @JsonProperty("access")
     List<String> accountIdentifiers;
 
-    /**
-     * Array containing the list of payments' identifiers.
-     */
     public AuthorizationUpdateRequest() {
     }
 
-    public AuthorizationUpdateRequest(String userId, String status, List<String> accountIdentifiers) {
+    public AuthorizationUpdateRequest(@NotBlank String userId, @NotBlank String status, List<String> accountIdentifiers) {
         this.userId = userId;
         this.status = status;
         this.accountIdentifiers = accountIdentifiers;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AuthorizationUpdateRequest that = (AuthorizationUpdateRequest) o;
+        return Objects.equals(userId, that.userId) && Objects.equals(status, that.status) && Objects.equals(accountIdentifiers, that.accountIdentifiers);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userId, status, accountIdentifiers);
     }
 }

@@ -32,6 +32,7 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Database entity for saving data about connection between Connector and Salt Edge Compliance Solution
@@ -182,7 +183,20 @@ public class Consent extends BaseJpaEntity implements Serializable {
         return debtorAccount != null;
     }
 
-    public boolean permissionsExpired() {
+    public boolean aisPermissionsExpired() {
         return isAisConsent() && permissionsExpiresAt != null && permissionsExpiresAt.isBefore(Instant.now());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Consent consent = (Consent) o;
+        return Objects.equals(tppName, consent.tppName) && Objects.equals(consentId, consent.consentId) && Objects.equals(status, consent.status) && Objects.equals(authorizationId, consent.authorizationId) && Objects.equals(authCode, consent.authCode) && Objects.equals(accessToken, consent.accessToken) && Objects.equals(userId, consent.userId) && Objects.equals(accountIdentifiers, consent.accountIdentifiers) && Objects.equals(permissions, consent.permissions) && Objects.equals(permissionsExpiresAt, consent.permissionsExpiresAt) && Objects.equals(transactionFrom, consent.transactionFrom) && Objects.equals(transactionTo, consent.transactionTo) && Objects.equals(payment, consent.payment) && Objects.equals(compliancePaymentId, consent.compliancePaymentId) && Objects.equals(paymentId, consent.paymentId) && Objects.equals(debtorAccount, consent.debtorAccount);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(tppName, consentId, status, authorizationId, authCode, accessToken, userId, accountIdentifiers, permissions, permissionsExpiresAt, transactionFrom, transactionTo, payment, compliancePaymentId, paymentId, debtorAccount);
     }
 }

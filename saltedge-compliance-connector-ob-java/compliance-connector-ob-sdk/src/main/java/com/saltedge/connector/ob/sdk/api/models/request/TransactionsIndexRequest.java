@@ -54,11 +54,10 @@ public class TransactionsIndexRequest extends PrioraBaseRequest {
     }
 
     public TransactionsIndexRequest(
-            String accountId,
-            LocalDate fromDate,
-            LocalDate toDate,
-            String fromId,
-            String sessionSecret
+        String accountId,
+        LocalDate fromDate,
+        LocalDate toDate,
+        String fromId
     ) {
         this.accountId = accountId;
         this.fromDate = fromDate;

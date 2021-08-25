@@ -41,6 +41,7 @@ import org.springframework.web.client.UnknownHttpStatusCodeException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.PrivateKey;
+import java.util.Objects;
 
 /**
  * Base rest client for Salt Edge Compliance callbacks
@@ -96,7 +97,7 @@ public abstract class CallbackRestClient {
             }
             HttpEntity<String> request = new HttpEntity<>(payload, headers);
             ResponseEntity<T> response = callbackRestTemplate.exchange(url, method, request, clazz);
-            getLogger().info("doCallbackRequest: response status:" + response.getStatusCodeValue() + ", body: " + response.getBody().toString());
+            getLogger().info("doCallbackRequest: response status:" + response.getStatusCodeValue() + ", body: " + Objects.requireNonNull(response.getBody()));
             return new Response<T>(response.getBody());
         } catch (HttpClientErrorException e) {
             getLogger().error("HttpClientErrorException:", e);
@@ -107,6 +108,8 @@ public abstract class CallbackRestClient {
             getLogger().error("HttpServerErrorException:", e);
         } catch (UnknownHttpStatusCodeException e) {
             getLogger().error("UnknownHttpStatusCodeException:", e);
+        } catch (Exception e) {
+            getLogger().error("Exception:", e);
         }
         return new Response<T>("");
     }

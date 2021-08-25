@@ -47,15 +47,15 @@ import javax.validation.constraints.NotNull;
  * https://priora.saltedge.com/docs/aspsp/ob/piis#connector-endpoints-consents
  */
 @RestController
-@RequestMapping(FundsConsentsController.BASE_PATH)
+@RequestMapping(ObFundsConsentsController.BASE_PATH)
 @Validated
-public class FundsConsentsController extends ObBaseController {
+public class ObFundsConsentsController extends ObBaseController {
     public final static String BASE_PATH = ApiConstants.API_BASE_PATH + "/funds_check_consents";
-    private static final Logger log = LoggerFactory.getLogger(FundsConsentsController.class);
+    private static final Logger log = LoggerFactory.getLogger(ObFundsConsentsController.class);
     @Autowired
-    private ObConsentsCreateService createService;
+    ObConsentsCreateService createService;
     @Autowired
-    private ObConsentsRevokeService revokeService;
+    ObConsentsRevokeService revokeService;
 
     /**
      * Create an access token with a set of access rights, named scopes.

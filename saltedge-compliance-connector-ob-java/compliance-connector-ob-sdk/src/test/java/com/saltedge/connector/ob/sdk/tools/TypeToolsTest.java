@@ -18,36 +18,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.saltedge.connector.ob.sdk.api.models;
+package com.saltedge.connector.ob.sdk.tools;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
+import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
+import static org.assertj.core.api.Assertions.assertThat;
 
-//TODO remove
-public class CustomInstantDeserializer extends JsonDeserializer<Instant> {
-
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(ZoneOffset.UTC);
-
-    @Override
-    public Instant deserialize(JsonParser jp, DeserializationContext ctx) {
-        try {
-            String trimmedText = jp.getText().replace(" UTC", "").trim();
-            return parseInstant(trimmedText);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    private Instant parseInstant(String value) {
-        LocalDateTime ldt = LocalDateTime.from(formatter.parse(value));
-        return Instant.from(ldt.atZone(ZoneOffset.UTC));
-    }
+public class TypeToolsTest {
+	@Test
+	public void safeParseFloatTest() {
+		assertThat(TypeTools.safeParseFloat("", null)).isNull();
+		assertThat(TypeTools.safeParseFloat("", 1f)).isEqualTo(1f);
+		assertThat(TypeTools.safeParseFloat("2", 1f)).isEqualTo(2f);
+		assertThat(TypeTools.safeParseFloat("2.2", 1f)).isEqualTo(2.2f);
+	}
 }

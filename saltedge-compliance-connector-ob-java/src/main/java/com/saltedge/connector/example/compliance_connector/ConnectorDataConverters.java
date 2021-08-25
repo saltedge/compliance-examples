@@ -64,7 +64,7 @@ public class ConnectorDataConverters {
             accountEntry.name + " / " + accountEntry.accountType + " / " + accountEntry.currencyCode,
             accountEntry.name,
             accountEntry.getCreatedAt().toInstant(),
-            accountEntry.getUpdatedAt().toInstant(),//TODO replace with null
+            accountEntry.getUpdatedAt().toInstant(),
             "processing",
             identifiers,
             new ObAccountIdentifier("UK.OBIE.SortCodeAccountNumber", accountEntry.accountNumber)
@@ -82,9 +82,8 @@ public class ConnectorDataConverters {
         result.id = transaction.id.toString();
         result.creditDebitIndicator = transaction.amount.startsWith("-") ? "credit" : "debit";
 
-        result.status = "Booked";//transaction.status;//TODO Capitalize
+        result.status = transaction.status;
         result.bookingDateTime = transaction.madeOn.atStartOfDay().toInstant(ZoneOffset.UTC);
-//        result.bookingDateTime = "2021-08-01 09:45:04 UTC";//TODO remove
 
         result.amount = new ObAmount(transaction.amount, transaction.currencyCode);
         result.transactionInformation = transaction.description;
