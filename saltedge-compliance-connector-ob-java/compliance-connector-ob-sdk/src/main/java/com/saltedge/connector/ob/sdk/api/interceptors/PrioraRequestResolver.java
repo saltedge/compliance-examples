@@ -28,7 +28,6 @@ import com.saltedge.connector.ob.sdk.api.models.request.*;
 import com.saltedge.connector.ob.sdk.api.models.response.EmptyJsonResponse;
 import com.saltedge.connector.ob.sdk.config.ApplicationProperties;
 import com.saltedge.connector.ob.sdk.tools.JsonTools;
-import freemarker.template.utility.StringUtil;
 import io.jsonwebtoken.*;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
