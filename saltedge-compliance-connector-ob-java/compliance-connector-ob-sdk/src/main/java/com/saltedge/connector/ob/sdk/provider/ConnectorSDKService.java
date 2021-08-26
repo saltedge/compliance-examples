@@ -39,7 +39,6 @@ import java.util.List;
 
 /**
  * SDK service with actions for callback communications from ASPSP to Compliance Service.
- *
  */
 @Lazy
 @Service

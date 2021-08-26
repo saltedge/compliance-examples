@@ -54,8 +54,7 @@ public class AuthorizationUpdateRequest {
     @JsonProperty("access")
     List<String> accountIdentifiers;
 
-    public AuthorizationUpdateRequest() {
-    }
+    public AuthorizationUpdateRequest() {}
 
     public AuthorizationUpdateRequest(@NotBlank String userId, @NotBlank String status, List<String> accountIdentifiers) {
         this.userId = userId;

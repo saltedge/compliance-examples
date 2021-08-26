@@ -50,7 +50,6 @@ public class ObAccountsConsentsIntegrationTests extends ControllerIntegrationTes
     @BeforeEach
     public void setUp() {
         seedConsents();
-//        callbackService.applicationProperties = new ApplicationProperties();
     }
 
     @Test

@@ -30,6 +30,7 @@ import javax.validation.constraints.NotBlank;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties
 public class ConsentsRevokeRequest extends PrioraBaseRequest {
+
     /**
      * Human readable Provider identifier.
      */

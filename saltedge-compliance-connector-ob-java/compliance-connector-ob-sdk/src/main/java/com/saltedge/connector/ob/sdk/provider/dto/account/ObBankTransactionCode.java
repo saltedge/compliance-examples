@@ -33,6 +33,7 @@ import javax.validation.constraints.NotEmpty;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties
 public class ObBankTransactionCode {
+
   /**
    * Specifies the family within a domain.
    */

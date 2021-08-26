@@ -30,16 +30,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties
 public class Meta {
-    /**
-     * Id of the next entity used in paginated responses.
-     */
-    @JsonProperty("next_id")
-    public String nextId;
 
-    public Meta() {
-    }
+  /**
+   * Id of the next entity used in paginated responses.
+   */
+  @JsonProperty("next_id")
+  public String nextId;
 
-    public Meta(String nextId) {
-        this.nextId = nextId;
-    }
+  public Meta() {
+  }
+
+  public Meta(String nextId) {
+    this.nextId = nextId;
+  }
 }

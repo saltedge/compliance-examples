@@ -37,149 +37,150 @@ import java.util.Map;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties
 public class ObTransaction {
-    /**
-     * Transaction identifier on Provider side
-     */
-    @NotEmpty
-    @JsonProperty(SDKConstants.KEY_ID)
-    public String id;
 
-    /**
-     * Unique reference for the transaction.
-     * This reference is optionally populated, and may as an example be the FPID in the Faster Payments context.
-     */
-    @JsonProperty("transaction_reference")
-    public String transactionReference;
+  /**
+   * Transaction identifier on Provider side
+   */
+  @NotEmpty
+  @JsonProperty(SDKConstants.KEY_ID)
+  public String id;
 
-    /**
-     * Unique reference for the statement. This reference may be optionally populated if available.
-     */
-    @JsonProperty("statement_reference")
-    public List<String> statementReference;
+  /**
+   * Unique reference for the transaction.
+   * This reference is optionally populated, and may as an example be the FPID in the Faster Payments context.
+   */
+  @JsonProperty("transaction_reference")
+  public String transactionReference;
 
-    /**
-     * Indicates whether the transaction is a credit or a debit entry.
-     */
-    @NotEmpty
-    @JsonProperty("credit_debit_indicator")
-    public String creditDebitIndicator;
+  /**
+   * Unique reference for the statement. This reference may be optionally populated if available.
+   */
+  @JsonProperty("statement_reference")
+  public List<String> statementReference;
 
-    /**
-     * Status of a transaction entry on the books of the account servicer.
-     * Allowed values: Booked, Pending
-     */
-    @NotEmpty
-    @JsonProperty(SDKConstants.KEY_STATUS)
-    public String status;
+  /**
+   * Indicates whether the transaction is a credit or a debit entry.
+   */
+  @NotEmpty
+  @JsonProperty("credit_debit_indicator")
+  public String creditDebitIndicator;
 
-    /**
-     * Specifies the Mutability of the Transaction record.
-     */
-    @JsonProperty("transaction_mutability")
-    public String transactionMutability;
+  /**
+   * Status of a transaction entry on the books of the account servicer.
+   * Allowed values: Booked, Pending
+   */
+  @NotEmpty
+  @JsonProperty(SDKConstants.KEY_STATUS)
+  public String status;
 
-    /**
-     * Date and time when a transaction entry is posted to an account on the account servicer's books.
-     *
-     * Usage: Booking date is the expected booking date, unless the status is booked, in which case it is the actual booking date.
-     */
-    @NotNull
-    @JsonProperty("booking_date_time")
-    public Instant bookingDateTime;
+  /**
+   * Specifies the Mutability of the Transaction record.
+   */
+  @JsonProperty("transaction_mutability")
+  public String transactionMutability;
 
-    /**
-     * Date and time at which assets become available to the account owner in case of a credit entry, or cease to be available to the account owner in case of a debit transaction entry.
-     *
-     * Usage: If transaction entry status is pending and value date is present, then the value date refers to an expected/requested value date.
-     * For transaction entries subject to availability/float and for which availability information is provided, the value date must not be used.
-     * In this case the availability component identifies the number of availability days.
-     */
-    @NotNull
-    @JsonProperty("value_date_time")
-    public Instant valueDateTime;
+  /**
+   * Date and time when a transaction entry is posted to an account on the account servicer's books.
+   *
+   * Usage: Booking date is the expected booking date, unless the status is booked, in which case it is the actual booking date.
+   */
+  @NotNull
+  @JsonProperty("booking_date_time")
+  public Instant bookingDateTime;
 
-    /**
-     * Further details of the transaction. This is the transaction narrative, which is unstructured text.
-     */
-    @JsonProperty("transaction_information")
-    public String transactionInformation;
+  /**
+   * Date and time at which assets become available to the account owner in case of a credit entry, or cease to be available to the account owner in case of a debit transaction entry.
+   *
+   * Usage: If transaction entry status is pending and value date is present, then the value date refers to an expected/requested value date.
+   * For transaction entries subject to availability/float and for which availability information is provided, the value date must not be used.
+   * In this case the availability component identifies the number of availability days.
+   */
+  @NotNull
+  @JsonProperty("value_date_time")
+  public Instant valueDateTime;
 
-    /**
-     * Amount of money in the cash transaction entry.
-     */
-    @NotNull
-    @JsonProperty(SDKConstants.KEY_AMOUNT)
-    public ObAmount amount;
+  /**
+   * Further details of the transaction. This is the transaction narrative, which is unstructured text.
+   */
+  @JsonProperty("transaction_information")
+  public String transactionInformation;
 
-    /**
-     * Transaction charges to be paid by the charge bearer
-     */
-    @JsonProperty("charge_amount")
-    public ObAmount chargeAmount;
+  /**
+   * Amount of money in the cash transaction entry.
+   */
+  @NotNull
+  @JsonProperty(SDKConstants.KEY_AMOUNT)
+  public ObAmount amount;
 
-    /**
-     * Transaction charges to be paid by the charge bearer
-     */
-    @JsonProperty("currency_exchange")
-    public ObCurrencyExchange currencyExchange;
+  /**
+   * Transaction charges to be paid by the charge bearer
+   */
+  @JsonProperty("charge_amount")
+  public ObAmount chargeAmount;
 
-    /**
-     * Set of elements used to fully identify the type of underlying transaction resulting in an entry.
-     */
-    @JsonProperty("bank_transaction_code")
-    public ObBankTransactionCode bankTransactionCode;
+  /**
+   * Transaction charges to be paid by the charge bearer
+   */
+  @JsonProperty("currency_exchange")
+  public ObCurrencyExchange currencyExchange;
 
-    /**
-     * Set of elements to fully identify a proprietary bank transaction code.
-     */
-    @JsonProperty("proprietary_bank_transaction_code")
-    public ObProprietaryBankTransactionCode proprietaryBankTransactionCode;
+  /**
+   * Set of elements used to fully identify the type of underlying transaction resulting in an entry.
+   */
+  @JsonProperty("bank_transaction_code")
+  public ObBankTransactionCode bankTransactionCode;
 
-    /**
-     * Define the balance as a numerical representation of the net increases and decreases in an account after a transaction entry is applied to the account.
-     */
-    @JsonProperty("balance")
-    public ObBalance balance;
+  /**
+   * Set of elements to fully identify a proprietary bank transaction code.
+   */
+  @JsonProperty("proprietary_bank_transaction_code")
+  public ObProprietaryBankTransactionCode proprietaryBankTransactionCode;
 
-    /**
-     * Details of the merchant involved in the transaction.
-     */
-    @JsonProperty("merchant_details")
-    public ObMerchant merchantDetails;
+  /**
+   * Define the balance as a numerical representation of the net increases and decreases in an account after a transaction entry is applied to the account.
+   */
+  @JsonProperty("balance")
+  public ObBalance balance;
 
-    /**
-     * Financial institution servicing an account for the creditor.
-     */
-    @JsonProperty("creditor_agent")
-    public ObAgent creditorAgent;
+  /**
+   * Details of the merchant involved in the transaction.
+   */
+  @JsonProperty("merchant_details")
+  public ObMerchant merchantDetails;
 
-    /**
-     * Unambiguous identification of the account of the creditor, in the case of a debit transaction.
-     */
-    @JsonProperty("creditor_account")
-    public ObAccountIdentifier creditorAccount;
+  /**
+   * Financial institution servicing an account for the creditor.
+   */
+  @JsonProperty("creditor_agent")
+  public ObAgent creditorAgent;
 
-    /**
-     * Financial institution servicing an account for the debtor.
-     */
-    @JsonProperty("debtor_agent")
-    public ObAgent debtorAgent;
+  /**
+   * Unambiguous identification of the account of the creditor, in the case of a debit transaction.
+   */
+  @JsonProperty("creditor_account")
+  public ObAccountIdentifier creditorAccount;
 
-    /**
-     * Unambiguous identification of the account of the debtor, in the case of a credit transaction.
-     */
-    @JsonProperty("debtor_account")
-    public ObAccountIdentifier debtorAccount;
+  /**
+   * Financial institution servicing an account for the debtor.
+   */
+  @JsonProperty("debtor_agent")
+  public ObAgent debtorAgent;
 
-    /**
-     * Set of elements to describe the card instrument used in the transaction.
-     */
-    @JsonProperty("card_instrument")
-    public ObCardIdentifier cardInstrument;
+  /**
+   * Unambiguous identification of the account of the debtor, in the case of a credit transaction.
+   */
+  @JsonProperty("debtor_account")
+  public ObAccountIdentifier debtorAccount;
 
-    /**
-     * Additional information that can not be captured in the structured fields and/or any other specific block.
-     */
-    @JsonProperty("supplementary_data")
-    public Map<String, String> supplementaryData;
+  /**
+   * Set of elements to describe the card instrument used in the transaction.
+   */
+  @JsonProperty("card_instrument")
+  public ObCardIdentifier cardInstrument;
+
+  /**
+   * Additional information that can not be captured in the structured fields and/or any other specific block.
+   */
+  @JsonProperty("supplementary_data")
+  public Map<String, String> supplementaryData;
 }

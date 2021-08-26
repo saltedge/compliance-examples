@@ -30,6 +30,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties
 public class ObMerchant {
+
   /**
    * Name by which the merchant is known.
    */

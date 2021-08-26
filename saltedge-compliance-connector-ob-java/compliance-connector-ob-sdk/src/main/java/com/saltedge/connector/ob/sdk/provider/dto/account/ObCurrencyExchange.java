@@ -35,65 +35,66 @@ import java.time.LocalDate;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties
 public class ObCurrencyExchange {
-    /**
-     * Currency from which an amount is to be converted in a currency conversion.
-     */
-    @NotEmpty
-    @JsonProperty("source_currency")
-    public String sourceCurrency;
 
-    /**
-     * Currency into which an amount is to be converted in a currency conversion.
-     */
-    @JsonProperty("target_currency")
-    public String targetCurrency;
+  /**
+   * Currency from which an amount is to be converted in a currency conversion.
+   */
+  @NotEmpty
+  @JsonProperty("source_currency")
+  public String sourceCurrency;
 
-    /**
-     * Currency in which the rate of exchange is expressed in a currency exchange.
-     * In the example 1GBP = xxxCUR, the unit currency is GBP.
-     */
-    @JsonProperty("unit_currency")
-    public String unitCurrency;
+  /**
+   * Currency into which an amount is to be converted in a currency conversion.
+   */
+  @JsonProperty("target_currency")
+  public String targetCurrency;
 
-    /**
-     * Factor used to convert an amount from one currency into another. This reflects the price at which one currency was bought with another currency.
-     * Usage: ExchangeRate expresses the ratio between UnitCurrency and QuotedCurrency (ExchangeRate = UnitCurrency/QuotedCurrency).
-     */
-    @NotEmpty
-    @JsonProperty("exchange_rate")
-    public String exchangeRate;
+  /**
+   * Currency in which the rate of exchange is expressed in a currency exchange.
+   * In the example 1GBP = xxxCUR, the unit currency is GBP.
+   */
+  @JsonProperty("unit_currency")
+  public String unitCurrency;
 
-    /**
-     * Unique identification to unambiguously identify the foreign exchange contract.
-     */
-    @JsonProperty("contract_identification")
-    public String contractIdentification;
+  /**
+   * Factor used to convert an amount from one currency into another. This reflects the price at which one currency was bought with another currency.
+   * Usage: ExchangeRate expresses the ratio between UnitCurrency and QuotedCurrency (ExchangeRate = UnitCurrency/QuotedCurrency).
+   */
+  @NotEmpty
+  @JsonProperty("exchange_rate")
+  public String exchangeRate;
 
-    /**
-     * Date and time at which an exchange rate is quoted.
-     */
-    @JsonProperty("quotation_date")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    public LocalDate quotationDate;
+  /**
+   * Unique identification to unambiguously identify the foreign exchange contract.
+   */
+  @JsonProperty("contract_identification")
+  public String contractIdentification;
 
-    /**
-     * Amount of money to be moved between the debtor and creditor, before deduction of charges, expressed in the currency as ordered by the initiating party.
-     */
-    @JsonProperty(SDKConstants.KEY_INSTRUCTED_AMOUNT)
-    public ObAmount instructedAmount;
+  /**
+   * Date and time at which an exchange rate is quoted.
+   */
+  @JsonProperty("quotation_date")
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+  public LocalDate quotationDate;
 
-    public ObCurrencyExchange(String sourceCurrency, String exchangeRate) {
-        this.sourceCurrency = sourceCurrency;
-        this.exchangeRate = exchangeRate;
-    }
+  /**
+   * Amount of money to be moved between the debtor and creditor, before deduction of charges, expressed in the currency as ordered by the initiating party.
+   */
+  @JsonProperty(SDKConstants.KEY_INSTRUCTED_AMOUNT)
+  public ObAmount instructedAmount;
 
-    public ObCurrencyExchange(String sourceCurrency, String targetCurrency, String unitCurrency, String exchangeRate, String contractIdentification, LocalDate quotationDate, ObAmount instructedAmount) {
-        this.sourceCurrency = sourceCurrency;
-        this.targetCurrency = targetCurrency;
-        this.unitCurrency = unitCurrency;
-        this.exchangeRate = exchangeRate;
-        this.contractIdentification = contractIdentification;
-        this.quotationDate = quotationDate;
-        this.instructedAmount = instructedAmount;
-    }
+  public ObCurrencyExchange(String sourceCurrency, String exchangeRate) {
+    this.sourceCurrency = sourceCurrency;
+    this.exchangeRate = exchangeRate;
+  }
+
+  public ObCurrencyExchange(String sourceCurrency, String targetCurrency, String unitCurrency, String exchangeRate, String contractIdentification, LocalDate quotationDate, ObAmount instructedAmount) {
+    this.sourceCurrency = sourceCurrency;
+    this.targetCurrency = targetCurrency;
+    this.unitCurrency = unitCurrency;
+    this.exchangeRate = exchangeRate;
+    this.contractIdentification = contractIdentification;
+    this.quotationDate = quotationDate;
+    this.instructedAmount = instructedAmount;
+  }
 }

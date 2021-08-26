@@ -35,6 +35,7 @@ import java.util.Objects;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties
 public class ObAccountIdentifier {
+
   /**
    * Name of the identification scheme, in a coded form as published in an external list.
    * Allowed values: UK.OBIE.SortCodeAccountNumber, UK.OBIE.IBAN, UK.OBIE.PAN, UK.OBIE.BICFI

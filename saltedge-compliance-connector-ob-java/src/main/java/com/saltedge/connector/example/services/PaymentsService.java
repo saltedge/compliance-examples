@@ -65,7 +65,6 @@ public class PaymentsService {
       log.error("PaymentsService", e);
       return null;
     }
-
   }
 
   @Async

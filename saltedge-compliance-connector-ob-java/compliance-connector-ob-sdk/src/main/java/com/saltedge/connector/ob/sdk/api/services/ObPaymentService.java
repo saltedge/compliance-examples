@@ -53,12 +53,13 @@ class ObPaymentService extends ObBaseService {
     @Async
     public void initiatePayment(@NotNull String consentId, @NotNull PaymentCreateRequest params) {
         try {
+            //prepare consent
             Consent consent = consentsRepository.findFirstByConsentId(consentId);
             consent.payment = params.paymentInitiation;
             consent.compliancePaymentId = params.compliancePaymentId;
-
+            //request payment initiation
             consent.paymentId = providerService.initiatePayment(consent.userId, params.paymentInitiation);
-
+            //save consent
             consentsRepository.save(consent);
         } catch (Exception e) {
             log.error("PaymentCreateService.createPayment:", e);

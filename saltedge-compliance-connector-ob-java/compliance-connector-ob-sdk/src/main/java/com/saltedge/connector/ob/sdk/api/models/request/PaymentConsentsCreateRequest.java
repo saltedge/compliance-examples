@@ -36,6 +36,7 @@ import javax.validation.constraints.NotNull;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties
 public class PaymentConsentsCreateRequest extends CreateBaseRequest {
+
     /**
      * Type of authorisation flow requested.
      */

@@ -20,7 +20,6 @@
  */
 package com.saltedge.connector.ob.sdk.api.controllers;
 
-import com.saltedge.connector.ob.sdk.SDKConstants;
 import com.saltedge.connector.ob.sdk.api.ApiConstants;
 import com.saltedge.connector.ob.sdk.api.models.errors.NotFound;
 import com.saltedge.connector.ob.sdk.api.models.errors.Unauthorized;
@@ -64,8 +63,8 @@ public class ObPaymentsConsentsController extends ObBaseController {
      * As a result, Connector should send a success, update or fail callback to Salt Edge PSD2 Compliance with the result of the operation,
      * be it a success, fail or request for additional steps.
      *
-     * @param request for consent creation
-     * @return empty JSON object
+     * @param request consent creation data
+     * @return empty JSON response
      */
     @PostMapping
     public ResponseEntity<EmptyJsonResponse> create(@Valid PaymentConsentsCreateRequest request) {
@@ -74,12 +73,11 @@ public class ObPaymentsConsentsController extends ObBaseController {
     }
 
     /**
-     * Checks whether a specific amount is available at point of time of the request on an account addressed by IBAN or other available identifiers.
+     * Checks whether a specific amount is available at point of time of the request on an account addressed by Account Number or other available identifiers.
      *
      * @param consent linked to Access-Token header
-     * @param accountId unique id of bank account
-     * @param request data
-     * @return list of transactions data with nextId of next page
+     * @param request funds confirmation data
+     * @return funds confirmation response
      */
     @GetMapping(path = "/funds_confirmation")
     public ResponseEntity<FundsConfirmationResponse> fundsConfirmation(

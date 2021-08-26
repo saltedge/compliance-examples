@@ -118,12 +118,12 @@ public class Consent extends BaseJpaEntity implements Serializable {
       Instant transactionFrom,
       Instant transactionTo
     ) {
-        Consent result = new Consent(tppName, consentId, status);
-        result.permissions = permissions;
-        result.permissionsExpiresAt = permissionsExpiresAt;
-        result.transactionFrom = transactionFrom;
-        result.transactionTo = transactionTo;
-        return result;
+        Consent consent = new Consent(tppName, consentId, status);
+        consent.permissions = permissions;
+        consent.permissionsExpiresAt = permissionsExpiresAt;
+        consent.transactionFrom = transactionFrom;
+        consent.transactionTo = transactionTo;
+        return consent;
     }
 
     public static Consent createPisConsent(
@@ -132,9 +132,9 @@ public class Consent extends BaseJpaEntity implements Serializable {
       String status,
       ObPaymentInitiationData payment
     ) {
-        Consent result = new Consent(tppName, consentId, status);
-        result.payment = payment;
-        return result;
+        Consent consent = new Consent(tppName, consentId, status);
+        consent.payment = payment;
+        return consent;
     }
 
     public static Consent createPiisConsent(
@@ -144,10 +144,10 @@ public class Consent extends BaseJpaEntity implements Serializable {
       Instant permissionsExpiresAt,
       ObAccountIdentifier debtorAccount
     ) {
-        Consent result = new Consent(tppName, consentId, status);
-        result.permissionsExpiresAt = permissionsExpiresAt;
-        result.debtorAccount = debtorAccount;
-        return result;
+        Consent consent = new Consent(tppName, consentId, status);
+        consent.permissionsExpiresAt = permissionsExpiresAt;
+        consent.debtorAccount = debtorAccount;
+        return consent;
     }
 
     public boolean isAwaitingAuthorisation() {

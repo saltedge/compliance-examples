@@ -50,8 +50,7 @@ public class TransactionsIndexRequest extends PrioraBaseRequest {
     @JsonProperty("from_id")
     public String fromId;
 
-    public TransactionsIndexRequest() {
-    }
+    public TransactionsIndexRequest() {}
 
     public TransactionsIndexRequest(
         String accountId,

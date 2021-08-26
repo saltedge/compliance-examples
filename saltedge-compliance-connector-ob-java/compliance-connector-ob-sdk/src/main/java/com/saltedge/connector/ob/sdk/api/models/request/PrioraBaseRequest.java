@@ -20,5 +20,4 @@
  */
 package com.saltedge.connector.ob.sdk.api.models.request;
 
-public abstract class PrioraBaseRequest {
-}
+public abstract class PrioraBaseRequest { }

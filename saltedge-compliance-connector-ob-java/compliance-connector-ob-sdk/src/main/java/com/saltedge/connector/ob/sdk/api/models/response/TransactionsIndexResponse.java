@@ -36,8 +36,7 @@ public class TransactionsIndexResponse {
     @JsonProperty(SDKConstants.KEY_META)
     public Meta meta;
 
-    public TransactionsIndexResponse() {
-    }
+    public TransactionsIndexResponse() {}
 
     public TransactionsIndexResponse(List<ObTransaction> data, Meta meta) {
         this.data = data;

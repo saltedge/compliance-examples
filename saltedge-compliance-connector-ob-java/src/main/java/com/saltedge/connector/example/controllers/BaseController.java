@@ -34,11 +34,7 @@ abstract public class BaseController {
     @Autowired
     protected UsersRepository usersRepository;
     @Autowired
-    protected PaymentsRepository paymentsRepository;
-    @Autowired
     protected AccountsRepository accountsRepository;
-    @Autowired
-    protected TransactionsRepository transactionsRepository;
 
     protected Long findUser(String username, String password) {
         if (StringUtils.hasText(username) && StringUtils.hasText(password)) {
@@ -47,22 +43,4 @@ abstract public class BaseController {
             return null;
         }
     }
-
-//    protected ModelAndView onAccountInformationAuthorizationSuccess(
-//            @NotEmpty String sessionSecret,
-//            @NotEmpty String userId,
-//            ProviderConsents consents
-//    ) {
-//        String returnToUrl = connectorCallbackService.onAccountInformationAuthorizationSuccess(
-//                sessionSecret,
-//                userId,
-//                KeyTools.generateToken(32),
-//                consents
-//        );
-//        if (returnToUrl == null) {
-//            return new ModelAndView("redirect:/oauth/authorize/accounts?session_secret=" + sessionSecret);
-//        } else {
-//            return new ModelAndView("redirect:" + returnToUrl);
-//        }
-//    }
 }

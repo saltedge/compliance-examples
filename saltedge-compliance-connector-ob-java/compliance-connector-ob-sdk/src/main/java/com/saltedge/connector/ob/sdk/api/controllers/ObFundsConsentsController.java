@@ -62,8 +62,8 @@ public class ObFundsConsentsController extends ObBaseController {
      * As a result, Connector should send a success, update or fail callback to Salt Edge PSD2 Compliance with the result of the operation,
      * be it a success, fail or request for additional steps.
      *
-     * @param request for consent creation
-     * @return empty JSON object
+     * @param request consent creation data
+     * @return empty JSON response
      */
     @PostMapping
     public ResponseEntity<EmptyJsonResponse> create(@Valid FundsConsentsCreateRequest request) {
@@ -75,8 +75,8 @@ public class ObFundsConsentsController extends ObBaseController {
      * Revoke an already existing and active access token.
      *
      * @param consentId unique identifier of Consent model
-     * @param request with sessionSecret
-     * @return empty JSON object
+     * @param request revoke consent data
+     * @return empty JSON response
      */
     @PatchMapping(path = "/{" + SDKConstants.KEY_CONSENT_ID + "}/revoke")
     public ResponseEntity<EmptyJsonResponse> revoke(

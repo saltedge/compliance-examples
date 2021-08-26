@@ -45,7 +45,7 @@ public class ObErrorsController extends ObBaseController {
     /**
      * This endpoint is responsible for receiving validation errors of responses which Connector sends to Salt Edge PSD2 Compliance Solution
      *
-     * @param token linked to Access-Token header
+     * @param consent linked to Access-Token header
      * @param request which contains error data
      *
      * @return empty JSON object

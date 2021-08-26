@@ -54,8 +54,7 @@ public class PaymentUpdateRequest extends PrioraBaseRequest {
     @JsonProperty(SDKConstants.KEY_APP_NAME)
     public String tppAppName;
 
-    public PaymentUpdateRequest() {
-    }
+    public PaymentUpdateRequest() {}
 
     public PaymentUpdateRequest(@NotBlank String consentId, @NotBlank String status, @NotBlank String tppAppName) {
         this.consentId = consentId;

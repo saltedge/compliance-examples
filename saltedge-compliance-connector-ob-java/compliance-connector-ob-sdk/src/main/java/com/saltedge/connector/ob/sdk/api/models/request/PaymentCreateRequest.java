@@ -36,6 +36,7 @@ import java.util.Objects;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties
 public class PaymentCreateRequest extends CreateBaseRequest {
+
     /**
      * Payment order identifier on Connector side. Used to map Salt Edge PSD2 Compliance payments to Connector ones.
      */

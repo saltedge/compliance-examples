@@ -32,8 +32,7 @@ public class AuthorizationsCreateResponse {
     @JsonProperty(SDKConstants.KEY_DATA)
     public Data data;
 
-    public AuthorizationsCreateResponse() {
-    }
+    public AuthorizationsCreateResponse() {}
 
     public AuthorizationsCreateResponse(Data data) {
         this.data = data;
@@ -45,6 +44,26 @@ public class AuthorizationsCreateResponse {
 
     public AuthorizationsCreateResponse(String redirectUri) {
         this.data = new Data(redirectUri);
+    }
+
+    @Override
+    public String toString() {
+        return "AuthorizationsCreateResponse{" +
+          "data=" + data +
+          '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AuthorizationsCreateResponse that = (AuthorizationsCreateResponse) o;
+        return Objects.equals(data, that.data);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(data);
     }
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -80,11 +99,11 @@ public class AuthorizationsCreateResponse {
         @Override
         public String toString() {
             return "Data{" +
-              "authorizationId='" + authorizationId + '\'' +
-              ", consentId='" + consentId + '\'' +
-              ", accessToken='" + accessToken + '\'' +
-              ", redirectUri='" + redirectUri + '\'' +
-              '}';
+                "authorizationId='" + authorizationId + '\'' +
+                ", consentId='" + consentId + '\'' +
+                ", accessToken='" + accessToken + '\'' +
+                ", redirectUri='" + redirectUri + '\'' +
+                '}';
         }
 
         @Override
@@ -99,25 +118,5 @@ public class AuthorizationsCreateResponse {
         public int hashCode() {
             return Objects.hash(authorizationId, consentId, accessToken, redirectUri);
         }
-    }
-
-    @Override
-    public String toString() {
-        return "AuthorizationsCreateResponse{" +
-          "data=" + data +
-          '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        AuthorizationsCreateResponse that = (AuthorizationsCreateResponse) o;
-        return Objects.equals(data, that.data);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(data);
     }
 }

@@ -36,6 +36,7 @@ import java.util.Objects;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ObAccount {
+
   /**
    * Account identifier on Provider
    */

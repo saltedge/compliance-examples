@@ -30,6 +30,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties
 public class ObAddress {
+
   /**
    * Identifies the nature of the postal address.
    * Allowed values: Business, Correspondence, DeliveryTo, MailTo, POBox, Postal, Residential, Statement

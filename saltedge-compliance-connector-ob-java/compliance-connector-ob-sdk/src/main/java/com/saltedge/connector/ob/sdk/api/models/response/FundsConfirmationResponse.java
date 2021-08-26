@@ -31,8 +31,7 @@ public class FundsConfirmationResponse {
     @JsonProperty(SDKConstants.KEY_DATA)
     public Data data;
 
-    public FundsConfirmationResponse() {
-    }
+    public FundsConfirmationResponse() {}
 
     public FundsConfirmationResponse(boolean fundsAvailable) {
         this.data = new Data(fundsAvailable);

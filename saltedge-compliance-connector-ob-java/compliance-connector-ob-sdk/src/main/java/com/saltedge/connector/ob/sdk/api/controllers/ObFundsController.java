@@ -38,7 +38,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 /**
- * This controller is responsible for check funds availability.
+ * This controller is responsible for checking funds availability.
  * https://priora.saltedge.com/docs/aspsp/ob/piis#connector-endpoints-funds-confirmation-fundscheck-get
  */
 @RestController
@@ -52,8 +52,8 @@ public class ObFundsController extends ObBaseController {
      * Fetch list of accounts belonging to a PSU and all relevant information about them.
      *
      * @param consent linked to Access-Token header
-     * @param request request with sessionSecret
-     * @return list of Account Data
+     * @param request funds confirmation data
+     * @return funds confirmation response
      */
     @GetMapping
     public ResponseEntity<FundsConfirmationResponse> fundsConfirmation(

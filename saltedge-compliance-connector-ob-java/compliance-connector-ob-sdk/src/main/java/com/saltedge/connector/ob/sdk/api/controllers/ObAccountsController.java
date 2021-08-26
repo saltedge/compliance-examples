@@ -61,7 +61,7 @@ public class ObAccountsController extends ObBaseController {
      * Fetch list of accounts belonging to a PSU and all relevant information about them.
      *
      * @param consent linked to Access-Token header
-     * @param request request with sessionSecret
+     * @param request empty request
      * @return list of Account Data
      */
     @GetMapping
@@ -77,7 +77,7 @@ public class ObAccountsController extends ObBaseController {
      *
      * @param consent linked to Access-Token header
      * @param accountId unique id of bank account
-     * @param request data
+     * @param request transactions list request data
      * @return list of transactions data with nextId of next page
      */
     @GetMapping(path = "/{" + SDKConstants.KEY_ACCOUNT_ID + "}/transactions")

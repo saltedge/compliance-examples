@@ -30,6 +30,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties
 public class ObRemittanceInformation {
+
   /**
    * Unique reference, as assigned by the creditor, to unambiguously refer to the payment transaction.
    */

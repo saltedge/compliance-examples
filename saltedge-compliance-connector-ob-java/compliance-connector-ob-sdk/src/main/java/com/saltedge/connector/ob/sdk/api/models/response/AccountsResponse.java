@@ -32,8 +32,7 @@ public class AccountsResponse {
     @JsonProperty(SDKConstants.KEY_DATA)
     public List<ObAccount> data;
 
-    public AccountsResponse() {
-    }
+    public AccountsResponse() {}
 
     public AccountsResponse(List<ObAccount> data) {
         this.data = data;

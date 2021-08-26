@@ -38,6 +38,8 @@ public abstract class Unauthorized extends RuntimeException implements HttpError
         return getClass().getSimpleName();
     }
 
+    /* Unauthorized successors  */
+
     public static class ConsentExpired extends Unauthorized {
         String value = "";
 

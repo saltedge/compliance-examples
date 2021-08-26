@@ -31,6 +31,7 @@ import com.saltedge.connector.ob.sdk.SDKConstants;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties
 public class ObAgent {
+
   /**
    * Name of the identification scheme, in a coded form as published in an external list.
    */

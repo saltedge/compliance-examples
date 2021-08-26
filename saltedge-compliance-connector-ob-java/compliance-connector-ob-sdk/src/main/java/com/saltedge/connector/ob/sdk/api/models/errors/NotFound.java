@@ -38,7 +38,7 @@ public abstract class NotFound extends RuntimeException implements HttpErrorPara
         return getClass().getSimpleName();
     }
 
-    // successors of NotFound
+    /* NotFound successors  */
 
     public static class UserNotFound extends NotFound {
         @Override

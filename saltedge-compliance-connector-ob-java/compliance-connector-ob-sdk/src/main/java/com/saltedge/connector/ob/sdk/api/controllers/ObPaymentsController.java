@@ -54,12 +54,11 @@ public class ObPaymentsController extends ObBaseController {
     ObPaymentService paymentService;
 
     /**
-     * Create an access token with a set of access rights, named scopes.
-     * As a result, Connector should send a success, update or fail callback to Salt Edge PSD2 Compliance with the result of the operation,
-     * be it a success, fail or request for additional steps.
+     * Create a payment. As a result, Connector should send an update callback to Salt Edge PSD2 Compliance with the result of the operation for additional steps.
      *
-     * @param request for consent creation
-     * @return empty JSON object
+     * @param consent linked to Access-Token header
+     * @param request payment initiation data
+     * @return empty JSON response
      */
     @PostMapping
     public ResponseEntity<EmptyJsonResponse> create(@NotNull Consent consent, @Valid PaymentCreateRequest request) {

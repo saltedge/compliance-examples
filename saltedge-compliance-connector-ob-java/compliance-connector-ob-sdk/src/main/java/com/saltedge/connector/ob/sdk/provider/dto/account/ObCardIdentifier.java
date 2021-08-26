@@ -33,6 +33,7 @@ import javax.validation.constraints.NotEmpty;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties
 public class ObCardIdentifier {
+
   /**
    * Name of the card scheme.
    * Allowed values: AmericanExpress, Diners, Discover, MasterCard, VISA

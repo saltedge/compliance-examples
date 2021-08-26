@@ -27,16 +27,17 @@ import java.util.List;
  * Transactions page
  */
 public class TransactionsPage {
-    /**
-     * Id of the next entity used in paginated responses.
-     */
-    @NotNull
-    public List<ObTransaction> transactions;
 
-    public String nextId;
+  /**
+   * Id of the next entity used in paginated responses.
+   */
+  @NotNull
+  public List<ObTransaction> transactions;
 
-    public TransactionsPage(@NotNull List<ObTransaction> transactions, String nextId) {
-        this.transactions = transactions;
-        this.nextId = nextId;
-    }
+  public String nextId;
+
+  public TransactionsPage(@NotNull List<ObTransaction> transactions, String nextId) {
+    this.transactions = transactions;
+    this.nextId = nextId;
+  }
 }
