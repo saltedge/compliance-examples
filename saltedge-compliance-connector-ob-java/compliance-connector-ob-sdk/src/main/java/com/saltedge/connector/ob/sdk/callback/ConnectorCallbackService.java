@@ -41,60 +41,60 @@ import org.springframework.util.StringUtils;
  */
 @Service
 public class ConnectorCallbackService extends CallbackRestClient {
-    private static final Logger log = LoggerFactory.getLogger(ConnectorCallbackService.class);
+  private static final Logger log = LoggerFactory.getLogger(ConnectorCallbackService.class);
 
-    public AuthorizationsCreateResponse createAuthorization(AuthorizationCreateRequest params) {
-        String url = getAuthorizationsUrl("");
-        Response<AuthorizationsCreateResponse> response = sendCallback(url, HttpMethod.POST, params, AuthorizationsCreateResponse.class);
-        if (StringUtils.hasText(response.error)) {//In some cases Priora can respond with 4xx and valid payload
-            return JsonTools.parseObject(response.error, AuthorizationsCreateResponse.class);
-        }
-        return response.success;
+  public AuthorizationsCreateResponse createAuthorization(AuthorizationCreateRequest params) {
+    String url = getAuthorizationsUrl("");
+    Response<AuthorizationsCreateResponse> response = sendCallback(url, HttpMethod.POST, params, AuthorizationsCreateResponse.class);
+    if (StringUtils.hasText(response.error)) {//In some cases Priora can respond with 4xx and valid payload
+      return JsonTools.parseObject(response.error, AuthorizationsCreateResponse.class);
     }
+    return response.success;
+  }
 
-    public AuthorizationsUpdateResponse updateAuthorization(String authorizationId, AuthorizationUpdateRequest params) {
-        String url = getAuthorizationsUrl(authorizationId);
-        Response<AuthorizationsUpdateResponse> response = sendCallback(url, HttpMethod.PUT, params, AuthorizationsUpdateResponse.class);
-        if (StringUtils.hasText(response.error)) {//In some cases Priora can respond with 4xx and valid payload
-            return JsonTools.parseObject(response.error, AuthorizationsUpdateResponse.class);
-        }
-        return response.success;
+  public AuthorizationsUpdateResponse updateAuthorization(String authorizationId, AuthorizationUpdateRequest params) {
+    String url = getAuthorizationsUrl(authorizationId);
+    Response<AuthorizationsUpdateResponse> response = sendCallback(url, HttpMethod.PUT, params, AuthorizationsUpdateResponse.class);
+    if (StringUtils.hasText(response.error)) {//In some cases Priora can respond with 4xx and valid payload
+      return JsonTools.parseObject(response.error, AuthorizationsUpdateResponse.class);
     }
+    return response.success;
+  }
 
-    /**
-     * Send request to SaltEdge payment update endpoint.
-     * https://priora.saltedge.com/docs/aspsp/ob/pis#salt-edge-endpoints-payments-payments-update
-     *
-     * @param paymentId SaltEdge Compliance service unique identifier of payment
-     * @param params for payment update
-     */
-    public void updatePayment(String paymentId, PaymentUpdateRequest params) {
-        String url = getPaymentsUrl(paymentId);
-        Response<EmptyJsonResponse> response = sendCallback(url, HttpMethod.PUT, params, EmptyJsonResponse.class);
-        if (StringUtils.hasText(response.error)) {//In some cases Priora can respond with 4xx and valid payload
-            //TODO handle error
-        }
+  /**
+   * Send request to SaltEdge payment update endpoint.
+   * https://priora.saltedge.com/docs/aspsp/ob/pis#salt-edge-endpoints-payments-payments-update
+   *
+   * @param paymentId SaltEdge Compliance service unique identifier of payment
+   * @param params for payment update
+   */
+  public void updatePayment(String paymentId, PaymentUpdateRequest params) {
+    String url = getPaymentsUrl(paymentId);
+    Response<EmptyJsonResponse> response = sendCallback(url, HttpMethod.PUT, params, EmptyJsonResponse.class);
+    if (StringUtils.hasText(response.error)) {//In some cases Priora can respond with 4xx and valid payload
+      log.error("Request to updatePayment error: " + response.error);
     }
+  }
 
-    @Override
-    protected Logger getLogger() {
-        return log;
-    }
+  @Override
+  protected Logger getLogger() {
+    return log;
+  }
 
-    private String getAuthorizationsUrl(String authorizationId) {
-        String idPath = StringUtils.hasText(authorizationId) ? "/" + authorizationId : "";
-        return createCallbackRequestUrl(ApiConstants.CALLBACK_BASE_PATH + "/authorizations" + idPath);
-    }
+  private String getAuthorizationsUrl(String authorizationId) {
+    String idPath = StringUtils.hasText(authorizationId) ? "/" + authorizationId : "";
+    return createCallbackRequestUrl(ApiConstants.CALLBACK_BASE_PATH + "/authorizations" + idPath);
+  }
 
-    private String getPaymentsUrl(String paymentId) {
-        String idPath = StringUtils.hasText(paymentId) ? "/" + paymentId : "";
-        return createCallbackRequestUrl(ApiConstants.CALLBACK_BASE_PATH + "/payments" + idPath);
-    }
+  private String getPaymentsUrl(String paymentId) {
+    String idPath = StringUtils.hasText(paymentId) ? "/" + paymentId : "";
+    return createCallbackRequestUrl(ApiConstants.CALLBACK_BASE_PATH + "/payments" + idPath);
+  }
 
-    private <T> Response<T> sendCallback(String url, HttpMethod method, Object params, Class<T> clazz) {
-        LinkedMultiValueMap<String, String> headers = createCallbackRequestHeaders();
-        String payload = createJwtPayload(params);
-        printPayload(url, method, headers, params, payload);
-        return doCallbackRequest(url, method, headers, payload, clazz);
-    }
+  private <T> Response<T> sendCallback(String url, HttpMethod method, Object params, Class<T> clazz) {
+    LinkedMultiValueMap<String, String> headers = createCallbackRequestHeaders();
+    String payload = createJwtPayload(params);
+    printPayload(url, method, headers, params, payload);
+    return doCallbackRequest(url, method, headers, payload, clazz);
+  }
 }
