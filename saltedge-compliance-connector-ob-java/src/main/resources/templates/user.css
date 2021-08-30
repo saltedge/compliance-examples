@@ -1,0 +1,53 @@
+<style type="text/css">
+    body {font-family: Arial, Helvetica, sans-serif;background-color:lightgrey;}
+
+    .container {
+      max-width: 640px;
+      margin: 0 auto;
+      background-color:white;
+    }
+    .top-header {
+        color:white;
+        background-color:#009E47;
+        text-align:center;
+    }
+    h2 {
+        text-align:center;
+    }
+    .form-container {
+      padding: 5px 10px;
+      text-align:center;
+    }
+    .info-container {
+      padding: 5px 10px;
+      text-align:left;
+    }
+    .centered {
+      text-align: center;
+    }
+    fieldset {
+        border: 0;
+    }
+    .submit {
+        font-size: larger;
+        padding: 5px 10px;
+        color: white;
+        background-color: green;
+    }
+    .inline {
+        display: inline;
+    }
+    table {border-collapse: collapse;}
+    table, th, td {border: 1px solid black;}
+    th, td {
+        padding: 5px;
+        background-color:none;
+        text-align: center;
+        vertical-align: center;
+        align: center;
+    }
+    table.center {
+        margin-left:auto;
+        margin-right:auto;
+      }
+</style>

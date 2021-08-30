@@ -1,0 +1,2 @@
+rootProject.name = 'saltedge-compliance-connector-ob'
+include 'compliance-connector-ob-sdk'
