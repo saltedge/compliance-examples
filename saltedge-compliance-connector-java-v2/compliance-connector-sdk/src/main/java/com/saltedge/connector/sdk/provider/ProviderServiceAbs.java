@@ -23,9 +23,9 @@ package com.saltedge.connector.sdk.provider;
 import com.saltedge.connector.sdk.api.models.*;
 import com.saltedge.connector.sdk.models.CardTransactionsPage;
 import com.saltedge.connector.sdk.models.TransactionsPage;
-import org.jetbrains.annotations.NotNull;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -56,13 +56,15 @@ public interface ProviderServiceAbs {
    *
    * @param sessionSecret Secret of create consent session. Should be returned on authentication success or fail.
    * @param userConsentIsRequired Flag that indicates if user consent for Account Information (balances, transactions) is required and should be returned on authentication success.
+   * @param psuIpAddress Ip Address of PSU. Optional.
    * @return URL string
    * @see ConnectorSDKCallbackService#onAccountInformationAuthorizationSuccess
    * @see ConnectorSDKCallbackService#onAccountInformationAuthorizationFail
    */
   String getAccountInformationAuthorizationPageUrl(
     @NotEmpty String sessionSecret,
-    boolean userConsentIsRequired
+    boolean userConsentIsRequired,
+    String psuIpAddress
   );
 
   /**
@@ -144,6 +146,7 @@ public interface ProviderServiceAbs {
    * @param currency Currency code of payment order
    * @param description Description of payment order
    * @param extraData Extra data of payment order. Attention: should be saved in payment model.
+   * @param psuIpAddress Ip Address of PSU.
    *
    * @return URL string of provider's authorization page designated for authorization of new Payment Initiation Session
    */
@@ -159,7 +162,8 @@ public interface ProviderServiceAbs {
     @NotEmpty String amount,
     @NotEmpty String currency,
     String description,
-    @NotNull String extraData
+    @NotNull String extraData,
+    @NotEmpty String psuIpAddress
   );
 
   /**
@@ -179,6 +183,7 @@ public interface ProviderServiceAbs {
    * @param currency Currency code of payment order
    * @param description Description of payment order
    * @param extraData Extra data of payment order. Attention: should be saved in payment model.
+   * @param psuIpAddress Ip Address of PSU.
    *
    * @return URL string of provider's authorization page designated for authorization of new Payment Initiation Session
    */
@@ -194,6 +199,7 @@ public interface ProviderServiceAbs {
     @NotEmpty String amount,
     @NotEmpty String currency,
     String description,
-    @NotNull String extraData
+    @NotNull String extraData,
+    @NotEmpty String psuIpAddress
   );
 }

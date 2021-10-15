@@ -50,10 +50,12 @@ public class TokenResolver implements HandlerMethodArgumentResolver {
     }
 
     @Override
-    public Object resolveArgument(MethodParameter parameter,
-                                  ModelAndViewContainer mavContainer,
-                                  NativeWebRequest webRequest,
-                                  WebDataBinderFactory binderFactory) throws Exception {
+    public Object resolveArgument(
+        MethodParameter parameter,
+        ModelAndViewContainer mavContainer,
+        NativeWebRequest webRequest,
+        WebDataBinderFactory binderFactory
+    ) throws Exception {
         String accessToken = webRequest.getHeader(SDKConstants.HEADER_ACCESS_TOKEN);
         if (StringUtils.isEmpty(accessToken)) throw new BadRequest.AccessTokenMissing();
         else {

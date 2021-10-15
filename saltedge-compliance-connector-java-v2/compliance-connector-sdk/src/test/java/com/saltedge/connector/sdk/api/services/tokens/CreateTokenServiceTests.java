@@ -39,6 +39,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -53,6 +54,9 @@ import static org.mockito.Mockito.verifyNoInteractions;
 public class CreateTokenServiceTests extends BaseServicesTests {
 	@Autowired
 	protected CreateTokenService testService;
+
+	private final String psuIpAddress = "192.168.0.1";
+	private final LocalDate validUntil = LocalDate.parse("2030-12-31");
 
 	@Override
 	@Before
@@ -79,7 +83,8 @@ public class CreateTokenServiceTests extends BaseServicesTests {
 	@Test
 	public void givenOAuthAuthTypeAndBankConsent_whenStartAuthorization_thenSaveTokenWithoutConsentAndSendSessionsUpdateCallback() {
 		// given
-		given(providerService.getAccountInformationAuthorizationPageUrl("sessionSecret", true)).willReturn("http://example.com?session_secret=sessionSecret");
+		given(providerService.getAccountInformationAuthorizationPageUrl("sessionSecret", true, psuIpAddress))
+				.willReturn("http://example.com?session_secret=sessionSecret");
 		CreateTokenRequest request = createTokenRequest(ProviderConsents.buildAllAccountsConsent());
 		request.authorizationType = "oauth";
 
@@ -97,18 +102,16 @@ public class CreateTokenServiceTests extends BaseServicesTests {
 		assertThat(tokenCaptor.getValue().status).isEqualTo(Token.Status.UNCONFIRMED);
 		assertThat(tokenCaptor.getValue().sessionSecret).isEqualTo("sessionSecret");
 		assertThat(tokenCaptor.getValue().providerOfferedConsents).isNull();
-		Instant testTokenExpiresAt = Instant.now().plus(SDKConstants.CONSENT_MAX_PERIOD + 1, ChronoUnit.DAYS)
-				.atZone(ZoneOffset.UTC).withHour(0).withMinute(0).withSecond(0).withNano(0).toInstant();
-		assertThat(tokenCaptor.getValue().tokenExpiresAt).isCloseTo(testTokenExpiresAt, byLessThan(100, ChronoUnit.MILLIS));
+		assertThat(tokenCaptor.getValue().tokenExpiresAt.toString()).isEqualTo("2030-12-31T23:59:59.999Z");
 	}
 
 	@Test
 	public void givenOAuthAuthTypeAndGlobalConsent_whenStartAuthorization_thenSaveTokenWithConsentAndSendSessionsUpdateCallback() {
 		// given
-		given(providerService.getAccountInformationAuthorizationPageUrl("sessionSecret", false)).willReturn("http://example.com?session_secret=sessionSecret");
+		given(providerService.getAccountInformationAuthorizationPageUrl("sessionSecret", false, psuIpAddress))
+				.willReturn("http://example.com?session_secret=sessionSecret");
 		CreateTokenRequest request = createTokenRequest(new ProviderConsents("allAccounts"));
 		request.authorizationType = "oauth";
-		request.validUntil = LocalDate.now().plusDays(1);
 
 		// when
 		testService.startAuthorization(request);
@@ -124,20 +127,18 @@ public class CreateTokenServiceTests extends BaseServicesTests {
 		assertThat(tokenCaptor.getValue().status).isEqualTo(Token.Status.UNCONFIRMED);
 		assertThat(tokenCaptor.getValue().sessionSecret).isEqualTo("sessionSecret");
 		assertThat(tokenCaptor.getValue().providerOfferedConsents).isNotNull();
-
-		Instant testTokenExpiresAt = Instant.now().plus(2, ChronoUnit.DAYS)
-				.atZone(ZoneOffset.UTC).withHour(0).withMinute(0).withSecond(0).withNano(0).toInstant();
-		assertThat(tokenCaptor.getValue().tokenExpiresAt).isEqualTo(testTokenExpiresAt);
+		assertThat(tokenCaptor.getValue().tokenExpiresAt.toString()).isEqualTo("2030-12-31T23:59:59.999Z");
 	}
 
-	private CreateTokenRequest createTokenRequest(
-			ProviderConsents requestedConsent
-	) {
+	private CreateTokenRequest createTokenRequest(ProviderConsents requestedConsent) {
 		CreateTokenRequest result = new CreateTokenRequest();
 		result.tppAppName = "tppAppName";
 		result.sessionSecret = "sessionSecret";
 		result.redirectUrl = "redirectUrl";
 		result.requestedConsent = requestedConsent;
+		result.validUntil = validUntil;
+		result.recurringIndicator = true;
+		result.psuIpAddress = psuIpAddress;
 		return result;
 	}
 }

@@ -33,7 +33,7 @@ import java.time.LocalDate;
 import static com.saltedge.connector.sdk.SDKConstants.*;
 
 /**
- * https://priora.saltedge.com/docs/aspsp/v2/connector_endpoints#tokens-create
+ * https://priora.saltedge.com/docs/aspsp/v2/ais#connector-endpoints-tokens-tokens-create
  */
 @JsonIgnoreProperties
 public class CreateTokenRequest extends PrioraBaseRequest {
@@ -79,5 +79,19 @@ public class CreateTokenRequest extends PrioraBaseRequest {
      */
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     @JsonProperty("valid_until")
+    @NotNull
     public LocalDate validUntil;
+
+    /**
+     * The value is true if the consent is for recurring access and false if the consent is for one-time access to the account information data.
+     */
+    @JsonProperty("recurring_indicator")
+    @NotNull
+    public Boolean recurringIndicator;
+
+    /**
+     * Ip Address of PSU. Optional.
+     */
+    @JsonProperty("psu_ip_address")
+    public String psuIpAddress;
 }

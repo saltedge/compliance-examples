@@ -52,6 +52,13 @@ public class CreatePaymentRequest extends PrioraBaseRequest {
   public String providerCode;
 
   /**
+   * Ip Address of PSU.
+   */
+  @JsonProperty("psu_ip_address")
+  @NotEmpty
+  public String psuIpAddress;
+
+  /**
    * The addressed payment product.
    * Allowed values: sepa-credit-transfers, instant-sepa-credit-transfers, target-2-payments, faster-payment-service, internal-transfer
    */
@@ -82,13 +89,15 @@ public class CreatePaymentRequest extends PrioraBaseRequest {
     @NotEmpty String providerCode,
     @NotEmpty String returnToUrl,
     @NotNull @Valid PaymentOrder paymentOrder,
-    @NotEmpty String paymentProduct
+    @NotEmpty String paymentProduct,
+    @NotEmpty String psuIpAddress
   ) {
     this.appName = appName;
     this.providerCode = providerCode;
     this.paymentProduct = paymentProduct;
     this.paymentOrder = paymentOrder;
     this.returnToUrl = returnToUrl;
+    this.psuIpAddress = psuIpAddress;
   }
 
   public String getAppName() {
@@ -129,5 +138,13 @@ public class CreatePaymentRequest extends PrioraBaseRequest {
 
   public void setReturnToUrl(String returnToUrl) {
     this.returnToUrl = returnToUrl;
+  }
+
+  public String getPsuIpAddress() {
+    return psuIpAddress;
+  }
+
+  public void setPsuIpAddress(String psuIpAddress) {
+    this.psuIpAddress = psuIpAddress;
   }
 }

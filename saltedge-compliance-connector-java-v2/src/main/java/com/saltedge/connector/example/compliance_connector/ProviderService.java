@@ -78,7 +78,8 @@ public class ProviderService implements ProviderServiceAbs {
   @Override
   public String getAccountInformationAuthorizationPageUrl(
     String sessionSecret,
-    boolean userConsentIsRequired
+    boolean userConsentIsRequired,
+    String psuIpAddress
   ) {
     try {
       return getAuthorizationPageUrlWithQueryParam(
@@ -198,7 +199,8 @@ public class ProviderService implements ProviderServiceAbs {
     @NotEmpty String amount,
     @NotEmpty String currency,
     String description,
-    @NotNull String extraData
+    @NotNull String extraData,
+    @NotEmpty String psuIpAddress
   ) {
     Double amountValue = ConnectorServiceTools.getAmountValue(amount);
     if (amountValue == null) throw new BadRequest.InvalidAttributeValue("amount");
@@ -237,7 +239,8 @@ public class ProviderService implements ProviderServiceAbs {
     @NotEmpty String amount,
     @NotEmpty String currency,
     String description,
-    @NotNull String extraData
+    @NotNull String extraData,
+    @NotEmpty String psuIpAddress
   ) {
     Double amountValue = ConnectorServiceTools.getAmountValue(amount);
     if (amountValue == null) throw new BadRequest.InvalidAttributeValue("amount");
@@ -266,8 +269,8 @@ public class ProviderService implements ProviderServiceAbs {
   private String getPaymentAuthorizationPageUrl(String paymentId) {
     try {
       return getAuthorizationPageUrlWithQueryParam(
-        UserOAuthAuthController.PAYMENTS_BASE_PATH,
-        new AbstractMap.SimpleImmutableEntry<String, String>(SDKConstants.KEY_PAYMENT_ID, paymentId)
+          UserOAuthAuthController.PAYMENTS_BASE_PATH,
+          new AbstractMap.SimpleImmutableEntry<>(SDKConstants.KEY_PAYMENT_ID, paymentId)
       );
     } catch (Exception e) {
       log.error(e.getMessage(), e);
