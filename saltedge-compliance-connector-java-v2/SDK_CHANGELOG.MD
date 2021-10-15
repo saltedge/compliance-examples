@@ -1,5 +1,9 @@
 # Salt Edge Compliance Connector SDK Changelog
 
+## 2.8.0 (2021-10-17)
+### Add:
+- Add support of `psu_ip_address` header in AIS token creation and PIS initiation
+
 ## 2.7.0.2 (2021-08-31)
 ### Add:
 - Add execution priority order `0` for `ApiExceptionsHandler`
