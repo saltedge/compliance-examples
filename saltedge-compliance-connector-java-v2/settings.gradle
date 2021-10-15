@@ -1,2 +1,2 @@
 rootProject.name = 'saltedge-compliance-connector'
-include ':compliance-connector-sdk'
+include 'compliance-connector-sdk'

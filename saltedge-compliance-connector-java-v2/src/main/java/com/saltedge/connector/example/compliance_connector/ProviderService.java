@@ -116,34 +116,34 @@ public class ProviderService implements ProviderServiceAbs {
   }
 
   @Override
-  public List<Account> getAccountsOfUser(@NotEmpty String userId) {
+  public List<Account> getAccountsOfUser(String userId) {
     UserEntity user = findAndValidateUser(userId);
     return AccountsCollector.collectAccounts(accountsRepository, user);
   }
 
   @Override
   public TransactionsPage getTransactionsOfAccount(
-    @NotEmpty String userId,
-    @NotEmpty String accountId,
-    @NotNull LocalDate fromDate,
-    @NotNull LocalDate toDate,
-    String fromId
+      String userId,
+      String accountId,
+      LocalDate fromDate,
+      LocalDate toDate,
+      String fromId
   ) {
     UserEntity user = findAndValidateUser(userId);
     AccountEntity account = accountsRepository
-      .findFirstByIdAndUserId(Long.parseLong(accountId), user.id)
-      .orElseThrow((Supplier<RuntimeException>) NotFound.AccountNotFound::new);
+        .findFirstByIdAndUserId(Long.parseLong(accountId), user.id)
+        .orElseThrow((Supplier<RuntimeException>) NotFound.AccountNotFound::new);
     int fromIdValue = (StringUtils.isEmpty(fromId)) ? 0 : Integer.parseInt(fromId);
     Page<TransactionEntity> pagedResult = transactionsRepository.findByAccountIdAndMadeOnBetween(
-      account.id,
-      fromDate, toDate,
-      PageRequest.of(fromIdValue, PAGE_SIZE)
+        account.id,
+        fromDate, toDate,
+        PageRequest.of(fromIdValue, PAGE_SIZE)
     );
 
     if (pagedResult.hasContent()) {
       return new TransactionsPage(
-        ConnectorTypeConverters.convertTransactionsToTransactionsData(pagedResult.getContent()),
-        (pagedResult.hasNext()) ? String.valueOf(fromIdValue + 1) : null
+          ConnectorTypeConverters.convertTransactionsToTransactionsData(pagedResult.getContent()),
+          (pagedResult.hasNext()) ? String.valueOf(fromIdValue + 1) : null
       );
     } else {
       return new TransactionsPage(new ArrayList<>(), null);
@@ -151,17 +151,17 @@ public class ProviderService implements ProviderServiceAbs {
   }
 
   @Override
-  public List<CardAccount> getCardAccountsOfUser(@NotEmpty String userId) {
+  public List<CardAccount> getCardAccountsOfUser(String userId) {
     UserEntity user = findAndValidateUser(userId);
     return AccountsCollector.collectCardAccounts(cardAccountsRepository, user);
   }
 
   @Override
   public CardTransactionsPage getTransactionsOfCardAccount(
-    @NotEmpty String userId,
-    @NotEmpty String accountId,
-    @NotNull LocalDate fromDate,
-    @NotNull LocalDate toDate,
+    String userId,
+    String accountId,
+    LocalDate fromDate,
+    LocalDate toDate,
     String fromId
   ) {
     UserEntity user = findAndValidateUser(userId);
@@ -188,19 +188,19 @@ public class ProviderService implements ProviderServiceAbs {
 
   @Override
   public String createPayment(
-    @NotEmpty String paymentProduct,
-    @NotEmpty String creditorIban,
+    String paymentProduct,
+    String creditorIban,
     String creditorBic,
-    @NotEmpty String creditorName,
+    String creditorName,
     ParticipantAddress creditorAddress,
     String creditorAgentName,
     String debtorIban,
     String debtorBic,
-    @NotEmpty String amount,
-    @NotEmpty String currency,
+    String amount,
+    String currency,
     String description,
-    @NotNull String extraData,
-    @NotEmpty String psuIpAddress
+    String extraData,
+    String psuIpAddress
   ) {
     Double amountValue = ConnectorServiceTools.getAmountValue(amount);
     if (amountValue == null) throw new BadRequest.InvalidAttributeValue("amount");
@@ -228,19 +228,19 @@ public class ProviderService implements ProviderServiceAbs {
 
   @Override
   public String createFPSPayment(
-    @NotEmpty String paymentProduct,
-    @NotEmpty String creditorBban,
-    @NotEmpty String creditorSortCode,
-    @NotEmpty String creditorName,
+    String paymentProduct,
+    String creditorBban,
+    String creditorSortCode,
+    String creditorName,
     ParticipantAddress creditorAddress,
     String creditorAgentName,
     String debtorBban,
     String debtorSortCode,
-    @NotEmpty String amount,
-    @NotEmpty String currency,
+    String amount,
+    String currency,
     String description,
-    @NotNull String extraData,
-    @NotEmpty String psuIpAddress
+    String extraData,
+    String psuIpAddress
   ) {
     Double amountValue = ConnectorServiceTools.getAmountValue(amount);
     if (amountValue == null) throw new BadRequest.InvalidAttributeValue("amount");
@@ -278,15 +278,15 @@ public class ProviderService implements ProviderServiceAbs {
     }
   }
 
-  private UserEntity findAndValidateUser(@NotNull String userId) {
+  private UserEntity findAndValidateUser(String userId) {
     return usersRepository.findById(Long.valueOf(userId))
       .orElseThrow((Supplier<RuntimeException>) NotFound.UserNotFound::new);
   }
 
   @SafeVarargs
   private final String getAuthorizationPageUrlWithQueryParam(
-    @NotEmpty String path,
-    @NotNull AbstractMap.SimpleImmutableEntry<String, String>... params
+    String path,
+    AbstractMap.SimpleImmutableEntry<String, String>... params
   ) {
     String urlString = env.getProperty("app.url");
     if (urlString == null) return null;
