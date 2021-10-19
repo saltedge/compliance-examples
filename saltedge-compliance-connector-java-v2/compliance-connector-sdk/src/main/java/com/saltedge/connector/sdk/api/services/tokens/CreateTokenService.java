@@ -48,7 +48,7 @@ import java.time.temporal.ChronoUnit;
 @Service
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class CreateTokenService extends TokensBaseService {
-    private static Logger log = LoggerFactory.getLogger(CreateTokenService.class);
+    private static final Logger log = LoggerFactory.getLogger(CreateTokenService.class);
 
     @Async
     public void startAuthorization(CreateTokenRequest params) {
@@ -62,7 +62,7 @@ public class CreateTokenService extends TokensBaseService {
                 }
 
                 if (AuthMode.OAUTH == type.mode) {
-                    oAuthAuthorize(token);
+                    oAuthAuthorize(token, params.psuIpAddress);
                 } else {
                     throw new BadRequest.InvalidAuthorizationType();//TODO remove when embedded type will be supported by Salt Edge PSD2 Compliance
 //                    embeddedAuthorize(...);
@@ -75,12 +75,13 @@ public class CreateTokenService extends TokensBaseService {
         }
     }
 
-    private void oAuthAuthorize(Token token) {
+    private void oAuthAuthorize(Token token, String psuIpAddress) {
         tokensRepository.save(token);
         SessionUpdateCallbackRequest params = new SessionUpdateCallbackRequest(
                 providerService.getAccountInformationAuthorizationPageUrl(
-                        token.sessionSecret,
-                        token.notGlobalConsent()
+                    token.sessionSecret,
+                    token.notGlobalConsent(),
+                    psuIpAddress
                 ),
                 SDKConstants.STATUS_REDIRECT
         );
@@ -89,8 +90,8 @@ public class CreateTokenService extends TokensBaseService {
 
     private Token createToken(AuthorizationType authType, CreateTokenRequest request) {
         LocalDate validUntil = request.validUntil;
-        if (validUntil == null) validUntil = LocalDate.now().plus(SDKConstants.CONSENT_MAX_PERIOD, ChronoUnit.DAYS);
-        Instant tokenExpiresAt = validUntil.atStartOfDay().toInstant(ZoneOffset.UTC).plus(1, ChronoUnit.DAYS);
+//        if (validUntil == null) validUntil = LocalDate.now().plus(SDKConstants.CONSENT_MAX_PERIOD, ChronoUnit.DAYS);
+        Instant tokenExpiresAt = validUntil.atStartOfDay().toInstant(ZoneOffset.UTC).plus(1, ChronoUnit.DAYS).minusMillis(1);
         return new Token(
                 request.sessionSecret,
                 request.tppAppName,

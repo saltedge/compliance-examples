@@ -51,7 +51,7 @@ import javax.validation.constraints.NotNull;
 @Validated
 public class AccountsV2Controller extends BaseV2Controller {
     public final static String BASE_PATH = SDKConstants.API_BASE_PATH + "/accounts";
-    private static Logger log = LoggerFactory.getLogger(AccountsV2Controller.class);
+    private static final Logger log = LoggerFactory.getLogger(AccountsV2Controller.class);
 
     /**
      * Fetch list of accounts belonging to a Customer (User) and all relevant information about them being Berlin Group compatible.

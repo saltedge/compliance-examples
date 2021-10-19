@@ -69,33 +69,35 @@ public class PaymentsService extends BaseService {
       String paymentAuthenticationUrl;
       if (paymentRequest.getPaymentProduct().equals(PAYMENT_PRODUCT_FASTER_PAYMENT_SERVICE)) {
         paymentAuthenticationUrl = providerService.createFPSPayment(
-          paymentRequest.getPaymentProduct(),
-          order.getCreditorAccount().getBban(),
-          order.getCreditorAccount().getSortCode(),
-          order.getCreditorName(),
-          order.getCreditorAddress(),
-          order.getCreditorAgentName(),
-          optDebtorAccount.map(Account::getBban).orElse(null),
-          optDebtorAccount.map(Account::getSortCode).orElse(null),
-          order.getInstructedAmount().getAmount(),
-          order.getInstructedAmount().getCurrency(),
-          order.getRemittanceInformationUnstructured(),
-          extraData
+            paymentRequest.getPaymentProduct(),
+            order.getCreditorAccount().getBban(),
+            order.getCreditorAccount().getSortCode(),
+            order.getCreditorName(),
+            order.getCreditorAddress(),
+            order.getCreditorAgentName(),
+            optDebtorAccount.map(Account::getBban).orElse(null),
+            optDebtorAccount.map(Account::getSortCode).orElse(null),
+            order.getInstructedAmount().getAmount(),
+            order.getInstructedAmount().getCurrency(),
+            order.getRemittanceInformationUnstructured(),
+            extraData,
+            paymentRequest.psuIpAddress
         );
       } else {
         paymentAuthenticationUrl = providerService.createPayment(
-          paymentRequest.getPaymentProduct(),
-          order.getCreditorAccount().getIban(),
-          order.getCreditorAccount().getBic(),
-          order.getCreditorName(),
-          order.getCreditorAddress(),
-          order.getCreditorAgentName(),
-          optDebtorAccount.map(Account::getIban).orElse(null),
-          optDebtorAccount.map(Account::getBic).orElse(null),
-          order.getInstructedAmount().getAmount(),
-          order.getInstructedAmount().getCurrency(),
-          order.getRemittanceInformationUnstructured(),
-          extraData
+            paymentRequest.getPaymentProduct(),
+            order.getCreditorAccount().getIban(),
+            order.getCreditorAccount().getBic(),
+            order.getCreditorName(),
+            order.getCreditorAddress(),
+            order.getCreditorAgentName(),
+            optDebtorAccount.map(Account::getIban).orElse(null),
+            optDebtorAccount.map(Account::getBic).orElse(null),
+            order.getInstructedAmount().getAmount(),
+            order.getInstructedAmount().getCurrency(),
+            order.getRemittanceInformationUnstructured(),
+            extraData,
+            paymentRequest.psuIpAddress
         );
       }
 

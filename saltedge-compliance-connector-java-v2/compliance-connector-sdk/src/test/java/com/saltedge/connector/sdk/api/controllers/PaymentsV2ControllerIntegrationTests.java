@@ -51,6 +51,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class PaymentsV2ControllerIntegrationTests extends ControllerIntegrationTests {
 
+  private final String psuIpAddress = "192.168.0.1";
+
   @Before
   public void setUp() {
     seedTokensRepository();
@@ -78,7 +80,8 @@ public class PaymentsV2ControllerIntegrationTests extends ControllerIntegrationT
         "endToEndIdentification",
         "remittanceInformationUnstructured"
       ),
-      "sepa-credit-transfers"
+      "sepa-credit-transfers",
+        psuIpAddress
     );
     request.sessionSecret = "sessionSecret";
     String auth = TestTools.createAuthorizationHeaderValue(request, TestTools.getInstance().getRsaPrivateKey());
@@ -118,7 +121,8 @@ public class PaymentsV2ControllerIntegrationTests extends ControllerIntegrationT
         "endToEndIdentification",
         null
       ),
-      "sepa-credit-transfers"
+      "sepa-credit-transfers",
+        psuIpAddress
     );
     request.sessionSecret = "sessionSecret";
     String auth = TestTools.createAuthorizationHeaderValue(request, TestTools.getInstance().getRsaPrivateKey());

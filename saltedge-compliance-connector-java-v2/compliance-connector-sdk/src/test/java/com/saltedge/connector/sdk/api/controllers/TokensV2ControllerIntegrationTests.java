@@ -40,6 +40,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.LinkedMultiValueMap;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -67,6 +68,9 @@ public class TokensV2ControllerIntegrationTests extends ControllerIntegrationTes
         request.authorizationType = "oAuth";
         request.redirectUrl = "url";
         request.requestedConsent = new ProviderConsents(ProviderConsents.GLOBAL_CONSENT_VALUE);
+        request.validUntil = LocalDate.now().plusDays(1);
+        request.recurringIndicator = true;
+
         String auth = TestTools.createAuthorizationHeaderValue(request, TestTools.getInstance().getRsaPrivateKey());
         LinkedMultiValueMap<String, String> headers = createHeaders();
         headers.add(SDKConstants.HEADER_AUTHORIZATION, auth);

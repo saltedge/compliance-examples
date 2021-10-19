@@ -24,6 +24,8 @@ import com.saltedge.connector.sdk.api.models.ProviderConsents;
 import com.saltedge.connector.sdk.api.models.ValidationTest;
 import org.junit.Test;
 
+import java.time.LocalDate;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class CreateTokenRequestTest extends ValidationTest {
@@ -50,6 +52,14 @@ public class CreateTokenRequestTest extends ValidationTest {
 		assertThat(validator.validate(model)).isNotEmpty();
 
 		model.providerCode = "providerCode";
+
+		assertThat(validator.validate(model)).isNotEmpty();
+
+		model.recurringIndicator = true;
+
+		assertThat(validator.validate(model)).isNotEmpty();
+
+		model.validUntil = LocalDate.MAX;
 
 		assertThat(validator.validate(model)).isNotEmpty();
 

@@ -33,51 +33,52 @@ import java.util.List;
 
 @Service
 public class TestProviderService implements ProviderServiceAbs {
-    @Override
-    public String getAccountInformationAuthorizationPageUrl(
-            String sessionSecret,
-            boolean userConsentIsRequired
-    ) {
-        return null;
-    }
+  @Override
+  public String getAccountInformationAuthorizationPageUrl(
+      String sessionSecret,
+      boolean userConsentIsRequired,
+      String psuIpAddress
+  ) {
+    return null;
+  }
 
-    @Override
-    public List<AuthorizationType> getAuthorizationTypes() {
-        return null;
-    }
+  @Override
+  public List<AuthorizationType> getAuthorizationTypes() {
+    return null;
+  }
 
-    @Override
-    public List<ExchangeRate> getExchangeRates() {
-        return null;
-    }
+  @Override
+  public List<ExchangeRate> getExchangeRates() {
+    return null;
+  }
 
-    @Override
-    public List<Account> getAccountsOfUser(@NotNull String userId) {
-        return null;
-    }
+  @Override
+  public List<Account> getAccountsOfUser(@NotNull String userId) {
+    return null;
+  }
 
-    @Override
-    public TransactionsPage getTransactionsOfAccount(String userId, String accountId, @NotNull LocalDate fromDate, @NotNull LocalDate toDate, String fromId) {
-        return null;
-    }
+  @Override
+  public TransactionsPage getTransactionsOfAccount(String userId, String accountId, @NotNull LocalDate fromDate, @NotNull LocalDate toDate, String fromId) {
+    return null;
+  }
 
-    @Override
-    public List<CardAccount> getCardAccountsOfUser(@NotEmpty String userId) {
-        return null;
-    }
+  @Override
+  public List<CardAccount> getCardAccountsOfUser(@NotEmpty String userId) {
+    return null;
+  }
 
-    @Override
-    public CardTransactionsPage getTransactionsOfCardAccount(@NotEmpty String userId, @NotEmpty String accountId, @NotNull LocalDate fromDate, @NotNull LocalDate toDate, String fromId) {
-        return null;
-    }
+  @Override
+  public CardTransactionsPage getTransactionsOfCardAccount(@NotEmpty String userId, @NotEmpty String accountId, @NotNull LocalDate fromDate, @NotNull LocalDate toDate, String fromId) {
+    return null;
+  }
 
-    @Override
-    public String createPayment(String paymentProduct, String creditorIban, String creditorBic, String creditorName, ParticipantAddress creditorAddress, String creditorAgentName, String debtorIban, String debtorBic, String amount, String currency, String description, @NotNull String extraData) {
-        return null;
-    }
+  @Override
+  public String createPayment(String paymentProduct, String creditorIban, String creditorBic, String creditorName, ParticipantAddress creditorAddress, String creditorAgentName, String debtorIban, String debtorBic, String amount, String currency, String description, @NotNull String extraData, @NotEmpty String psuIpAddress) {
+    return null;
+  }
 
-    @Override
-    public String createFPSPayment(String paymentProduct, String creditorBban, String creditorSortCode, String creditorName, ParticipantAddress creditorAddress, String creditorAgentName, String debtorBban, String debtorSortCode, String amount, String currency, String description, @NotNull String extraData) {
-        return null;
-    }
+  @Override
+  public String createFPSPayment(String paymentProduct, String creditorBban, String creditorSortCode, String creditorName, ParticipantAddress creditorAddress, String creditorAgentName, String debtorBban, String debtorSortCode, String amount, String currency, String description, @NotNull String extraData, @NotEmpty String psuIpAddress) {
+    return null;
+  }
 }
