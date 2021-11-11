@@ -145,10 +145,12 @@ public class UserConsentController extends UserBaseController {
     @RequestParam(name = "confirm", required = false) String confirmAction,
     @RequestParam(name = "deny", required = false) String denyAction
   ) {
+    log.error("onPaymentConfirmationSubmit");
     PaymentEntity payment = paymentsRepository.findById(paymentId).orElse(null);
     String returnToUrl;
     if (!StringUtils.isEmpty(confirmAction) && payment != null) {
       processAndClosePayment(payment, userId);
+      //TODO: update state and provide funds confirmation info
       returnToUrl = connectorCallbackService.onPaymentInitiationAuthorizationSuccess(
         userId.toString(),
         payment.extra,

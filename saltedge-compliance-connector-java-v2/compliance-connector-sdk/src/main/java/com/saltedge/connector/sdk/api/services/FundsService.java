@@ -39,6 +39,7 @@ public class FundsService extends BaseService {
     private static Logger log = LoggerFactory.getLogger(FundsService.class);
 
     public boolean confirmFunds(@NotNull Token token, @NotNull FundsConfirmationRequest request) {
+        log.error("confirmFunds");
         try {
             List<ExchangeRate> rates = providerService.getExchangeRates();
             Account account = providerService.getAccountsOfUser(token.userId).stream()
