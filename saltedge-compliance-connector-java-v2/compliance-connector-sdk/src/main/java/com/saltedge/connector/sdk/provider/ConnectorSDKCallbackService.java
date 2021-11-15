@@ -30,6 +30,7 @@ import com.saltedge.connector.sdk.api.services.tokens.CollectTokensService;
 import com.saltedge.connector.sdk.api.services.tokens.ConfirmTokenService;
 import com.saltedge.connector.sdk.api.services.tokens.RevokeTokenService;
 import com.saltedge.connector.sdk.callback.mapping.SessionSuccessCallbackRequest;
+import com.saltedge.connector.sdk.callback.mapping.SessionUpdateCallbackRequest;
 import com.saltedge.connector.sdk.callback.services.SessionsCallbackService;
 import com.saltedge.connector.sdk.callback.services.TokensCallbackService;
 import com.saltedge.connector.sdk.models.Token;
@@ -192,6 +193,17 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
     if (!StringUtils.isEmpty(sessionSecret)) sessionsCallbackService.sendSuccessCallback(sessionSecret, params);
 
     return paymentExtraMap.getOrDefault(SDKConstants.KEY_RETURN_TO_URL, "");
+  }
+
+  @Override
+  public boolean updatePaymentFundsInformation(Boolean fundsAvailable, String paymentExtra, String paymentProduct) {
+    Map<String, String> paymentExtraMap = parseExtra(paymentExtra);
+    String sessionSecret = paymentExtraMap.get(SDKConstants.KEY_SESSION_SECRET);
+    String status = getStatusOfPaymentProduct(paymentProduct);
+
+    SessionUpdateCallbackRequest updateParams = new SessionUpdateCallbackRequest(null, status, fundsAvailable);
+    sessionsCallbackService.sendUpdateCallback(sessionSecret, updateParams);
+    return fundsAvailable;
   }
 
   /**

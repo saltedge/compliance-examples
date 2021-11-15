@@ -83,7 +83,8 @@ public class CreateTokenService extends TokensBaseService {
                     token.notGlobalConsent(),
                     psuIpAddress
                 ),
-                SDKConstants.STATUS_RECEIVED
+                SDKConstants.STATUS_RECEIVED,
+                false
         );
         callbackService.sendUpdateCallback(token.sessionSecret, params);
     }

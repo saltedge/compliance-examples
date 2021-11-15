@@ -26,7 +26,6 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Interface for call back communication from Provider application to Connector SDK Module
@@ -135,4 +134,14 @@ public interface ConnectorCallbackAbs {
    * @return URL string for final redirection of Payment Authorization session
    */
   String onPaymentInitiationAuthorizationFail(@NotEmpty String paymentExtra);
+
+  /**
+   * Provider notify Connector Module about oAuth success authentication and user consent for payment
+   *
+   * @param fundsAvailable a value that indicates whether we have enough funds to make a payment
+   * @param paymentExtra Extra data of payment order, provided in `ProviderServiceAbs.createPayment(...)`
+   * @param paymentProduct Payment product code (Allowed values: sepa-credit-transfers, instant-sepa-credit-transfers, target-2-payments, faster-payment-service, internal-transfer)
+   * @return True if funds are available
+   */
+  boolean updatePaymentFundsInformation(Boolean fundsAvailable, String paymentExtra, String paymentProduct);
 }

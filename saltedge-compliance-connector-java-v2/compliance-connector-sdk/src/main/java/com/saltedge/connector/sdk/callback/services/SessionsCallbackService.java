@@ -38,25 +38,18 @@ import org.springframework.util.LinkedMultiValueMap;
 public class SessionsCallbackService extends CallbackRestClient {
     private static final Logger log = LoggerFactory.getLogger(SessionsCallbackService.class);
 
-    @Async
     public void sendUpdateCallback(String sessionSecret, BaseCallbackRequest params) {
-        log.error("sendUpdateCallback");
         String url = createCallbackRequestUrl(createSessionPath(sessionSecret) + "/update");
         sendSessionCallback(url, sessionSecret, params);
     }
 
-    @Async
     public void sendSuccessCallback(String sessionSecret, BaseCallbackRequest params) {
-        log.error("sendSuccessCallback");
-
         String url = createCallbackRequestUrl(createSessionPath(sessionSecret) + "/success");
         sendSessionCallback(url, sessionSecret, params);
     }
 
     @Async
     public void sendFailCallback(String sessionSecret, Exception exception) {
-        log.error("sendFailCallback");
-
         if (exception instanceof HttpErrorParams) {
             HttpErrorParams errorParams = (HttpErrorParams) exception;
             BaseFailRequest params = new BaseFailRequest(errorParams.getErrorClass(), errorParams.getErrorMessage());
@@ -69,8 +62,6 @@ public class SessionsCallbackService extends CallbackRestClient {
 
     @Async
     public void sendFailCallback(String sessionSecret, BaseFailRequest params) {
-        log.error("sendFailCallback2");
-
         String url = createCallbackRequestUrl(createSessionPath(sessionSecret) + "/fail");
         sendSessionCallback(url, sessionSecret, params);
     }
