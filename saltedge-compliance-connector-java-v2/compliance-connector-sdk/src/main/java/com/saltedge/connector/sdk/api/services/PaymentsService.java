@@ -55,7 +55,6 @@ public class PaymentsService extends BaseService {
 
   @Async
   public void createPayment(@NotNull CreatePaymentRequest paymentRequest) {
-    log.error("createPayment from logger");
     try {
       PaymentOrder order = paymentRequest.getPaymentOrder();
       String extraData = createExtraData(
@@ -85,7 +84,6 @@ public class PaymentsService extends BaseService {
             paymentRequest.psuIpAddress
         );
       } else {
-        log.error("createPayment paymentRequest.getPaymentProduct() else");
         paymentAuthenticationUrl = providerService.createPayment(
             paymentRequest.getPaymentProduct(),
             order.getCreditorAccount().getIban(),
@@ -106,7 +104,6 @@ public class PaymentsService extends BaseService {
       if (StringUtils.isEmpty(paymentAuthenticationUrl)) {
         callbackService.sendFailCallback(paymentRequest.sessionSecret, new NotFound.PaymentNotCreated());
       } else {
-        log.error("createPayment StringUtils.isEmpty(paymentAuthenticationUrl) else");
         SessionUpdateCallbackRequest params = new SessionUpdateCallbackRequest(
                 paymentAuthenticationUrl,
                 SDKConstants.STATUS_RECEIVED,
