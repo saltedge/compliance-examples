@@ -43,6 +43,11 @@ public class SessionUpdateCallbackRequest extends BaseCallbackRequest {
     public SessionUpdateCallbackRequest() {
     }
 
+    public SessionUpdateCallbackRequest(String redirectUrl, String status) {
+        this.redirectUrl = redirectUrl;
+        this.status = status;
+    }
+
     public SessionUpdateCallbackRequest(String redirectUrl, String status, Boolean fundsAvailable) {
         this.redirectUrl = redirectUrl;
         this.status = status;
