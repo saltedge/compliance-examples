@@ -188,7 +188,7 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
     Map<String, String> paymentExtraMap = parseExtra(paymentExtra);
 
     String sessionSecret = paymentExtraMap.get(SDKConstants.KEY_SESSION_SECRET);
-    String status = getStatusOfPaymentProduct(paymentProduct);
+    String status = getFinalStatusOfPaymentProduct(paymentProduct);
     SessionSuccessCallbackRequest params = new SessionSuccessCallbackRequest(userId, status);
     if (!StringUtils.isEmpty(sessionSecret)) sessionsCallbackService.sendSuccessCallback(sessionSecret, params);
 
@@ -199,7 +199,7 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
   public boolean updatePaymentFundsInformation(Boolean fundsAvailable, String paymentExtra, String paymentProduct) {
     Map<String, String> paymentExtraMap = parseExtra(paymentExtra);
     String sessionSecret = paymentExtraMap.get(SDKConstants.KEY_SESSION_SECRET);
-    String status = getStatusOfPaymentProduct(paymentProduct);
+    String status = getFinalStatusOfPaymentProduct(paymentProduct);
 
     SessionUpdateCallbackRequest updateParams = new SessionUpdateCallbackRequest(null, status, fundsAvailable);
     sessionsCallbackService.sendUpdateCallback(sessionSecret, updateParams);
@@ -226,7 +226,7 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
     return paymentExtraMap.getOrDefault(SDKConstants.KEY_RETURN_TO_URL, "");
   }
 
-  private String getStatusOfPaymentProduct(@NotEmpty String paymentProduct) {
+  private String getFinalStatusOfPaymentProduct(@NotEmpty String paymentProduct) {
     switch (paymentProduct) {
       case PAYMENT_PRODUCT_FASTER_PAYMENT_SERVICE:
         return "ACSC";

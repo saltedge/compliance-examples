@@ -107,7 +107,7 @@ public class PaymentsService extends BaseService {
         SessionUpdateCallbackRequest params = new SessionUpdateCallbackRequest(
                 paymentAuthenticationUrl,
                 SDKConstants.STATUS_RECEIVED,
-                false
+                null
         );
         callbackService.sendUpdateCallback(paymentRequest.sessionSecret, params);
       }

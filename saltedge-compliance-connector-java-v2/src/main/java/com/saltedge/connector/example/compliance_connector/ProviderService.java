@@ -211,11 +211,7 @@ public class ProviderService implements ProviderServiceAbs {
     paymentEntity.status = PaymentStatus.PENDING;
     paymentEntity.amount = amountValue;
     paymentEntity.currency = currency;
-    if (paymentEntity.description != null) {
-      paymentEntity.description = description;
-    } else {
-      paymentEntity.description = "";
-    }
+    paymentEntity.description = description == null ? "" : description;
     paymentEntity.extra = extraData;
     paymentEntity.accountId = debtorAccount.id;
     paymentEntity.toAccountName = creditorName;
@@ -255,11 +251,7 @@ public class ProviderService implements ProviderServiceAbs {
     paymentEntity.status = PaymentStatus.PENDING;
     paymentEntity.amount = amountValue;
     paymentEntity.currency = currency;
-    if (paymentEntity.description != null) {
-      paymentEntity.description = description;
-    } else {
-      paymentEntity.description = "";
-    }
+    paymentEntity.description = description == null ? "" : description;
     paymentEntity.extra = extraData;
     paymentEntity.accountId = debtorAccount.id;
     paymentEntity.toAccountName = creditorName;

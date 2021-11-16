@@ -38,12 +38,12 @@ public class SessionUpdateCallbackRequest extends BaseCallbackRequest {
     public Instant sessionExpiresAt;
 
     @JsonProperty("funds_available")
-    public boolean fundsAvailable;
+    public Boolean fundsAvailable;
 
     public SessionUpdateCallbackRequest() {
     }
 
-    public SessionUpdateCallbackRequest(String redirectUrl, String status, boolean fundsAvailable) {
+    public SessionUpdateCallbackRequest(String redirectUrl, String status, Boolean fundsAvailable) {
         this.redirectUrl = redirectUrl;
         this.status = status;
         this.fundsAvailable = fundsAvailable;

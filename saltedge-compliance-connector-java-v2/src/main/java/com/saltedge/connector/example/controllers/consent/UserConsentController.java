@@ -147,11 +147,12 @@ public class UserConsentController extends UserBaseController {
   ) {
     PaymentEntity payment = paymentsRepository.findById(paymentId).orElse(null);
     String returnToUrl;
+    AccountEntity account = null;
+    if (payment != null) {
+      account = accountsRepository.findById(payment.accountId).orElse(null);
+    }
     if (!StringUtils.isEmpty(confirmAction) && payment != null) {
-      AccountEntity account = accountsRepository.findById(payment.accountId).orElse(null);
-      boolean fundsAvailable;
-      fundsAvailable = payment.amount < Double.parseDouble(account.availableAmount);
-      connectorCallbackService.updatePaymentFundsInformation(fundsAvailable, payment.extra, payment.paymentProduct);
+      if (account != null) updatePaymentFundsInformation(payment, account.availableAmount);
       processAndClosePayment(payment, userId);
       returnToUrl = connectorCallbackService.onPaymentInitiationAuthorizationSuccess(
         userId.toString(),
@@ -164,6 +165,7 @@ public class UserConsentController extends UserBaseController {
         extra = payment.extra;
         payment.status = PaymentStatus.FAILED;
         paymentsRepository.save(payment);
+        if (account != null) updatePaymentFundsInformation(payment, account.availableAmount);
       }
       returnToUrl = connectorCallbackService.onPaymentInitiationAuthorizationFail(extra);
     }
@@ -173,6 +175,12 @@ public class UserConsentController extends UserBaseController {
     } else {
       return new ModelAndView("redirect:" + returnToUrl);
     }
+  }
+
+  private void updatePaymentFundsInformation(PaymentEntity payment, String availableAmount) {
+    boolean fundsAvailable;
+    fundsAvailable = payment.amount < Double.parseDouble(availableAmount);
+    connectorCallbackService.updatePaymentFundsInformation(fundsAvailable, payment.extra, payment.paymentProduct);
   }
 
   private void processAndClosePayment(PaymentEntity payment, Long userId) {

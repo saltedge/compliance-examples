@@ -84,7 +84,7 @@ public class CreateTokenService extends TokensBaseService {
                     psuIpAddress
                 ),
                 SDKConstants.STATUS_RECEIVED,
-                false
+                null
         );
         callbackService.sendUpdateCallback(token.sessionSecret, params);
     }

@@ -38,11 +38,13 @@ import org.springframework.util.LinkedMultiValueMap;
 public class SessionsCallbackService extends CallbackRestClient {
     private static final Logger log = LoggerFactory.getLogger(SessionsCallbackService.class);
 
+    @Async
     public void sendUpdateCallback(String sessionSecret, BaseCallbackRequest params) {
         String url = createCallbackRequestUrl(createSessionPath(sessionSecret) + "/update");
         sendSessionCallback(url, sessionSecret, params);
     }
 
+    @Async
     public void sendSuccessCallback(String sessionSecret, BaseCallbackRequest params) {
         String url = createCallbackRequestUrl(createSessionPath(sessionSecret) + "/success");
         sendSessionCallback(url, sessionSecret, params);
