@@ -196,12 +196,11 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
   }
 
   @Override
-  public boolean updatePaymentFundsInformation(Boolean fundsAvailable, String paymentExtra, String paymentProduct) {
+  public boolean updatePaymentFundsInformation(Boolean fundsAvailable, String paymentExtra, String status) {
     Map<String, String> paymentExtraMap = parseExtra(paymentExtra);
     String sessionSecret = paymentExtraMap.get(SDKConstants.KEY_SESSION_SECRET);
-    String status = getFinalStatusOfPaymentProduct(paymentProduct);
 
-    SessionUpdateCallbackRequest updateParams = new SessionUpdateCallbackRequest(null, status, fundsAvailable);
+    SessionUpdateCallbackRequest updateParams = new SessionUpdateCallbackRequest(status, fundsAvailable);
     sessionsCallbackService.sendUpdateCallback(sessionSecret, updateParams);
     return fundsAvailable;
   }

@@ -147,12 +147,16 @@ public class UserConsentController extends UserBaseController {
   ) {
     PaymentEntity payment = paymentsRepository.findById(paymentId).orElse(null);
     String returnToUrl;
-    AccountEntity account = null;
-    if (payment != null) {
-      account = accountsRepository.findById(payment.accountId).orElse(null);
-    }
     if (!StringUtils.isEmpty(confirmAction) && payment != null) {
-      if (account != null) updatePaymentFundsInformation(payment, account.availableAmount);
+      AccountEntity account = accountsRepository.findById(payment.accountId).orElse(null);
+      if (account != null) {
+          try {
+              double amount = Double.parseDouble(account.availableAmount);
+              updatePaymentFundsInformation(payment, amount);
+          } catch (NumberFormatException e) {
+              log.error(e.getMessage(), e);
+          }
+      }
       processAndClosePayment(payment, userId);
       returnToUrl = connectorCallbackService.onPaymentInitiationAuthorizationSuccess(
         userId.toString(),
@@ -165,7 +169,6 @@ public class UserConsentController extends UserBaseController {
         extra = payment.extra;
         payment.status = PaymentStatus.FAILED;
         paymentsRepository.save(payment);
-        if (account != null) updatePaymentFundsInformation(payment, account.availableAmount);
       }
       returnToUrl = connectorCallbackService.onPaymentInitiationAuthorizationFail(extra);
     }
@@ -177,10 +180,9 @@ public class UserConsentController extends UserBaseController {
     }
   }
 
-  private void updatePaymentFundsInformation(PaymentEntity payment, String availableAmount) {
-    boolean fundsAvailable;
-    fundsAvailable = payment.amount < Double.parseDouble(availableAmount);
-    connectorCallbackService.updatePaymentFundsInformation(fundsAvailable, payment.extra, payment.paymentProduct);
+  private void updatePaymentFundsInformation(PaymentEntity payment, Double amount) {
+      boolean fundsAvailable = payment.amount < amount;
+      connectorCallbackService.updatePaymentFundsInformation(fundsAvailable, payment.extra, "PDNG");
   }
 
   private void processAndClosePayment(PaymentEntity payment, Long userId) {
