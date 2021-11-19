@@ -28,6 +28,7 @@ import com.saltedge.connector.sdk.api.models.err.Unauthorized;
 import com.saltedge.connector.sdk.api.services.tokens.ConfirmTokenService;
 import com.saltedge.connector.sdk.api.services.tokens.RevokeTokenService;
 import com.saltedge.connector.sdk.callback.mapping.SessionSuccessCallbackRequest;
+import com.saltedge.connector.sdk.callback.mapping.SessionUpdateCallbackRequest;
 import com.saltedge.connector.sdk.callback.services.SessionsCallbackService;
 import com.saltedge.connector.sdk.callback.services.TokensCallbackService;
 import com.saltedge.connector.sdk.models.Token;
@@ -46,6 +47,8 @@ import java.util.HashMap;
 
 import static com.saltedge.connector.sdk.SDKConstants.KEY_DESCRIPTION;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
@@ -243,6 +246,31 @@ public class ConnectorCallbackServiceTests {
 		// then
 		assertThat(result).isFalse();
 		verifyNoMoreInteractions(tokensCallbackService);
+	}
+
+	@Test
+	public void updatePaymentFundsInformationTestCase1() throws JsonProcessingException {
+		// given
+		HashMap<String, String> extraData = new HashMap<>();
+		extraData.put(SDKConstants.KEY_SESSION_SECRET, "sessionSecret");
+		String extraJson = JsonTools.createDefaultMapper().writeValueAsString(extraData);
+
+		// when
+		boolean result = testService.updatePaymentFundsInformation(true, extraJson, "PDNG");
+
+		// then
+		assertTrue(result);
+		verify(sessionsCallbackService).sendUpdateCallback(eq("sessionSecret"), eq(new SessionUpdateCallbackRequest(true, "PDNG")));
+	}
+
+	@Test
+	public void updatePaymentFundsInformationTestCase2() {
+		// when
+		boolean result = testService.updatePaymentFundsInformation(false, "", "PDNG");
+
+		// then
+		assertFalse(result);
+		verify(sessionsCallbackService).sendUpdateCallback(eq(null), eq(new SessionUpdateCallbackRequest(false, "PDNG")));
 	}
 
 	@Test(expected = ConstraintViolationException.class)

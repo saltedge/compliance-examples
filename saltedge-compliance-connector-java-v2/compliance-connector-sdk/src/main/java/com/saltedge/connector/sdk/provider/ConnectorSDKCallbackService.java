@@ -200,7 +200,7 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
     Map<String, String> paymentExtraMap = parseExtra(paymentExtra);
     String sessionSecret = paymentExtraMap.get(SDKConstants.KEY_SESSION_SECRET);
 
-    SessionUpdateCallbackRequest updateParams = new SessionUpdateCallbackRequest(status, fundsAvailable);
+    SessionUpdateCallbackRequest updateParams = new SessionUpdateCallbackRequest(fundsAvailable, status);
     sessionsCallbackService.sendUpdateCallback(sessionSecret, updateParams);
     return fundsAvailable;
   }

@@ -1,5 +1,12 @@
 # Salt Edge Compliance Connector SDK Changelog
 
+## 2.9.0 (2021-11-19)
+### Add:
+- Add `funds_available` in session update callback
+
+### Change:
+- Add check for payment description on nullability, update the parameters for the session update request
+
 ## 2.8.0 (2021-10-17)
 ### Add:
 - Add support of `psu_ip_address` header in AIS token creation and PIS initiation

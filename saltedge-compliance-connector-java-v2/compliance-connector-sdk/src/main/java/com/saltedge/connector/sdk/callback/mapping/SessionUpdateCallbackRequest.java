@@ -48,8 +48,8 @@ public class SessionUpdateCallbackRequest extends BaseCallbackRequest {
         this.status = status;
     }
 
-    public SessionUpdateCallbackRequest(String status, Boolean fundsAvailable) {
-        this.status = status;
+    public SessionUpdateCallbackRequest(Boolean fundsAvailable, String status) {
         this.fundsAvailable = fundsAvailable;
+        this.status = status;
     }
 }
