@@ -279,7 +279,6 @@ public class ConnectorCallbackServiceTests {
 	public void updatePaymentFundsInformationTestCase3() throws JsonProcessingException {
 		// given
 		HashMap<String, String> extraData = new HashMap<>();
-		extraData.put(SDKConstants.KEY_SESSION_SECRET, null);
 		String extraJson = JsonTools.createDefaultMapper().writeValueAsString(extraData);
 
 		// when
