@@ -47,8 +47,7 @@ import java.util.HashMap;
 
 import static com.saltedge.connector.sdk.SDKConstants.KEY_DESCRIPTION;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
@@ -256,21 +255,39 @@ public class ConnectorCallbackServiceTests {
 		String extraJson = JsonTools.createDefaultMapper().writeValueAsString(extraData);
 
 		// when
-		boolean result = testService.updatePaymentFundsInformation(true, extraJson, "PDNG");
+		testService.updatePaymentFundsInformation(true, extraJson, "PDNG");
 
 		// then
-		assertTrue(result);
 		verify(sessionsCallbackService).sendUpdateCallback(eq("sessionSecret"), eq(new SessionUpdateCallbackRequest(true, "PDNG")));
 	}
 
 	@Test
-	public void updatePaymentFundsInformationTestCase2() {
+	public void updatePaymentFundsInformationTestCase2() throws JsonProcessingException {
+		// given
+		HashMap<String, String> extraData = new HashMap<>();
+		extraData.put(SDKConstants.KEY_SESSION_SECRET, "sessionSecret");
+		String extraJson = JsonTools.createDefaultMapper().writeValueAsString(extraData);
+
 		// when
-		boolean result = testService.updatePaymentFundsInformation(false, "", "PDNG");
+		testService.updatePaymentFundsInformation(false, extraJson, "PDNG");
 
 		// then
-		assertFalse(result);
-		verify(sessionsCallbackService).sendUpdateCallback(eq(null), eq(new SessionUpdateCallbackRequest(false, "PDNG")));
+		verify(sessionsCallbackService).sendUpdateCallback(eq("sessionSecret"), eq(new SessionUpdateCallbackRequest(false, "PDNG")));
+	}
+
+	@Test
+	public void updatePaymentFundsInformationTestCase3() throws JsonProcessingException {
+		// given
+		HashMap<String, String> extraData = new HashMap<>();
+		extraData.put(SDKConstants.KEY_SESSION_SECRET, null);
+		String extraJson = JsonTools.createDefaultMapper().writeValueAsString(extraData);
+
+		// when
+		testService.updatePaymentFundsInformation(false, extraJson, "PDNG");
+
+		// then
+		verify(sessionsCallbackService).createRestTemplate();
+		verifyNoMoreInteractions(sessionsCallbackService);
 	}
 
 	@Test(expected = ConstraintViolationException.class)

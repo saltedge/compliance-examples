@@ -5,7 +5,7 @@
 - Add `funds_available` in session update callback
 
 ### Change:
-- Add check for payment description on nullability, update the parameters for the session update request
+- Update the parameters for the session update request
 
 ## 2.8.0 (2021-10-17)
 ### Add:

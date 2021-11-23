@@ -141,7 +141,6 @@ public interface ConnectorCallbackAbs {
    * @param fundsAvailable a value that indicates whether we have enough funds to make a payment
    * @param paymentExtra Extra data of payment order, provided in `ProviderServiceAbs.createPayment(...)`
    * @param status intermediate status
-   * @return True if funds are available
    */
-  boolean updatePaymentFundsInformation(Boolean fundsAvailable, String paymentExtra, String status);
+  void updatePaymentFundsInformation(Boolean fundsAvailable, String paymentExtra, String status);
 }
