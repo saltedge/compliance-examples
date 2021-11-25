@@ -148,6 +148,15 @@ public class UserConsentController extends UserBaseController {
     PaymentEntity payment = paymentsRepository.findById(paymentId).orElse(null);
     String returnToUrl;
     if (!StringUtils.isEmpty(confirmAction) && payment != null) {
+      AccountEntity account = accountsRepository.findById(payment.accountId).orElse(null);
+      if (account != null) {
+          try {
+              double amount = Double.parseDouble(account.availableAmount);
+              updatePaymentFundsInformation(payment, amount);
+          } catch (NumberFormatException e) {
+              log.error(e.getMessage(), e);
+          }
+      }
       processAndClosePayment(payment, userId);
       returnToUrl = connectorCallbackService.onPaymentInitiationAuthorizationSuccess(
         userId.toString(),
@@ -169,6 +178,11 @@ public class UserConsentController extends UserBaseController {
     } else {
       return new ModelAndView("redirect:" + returnToUrl);
     }
+  }
+
+  private void updatePaymentFundsInformation(PaymentEntity payment, Double amount) {
+      boolean fundsAvailable = payment.amount < amount;
+      connectorCallbackService.updatePaymentFundsInformation(fundsAvailable, payment.extra, "PDNG");
   }
 
   private void processAndClosePayment(PaymentEntity payment, Long userId) {

@@ -28,6 +28,7 @@ import com.saltedge.connector.sdk.api.models.err.Unauthorized;
 import com.saltedge.connector.sdk.api.services.tokens.ConfirmTokenService;
 import com.saltedge.connector.sdk.api.services.tokens.RevokeTokenService;
 import com.saltedge.connector.sdk.callback.mapping.SessionSuccessCallbackRequest;
+import com.saltedge.connector.sdk.callback.mapping.SessionUpdateCallbackRequest;
 import com.saltedge.connector.sdk.callback.services.SessionsCallbackService;
 import com.saltedge.connector.sdk.callback.services.TokensCallbackService;
 import com.saltedge.connector.sdk.models.Token;
@@ -46,6 +47,7 @@ import java.util.HashMap;
 
 import static com.saltedge.connector.sdk.SDKConstants.KEY_DESCRIPTION;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
@@ -243,6 +245,48 @@ public class ConnectorCallbackServiceTests {
 		// then
 		assertThat(result).isFalse();
 		verifyNoMoreInteractions(tokensCallbackService);
+	}
+
+	@Test
+	public void updatePaymentFundsInformationTestCase1() throws JsonProcessingException {
+		// given
+		HashMap<String, String> extraData = new HashMap<>();
+		extraData.put(SDKConstants.KEY_SESSION_SECRET, "sessionSecret");
+		String extraJson = JsonTools.createDefaultMapper().writeValueAsString(extraData);
+
+		// when
+		testService.updatePaymentFundsInformation(true, extraJson, "PDNG");
+
+		// then
+		verify(sessionsCallbackService).sendUpdateCallback(eq("sessionSecret"), eq(new SessionUpdateCallbackRequest(true, "PDNG")));
+	}
+
+	@Test
+	public void updatePaymentFundsInformationTestCase2() throws JsonProcessingException {
+		// given
+		HashMap<String, String> extraData = new HashMap<>();
+		extraData.put(SDKConstants.KEY_SESSION_SECRET, "sessionSecret");
+		String extraJson = JsonTools.createDefaultMapper().writeValueAsString(extraData);
+
+		// when
+		testService.updatePaymentFundsInformation(false, extraJson, "PDNG");
+
+		// then
+		verify(sessionsCallbackService).sendUpdateCallback(eq("sessionSecret"), eq(new SessionUpdateCallbackRequest(false, "PDNG")));
+	}
+
+	@Test
+	public void updatePaymentFundsInformationTestCase3() throws JsonProcessingException {
+		// given
+		HashMap<String, String> extraData = new HashMap<>();
+		String extraJson = JsonTools.createDefaultMapper().writeValueAsString(extraData);
+
+		// when
+		testService.updatePaymentFundsInformation(false, extraJson, "PDNG");
+
+		// then
+		verify(sessionsCallbackService).createRestTemplate();
+		verifyNoMoreInteractions(sessionsCallbackService);
 	}
 
 	@Test(expected = ConstraintViolationException.class)

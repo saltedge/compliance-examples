@@ -30,6 +30,7 @@ import com.saltedge.connector.sdk.api.services.tokens.CollectTokensService;
 import com.saltedge.connector.sdk.api.services.tokens.ConfirmTokenService;
 import com.saltedge.connector.sdk.api.services.tokens.RevokeTokenService;
 import com.saltedge.connector.sdk.callback.mapping.SessionSuccessCallbackRequest;
+import com.saltedge.connector.sdk.callback.mapping.SessionUpdateCallbackRequest;
 import com.saltedge.connector.sdk.callback.services.SessionsCallbackService;
 import com.saltedge.connector.sdk.callback.services.TokensCallbackService;
 import com.saltedge.connector.sdk.models.Token;
@@ -187,11 +188,20 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
     Map<String, String> paymentExtraMap = parseExtra(paymentExtra);
 
     String sessionSecret = paymentExtraMap.get(SDKConstants.KEY_SESSION_SECRET);
-    String status = getStatusOfPaymentProduct(paymentProduct);
+    String status = getFinalStatusOfPaymentProduct(paymentProduct);
     SessionSuccessCallbackRequest params = new SessionSuccessCallbackRequest(userId, status);
     if (!StringUtils.isEmpty(sessionSecret)) sessionsCallbackService.sendSuccessCallback(sessionSecret, params);
 
     return paymentExtraMap.getOrDefault(SDKConstants.KEY_RETURN_TO_URL, "");
+  }
+
+  @Override
+  public void updatePaymentFundsInformation(Boolean fundsAvailable, String paymentExtra, String status) {
+    Map<String, String> paymentExtraMap = parseExtra(paymentExtra);
+    String sessionSecret = paymentExtraMap.get(SDKConstants.KEY_SESSION_SECRET);
+
+    SessionUpdateCallbackRequest updateParams = new SessionUpdateCallbackRequest(fundsAvailable, status);
+    if (!StringUtils.isEmpty(sessionSecret))  sessionsCallbackService.sendUpdateCallback(sessionSecret, updateParams);
   }
 
   /**
@@ -214,7 +224,7 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
     return paymentExtraMap.getOrDefault(SDKConstants.KEY_RETURN_TO_URL, "");
   }
 
-  private String getStatusOfPaymentProduct(@NotEmpty String paymentProduct) {
+  private String getFinalStatusOfPaymentProduct(@NotEmpty String paymentProduct) {
     switch (paymentProduct) {
       case PAYMENT_PRODUCT_FASTER_PAYMENT_SERVICE:
         return "ACSC";

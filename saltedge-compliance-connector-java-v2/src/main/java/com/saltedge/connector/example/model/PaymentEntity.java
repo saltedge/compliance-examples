@@ -111,4 +111,31 @@ public class PaymentEntity extends BaseEntity implements Serializable {
   public boolean isFps() {
     return PAYMENT_PRODUCT_FASTER_PAYMENT_SERVICE.equals(paymentProduct);
   }
+
+  @Override
+  public String toString() {
+    return "PaymentEntity{" +
+            "description='" + description + '\'' +
+            ", status=" + status +
+            ", amount=" + amount +
+            ", total=" + total +
+            ", currency='" + currency + '\'' +
+            ", accountId=" + accountId +
+            ", fees=" + fees +
+            ", paymentAttributes=" + paymentAttributes +
+            ", extra='" + extra + '\'' +
+            ", confirmationCode='" + confirmationCode + '\'' +
+            ", fromIban='" + fromIban + '\'' +
+            ", fromBic='" + fromBic + '\'' +
+            ", fromBban='" + fromBban + '\'' +
+            ", fromSortCode='" + fromSortCode + '\'' +
+            ", toIban='" + toIban + '\'' +
+            ", toBic='" + toBic + '\'' +
+            ", toBban='" + toBban + '\'' +
+            ", toSortCode='" + toSortCode + '\'' +
+            ", toAccountName='" + toAccountName + '\'' +
+            ", paymentProduct='" + paymentProduct + '\'' +
+            ", user=" + user +
+            '}';
+  }
 }
