@@ -92,7 +92,11 @@ See interface [ConnectorCallbackAbs.java](src/main/java/com/saltedge/connector/s
 
 * `onAccountInformationAuthorizationFail(sessionSecret)`- notify SDK about the failed authorization:  
   * `sessionSecret` unique authorization secret code passed to application via `getAccountInformationAuthorizationPageUrl(...)`;
-      
+
+* `updatePaymentFundsInformation(fundsAvailable, extra, status)`- notify SDK about funds availability and intermediate payment status:
+  * `fundsAvailable` **[optional]** a value that indicates whether user have enough funds to make a payment;
+  * `extra` extra data from authenticated Payment passed to application via `getPaymentAuthorizationPageUrl(...)`;
+  * `status` **[optional]** an intermediate payment status;
 * `onPaymentInitiationAuthorizationSuccess(paymentId, userId, extra)` - notify SDK about the successful authorization if User for AIS flow:
   * `userId` unique identifier of Provider's system User (Customer);  
   * `extra` extra data from authenticated Payment passed to application via `getPaymentAuthorizationPageUrl(...)`;  
