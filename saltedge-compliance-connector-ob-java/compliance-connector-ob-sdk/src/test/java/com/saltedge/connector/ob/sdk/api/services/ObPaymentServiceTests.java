@@ -29,6 +29,7 @@ import com.saltedge.connector.ob.sdk.provider.ProviderServiceAbs;
 import com.saltedge.connector.ob.sdk.provider.dto.account.ObAccountIdentifier;
 import com.saltedge.connector.ob.sdk.provider.dto.account.ObAmount;
 import com.saltedge.connector.ob.sdk.provider.dto.payment.ObPaymentInitiationData;
+import com.saltedge.connector.ob.sdk.provider.dto.payment.ObRiskData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -59,6 +60,7 @@ public class ObPaymentServiceTests {
 		initialConsent.authCode = "authCode";
 		initialConsent.accessToken = "accessToken";
 		initialConsent.userId = "userId";
+		initialConsent.risk = new ObRiskData("BillPayment");
 		given(mockConsentsRepository.findFirstByConsentId("consentId1")).willReturn(initialConsent);
 
 		Consent pisConsent = new Consent("tppName", "consentId2", "AwaitingAuthorization");
@@ -80,19 +82,23 @@ public class ObPaymentServiceTests {
 		paymentData.instructedAmount = new ObAmount("1.0", "GBP");
 		paymentData.creditorAccount = new ObAccountIdentifier("scheme", "identifier");
 
+		ObRiskData risk = new ObRiskData("BillPayment");
+
 		PaymentCreateRequest request = new PaymentCreateRequest();
 		request.tppAppName = "tppAppName";
 		request.consentId = "consentId1";
+		request.paymentType = "domestic_payment";
 		request.compliancePaymentId = "compliancePaymentId";
 		request.paymentInitiation = paymentData;
 
-		given(mockProviderServiceAbs.initiatePayment("userId", paymentData)).willReturn("paymentId");
+		given(mockProviderServiceAbs.initiatePayment("userId", "domestic_payment", paymentData, risk))
+				.willReturn("paymentId");
 
 		//when
 		testService.initiatePayment("consentId1", request);
 
 		//then
-		Mockito.verify(mockProviderServiceAbs).initiatePayment("userId", paymentData);
+		Mockito.verify(mockProviderServiceAbs).initiatePayment("userId", "domestic_payment", paymentData, risk);
 
 		final ArgumentCaptor<Consent> captor = ArgumentCaptor.forClass(Consent.class);
 		Mockito.verify(mockConsentsRepository).save(captor.capture());

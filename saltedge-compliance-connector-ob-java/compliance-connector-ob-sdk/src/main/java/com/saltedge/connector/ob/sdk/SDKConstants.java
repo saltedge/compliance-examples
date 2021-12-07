@@ -66,6 +66,7 @@ public class SDKConstants {
     public final static String KEY_PAYMENT_ID = "payment_id";
     public final static String KEY_END_TO_END_IDENTIFICATION = "end_to_end_identification";
     public final static String KEY_ACCESS = "access";
+    public final static String KEY_INITIATION = "initiation";
 
     public final static String PAYMENT_PRODUCT_FASTER_PAYMENT_SERVICE = "faster-payment-service";
     public final static String PAYMENT_PRODUCT_INSTANT_SEPA_CREDIT_TRANSFERS = "instant-sepa-credit-transfers";

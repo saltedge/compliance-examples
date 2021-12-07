@@ -28,6 +28,7 @@ import com.saltedge.connector.ob.sdk.model.jpa.ConsentsRepository;
 import com.saltedge.connector.ob.sdk.provider.dto.account.ObAccountIdentifier;
 import com.saltedge.connector.ob.sdk.provider.dto.account.ObAmount;
 import com.saltedge.connector.ob.sdk.provider.dto.payment.ObPaymentInitiationData;
+import com.saltedge.connector.ob.sdk.provider.dto.payment.ObRiskData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,12 +78,22 @@ public class ObConsentsCreateServiceTests {
 		request.tppAppName = "tppAppName";
 		request.consentId = "1";
 		request.paymentInitiation = paymentData;
+		request.risk = new ObRiskData("BillPayment");
+		request.status = "AwaitingAuthorisation";
+		request.paymentType = "domestic_payment";
 
 		// when
 		testService.createPisConsent(request);
 
 		// then
-		Consent testConsent = Consent.createPisConsent("tppAppName", "1", "AwaitingAuthorisation", paymentData);
+		Consent testConsent = Consent.createPisConsent(
+				"tppAppName",
+				"1",
+				"AwaitingAuthorisation",
+				"domestic_payment",
+				paymentData,
+				new ObRiskData("BillPayment")
+		);
 		verify(mockConsentsRepository).save(testConsent);
 	}
 

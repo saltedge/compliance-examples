@@ -60,7 +60,7 @@ public class AccountsConsentsCreateRequest extends CreateBaseRequest {
      * ReadStatementsDetail,
      * ReadDirectDebits
      */
-    @NotNull
+    @NotEmpty
     @JsonProperty("permissions")
     public List<String> permissions;
 

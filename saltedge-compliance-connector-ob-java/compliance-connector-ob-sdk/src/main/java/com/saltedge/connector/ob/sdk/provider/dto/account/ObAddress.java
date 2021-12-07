@@ -25,11 +25,17 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * Creditor/Debtor address.
+ * Information that locates and identifies a specific address, as defined by postal services or in free format text.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties
 public class ObAddress {
+
+  /**
+   * Information that locates and identifies a specific address, as defined by postal services, presented in free format text.
+   */
+  @JsonProperty("address_line")
+  public String addressLine;
 
   /**
    * Identifies the nature of the postal address.
@@ -85,10 +91,4 @@ public class ObAddress {
    */
   @JsonProperty("country")
   public String country;
-
-  /**
-   * Information that locates and identifies a specific address, as defined by postal services, presented in free format text.
-   */
-  @JsonProperty("address_line")
-  public String addressLine;
 }

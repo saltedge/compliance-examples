@@ -20,11 +20,12 @@
  */
 package com.saltedge.connector.ob.sdk.provider.dto.payment;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import javax.validation.constraints.NotEmpty;
+import java.time.Instant;
 
 /**
  * Type of authorisation flow requested.
@@ -41,6 +42,7 @@ public class ObAuthorizationType {
   /**
    * Date and time at which the requested authorisation flow must be completed.
    */
+  @JsonFormat(shape = JsonFormat.Shape.STRING)
   @JsonProperty("completion_date_time")
-  public String completionDateTime;
+  public Instant completionDateTime;
 }

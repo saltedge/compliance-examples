@@ -38,6 +38,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Collections;
+import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -59,7 +60,7 @@ public class ObAccountsConsentsIntegrationTests extends ControllerIntegrationTes
         request.tppAppName = "name";
         request.providerCode = "code";
         request.consentId = "123";
-        request.permissions = Collections.emptyList();
+        request.permissions = List.of("ReadAccountsBasic");
 
         String auth = TestTools.createAuthorizationHeaderValue(request, TestTools.getInstance().getRsaPrivateKey());
         LinkedMultiValueMap<String, String> headers = createHeaders();

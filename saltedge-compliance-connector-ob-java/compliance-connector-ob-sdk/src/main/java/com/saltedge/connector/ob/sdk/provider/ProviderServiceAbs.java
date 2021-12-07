@@ -22,6 +22,7 @@ package com.saltedge.connector.ob.sdk.provider;
 
 import com.saltedge.connector.ob.sdk.provider.dto.account.*;
 import com.saltedge.connector.ob.sdk.provider.dto.payment.ObPaymentInitiationData;
+import com.saltedge.connector.ob.sdk.provider.dto.payment.ObRiskData;
 import org.jetbrains.annotations.NotNull;
 
 import javax.validation.constraints.NotEmpty;
@@ -70,13 +71,18 @@ public interface ProviderServiceAbs {
   boolean confirmFunds(@NotEmpty String userId, @NotNull ObAccountIdentifier debtorAccount, @NotNull ObAmount amount);
 
   /**
-   * Initiate a Domestic payment order.
+   * Initiate a payment order, Domestic or International.
    * Serves payment endpoint (https://priora.saltedge.com/docs/aspsp/v2/pis#pis-connector_endpoints-payments)
    *
    * @param userId User identifier on Provider side
-   * @param params payment initiation data
+   * @param paymentInitiation payment initiation data
    *
    * @return payment unique identifier.
    */
-  String initiatePayment(@NotEmpty String userId, @NotNull ObPaymentInitiationData params);
+  String initiatePayment(
+      @NotEmpty String userId,
+      @NotEmpty String paymentType,
+      @NotNull ObPaymentInitiationData paymentInitiation,
+      ObRiskData risk
+  );
 }

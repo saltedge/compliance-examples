@@ -20,6 +20,7 @@
  */
 package com.saltedge.connector.ob.sdk.api.services;
 
+import com.saltedge.connector.ob.sdk.api.models.errors.NotFound;
 import com.saltedge.connector.ob.sdk.api.models.request.AuthorizationCreateRequest;
 import com.saltedge.connector.ob.sdk.api.models.request.AuthorizationUpdateRequest;
 import com.saltedge.connector.ob.sdk.api.models.response.AuthorizationsCreateResponse;
@@ -35,10 +36,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.security.InvalidParameterException;
 import java.time.Instant;
 import java.util.Collections;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 
 @SpringBootTest
@@ -113,11 +116,10 @@ public class ObAuthorizationServiceTests {
 		given(mockCallbackService.createAuthorization(callbackRequest)).willReturn(null);
 
 		//when
-		String result = testService.createAuthorization("authorizeUrl", "authCode", authCodeExp);
+		assertThrows(NotFound.ConsentNotFound.class, () -> testService.createAuthorization("authorizeUrl", "authCode", authCodeExp));
 
 		//then
 		Mockito.verifyNoMoreInteractions(mockConsentsRepository);
-		assertThat(result).isNull();
 	}
 
 	@Test
@@ -130,11 +132,10 @@ public class ObAuthorizationServiceTests {
 		given(mockCallbackService.createAuthorization(callbackRequest)).willReturn(callbackResponse);
 
 		//when
-		String result = testService.createAuthorization("authorizeUrl", "authCode", authCodeExp);
+		assertThrows(NotFound.ConsentNotFound.class, () -> testService.createAuthorization("authorizeUrl", "authCode", authCodeExp));
 
 		//then
 		Mockito.verifyNoMoreInteractions(mockConsentsRepository);
-		assertThat(result).isNull();
 	}
 
 	//updateAuthorization(...)

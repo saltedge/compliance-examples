@@ -26,9 +26,11 @@ import com.saltedge.connector.ob.sdk.provider.dto.account.ObAccountIdentifier;
 import com.saltedge.connector.ob.sdk.provider.dto.account.ObAmount;
 import com.saltedge.connector.ob.sdk.provider.dto.account.TransactionsPage;
 import com.saltedge.connector.ob.sdk.provider.dto.payment.ObPaymentInitiationData;
+import com.saltedge.connector.ob.sdk.provider.dto.payment.ObRiskData;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
+import javax.validation.constraints.NotEmpty;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -50,7 +52,7 @@ public class TestProviderService implements ProviderServiceAbs {
     }
 
     @Override
-    public String initiatePayment(String userId, @NotNull ObPaymentInitiationData params) {
+    public String initiatePayment(@NotEmpty String userId, @NotEmpty String paymentType, @NotNull ObPaymentInitiationData paymentInitiation, ObRiskData risk) {
         return null;
     }
 }
