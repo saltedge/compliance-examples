@@ -94,6 +94,7 @@ public class ObAccountsControllerIntegrationTests {
 
         //then
         assertThat(responseString).isEqualTo(expectedResponseContent);
+        assertThat(responseString).contains("2021-01-01T10:15:30Z");
     }
 
     private List<ObAccount> getTestAccountsData() {

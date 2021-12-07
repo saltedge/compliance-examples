@@ -26,15 +26,13 @@ import com.saltedge.connector.ob.sdk.SDKConstants;
 import com.saltedge.connector.ob.sdk.TestTools;
 import com.saltedge.connector.ob.sdk.api.models.request.AccountsConsentsCreateRequest;
 import com.saltedge.connector.ob.sdk.api.models.request.AuthorizationCreateRequest;
-import com.saltedge.connector.ob.sdk.api.models.response.AuthorizationsCreateResponse;
 import com.saltedge.connector.ob.sdk.api.models.response.ErrorResponse;
+import com.saltedge.connector.ob.sdk.provider.dto.account.ObAmount;
+import com.saltedge.connector.ob.sdk.provider.dto.account.ObBalance;
 import org.junit.jupiter.api.Test;
 
 import java.security.PrivateKey;
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -113,5 +111,13 @@ public class JsonToolsTest {
 		payload = JsonTools.createAuthorizationPayloadValue(new ErrorResponse(), null);
 
 		assertThat(payload).isEqualTo("");
+	}
+
+	@Test
+	public void dateTimeSerializationTest() throws JsonProcessingException {
+		ObBalance testObject = new ObBalance(new ObAmount("1000.0", "GBP"), "debit", "closingAvailable", Instant.parse("2021-01-01T10:15:30.00Z"));
+		String result = JsonTools.createDefaultMapper().writeValueAsString(testObject);
+
+		assertThat(result).isEqualTo("{\"amount\":{\"amount\":\"1000.0\",\"currency\":\"GBP\"},\"credit_debit_indicator\":\"debit\",\"type\":\"closingAvailable\",\"date_time\":\"2021-01-01T10:15:30Z\"}");
 	}
 }
