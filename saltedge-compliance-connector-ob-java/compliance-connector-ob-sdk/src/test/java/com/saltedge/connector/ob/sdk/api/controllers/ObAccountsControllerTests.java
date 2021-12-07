@@ -39,6 +39,7 @@ import java.text.ParseException;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -53,8 +54,10 @@ public class ObAccountsControllerTests {
 
     @BeforeEach
     void setUp() {
-        consent = new Consent();
+        consent = Consent.createAisConsent("tppAppName", "1", "Authorised", Collections.emptyList(), null, null, null);
+        consent.id = 1L;
         consent.userId = userId;
+        consent.accessToken = "validToken";
         testController = new ObAccountsController();
         testController.providerService = mockProviderService;
     }

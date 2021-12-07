@@ -23,6 +23,7 @@ package com.saltedge.connector.example.controllers.consent;
 import com.saltedge.connector.example.controllers.BaseController;
 import com.saltedge.connector.example.model.AccountEntity;
 import com.saltedge.connector.ob.sdk.SDKConstants;
+import com.saltedge.connector.ob.sdk.api.models.errors.NotFound;
 import com.saltedge.connector.ob.sdk.config.ApplicationProperties;
 import com.saltedge.connector.ob.sdk.model.jpa.Consent;
 import org.slf4j.Logger;
@@ -62,12 +63,18 @@ public class ConsentController extends BaseController {
         String requestURL = request.getRequestURL().toString() + "?" + request.getQueryString();
         if (requestURL.startsWith("http://")) requestURL = requestURL.replaceFirst("http://", "https://");
         String authCode = UUID.randomUUID().toString();
+        String redirectUri = null;
+        try {
+            redirectUri = connectorSDKService.onUserInitiateConsentAuthorization(
+                requestURL,
+                authCode,
+                Instant.now().plus(10, ChronoUnit.MINUTES)
+            );
+        } catch (NotFound.ConsentNotFound e) {
+            log.error("ConsentController", e);
+            return createLoginModel(authCode).addObject("error", e.getErrorMessage());
+        }
 
-        String redirectUri = connectorSDKService.onUserInitiateConsentAuthorization(
-          requestURL,
-          authCode,
-          Instant.now().plus(10, ChronoUnit.MINUTES)
-        );
         if (StringUtils.hasText(redirectUri)) {
             return new ModelAndView("redirect:" + redirectUri);
         }

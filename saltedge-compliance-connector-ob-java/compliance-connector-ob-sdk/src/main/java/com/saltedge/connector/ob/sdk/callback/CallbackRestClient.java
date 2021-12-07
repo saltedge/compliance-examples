@@ -49,8 +49,9 @@ import java.util.Objects;
 public abstract class CallbackRestClient {
     @Autowired
     public ApplicationProperties applicationProperties;
+
+//    @Qualifier("saltEdgeCallbackRestTemplateBean")
     @Autowired
-    @Qualifier("saltEdgeCallbackRestTemplateBean")
     public RestTemplate callbackRestTemplate;
 
     protected ObjectMapper mapper = JsonTools.createDefaultMapper();
@@ -129,11 +130,11 @@ public abstract class CallbackRestClient {
         }
     }
 
-    @Bean
-    @Qualifier("saltEdgeCallbackRestTemplateBean")
-    public RestTemplate createRestTemplate() {
-        return new RestTemplate();
-    }
+//    @Bean
+//    @Qualifier("saltEdgeCallbackRestTemplateBean")
+//    public RestTemplate createRestTemplate() {
+//        return new RestTemplate();
+//    }
 
     public static class Response<T> {
         public T success;
