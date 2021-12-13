@@ -29,7 +29,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * JPA mapper for List<String> type
+ * JPA mapper for List of Strings
  */
 public class StringListConverter implements AttributeConverter<List<String>, String> {
     private static final Logger log = LoggerFactory.getLogger(StringListConverter.class);
@@ -43,6 +43,5 @@ public class StringListConverter implements AttributeConverter<List<String>, Str
     @Override
     public List<String> convertToEntityAttribute(String dbData) {
         return dbData != null ? Arrays.asList(dbData.split(SPLIT_CHAR)) : Collections.emptyList();
-
     }
 }

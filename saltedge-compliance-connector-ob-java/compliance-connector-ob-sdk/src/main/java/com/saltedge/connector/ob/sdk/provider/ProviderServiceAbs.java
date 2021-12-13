@@ -52,8 +52,8 @@ public interface ProviderServiceAbs {
    *
    * @param userId User identifier on Provider side
    * @param accountId Account identifier on Provider side
-   * @param fromDate Starting date, from which transactions should be fetched. Value can be set to 90 days ago by default.
-   * @param toDate Ending date, to which transactions should be fetched. Value will always be the today’s date.
+   * @param fromDate Specified start date and time for the transaction query period. If this is not populated, the start date will be open ended, and data will be returned from the earliest available transaction.
+   * @param toDate Specified end date and time for the transaction query period. If this is not populated, the end date will be open ended, and data will be returned to the latest available transaction.
    * @param fromId ID of page for Pageable request.
    *
    * @return Page container with list of Transaction objects and next page id
@@ -75,9 +75,10 @@ public interface ProviderServiceAbs {
    * Serves payment endpoint (https://priora.saltedge.com/docs/aspsp/v2/pis#pis-connector_endpoints-payments)
    *
    * @param userId User identifier on Provider side
-   * @param paymentInitiation payment initiation data
-   *
-   * @return payment unique identifier.
+   * @param paymentType Specifies the type of payment associated with a preregistered template. Allowed values: domestic_payment, international_payment.
+   * @param paymentInitiation Payment initiation data
+   * @param risk Specify additional details for risk scoring for Payments.
+   * @return Payment unique identifier.
    */
   String initiatePayment(
       @NotEmpty String userId,
