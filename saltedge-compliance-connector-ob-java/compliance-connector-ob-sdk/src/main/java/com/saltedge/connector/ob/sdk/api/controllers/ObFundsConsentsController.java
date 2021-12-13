@@ -75,8 +75,10 @@ public class ObFundsConsentsController extends ObBaseController {
      * Revoke an already existing and active access token.
      *
      * @param consentId unique identifier of Consent model
+     * @param consent Consent model find by access-token
      * @param request revoke consent data
      * @return empty JSON response
+     * @throws NotFound.ConsentNotFound if consent cannot be found or access-token not corresponds to consentId
      */
     @PatchMapping(path = "/{" + SDKConstants.KEY_CONSENT_ID + "}/revoke")
     public ResponseEntity<EmptyJsonResponse> revoke(

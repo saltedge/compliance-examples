@@ -74,10 +74,12 @@ class ObConsentsCreateService extends ObBaseService {
     public void createPisConsent(PaymentConsentsCreateRequest consentsCreateParams) {
         try {
             Consent result = Consent.createPisConsent(
-              consentsCreateParams.tppAppName,
-              consentsCreateParams.consentId,
-              "AwaitingAuthorisation",
-              consentsCreateParams.paymentInitiation
+                consentsCreateParams.tppAppName,
+                consentsCreateParams.consentId,
+                consentsCreateParams.status,
+                consentsCreateParams.paymentType,
+                consentsCreateParams.paymentInitiation,
+                consentsCreateParams.risk
             );
             consentsRepository.save(result);
         } catch (Exception e) {

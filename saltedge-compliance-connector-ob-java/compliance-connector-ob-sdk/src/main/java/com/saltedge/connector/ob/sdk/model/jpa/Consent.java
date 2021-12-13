@@ -23,6 +23,7 @@ package com.saltedge.connector.ob.sdk.model.jpa;
 import com.saltedge.connector.ob.sdk.SDKConstants;
 import com.saltedge.connector.ob.sdk.provider.dto.account.ObAccountIdentifier;
 import com.saltedge.connector.ob.sdk.provider.dto.payment.ObPaymentInitiationData;
+import com.saltedge.connector.ob.sdk.provider.dto.payment.ObRiskData;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.Column;
@@ -85,9 +86,16 @@ public class Consent extends BaseJpaEntity implements Serializable {
     public Instant transactionTo;
 
     //PIS initial data
-    @Column(name = "payment", length = 4096)
+    @Column(name = "payment", length = 65536)
     @Convert(converter = PaymentInitiationDataConverter.class)
-    public ObPaymentInitiationData payment;
+    public ObPaymentInitiationData paymentInitiation;
+
+    @Column(name = "payment_type")
+    public String paymentType;
+
+    @Column(name = "risk", length = 65536)
+    @Convert(converter = PaymentRiskDataConverter.class)
+    public ObRiskData risk;
 
     @Column(name = "compliance_payment_id")
     public String compliancePaymentId;
@@ -130,10 +138,14 @@ public class Consent extends BaseJpaEntity implements Serializable {
       String tppName,
       String consentId,
       String status,
-      ObPaymentInitiationData payment
+      String paymentType,
+      ObPaymentInitiationData paymentInitiation,
+      ObRiskData risk
     ) {
         Consent consent = new Consent(tppName, consentId, status);
-        consent.payment = payment;
+        consent.paymentType = paymentType;
+        consent.paymentInitiation = paymentInitiation;
+        consent.risk = risk;
         return consent;
     }
 
@@ -176,7 +188,7 @@ public class Consent extends BaseJpaEntity implements Serializable {
     }
 
     public boolean isPisConsent() {
-        return payment != null;
+        return paymentInitiation != null;
     }
 
     public boolean isPiisConsent() {
@@ -192,11 +204,36 @@ public class Consent extends BaseJpaEntity implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Consent consent = (Consent) o;
-        return Objects.equals(tppName, consent.tppName) && Objects.equals(consentId, consent.consentId) && Objects.equals(status, consent.status) && Objects.equals(authorizationId, consent.authorizationId) && Objects.equals(authCode, consent.authCode) && Objects.equals(accessToken, consent.accessToken) && Objects.equals(userId, consent.userId) && Objects.equals(accountIdentifiers, consent.accountIdentifiers) && Objects.equals(permissions, consent.permissions) && Objects.equals(permissionsExpiresAt, consent.permissionsExpiresAt) && Objects.equals(transactionFrom, consent.transactionFrom) && Objects.equals(transactionTo, consent.transactionTo) && Objects.equals(payment, consent.payment) && Objects.equals(compliancePaymentId, consent.compliancePaymentId) && Objects.equals(paymentId, consent.paymentId) && Objects.equals(debtorAccount, consent.debtorAccount);
+        return Objects.equals(tppName, consent.tppName) && Objects.equals(consentId, consent.consentId) && Objects.equals(status, consent.status) && Objects.equals(authorizationId, consent.authorizationId) && Objects.equals(authCode, consent.authCode) && Objects.equals(accessToken, consent.accessToken) && Objects.equals(userId, consent.userId) && Objects.equals(accountIdentifiers, consent.accountIdentifiers) && Objects.equals(permissions, consent.permissions) && Objects.equals(permissionsExpiresAt, consent.permissionsExpiresAt) && Objects.equals(transactionFrom, consent.transactionFrom) && Objects.equals(transactionTo, consent.transactionTo) && Objects.equals(paymentInitiation, consent.paymentInitiation) && Objects.equals(paymentType, consent.paymentType) && Objects.equals(risk, consent.risk) && Objects.equals(compliancePaymentId, consent.compliancePaymentId) && Objects.equals(paymentId, consent.paymentId) && Objects.equals(debtorAccount, consent.debtorAccount);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(tppName, consentId, status, authorizationId, authCode, accessToken, userId, accountIdentifiers, permissions, permissionsExpiresAt, transactionFrom, transactionTo, payment, compliancePaymentId, paymentId, debtorAccount);
+        return Objects.hash(tppName, consentId, status, authorizationId, authCode, accessToken, userId, accountIdentifiers, permissions, permissionsExpiresAt, transactionFrom, transactionTo, paymentInitiation, paymentType, risk, compliancePaymentId, paymentId, debtorAccount);
+    }
+
+    @Override
+    public String toString() {
+        return "Consent{" +
+            "id=" + id +
+            ", tppName='" + tppName + '\'' +
+            ", consentId='" + consentId + '\'' +
+            ", status='" + status + '\'' +
+            ", authorizationId='" + authorizationId + '\'' +
+            ", authCode='" + authCode + '\'' +
+            ", accessToken='" + accessToken + '\'' +
+            ", userId='" + userId + '\'' +
+            ", accountIdentifiers=" + accountIdentifiers +
+            ", permissions=" + permissions +
+            ", permissionsExpiresAt=" + permissionsExpiresAt +
+            ", transactionFrom=" + transactionFrom +
+            ", transactionTo=" + transactionTo +
+            ", paymentInitiation=" + paymentInitiation +
+            ", paymentType='" + paymentType + '\'' +
+            ", risk=" + risk +
+            ", compliancePaymentId='" + compliancePaymentId + '\'' +
+            ", paymentId='" + paymentId + '\'' +
+            ", debtorAccount=" + debtorAccount +
+            '}';
     }
 }

@@ -48,9 +48,19 @@ public abstract class NotFound extends RuntimeException implements HttpErrorPara
     }
 
     public static class ConsentNotFound extends NotFound {
+        private String message;
+
+        public ConsentNotFound() {
+            message = "Consent not found.";
+        }
+
+        public ConsentNotFound(String message) {
+            this.message = message;
+        }
+
         @Override
         public String getErrorMessage() {
-            return "Token not found.";
+            return message;
         }
     }
 

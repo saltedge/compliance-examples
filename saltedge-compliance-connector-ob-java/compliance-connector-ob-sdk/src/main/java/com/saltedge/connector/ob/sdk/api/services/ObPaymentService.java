@@ -55,10 +55,15 @@ class ObPaymentService extends ObBaseService {
         try {
             //prepare consent
             Consent consent = consentsRepository.findFirstByConsentId(consentId);
-            consent.payment = params.paymentInitiation;
+            consent.paymentInitiation = params.paymentInitiation;
             consent.compliancePaymentId = params.compliancePaymentId;
             //request payment initiation
-            consent.paymentId = providerService.initiatePayment(consent.userId, params.paymentInitiation);
+            consent.paymentId = providerService.initiatePayment(
+                consent.userId,
+                params.paymentType,
+                params.paymentInitiation,
+                consent.risk
+            );
             //save consent
             consentsRepository.save(consent);
         } catch (Exception e) {

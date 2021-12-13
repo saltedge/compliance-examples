@@ -20,28 +20,40 @@
  */
 package com.saltedge.connector.ob.sdk.model.jpa;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.saltedge.connector.ob.sdk.provider.dto.payment.ObRiskData;
+import com.saltedge.connector.ob.sdk.tools.JsonTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.AttributeConverter;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.io.IOException;
 
 /**
- * JPA mapper for List of Strings
+ * JPA mapper for ObRiskData type
  */
-public class StringListConverter implements AttributeConverter<List<String>, String> {
-    private static final Logger log = LoggerFactory.getLogger(StringListConverter.class);
-    private static final String SPLIT_CHAR = ";";
+public class PaymentRiskDataConverter implements AttributeConverter<ObRiskData, String> {
+    private static final Logger log = LoggerFactory.getLogger(PaymentRiskDataConverter.class);
+    private final ObjectMapper objectMapper = JsonTools.createDefaultMapper();
 
     @Override
-    public String convertToDatabaseColumn(List<String> stringList) {
-        return stringList != null ? String.join(SPLIT_CHAR, stringList) : "";
+    public String convertToDatabaseColumn(ObRiskData data) {
+        try {
+            return objectMapper.writeValueAsString(data);
+        } catch (JsonProcessingException e) {
+            log.error("PaymentRiskDataConverter: JSON writing error", e);
+            return null;
+        }
     }
 
     @Override
-    public List<String> convertToEntityAttribute(String dbData) {
-        return dbData != null ? Arrays.asList(dbData.split(SPLIT_CHAR)) : Collections.emptyList();
+    public ObRiskData convertToEntityAttribute(String dbData) {
+        try {
+            return objectMapper.readValue(dbData, ObRiskData.class);
+        } catch (IOException e) {
+            log.error("PaymentRiskDataConverter: JSON reading error", e);
+            return null;
+        }
     }
 }

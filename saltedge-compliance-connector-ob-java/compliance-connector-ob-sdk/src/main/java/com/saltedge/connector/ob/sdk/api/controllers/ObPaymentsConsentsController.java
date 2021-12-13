@@ -85,11 +85,11 @@ public class ObPaymentsConsentsController extends ObBaseController {
       @Valid PaymentFundsConfirmationRequest request
     ) {
         if (!consent.isPisConsent()) throw new Unauthorized.AccessDenied();
-        if (consent.payment.debtorAccount == null || consent.payment.instructedAmount == null) throw new NotFound.PaymentNotFound();
+        if (consent.paymentInitiation.debtorAccount == null || consent.paymentInitiation.instructedAmount == null) throw new NotFound.PaymentNotFound();
         boolean fundsAvailable = providerService.confirmFunds(
           consent.userId,
-          consent.payment.debtorAccount,
-          consent.payment.instructedAmount
+          consent.paymentInitiation.debtorAccount,
+          consent.paymentInitiation.instructedAmount
         );
         return new ResponseEntity<>(new FundsConfirmationResponse(fundsAvailable), HttpStatus.OK);
     }

@@ -47,14 +47,14 @@
 
             <#if error??>
                 <p><span class="red-text">${error}</span></p>
+            <#else>
+                <center>
+                  <div class='row'>
+                    <button type='submit' name='btn_login' class='col s12 btn btn-large waves-effect indigo'>Sign In</button>
+                    <input type="hidden" name="auth_code" value="${auth_code}">
+                  </div>
+                </center>
             </#if>
-
-            <center>
-              <div class='row'>
-                <button type='submit' name='btn_login' class='col s12 btn btn-large waves-effect indigo'>Sign In</button>
-                <input type="hidden" name="auth_code" value="${auth_code}">
-              </div>
-            </center>
           </form>
         </div>
       </div>

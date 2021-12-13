@@ -20,6 +20,7 @@
  */
 package com.saltedge.connector.ob.sdk.api.services;
 
+import com.saltedge.connector.ob.sdk.api.models.errors.NotFound;
 import com.saltedge.connector.ob.sdk.api.models.request.AuthorizationCreateRequest;
 import com.saltedge.connector.ob.sdk.api.models.request.AuthorizationUpdateRequest;
 import com.saltedge.connector.ob.sdk.api.models.response.AuthorizationsCreateResponse;
@@ -51,27 +52,31 @@ public class ObAuthorizationService extends ObBaseService {
      * @param authCode random authorization session code. Minimal 16 characters.
      * @param authCodeExp authorization session code expiration datetime (optional).
      * @return error redirect URL or null, to return TPP back.
+     * @throws com.saltedge.connector.ob.sdk.api.models.errors.NotFound.ConsentNotFound if consent model cannot be found
      */
-    public String createAuthorization(@NotEmpty String authorizeUrl, @NotEmpty String authCode, Instant authCodeExp) {
+    public String createAuthorization(@NotEmpty String authorizeUrl, @NotEmpty String authCode, Instant authCodeExp) throws NotFound.ConsentNotFound {
+        AuthorizationsCreateResponse response = null;
         try {
-            AuthorizationsCreateResponse response = callbackService.createAuthorization(
+            response = callbackService.createAuthorization(
               new AuthorizationCreateRequest(authorizeUrl, authCode, authCodeExp)
             );
-            if (response == null || response.data == null) {
-                log.error("ObAuthorizationService.createAuthorization: response.data is null");
-                return null;
-            }
-            if (StringUtils.hasText(response.data.redirectUri)) {
-                return response.data.redirectUri;
-            } else {
-                Consent consent = consentsRepository.findFirstByConsentId(response.data.consentId);
+        } catch (Exception e) {
+            log.error("AuthorizationService.createAuthorization:", e);
+        }
+        if (response == null || response.data == null) {
+            log.error("ObAuthorizationService.createAuthorization response is empty");
+            throw new NotFound.ConsentNotFound("Consent with empty ID cannot be found");
+        } else if (StringUtils.hasText(response.data.redirectUri)) {
+            return response.data.redirectUri;
+        } else {
+            Consent consent = consentsRepository.findFirstByConsentId(response.data.consentId);
+            if (consent == null) throw new NotFound.ConsentNotFound("Consent with ID:" + response.data.consentId + " not found");
+            else {
                 consent.authCode = authCode;
                 consent.accessToken = response.data.accessToken;
                 consent.authorizationId = response.data.authorizationId;
                 consentsRepository.save(consent);
             }
-        } catch (Exception e) {
-            log.error("AuthorizationService.createAuthorization:", e);
         }
         return null;
     }

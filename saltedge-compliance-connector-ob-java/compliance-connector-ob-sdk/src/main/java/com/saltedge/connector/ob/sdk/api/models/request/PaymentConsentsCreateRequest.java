@@ -20,15 +20,20 @@
  */
 package com.saltedge.connector.ob.sdk.api.models.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.saltedge.connector.ob.sdk.SDKConstants;
 import com.saltedge.connector.ob.sdk.provider.dto.payment.ObAuthorizationType;
 import com.saltedge.connector.ob.sdk.provider.dto.payment.ObPaymentInitiationData;
+import com.saltedge.connector.ob.sdk.provider.dto.payment.ObRiskData;
 import com.saltedge.connector.ob.sdk.provider.dto.payment.ObScaData;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.time.Instant;
 
 /**
  * @see <a href="https://priora.saltedge.com/docs/aspsp/ob/pis#connector-endpoints-payments-payments-consent">Payment Consents Endpoints</a>
@@ -38,22 +43,58 @@ import javax.validation.constraints.NotNull;
 public class PaymentConsentsCreateRequest extends CreateBaseRequest {
 
     /**
+     * Specifies the type of payment associated with a preregistered template.
+     * Allowed values: domestic_payment, international_payment
+     */
+    @NotBlank
+    @JsonProperty("payment_type")
+    public String paymentType;
+
+    /**
+     * Specifies the status of account resource in code form.
+     * (e.g. AwaitingAuthorisation)
+     */
+    @NotBlank
+    @JsonProperty("status")
+    public String status;
+
+    /**
+     * Date and time at which the resource was created.
+     */
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    @JsonProperty("creation_date_time")
+    public Instant creationDateTime;
+
+    /**
+     * The Initiation payload is sent by the initiating party to the ASPSP.
+     */
+    @JsonProperty(SDKConstants.KEY_INITIATION)
+    @NotNull
+    @Valid
+    public ObPaymentInitiationData paymentInitiation;
+
+    /**
+     * Date and time at which the resource status was updated.
+     */
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    @JsonProperty("status_update_date_time")
+    public Instant statusUpdateDateTime;
+
+    /**
      * Type of authorisation flow requested.
      */
     @JsonProperty("authorisation")
     public ObAuthorizationType authorisation;
 
     /**
-     * The Initiation payload is sent by the initiating party to the ASPSP.
-     */
-    @JsonProperty("initiation")
-    @NotNull
-    @Valid
-    public ObPaymentInitiationData paymentInitiation;
-
-    /**
      * Supporting Data provided by TPP, when requesting SCA Exemption.
      */
     @JsonProperty("sca_support_data")
     public ObScaData scaData;
+
+    /**
+     * Data provided by TPP, used to specify additional details for risk scoring for Payments.
+     */
+    @JsonProperty("risk")
+    public ObRiskData risk;
 }

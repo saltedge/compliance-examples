@@ -141,6 +141,7 @@ public class ObAccount {
     this.currencyCode = currencyCode;
     this.accountType = accountType;
     this.accountSubType = accountSubType;
+    this.balances = balances;
   }
 
   public ObAccount(

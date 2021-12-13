@@ -18,31 +18,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.saltedge.connector.ob.sdk.provider.dto.payment;
+package com.saltedge.connector.ob.sdk.config;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.client.RestTemplate;
 
-import java.time.Instant;
+import java.time.Duration;
 
-/**
- * Type of authorisation flow requested.
- */
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties
-public class ObAuthorizationType {
-  /**
-   * Type of authorisation flow requested.
-   */
-  @JsonProperty("authorisation_type")
-  public String authorisationType;
-
-  /**
-   * Date and time at which the requested authorisation flow must be completed.
-   */
-  @JsonFormat(shape = JsonFormat.Shape.STRING)
-  @JsonProperty("completion_date_time")
-  public Instant completionDateTime;
+@Configuration
+public class RestTemplateConfiguration {
+    @Bean
+    public RestTemplate restTemplate(RestTemplateBuilder builder) {
+        return builder
+            .setConnectTimeout(Duration.ofMillis(3000))
+            .setReadTimeout(Duration.ofMillis(3000))
+            .build();
+    }
 }

@@ -35,6 +35,7 @@ import com.saltedge.connector.ob.sdk.provider.dto.account.ObAccountIdentifier;
 import com.saltedge.connector.ob.sdk.provider.dto.account.ObAmount;
 import com.saltedge.connector.ob.sdk.provider.dto.account.TransactionsPage;
 import com.saltedge.connector.ob.sdk.provider.dto.payment.ObPaymentInitiationData;
+import com.saltedge.connector.ob.sdk.provider.dto.payment.ObRiskData;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -132,11 +133,16 @@ public class ComplianceConnectorService implements ProviderServiceAbs {
   }
 
   @Override
-  public String initiatePayment(String userId, @NotNull ObPaymentInitiationData params) {
+  public String initiatePayment(
+      @NotEmpty String userId,
+      @NotEmpty String paymentType,
+      @NotNull ObPaymentInitiationData paymentInitiation,
+      ObRiskData risk
+  ) {
     UserEntity user = findAndValidateUser(userId);
 
-    Long paymentId = paymentsService.initiatePayment(params);
-    paymentsService.processPayment(paymentId, params);//Async
+    Long paymentId = paymentsService.initiatePayment(paymentType, paymentInitiation, risk);
+    paymentsService.processPayment(paymentId);//Async
     return String.valueOf(paymentId);
   }
 

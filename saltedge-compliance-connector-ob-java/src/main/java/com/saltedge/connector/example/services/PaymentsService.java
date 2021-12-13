@@ -25,6 +25,7 @@ import com.saltedge.connector.example.model.PaymentStatus;
 import com.saltedge.connector.example.model.repository.PaymentsRepository;
 import com.saltedge.connector.ob.sdk.provider.ConnectorSDKService;
 import com.saltedge.connector.ob.sdk.provider.dto.payment.ObPaymentInitiationData;
+import com.saltedge.connector.ob.sdk.provider.dto.payment.ObRiskData;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +46,7 @@ public class PaymentsService {
   @Autowired
   private PaymentsRepository paymentsRepository;
 
-  public Long initiatePayment(ObPaymentInitiationData params) {
+  public Long initiatePayment(String paymentType, ObPaymentInitiationData params, ObRiskData risk) {
     try {
       PaymentEntity paymentEntity = new PaymentEntity();
       paymentEntity.status = PaymentStatus.PENDING;
@@ -68,7 +69,7 @@ public class PaymentsService {
   }
 
   @Async
-  public void processPayment(@NotNull Long paymentId, @NotNull ObPaymentInitiationData params) {
+  public void processPayment(@NotNull Long paymentId) {
     try {
       Thread.sleep(1000);
       connectorSDKService.onPaymentStatusUpdate(String.valueOf(paymentId), "AcceptedCreditSettlementCompleted");

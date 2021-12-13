@@ -23,6 +23,7 @@ package com.saltedge.connector.ob.sdk.model.jpa;
 import com.saltedge.connector.ob.sdk.provider.dto.account.ObAccountIdentifier;
 import com.saltedge.connector.ob.sdk.provider.dto.account.ObAmount;
 import com.saltedge.connector.ob.sdk.provider.dto.payment.ObPaymentInitiationData;
+import com.saltedge.connector.ob.sdk.provider.dto.payment.ObRiskData;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
 
@@ -52,8 +53,19 @@ public class ConsentTests {
 		paymentData.instructedAmount = new ObAmount("1.0", "GBP");
 		paymentData.creditorAccount = new ObAccountIdentifier("scheme", "identifier");
 
+		ObRiskData risk = new ObRiskData();
+		risk.paymentContextCode = "BillPayment";
+		risk.merchantCategoryCode = "5541";
+
 		//when
-		Consent result = Consent.createPisConsent("tppAppName", "1", "AwaitingAuthorisation", paymentData);
+		Consent result = Consent.createPisConsent(
+				"tppAppName",
+				"1",
+				"AwaitingAuthorisation",
+				"domestic_payment",
+				paymentData,
+				risk
+		);
 
 		//then
 		assertThat(result.isAisConsent()).isFalse();
@@ -167,7 +179,7 @@ public class ConsentTests {
 	@Test
 	public void isPisConsentTest() {
 		Consent testConsent = new Consent();
-		testConsent.payment = null;
+		testConsent.paymentInitiation = null;
 
 		assertThat(testConsent.isPisConsent()).isFalse();
 
@@ -176,7 +188,7 @@ public class ConsentTests {
 		paymentData.endToEndIdentification = "endToEndIdentification";
 		paymentData.instructedAmount = new ObAmount("1.0", "GBP");
 		paymentData.creditorAccount = new ObAccountIdentifier("scheme", "identifier");
-		testConsent.payment = paymentData;
+		testConsent.paymentInitiation = paymentData;
 
 		assertThat(testConsent.isPisConsent()).isTrue();
 	}

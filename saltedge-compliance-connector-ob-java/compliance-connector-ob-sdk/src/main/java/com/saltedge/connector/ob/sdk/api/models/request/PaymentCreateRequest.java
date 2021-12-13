@@ -23,6 +23,7 @@ package com.saltedge.connector.ob.sdk.api.models.request;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.saltedge.connector.ob.sdk.SDKConstants;
 import com.saltedge.connector.ob.sdk.provider.dto.payment.ObPaymentInitiationData;
 
 import javax.validation.Valid;
@@ -41,13 +42,21 @@ public class PaymentCreateRequest extends CreateBaseRequest {
      * Payment order identifier on Connector side. Used to map Salt Edge PSD2 Compliance payments to Connector ones.
      */
     @NotBlank
-    @JsonProperty("payment_id")
+    @JsonProperty(SDKConstants.KEY_PAYMENT_ID)
     public String compliancePaymentId;
+
+    /**
+     * Specifies the type of payment associated with a preregistered template.
+     * Allowed values: domestic_payment, international_payment
+     */
+    @NotBlank
+    @JsonProperty("payment_type")
+    public String paymentType;
 
     /**
      * The Initiation payload is sent by the initiating party to the ASPSP.
      */
-    @JsonProperty("initiation")
+    @JsonProperty(SDKConstants.KEY_INITIATION)
     @NotNull
     @Valid
     public ObPaymentInitiationData paymentInitiation;
@@ -57,11 +66,11 @@ public class PaymentCreateRequest extends CreateBaseRequest {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PaymentCreateRequest that = (PaymentCreateRequest) o;
-        return Objects.equals(compliancePaymentId, that.compliancePaymentId) && Objects.equals(paymentInitiation, that.paymentInitiation);
+        return Objects.equals(compliancePaymentId, that.compliancePaymentId) && Objects.equals(paymentType, that.paymentType) && Objects.equals(paymentInitiation, that.paymentInitiation);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(compliancePaymentId, paymentInitiation);
+        return Objects.hash(compliancePaymentId, paymentType, paymentInitiation);
     }
 }

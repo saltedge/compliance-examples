@@ -67,6 +67,8 @@ public class ObAccountsController extends ObBaseController {
     @GetMapping
     public ResponseEntity<AccountsResponse> accountsIndex(@NotNull Consent consent, @Valid DefaultRequest request) {
         List<ObAccount> accounts = providerService.getAccountsOfUser(consent.userId);
+        System.out.println("accountsIndex:consent.userId:" + consent.userId);
+        System.out.println("accountsIndex:accounts == null:" + (accounts == null));
         if (accounts == null) accounts = Collections.emptyList();
         AccountsResponse response = new AccountsResponse(accounts);
         return new ResponseEntity<>(response, HttpStatus.OK);

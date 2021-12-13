@@ -20,6 +20,7 @@
  */
 package com.saltedge.connector.ob.sdk.provider;
 
+import com.saltedge.connector.ob.sdk.api.models.errors.NotFound;
 import com.saltedge.connector.ob.sdk.api.services.ObAuthorizationService;
 import com.saltedge.connector.ob.sdk.api.services.ObPaymentService;
 import com.saltedge.connector.ob.sdk.model.jpa.Consent;
@@ -59,8 +60,9 @@ public class ConnectorSDKService {
    * @param authCode random authorization session code. Minimal 16 characters.
    * @param authCodeExp authorization session code expiration datetime (optional).
    * @return error redirect URL or null, to return TPP back.
+   * @throws com.saltedge.connector.ob.sdk.api.models.errors.NotFound.ConsentNotFound if consent model cannot be found
    */
-  public String onUserInitiateConsentAuthorization(@NotEmpty String authorizeUrl, @NotEmpty String authCode, Instant authCodeExp) {
+  public String onUserInitiateConsentAuthorization(@NotEmpty String authorizeUrl, @NotEmpty String authCode, Instant authCodeExp) throws NotFound.ConsentNotFound {
     return authorizationService.createAuthorization(authorizeUrl, authCode, authCodeExp);
   }
 
