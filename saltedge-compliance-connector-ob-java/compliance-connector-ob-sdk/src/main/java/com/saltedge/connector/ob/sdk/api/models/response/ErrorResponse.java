@@ -25,12 +25,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.saltedge.connector.ob.sdk.SDKConstants;
 import com.saltedge.connector.ob.sdk.api.models.errors.HttpErrorParams;
 
+import javax.validation.constraints.NotBlank;
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ErrorResponse {
     @JsonProperty(SDKConstants.KEY_ERROR_CLASS)
+    @NotBlank
     public String errorClass;
 
     @JsonProperty(SDKConstants.KEY_ERROR_MESSAGE)
+    @NotBlank
     public String errorMessage;
 
     public ErrorResponse() { }

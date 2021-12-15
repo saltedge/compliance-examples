@@ -32,9 +32,18 @@ import javax.validation.constraints.NotBlank;
 public class ConsentsRevokeRequest extends PrioraBaseRequest {
 
     /**
+     * The consent identifier assigned to the created resource.
+     */
+    @NotBlank
+    @JsonProperty(SDKConstants.KEY_CONSENT_ID)
+    public String consentId;
+
+    /**
      * Human readable Provider identifier.
      */
     @NotBlank
     @JsonProperty(SDKConstants.KEY_PROVIDER_CODE)
     public String providerCode;
+
+    //TODO: Add exp (integer, required)
 }

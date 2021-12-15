@@ -27,6 +27,9 @@ import com.saltedge.connector.ob.sdk.provider.dto.account.ObAccount;
 
 import java.util.List;
 
+/**
+ * @see <a href="https://priora.saltedge.com/docs/aspsp/ob/ais#connector-endpoints-accounts">Accounts Endpoints</a>
+ */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AccountsResponse {
     @JsonProperty(SDKConstants.KEY_DATA)

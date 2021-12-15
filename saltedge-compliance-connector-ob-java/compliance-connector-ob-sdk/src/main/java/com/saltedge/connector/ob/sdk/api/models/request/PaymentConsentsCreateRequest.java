@@ -96,5 +96,6 @@ public class PaymentConsentsCreateRequest extends CreateBaseRequest {
      * Data provided by TPP, used to specify additional details for risk scoring for Payments.
      */
     @JsonProperty("risk")
+    @NotNull
     public ObRiskData risk;
 }

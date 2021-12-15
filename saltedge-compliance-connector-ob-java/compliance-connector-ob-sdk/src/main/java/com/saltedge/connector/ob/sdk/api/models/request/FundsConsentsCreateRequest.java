@@ -24,8 +24,10 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.saltedge.connector.ob.sdk.SDKConstants;
 import com.saltedge.connector.ob.sdk.provider.dto.account.ObAccountIdentifier;
 
+import javax.validation.constraints.NotBlank;
 import java.time.Instant;
 
 /**
@@ -34,6 +36,10 @@ import java.time.Instant;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties
 public class FundsConsentsCreateRequest extends CreateBaseRequest {
+
+    @JsonProperty(SDKConstants.KEY_STATUS)
+    @NotBlank
+    public String status;
 
     /**
      * Specified date and time the permissions will expire.

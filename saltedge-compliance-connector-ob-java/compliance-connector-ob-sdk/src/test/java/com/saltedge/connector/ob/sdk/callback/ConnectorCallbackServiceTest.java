@@ -126,7 +126,7 @@ public class ConnectorCallbackServiceTest {
     public void whenUpdateAuthorization_shouldBeCalledExchangeWithParams() {
         //given
         String authorizationId = "1";
-        AuthorizationsUpdateResponse response = new AuthorizationsUpdateResponse(new AuthorizationsUpdateResponse.Data(authorizationId, "accepted", "accessToken"));
+        AuthorizationsUpdateResponse response = new AuthorizationsUpdateResponse(new AuthorizationsUpdateResponse.Data(authorizationId, "accepted"));
         given(restTemplate.exchange(anyString(), eq(HttpMethod.PUT), any(HttpEntity.class), eq(AuthorizationsUpdateResponse.class)))
             .willReturn(ResponseEntity.ok(response));
 

@@ -28,6 +28,9 @@ import com.saltedge.connector.ob.sdk.SDKConstants;
 import javax.validation.constraints.NotBlank;
 import java.util.Objects;
 
+/**
+ * @see <a href="https://priora.saltedge.com/docs/aspsp/ob/pis#salt-edge-endpoints-payments-payments-update">Payment Update Endpoints</a>
+ */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties
 public class PaymentUpdateRequest extends PrioraBaseRequest {
@@ -35,23 +38,23 @@ public class PaymentUpdateRequest extends PrioraBaseRequest {
     /**
      * PSU identifier on Connector side. Used to map PSU resource on Salt Edge PSD2 Compliance side to Connector one
      */
-    @NotBlank
     @JsonProperty(SDKConstants.KEY_CONSENT_ID)
+    @NotBlank
     public String consentId;
 
     /**
      * Conveys current status of the operation.
      * Allowed values: approved, denied
      */
-    @NotBlank
     @JsonProperty(SDKConstants.KEY_STATUS)
+    @NotBlank
     public String status;
 
     /**
      * TPP application name.
      */
-    @NotBlank
     @JsonProperty(SDKConstants.KEY_APP_NAME)
+    @NotBlank
     public String tppAppName;
 
     public PaymentUpdateRequest() {}

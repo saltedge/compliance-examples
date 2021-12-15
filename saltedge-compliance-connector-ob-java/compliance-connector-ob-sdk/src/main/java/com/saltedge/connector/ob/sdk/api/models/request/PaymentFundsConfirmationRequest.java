@@ -27,6 +27,9 @@ import com.saltedge.connector.ob.sdk.SDKConstants;
 
 import javax.validation.constraints.NotBlank;
 
+/**
+ * @see <a href="https://priora.saltedge.com/docs/aspsp/ob/pis#connector-endpoints-payments-payments-funds-confirmation">Payment Funds Confirmation Endpoints</a>
+ */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties
 public class PaymentFundsConfirmationRequest extends PrioraBaseRequest {
@@ -41,7 +44,7 @@ public class PaymentFundsConfirmationRequest extends PrioraBaseRequest {
     /**
      * Human readable Provider identifier.
      */
-    @NotBlank
     @JsonProperty(SDKConstants.KEY_PROVIDER_CODE)
+    @NotBlank
     public String providerCode;
 }

@@ -25,11 +25,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.saltedge.connector.ob.sdk.SDKConstants;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AuthorizationsUpdateResponse {
     @JsonProperty(SDKConstants.KEY_DATA)
+    @NotNull
     public Data data;
 
     public AuthorizationsUpdateResponse() {}
@@ -68,20 +70,16 @@ public class AuthorizationsUpdateResponse {
         @NotEmpty
         public String status;
 
-        @JsonProperty(SDKConstants.KEY_ACCESS_TOKEN)
-        @NotEmpty
-        public String accessToken;
-
         @JsonProperty(SDKConstants.KEY_REDIRECT_URI)
+        @NotEmpty
         public String redirectUri;
 
         public Data() {
         }
 
-        public Data(String authorizationId, String status, String accessToken) {
+        public Data(String authorizationId, String status) {
             this.authorizationId = authorizationId;
             this.status = status;
-            this.accessToken = accessToken;
         }
 
         @Override
@@ -89,7 +87,6 @@ public class AuthorizationsUpdateResponse {
             return "Data{" +
                 "authorizationId='" + authorizationId + '\'' +
                 ", status='" + status + '\'' +
-                ", accessToken='" + accessToken + '\'' +
                 ", redirectUri='" + redirectUri + '\'' +
                 '}';
         }
@@ -99,12 +96,12 @@ public class AuthorizationsUpdateResponse {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             Data data = (Data) o;
-            return Objects.equals(authorizationId, data.authorizationId) && Objects.equals(status, data.status) && Objects.equals(accessToken, data.accessToken) && Objects.equals(redirectUri, data.redirectUri);
+            return Objects.equals(authorizationId, data.authorizationId) && Objects.equals(status, data.status) && Objects.equals(redirectUri, data.redirectUri);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(authorizationId, status, accessToken, redirectUri);
+            return Objects.hash(authorizationId, status, redirectUri);
         }
     }
 }

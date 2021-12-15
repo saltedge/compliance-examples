@@ -95,7 +95,6 @@ public class ObTransaction {
    * For transaction entries subject to availability/float and for which availability information is provided, the value date must not be used.
    * In this case the availability component identifies the number of availability days.
    */
-  @NotNull
   @JsonProperty("value_date_time")
   public Instant valueDateTime;
 

@@ -26,7 +26,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.saltedge.connector.ob.sdk.SDKConstants;
 
-import javax.validation.constraints.NotEmpty;
 import java.util.Objects;
 
 /**
@@ -41,14 +40,12 @@ public class ObAccountIdentifier {
    * Allowed values: UK.OBIE.SortCodeAccountNumber, UK.OBIE.IBAN, UK.OBIE.PAN, UK.OBIE.BICFI
    */
   @JsonProperty(SDKConstants.KEY_SCHEME_NAME)
-  @NotEmpty
   public String schemeName;
 
   /**
    * Identification assigned by an institution to identify an account. This identification is known by the account owner.
    */
   @JsonProperty(SDKConstants.KEY_IDENTIFICATION)
-  @NotEmpty
   public String identification;
 
   /**

@@ -48,7 +48,6 @@ public class ObAccount {
    * Identification of the currency in which the account is held (ISO 4217).
    * Usage: Currency should only be used in case one and the same account number covers several currencies and the initiating party needs to identify which currency needs to be used for settlement on the account.
    */
-  @NotEmpty
   @JsonProperty(SDKConstants.KEY_CURRENCY)
   public String currencyCode;
 
