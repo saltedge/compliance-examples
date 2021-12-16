@@ -68,7 +68,6 @@ public class AuthorizationUpdateRequest {
         this.userId = userId;
         this.status = status;
         this.accountIdentifiers = accountIdentifiers;
-//        this.debtorAccount = debtorAccount TODO: check if we need it
     }
 
     @Override
