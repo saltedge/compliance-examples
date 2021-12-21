@@ -67,7 +67,7 @@ public class CardTransaction {
     /**
      * Date of the actual card transaction in ISO 8601: “yyyy-mm-dd” format.
      */
-    @NotBlank
+    @NotNull
     @JsonProperty("transaction_date")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate transactionDate;
@@ -75,7 +75,7 @@ public class CardTransaction {
     /**
      * Additional details given for the related card transactions.
      */
-    @NotNull
+    @NotBlank
     @JsonProperty("transaction_details")
     private String transactionDetails;
 
