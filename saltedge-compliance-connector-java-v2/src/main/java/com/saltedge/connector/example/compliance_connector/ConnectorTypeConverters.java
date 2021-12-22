@@ -101,7 +101,10 @@ public class ConnectorTypeConverters {
         result.setDebtorDetails(createParticipantDetails(transaction.account));
         result.setCreditorDetails(new ParticipantDetails(
           transaction.toAccountName,
-          ParticipantAccount.createWithIbanAndName(transaction.toIban)
+          ParticipantAccount.createWithIbanAndName(
+            transaction.toIban,
+            transaction.toAccountName
+          )
         ));
 
         List<CurrencyExchange> exchanges = new ArrayList<>();
@@ -152,6 +155,8 @@ public class ConnectorTypeConverters {
         participantAccount.iban = account.iban;
         participantAccount.maskedPan = maskPan(account.pan);
         participantAccount.msisdn = account.user.phone;
+        participantAccount.pan = account.pan;
+        participantAccount.name = account.name;
         return new ParticipantDetails(account.name, participantAccount);
     }
 

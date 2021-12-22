@@ -32,6 +32,7 @@ public class ErrorRequestTest extends ValidationTest {
 
 		assertThat(model.error).isNull();
 		assertThat(model.request).isNull();
+		assertThat(model.response).isNull();
 	}
 
 	@Test

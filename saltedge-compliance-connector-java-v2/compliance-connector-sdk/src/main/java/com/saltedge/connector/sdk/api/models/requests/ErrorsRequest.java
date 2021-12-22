@@ -24,32 +24,28 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.saltedge.connector.sdk.api.models.responses.ErrorResponse;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.util.Map;
 
 @JsonIgnoreProperties
 public class ErrorsRequest extends PrioraBaseRequest {
     @JsonProperty("error")
-    @NotNull
     public ErrorResponse error;
 
     @JsonProperty("request")
-    @NotNull
     public RequestData request;
+
+    @JsonProperty("response")
+    public Map<String, Object> response;
 
     @JsonIgnoreProperties
     public static class RequestData {
         @JsonProperty("headers")
-        @NotBlank
         public Map<String, String> headers;
 
         @JsonProperty("method")
-        @NotBlank
         public String method;
 
         @JsonProperty("url")
-        @NotBlank
         public String url;
 
         @Override

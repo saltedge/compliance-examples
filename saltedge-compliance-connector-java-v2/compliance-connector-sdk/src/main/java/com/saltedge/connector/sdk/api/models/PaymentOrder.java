@@ -41,7 +41,7 @@ public class PaymentOrder {
    */
   @JsonProperty("creditor_account")
   @RequestAccountConstraint
-  public Account creditorAccount; //TODO: use only iban with bic (string, optional) https://git.saltedge.com/psd2/priora/-/issues/2876#note_1500608
+  public Account creditorAccount;
 
   /**
    * Creditor full name.
@@ -60,7 +60,7 @@ public class PaymentOrder {
    * Debtor account data.
    */
   @JsonProperty("debtor_account")
-  public Account debtorAccount; //TODO: use only iban with bic (string, optional) https://git.saltedge.com/psd2/priora/-/issues/2876#note_1500608
+  public Account debtorAccount;
 
   /**
    * Amount and currency.
@@ -88,8 +88,6 @@ public class PaymentOrder {
    */
   @JsonProperty("creditor_agent_name")
   public String creditorAgentName;
-
-  //TODO: Add requested_execution_date,
 
   public PaymentOrder() {
   }

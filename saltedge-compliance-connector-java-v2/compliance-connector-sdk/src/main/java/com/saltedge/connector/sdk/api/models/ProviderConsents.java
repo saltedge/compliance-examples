@@ -26,7 +26,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.saltedge.connector.sdk.SDKConstants;
 import org.springframework.util.StringUtils;
 
-import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -59,7 +58,6 @@ public class ProviderConsents {
      * or null in case of Bank Offered Consent
      */
     @JsonProperty("allPsd2")
-    @NotBlank
     public String globalAccessConsent;
 
     /**

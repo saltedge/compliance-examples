@@ -18,38 +18,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.saltedge.connector.sdk.callback.mapping;
+package com.saltedge.connector.sdk.api.models;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.saltedge.connector.sdk.SDKConstants;
+import org.junit.Test;
 
-import java.time.Instant;
+import static org.assertj.core.api.Assertions.assertThat;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class SessionUpdateCallbackRequest extends BaseCallbackRequest {
-    @JsonProperty(SDKConstants.KEY_REDIRECT_URL)
-    public String redirectUrl;
+public class TransactionExtraTests {
+	@Test
+	public void constructorTest() {
+		TransactionExtra model = new TransactionExtra();
 
-    @JsonProperty(SDKConstants.KEY_STATUS)
-    public String status;
-
-    @JsonProperty("session_expires_at")
-    public Instant sessionExpiresAt;
-
-    @JsonProperty("funds_available")
-    public Boolean fundsAvailable;
-
-    public SessionUpdateCallbackRequest() {
-    }
-
-    public SessionUpdateCallbackRequest(String redirectUrl, String status) {
-        this.redirectUrl = redirectUrl;
-        this.status = status;
-    }
-
-    public SessionUpdateCallbackRequest(Boolean fundsAvailable, String status) {
-        this.fundsAvailable = fundsAvailable;
-        this.status = status;
-    }
+		assertThat(model.additionalInformation).isNull();
+		assertThat(model.bankTransactionCode).isNull();
+		assertThat(model.checkId).isNull();
+		assertThat(model.entryReference).isNull();
+		assertThat(model.mandateId).isNull();
+		assertThat(model.proprietaryBankTransactionCode).isNull();
+		assertThat(model.purposeCode).isNull();
+		assertThat(model.ultimateCreditor).isNull();
+		assertThat(model.ultimateDebtor).isNull();
+	}
 }

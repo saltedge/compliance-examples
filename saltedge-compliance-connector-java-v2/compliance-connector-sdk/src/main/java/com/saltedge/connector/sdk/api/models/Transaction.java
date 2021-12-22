@@ -25,12 +25,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.saltedge.connector.sdk.SDKConstants;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.List;
-
-import static com.saltedge.connector.sdk.SDKConstants.KEY_END_TO_END_ID;
 
 /**
  * Transaction data
@@ -41,21 +37,18 @@ public class Transaction {
      * Transaction identifier on Provider side
      */
     @JsonProperty(SDKConstants.KEY_ID)
-    @NotBlank
     private String id;
 
     /**
      * Transaction amount
      */
     @JsonProperty(SDKConstants.KEY_AMOUNT)
-    @NotBlank
     private String amount;
 
     /**
      * Transaction currency code in ISO 4217
      */
     @JsonProperty(SDKConstants.KEY_CURRENCY)
-    @NotBlank
     private String currencyCode;
 
     /**
@@ -63,18 +56,13 @@ public class Transaction {
      * Allowed values: booked, pending
      */
     @JsonProperty(SDKConstants.KEY_STATUS)
-    @NotBlank
     private String status;
-
-    @JsonProperty(KEY_END_TO_END_ID)
-    public String endToEndId;
 
     /**
      * The Date at which assets become available to the account owner in case of a credit.
      */
     @JsonProperty("value_date")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    @NotNull
     private LocalDate valueDate;
 
     /**
@@ -107,6 +95,12 @@ public class Transaction {
      */
     @JsonProperty("remittance_information")
     private TransactionRemittanceInformation remittanceInformation;
+
+    /**
+     * Additional information deemed relevant to a payment
+     */
+    @JsonProperty(SDKConstants.KEY_EXTRA)
+    private TransactionExtra extra;
 
     public Transaction() {
     }
@@ -189,5 +183,13 @@ public class Transaction {
 
     public void setRemittanceInformation(TransactionRemittanceInformation remittanceInformation) {
         this.remittanceInformation = remittanceInformation;
+    }
+
+    public TransactionExtra getExtra() {
+        return extra;
+    }
+
+    public void setExtra(TransactionExtra extra) {
+        this.extra = extra;
     }
 }

@@ -33,7 +33,7 @@ public class ParticipantDetailsTests {
 
 		model = new ParticipantDetails(
 			"name",
-			new ParticipantAccount("bban", "EUR", "iban", "****", "+(1) 1234567")
+			new ParticipantAccount("bban", "EUR", "iban", "****", "+(1) 1234567", "1234", "name")
 		);
 
 		assertThat(model.account.bban).isEqualTo("bban");
@@ -41,5 +41,7 @@ public class ParticipantDetailsTests {
 		assertThat(model.account.iban).isEqualTo("iban");
 		assertThat(model.account.maskedPan).isEqualTo("****");
 		assertThat(model.account.msisdn).isEqualTo("+(1) 1234567");
+		assertThat(model.account.pan).isEqualTo("1234");
+		assertThat(model.account.name).isEqualTo("name");
 	}
 }

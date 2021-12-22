@@ -40,8 +40,8 @@ public class CreateTokenRequest extends PrioraBaseRequest {
     /**
      * Human readable Provider identifier.
      */
-    @JsonProperty(SDKConstants.KEY_PROVIDER_CODE)
     @NotBlank
+    @JsonProperty(SDKConstants.KEY_PROVIDER_CODE)
     public String providerCode;
 
     /**
@@ -69,6 +69,7 @@ public class CreateTokenRequest extends PrioraBaseRequest {
      * Requested access services.
      */
     @JsonProperty(KEY_ACCESS)
+    @NotNull
     public ProviderConsents requestedConsent;
 
     /**
