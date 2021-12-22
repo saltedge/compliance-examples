@@ -40,7 +40,7 @@ public class SessionUpdateCallbackRequest extends BaseCallbackRequest {
     @JsonProperty("funds_available")
     public Boolean fundsAvailable;
 
-    //TODO: add sca_status
+    //TODO: add sca_status 
 
     public SessionUpdateCallbackRequest() {
     }
