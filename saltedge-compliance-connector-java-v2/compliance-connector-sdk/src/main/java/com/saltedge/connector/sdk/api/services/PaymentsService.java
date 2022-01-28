@@ -106,7 +106,7 @@ public class PaymentsService extends BaseService {
       } else {
         SessionUpdateCallbackRequest params = new SessionUpdateCallbackRequest(
                 paymentAuthenticationUrl,
-                SDKConstants.STATUS_RECEIVED
+                SDKConstants.STATUS_RCVD
         );
         callbackService.sendUpdateCallback(paymentRequest.sessionSecret, params);
       }

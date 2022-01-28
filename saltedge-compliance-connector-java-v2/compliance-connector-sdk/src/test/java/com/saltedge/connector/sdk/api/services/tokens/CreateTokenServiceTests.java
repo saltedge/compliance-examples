@@ -94,7 +94,7 @@ public class CreateTokenServiceTests extends BaseServicesTests {
 		// then
 		final ArgumentCaptor<SessionUpdateCallbackRequest> callbackCaptor = ArgumentCaptor.forClass(SessionUpdateCallbackRequest.class);
 		verify(sessionsCallbackService).sendUpdateCallback(eq("sessionSecret"), callbackCaptor.capture());
-		assertThat(callbackCaptor.getValue().status).isEqualTo(SDKConstants.STATUS_REDIRECT);
+		assertThat(callbackCaptor.getValue().status).isEqualTo(SDKConstants.STATUS_RECEIVED);
 		assertThat(callbackCaptor.getValue().redirectUrl).isEqualTo("http://example.com?session_secret=sessionSecret");
 
 		final ArgumentCaptor<Token> tokenCaptor = ArgumentCaptor.forClass(Token.class);
@@ -119,7 +119,7 @@ public class CreateTokenServiceTests extends BaseServicesTests {
 		// then
 		final ArgumentCaptor<SessionUpdateCallbackRequest> callbackCaptor = ArgumentCaptor.forClass(SessionUpdateCallbackRequest.class);
 		verify(sessionsCallbackService).sendUpdateCallback(eq("sessionSecret"), callbackCaptor.capture());
-		assertThat(callbackCaptor.getValue().status).isEqualTo(SDKConstants.STATUS_REDIRECT);
+		assertThat(callbackCaptor.getValue().status).isEqualTo(SDKConstants.STATUS_RECEIVED);
 		assertThat(callbackCaptor.getValue().redirectUrl).isEqualTo("http://example.com?session_secret=sessionSecret");
 
 		final ArgumentCaptor<Token> tokenCaptor = ArgumentCaptor.forClass(Token.class);
