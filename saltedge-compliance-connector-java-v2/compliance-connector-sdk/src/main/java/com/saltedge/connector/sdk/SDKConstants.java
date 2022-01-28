@@ -30,7 +30,6 @@ public class SDKConstants {
     public final static String HEADER_ACCESS_TOKEN = "access-token";
 
     public final static String STATUS_WAITING_CONFIRMATION_CODE = "waiting_confirmation_code";
-//    public final static String STATUS_REDIRECT = "redirect";
     public final static String STATUS_RECEIVED = "received";
     public final static String STATUS_RCVD = "RCVD";
 
