@@ -62,9 +62,9 @@ public class PaymentsV2ControllerIntegrationTests extends ControllerIntegrationT
   @Test
   public void givenValidRequest_whenCreatePayment_thenReturnOK() {
     // given
-    Account creditorAccount = new Account();
+    ParticipantAccount creditorAccount = new ParticipantAccount();
     creditorAccount.setIban("iban1");
-    Account debtorAccount = new Account();
+    ParticipantAccount debtorAccount = new ParticipantAccount();
     debtorAccount.setIban("iban2");
     CreatePaymentRequest request = new CreatePaymentRequest(
       "appName",
@@ -103,9 +103,9 @@ public class PaymentsV2ControllerIntegrationTests extends ControllerIntegrationT
   @Test
   public void givenMinimalValidRequest_whenCreatePayment_thenReturnOK() {
     // given
-    Account creditorAccount = new Account();
+    ParticipantAccount creditorAccount = new ParticipantAccount();
     creditorAccount.setIban("iban1");
-    Account debtorAccount = new Account();
+    ParticipantAccount debtorAccount = new ParticipantAccount();
     debtorAccount.setIban("iban2");
     CreatePaymentRequest request = new CreatePaymentRequest(
       "appName",

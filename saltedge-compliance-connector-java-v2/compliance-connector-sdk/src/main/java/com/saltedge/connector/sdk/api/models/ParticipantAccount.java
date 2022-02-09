@@ -48,6 +48,18 @@ public class ParticipantAccount {
     public String iban;
 
     /**
+     * Number code, which is used by British and Irish banks.
+     */
+    @JsonProperty(SDKConstants.KEY_SORT_CODE)
+    private String sortCode;
+
+    /**
+     * International Bank Identifier Code
+     */
+    @JsonProperty(SDKConstants.KEY_BIC)
+    public String bic;
+
+    /**
      * Primary Account Number (PAN) of a card in a masked form.
      */
     @JsonProperty(SDKConstants.KEY_MASKED_PAN)
@@ -81,5 +93,61 @@ public class ParticipantAccount {
         result.iban = iban;
         result.currencyCode = currencyCode;
         return result;
+    }
+
+    public String getCurrencyCode() {
+        return currencyCode;
+    }
+
+    public void setCurrencyCode(String currencyCode) {
+        this.currencyCode = currencyCode;
+    }
+
+    public String getBban() {
+        return bban;
+    }
+
+    public void setBban(String bban) {
+        this.bban = bban;
+    }
+
+    public String getIban() {
+        return iban;
+    }
+
+    public void setIban(String iban) {
+        this.iban = iban;
+    }
+
+    public String getMaskedPan() {
+        return maskedPan;
+    }
+
+    public void setMaskedPan(String maskedPan) {
+        this.maskedPan = maskedPan;
+    }
+
+    public String getMsisdn() {
+        return msisdn;
+    }
+
+    public void setMsisdn(String msisdn) {
+        this.msisdn = msisdn;
+    }
+
+    public String getBic() {
+        return bic;
+    }
+
+    public void setBic(String bic) {
+        this.bic = bic;
+    }
+
+    public String getSortCode() {
+        return sortCode;
+    }
+
+    public void setSortCode(String sortCode) {
+        this.sortCode = sortCode;
     }
 }

@@ -22,10 +22,7 @@ package com.saltedge.connector.sdk.api.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.saltedge.connector.sdk.SDKConstants;
-import com.saltedge.connector.sdk.api.models.Account;
-import com.saltedge.connector.sdk.api.models.Amount;
-import com.saltedge.connector.sdk.api.models.ParticipantAddress;
-import com.saltedge.connector.sdk.api.models.PaymentOrder;
+import com.saltedge.connector.sdk.api.models.*;
 import com.saltedge.connector.sdk.api.models.err.HttpErrorParams;
 import com.saltedge.connector.sdk.api.models.requests.CreatePaymentRequest;
 import com.saltedge.connector.sdk.callback.mapping.SessionUpdateCallbackRequest;
@@ -246,10 +243,10 @@ public class PaymentsServiceTests extends BaseServicesTests {
   }
 
   private CreatePaymentRequest createPaymentRequest(Boolean skipDebtorAccount) {
-    Account creditorAccount = new Account();
+    ParticipantAccount creditorAccount = new ParticipantAccount();
     creditorAccount.setIban("creditorAccountIban");
     creditorAccount.setBic("creditorAccountBic");
-    Account debtorAccount = new Account();
+    ParticipantAccount debtorAccount = new ParticipantAccount();
     debtorAccount.setIban("debtorAccountIban");
     debtorAccount.setBic("debtorAccountBic");
     CreatePaymentRequest result = new CreatePaymentRequest(
@@ -274,10 +271,10 @@ public class PaymentsServiceTests extends BaseServicesTests {
   }
 
   private CreatePaymentRequest createFPSPaymentRequest(Boolean skipDebtorAccount) {
-    Account creditorAccount = new Account();
+    ParticipantAccount creditorAccount = new ParticipantAccount();
     creditorAccount.setBban("creditorAccountBban");
     creditorAccount.setSortCode("creditorAccountSortCode");
-    Account debtorAccount = new Account();
+    ParticipantAccount debtorAccount = new ParticipantAccount();
     debtorAccount.setBban("debtorAccountBban");
     debtorAccount.setSortCode("debtorAccountSortCode");
     CreatePaymentRequest result = new CreatePaymentRequest(
