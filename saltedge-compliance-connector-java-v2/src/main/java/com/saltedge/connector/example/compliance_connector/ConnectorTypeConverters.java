@@ -100,20 +100,13 @@ public class ConnectorTypeConverters {
         result.setBookingDate(transaction.postDate);
         result.setDebtorDetails(createParticipantDetails(transaction.account));
         result.setCreditorDetails(new ParticipantDetails(
-          transaction.toAccountName,
-          ParticipantAccount.createWithIbanAndName(
-            transaction.toIban,
-            transaction.toAccountName
-          )
+                transaction.toAccountName,
+                ParticipantAccount.createWithIbanAndName(transaction.toIban)
         ));
 
         List<CurrencyExchange> exchanges = new ArrayList<>();
         exchanges.add(new CurrencyExchange("", "1.0", transaction.postDate, transaction.currencyCode, transaction.currencyCode, transaction.currencyCode));
         result.setCurrencyExchange(exchanges);
-
-        result.setExtra(new TransactionExtra());
-        result.getExtra().ultimateCreditor = result.getCreditorDetails().account.name;
-        result.getExtra().ultimateDebtor = result.getDebtorDetails().account.name;
 
         TransactionRemittanceInformation information = new TransactionRemittanceInformation();
         information.structured = transaction.description;
@@ -159,8 +152,6 @@ public class ConnectorTypeConverters {
         participantAccount.iban = account.iban;
         participantAccount.maskedPan = maskPan(account.pan);
         participantAccount.msisdn = account.user.phone;
-        participantAccount.pan = account.pan;
-        participantAccount.name = account.name;
         return new ParticipantDetails(account.name, participantAccount);
     }
 

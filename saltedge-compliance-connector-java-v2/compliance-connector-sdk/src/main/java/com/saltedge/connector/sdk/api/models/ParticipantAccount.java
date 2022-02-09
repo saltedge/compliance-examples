@@ -48,12 +48,6 @@ public class ParticipantAccount {
     public String iban;
 
     /**
-     * Primary Account Number (PAN) of a card, can be tokenized by the ASPSP due to PCI DSS requirements.
-     */
-    @JsonProperty("pan")
-    public String pan;
-
-    /**
      * Primary Account Number (PAN) of a card in a masked form.
      */
     @JsonProperty(SDKConstants.KEY_MASKED_PAN)
@@ -65,29 +59,20 @@ public class ParticipantAccount {
     @JsonProperty(SDKConstants.KEY_MSISDN)
     public String msisdn;
 
-    /**
-     * Creditor/Debtor name.
-     */
-    @JsonProperty(SDKConstants.KEY_NAME)
-    public String name;
-
     public ParticipantAccount() {
     }
 
-    public ParticipantAccount(String bban, String currencyCode, String iban, String maskedPan, String msisdn, String pan, String name) {
+    public ParticipantAccount(String bban, String currencyCode, String iban, String maskedPan, String msisdn) {
         this.bban = bban;
         this.currencyCode = currencyCode;
         this.iban = iban;
         this.maskedPan = maskedPan;
         this.msisdn = msisdn;
-        this.pan = pan;
-        this.name = name;
     }
 
-    public static ParticipantAccount createWithIbanAndName(String iban, String name) {
+    public static ParticipantAccount createWithIbanAndName(String iban) {
         ParticipantAccount result = new ParticipantAccount();
         result.iban = iban;
-        result.name = name;
         return result;
     }
 
