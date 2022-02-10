@@ -30,8 +30,8 @@ public class SDKConstants {
     public final static String HEADER_ACCESS_TOKEN = "access-token";
 
     public final static String STATUS_WAITING_CONFIRMATION_CODE = "waiting_confirmation_code";
-    public final static String STATUS_REDIRECT = "redirect";
-    public final static String STATUS_RECEIVED = "RCVD";
+    public final static String STATUS_RECEIVED = "received";
+    public final static String STATUS_RCVD = "RCVD";
 
     public final static int CONSENT_MAX_PERIOD = 1;
 
@@ -64,6 +64,7 @@ public class SDKConstants {
     public final static String KEY_SESSION_SECRET = "session_secret";
     public final static String KEY_PAYMENT_ID = "payment_id";
     public final static String KEY_END_TO_END_IDENTIFICATION = "end_to_end_identification";
+    public final static String KEY_END_TO_END_ID = "end_to_end_id";
     public final static String KEY_ACCESS = "access";
     public final static String KEY_BALANCES = "balances";
     public final static String KEY_PRODUCT = "product";

@@ -40,15 +40,18 @@ public class Account {
    * Account identifier on Provider
    */
   @JsonProperty(SDKConstants.KEY_ID)
+  @NotBlank
   private String id;
 
   /**
    * Human readable account name
    */
   @JsonProperty(SDKConstants.KEY_NAME)
+  @NotBlank
   private String name;
 
   @JsonProperty(SDKConstants.KEY_BALANCES)
+  @NotNull
   private List<AccountBalance> balances;
 
   /**
@@ -56,13 +59,14 @@ public class Account {
    * Allowed values: CACC, CASH, CISH, COMM, CPAC, LLSV, LOAN, MGLD, MOMA, NREX, ODFT, ONDP, OTHR, SACC, SLRY, SVGS, TAXE, TRAN, TRAS
    */
   @JsonProperty("cash_account_type")
+  @NotBlank
   private String cashAccountType;
 
   /**
    * Currency code of account (ISO 4217).
    */
-  @NotBlank
   @JsonProperty(SDKConstants.KEY_CURRENCY)
+  @NotBlank
   private String currencyCode;
 
   /**
@@ -75,12 +79,14 @@ public class Account {
    * Product Name of the Bank for this account, proprietary definition.
    */
   @JsonProperty(SDKConstants.KEY_PRODUCT)
+  @NotBlank
   private String product;
 
   /**
    * Current status of the account. Allowed values: enabled, deleted, blocked
    */
   @JsonProperty(SDKConstants.KEY_STATUS)
+  @NotBlank
   private String status;
 
   /**

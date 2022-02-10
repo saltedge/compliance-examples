@@ -34,6 +34,7 @@ public class SDKConstantsTest {
 		assertThat(SDKConstants.HEADER_CLIENT_ID).isEqualTo("client-id");
 		assertThat(SDKConstants.HEADER_ACCESS_TOKEN).isEqualTo("access-token");
 		assertThat(SDKConstants.STATUS_WAITING_CONFIRMATION_CODE).isEqualTo("waiting_confirmation_code");
-		assertThat(SDKConstants.STATUS_REDIRECT).isEqualTo("redirect");
+		assertThat(SDKConstants.STATUS_RECEIVED).isEqualTo("received");
+		assertThat(SDKConstants.STATUS_RCVD).isEqualTo("RCVD");
 	}
 }

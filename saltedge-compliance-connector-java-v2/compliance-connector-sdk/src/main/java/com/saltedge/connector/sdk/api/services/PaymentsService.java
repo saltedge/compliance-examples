@@ -23,6 +23,7 @@ package com.saltedge.connector.sdk.api.services;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.saltedge.connector.sdk.SDKConstants;
 import com.saltedge.connector.sdk.api.models.Account;
+import com.saltedge.connector.sdk.api.models.ParticipantAccount;
 import com.saltedge.connector.sdk.api.models.PaymentOrder;
 import com.saltedge.connector.sdk.api.models.err.HttpErrorParams;
 import com.saltedge.connector.sdk.api.models.err.NotFound;
@@ -63,20 +64,20 @@ public class PaymentsService extends BaseService {
         order.endToEndIdentification
       );
 
-      Account debtorAccount = order.getDebtorAccount();
-      Optional<Account> optDebtorAccount = Optional.ofNullable(debtorAccount);
+      ParticipantAccount debtorAccount = order.getDebtorAccount();
+      Optional<ParticipantAccount> optDebtorAccount = Optional.ofNullable(debtorAccount);
 
       String paymentAuthenticationUrl;
       if (paymentRequest.getPaymentProduct().equals(PAYMENT_PRODUCT_FASTER_PAYMENT_SERVICE)) {
         paymentAuthenticationUrl = providerService.createFPSPayment(
             paymentRequest.getPaymentProduct(),
             order.getCreditorAccount().getBban(),
-            order.getCreditorAccount().getSortCode(),
+            order.getCreditorAccount().getSortCode(), //add sort code
             order.getCreditorName(),
             order.getCreditorAddress(),
             order.getCreditorAgentName(),
-            optDebtorAccount.map(Account::getBban).orElse(null),
-            optDebtorAccount.map(Account::getSortCode).orElse(null),
+            optDebtorAccount.map(ParticipantAccount::getBban).orElse(null),
+            optDebtorAccount.map(ParticipantAccount::getSortCode).orElse(null),
             order.getInstructedAmount().getAmount(),
             order.getInstructedAmount().getCurrency(),
             order.getRemittanceInformationUnstructured(),
@@ -91,8 +92,8 @@ public class PaymentsService extends BaseService {
             order.getCreditorName(),
             order.getCreditorAddress(),
             order.getCreditorAgentName(),
-            optDebtorAccount.map(Account::getIban).orElse(null),
-            optDebtorAccount.map(Account::getBic).orElse(null),
+            optDebtorAccount.map(ParticipantAccount::getIban).orElse(null),
+            optDebtorAccount.map(ParticipantAccount::getBic).orElse(null),
             order.getInstructedAmount().getAmount(),
             order.getInstructedAmount().getCurrency(),
             order.getRemittanceInformationUnstructured(),
@@ -106,7 +107,7 @@ public class PaymentsService extends BaseService {
       } else {
         SessionUpdateCallbackRequest params = new SessionUpdateCallbackRequest(
                 paymentAuthenticationUrl,
-                SDKConstants.STATUS_RECEIVED
+                SDKConstants.STATUS_RCVD
         );
         callbackService.sendUpdateCallback(paymentRequest.sessionSecret, params);
       }
