@@ -47,6 +47,7 @@ public class AuthorizationCreateRequest {
    * Allowed length: min: 16 characters
    */
   @JsonProperty(SDKConstants.KEY_AUTH_CODE)
+  @NotEmpty
   @Size(min = 16)
   public String authCode;
 

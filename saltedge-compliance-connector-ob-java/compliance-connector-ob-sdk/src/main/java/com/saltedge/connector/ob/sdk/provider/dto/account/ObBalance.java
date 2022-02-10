@@ -99,7 +99,6 @@ public class ObBalance {
     /**
      * Amount of money of the credit line
      */
-    @NotNull
     @JsonProperty(SDKConstants.KEY_AMOUNT)
     public ObAmount amount;
 

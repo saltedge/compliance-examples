@@ -24,12 +24,13 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.saltedge.connector.ob.sdk.SDKConstants;
 
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AuthorizationsCreateResponse {
     @JsonProperty(SDKConstants.KEY_DATA)
+    @NotNull
     public Data data;
 
     public AuthorizationsCreateResponse() {}
@@ -69,15 +70,12 @@ public class AuthorizationsCreateResponse {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class Data {
         @JsonProperty(SDKConstants.KEY_AUTHORIZATION_ID)
-        @NotEmpty
         public String authorizationId;
 
         @JsonProperty(SDKConstants.KEY_CONSENT_ID)
-        @NotEmpty
         public String consentId;
 
         @JsonProperty(SDKConstants.KEY_ACCESS_TOKEN)
-        @NotEmpty
         public String accessToken;
 
         @JsonProperty(SDKConstants.KEY_REDIRECT_URI)

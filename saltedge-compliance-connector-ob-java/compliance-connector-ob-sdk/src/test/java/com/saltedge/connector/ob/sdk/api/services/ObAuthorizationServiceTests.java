@@ -145,7 +145,7 @@ public class ObAuthorizationServiceTests {
 		//given
 		AuthorizationUpdateRequest callbackRequest = new AuthorizationUpdateRequest("userId", "approved", Collections.emptyList());
 		AuthorizationsUpdateResponse callbackResponse = new AuthorizationsUpdateResponse();
-		AuthorizationsUpdateResponse.Data data = new AuthorizationsUpdateResponse.Data("authorizationId", "Authorised", "accessToken");
+		AuthorizationsUpdateResponse.Data data = new AuthorizationsUpdateResponse.Data("authorizationId", "Authorised");
 		data.redirectUri = "redirectUri";
 		callbackResponse.data = data;
 

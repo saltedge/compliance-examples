@@ -25,13 +25,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.saltedge.connector.ob.sdk.SDKConstants;
 
 import javax.validation.constraints.NotNull;
+import java.time.Instant;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class FundsConfirmationResponse {
     @JsonProperty(SDKConstants.KEY_DATA)
     public Data data;
 
-    public FundsConfirmationResponse() {}
+    public FundsConfirmationResponse() {
+    }
+
+    public FundsConfirmationResponse(boolean fundsAvailable, String fundsConfirmationId, Instant fundsConfirmationCreatedAt) {
+        this.data = new Data(fundsAvailable, fundsConfirmationId, fundsConfirmationCreatedAt);
+    }
 
     public FundsConfirmationResponse(boolean fundsAvailable) {
         this.data = new Data(fundsAvailable);
@@ -43,11 +49,23 @@ public class FundsConfirmationResponse {
         @NotNull
         public Boolean fundsAvailable;
 
+        @JsonProperty("funds_confirmation_id")
+        public String fundsConfirmationId;
+
+        @JsonProperty("funds_confirmation_created_at")
+        public Instant fundsConfirmationCreatedAt;
+
         public Data() {
         }
 
         public Data(boolean fundsAvailable) {
             this.fundsAvailable = fundsAvailable;
+        }
+
+        public Data(boolean fundsAvailable, String fundsConfirmationId, Instant fundsConfirmationCreatedAt) {
+            this.fundsAvailable = fundsAvailable;
+            this.fundsConfirmationId = fundsConfirmationId;
+            this.fundsConfirmationCreatedAt = fundsConfirmationCreatedAt;
         }
     }
 }

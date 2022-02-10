@@ -26,11 +26,13 @@ import com.saltedge.connector.ob.sdk.SDKConstants;
 import com.saltedge.connector.ob.sdk.provider.dto.account.Meta;
 import com.saltedge.connector.ob.sdk.provider.dto.account.ObTransaction;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class TransactionsIndexResponse {
     @JsonProperty(SDKConstants.KEY_DATA)
+    @NotNull
     public List<ObTransaction> data;
 
     @JsonProperty(SDKConstants.KEY_META)

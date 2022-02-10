@@ -24,6 +24,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.saltedge.connector.ob.sdk.SDKConstants;
+import com.saltedge.connector.ob.sdk.provider.dto.account.ObAccountIdentifier;
 
 import javax.validation.constraints.NotBlank;
 import java.util.List;
@@ -36,16 +37,16 @@ public class AuthorizationUpdateRequest {
     /**
      * PSU identifier on Connector side. Used to map PSU resource on Salt Edge PSD2 Compliance side to Connector one
      */
-    @NotBlank
     @JsonProperty(SDKConstants.KEY_USER_ID)
+    @NotBlank
     public String userId;
 
     /**
      * Conveys current status of the operation.
      * Allowed values: approved, denied
      */
-    @NotBlank
     @JsonProperty(SDKConstants.KEY_STATUS)
+    @NotBlank
     public String status;
 
     /**
@@ -54,7 +55,14 @@ public class AuthorizationUpdateRequest {
     @JsonProperty("access")
     List<String> accountIdentifiers;
 
-    public AuthorizationUpdateRequest() {}
+    /**
+     * Unambiguous identification of the account of the debtor, in the case of a credit transaction.
+     */
+    @JsonProperty("debtor_account")
+    public ObAccountIdentifier debtorAccount;
+
+    public AuthorizationUpdateRequest() {
+    }
 
     public AuthorizationUpdateRequest(@NotBlank String userId, @NotBlank String status, List<String> accountIdentifiers) {
         this.userId = userId;
@@ -67,11 +75,11 @@ public class AuthorizationUpdateRequest {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         AuthorizationUpdateRequest that = (AuthorizationUpdateRequest) o;
-        return Objects.equals(userId, that.userId) && Objects.equals(status, that.status) && Objects.equals(accountIdentifiers, that.accountIdentifiers);
+        return Objects.equals(userId, that.userId) && Objects.equals(status, that.status) && Objects.equals(accountIdentifiers, that.accountIdentifiers) && Objects.equals(debtorAccount, that.debtorAccount);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, status, accountIdentifiers);
+        return Objects.hash(userId, status, accountIdentifiers, debtorAccount);
     }
 }

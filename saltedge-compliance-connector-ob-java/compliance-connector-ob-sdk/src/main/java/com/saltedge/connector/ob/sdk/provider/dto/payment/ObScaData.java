@@ -24,8 +24,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import javax.validation.constraints.NotEmpty;
-
 /**
  * Supporting Data provided by TPP, when requesting SCA Exemption.
  */
@@ -37,7 +35,6 @@ public class ObScaData {
    * Usage: This field indicates whether the PSU was subject to SCA performed by the TPP.
    */
   @JsonProperty("applied_authentication_approach")
-  @NotEmpty
   public String appliedAuthenticationApproach;
 
   /**
@@ -45,7 +42,6 @@ public class ObScaData {
    * Usage: If the payment is recurring then the transaction identifier of the previous payment occurrence so that the ASPSP can verify that the PISP, amount and the payee are the same as the previous occurrence.
    */
   @JsonProperty("reference_payment_order_id")
-  @NotEmpty
   public String referencePaymentOrderId;
 
   /**

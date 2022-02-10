@@ -36,6 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.time.Instant;
 
 /**
  * This controller is responsible for checking funds availability.
@@ -66,6 +67,8 @@ public class ObFundsController extends ObBaseController {
           consent.debtorAccount,
           request.instructedAmount
         );
-        return new ResponseEntity<>(new FundsConfirmationResponse(fundsAvailable), HttpStatus.OK);
+        String fundsConfirmationId = consent.id.toString();
+        Instant fundsConfirmationCreatedAt = Instant.now();
+        return new ResponseEntity<>(new FundsConfirmationResponse(fundsAvailable, fundsConfirmationId, fundsConfirmationCreatedAt), HttpStatus.OK);
     }
 }

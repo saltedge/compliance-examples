@@ -30,6 +30,9 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
+/**
+ * @see <a href="https://priora.saltedge.com/docs/aspsp/ob/ais#connector-endpoints-accounts-accounts-transactions">Transactions Endpoints</a>
+ */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties
 public class TransactionsIndexRequest extends PrioraBaseRequest {

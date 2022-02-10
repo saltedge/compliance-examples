@@ -25,6 +25,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.saltedge.connector.ob.sdk.SDKConstants;
 import com.saltedge.connector.ob.sdk.provider.dto.payment.ObPaymentInitiationData;
+import com.saltedge.connector.ob.sdk.provider.dto.payment.ObRiskData;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
@@ -41,16 +42,16 @@ public class PaymentCreateRequest extends CreateBaseRequest {
     /**
      * Payment order identifier on Connector side. Used to map Salt Edge PSD2 Compliance payments to Connector ones.
      */
-    @NotBlank
     @JsonProperty(SDKConstants.KEY_PAYMENT_ID)
+    @NotBlank
     public String compliancePaymentId;
 
     /**
      * Specifies the type of payment associated with a preregistered template.
      * Allowed values: domestic_payment, international_payment
      */
-    @NotBlank
     @JsonProperty("payment_type")
+    @NotBlank
     public String paymentType;
 
     /**
@@ -60,6 +61,13 @@ public class PaymentCreateRequest extends CreateBaseRequest {
     @NotNull
     @Valid
     public ObPaymentInitiationData paymentInitiation;
+
+    /**
+     * Data provided by TPP, used to specify additional details for risk scoring for Payments.
+     */
+    @JsonProperty("risk")
+    @NotNull
+    public ObRiskData risk;
 
     @Override
     public boolean equals(Object o) {
