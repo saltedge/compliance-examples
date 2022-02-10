@@ -24,6 +24,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.saltedge.connector.sdk.SDKConstants;
 
+import javax.validation.constraints.NotBlank;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -31,6 +32,7 @@ import java.util.Objects;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class BaseCallbackRequest {
     @JsonProperty(SDKConstants.KEY_SESSION_SECRET)
+    @NotBlank
     public String sessionSecret;
 
     @JsonProperty(SDKConstants.KEY_EXTRA)

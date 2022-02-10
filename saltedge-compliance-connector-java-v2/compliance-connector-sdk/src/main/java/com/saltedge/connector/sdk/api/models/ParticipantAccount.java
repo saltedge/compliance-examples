@@ -48,10 +48,16 @@ public class ParticipantAccount {
     public String iban;
 
     /**
-     * Primary Account Number (PAN) of a card, can be tokenized by the ASPSP due to PCI DSS requirements.
+     * Number code, which is used by British and Irish banks.
      */
-    @JsonProperty("pan")
-    public String pan;
+    @JsonProperty(SDKConstants.KEY_SORT_CODE)
+    private String sortCode;
+
+    /**
+     * International Bank Identifier Code
+     */
+    @JsonProperty(SDKConstants.KEY_BIC)
+    public String bic;
 
     /**
      * Primary Account Number (PAN) of a card in a masked form.
@@ -65,29 +71,20 @@ public class ParticipantAccount {
     @JsonProperty(SDKConstants.KEY_MSISDN)
     public String msisdn;
 
-    /**
-     * Creditor/Debtor name.
-     */
-    @JsonProperty(SDKConstants.KEY_NAME)
-    public String name;
-
     public ParticipantAccount() {
     }
 
-    public ParticipantAccount(String bban, String currencyCode, String iban, String maskedPan, String msisdn, String pan, String name) {
+    public ParticipantAccount(String bban, String currencyCode, String iban, String maskedPan, String msisdn) {
         this.bban = bban;
         this.currencyCode = currencyCode;
         this.iban = iban;
         this.maskedPan = maskedPan;
         this.msisdn = msisdn;
-        this.pan = pan;
-        this.name = name;
     }
 
-    public static ParticipantAccount createWithIbanAndName(String iban, String name) {
+    public static ParticipantAccount createWithIbanAndName(String iban) {
         ParticipantAccount result = new ParticipantAccount();
         result.iban = iban;
-        result.name = name;
         return result;
     }
 
@@ -96,5 +93,61 @@ public class ParticipantAccount {
         result.iban = iban;
         result.currencyCode = currencyCode;
         return result;
+    }
+
+    public String getCurrencyCode() {
+        return currencyCode;
+    }
+
+    public void setCurrencyCode(String currencyCode) {
+        this.currencyCode = currencyCode;
+    }
+
+    public String getBban() {
+        return bban;
+    }
+
+    public void setBban(String bban) {
+        this.bban = bban;
+    }
+
+    public String getIban() {
+        return iban;
+    }
+
+    public void setIban(String iban) {
+        this.iban = iban;
+    }
+
+    public String getMaskedPan() {
+        return maskedPan;
+    }
+
+    public void setMaskedPan(String maskedPan) {
+        this.maskedPan = maskedPan;
+    }
+
+    public String getMsisdn() {
+        return msisdn;
+    }
+
+    public void setMsisdn(String msisdn) {
+        this.msisdn = msisdn;
+    }
+
+    public String getBic() {
+        return bic;
+    }
+
+    public void setBic(String bic) {
+        this.bic = bic;
+    }
+
+    public String getSortCode() {
+        return sortCode;
+    }
+
+    public void setSortCode(String sortCode) {
+        this.sortCode = sortCode;
     }
 }

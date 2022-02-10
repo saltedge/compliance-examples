@@ -41,7 +41,7 @@ public class PaymentOrder {
    */
   @JsonProperty("creditor_account")
   @RequestAccountConstraint
-  public Account creditorAccount;
+  public ParticipantAccount creditorAccount;
 
   /**
    * Creditor full name.
@@ -60,7 +60,7 @@ public class PaymentOrder {
    * Debtor account data.
    */
   @JsonProperty("debtor_account")
-  public Account debtorAccount;
+  public ParticipantAccount debtorAccount; //TODO: use only iban with bic (string, optional) https://git.saltedge.com/psd2/priora/-/issues/2876#note_1500608
 
   /**
    * Amount and currency.
@@ -92,7 +92,7 @@ public class PaymentOrder {
   public PaymentOrder() {
   }
 
-  public PaymentOrder(Account creditorAccount, @NotEmpty String creditorName, ParticipantAddress creditorAddress, String creditorAgentName, Account debtorAccount, @NotNull @Valid Amount instructedAmount, String endToEndIdentification, String remittanceInformationUnstructured) {
+  public PaymentOrder(ParticipantAccount creditorAccount, @NotEmpty String creditorName, ParticipantAddress creditorAddress, String creditorAgentName, ParticipantAccount debtorAccount, @NotNull @Valid Amount instructedAmount, String endToEndIdentification, String remittanceInformationUnstructured) {
     this.creditorAccount = creditorAccount;
     this.creditorName = creditorName;
     this.creditorAddress = creditorAddress;
@@ -103,11 +103,11 @@ public class PaymentOrder {
     this.remittanceInformationUnstructured = remittanceInformationUnstructured;
   }
 
-  public Account getCreditorAccount() {
+  public ParticipantAccount getCreditorAccount() {
     return creditorAccount;
   }
 
-  public void setCreditorAccount(Account creditorAccount) {
+  public void setCreditorAccount(ParticipantAccount creditorAccount) {
     this.creditorAccount = creditorAccount;
   }
 
@@ -127,11 +127,11 @@ public class PaymentOrder {
     this.creditorAddress = creditorAddress;
   }
 
-  public Account getDebtorAccount() {
+  public ParticipantAccount getDebtorAccount() {
     return debtorAccount;
   }
 
-  public void setDebtorAccount(Account debtorAccount) {
+  public void setDebtorAccount(ParticipantAccount debtorAccount) {
     this.debtorAccount = debtorAccount;
   }
 
