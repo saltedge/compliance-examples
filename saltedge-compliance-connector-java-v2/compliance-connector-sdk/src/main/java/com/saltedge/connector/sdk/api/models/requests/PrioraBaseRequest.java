@@ -35,4 +35,8 @@ public abstract class PrioraBaseRequest {
     @NotBlank
     @JsonProperty(SDKConstants.KEY_SESSION_SECRET)
     public String sessionSecret;
+
+    public String getSessionSecret() {
+        return sessionSecret;
+    }
 }

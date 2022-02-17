@@ -50,7 +50,7 @@ import javax.validation.Valid;
 @Validated
 public class TokensV2Controller extends BaseV2Controller {
     public final static String BASE_PATH = SDKConstants.API_BASE_PATH + "/tokens";
-    private static Logger log = LoggerFactory.getLogger(TokensV2Controller.class);
+    private static final Logger log = LoggerFactory.getLogger(TokensV2Controller.class);
     @Autowired
     CreateTokenService createTokenService;
     @Autowired

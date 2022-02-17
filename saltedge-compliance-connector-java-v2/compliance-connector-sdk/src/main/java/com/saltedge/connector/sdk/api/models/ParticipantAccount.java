@@ -23,6 +23,7 @@ package com.saltedge.connector.sdk.api.models;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.saltedge.connector.sdk.SDKConstants;
+import org.springframework.util.StringUtils;
 
 /**
  * Creditor/Debtor account information.
@@ -70,6 +71,20 @@ public class ParticipantAccount {
      */
     @JsonProperty(SDKConstants.KEY_MSISDN)
     public String msisdn;
+
+    /**
+     * Check if one of identifiers is not empty
+     *
+     * @return true if model contains at least one identifier
+     */
+    public boolean hasIdentifier() {
+        return StringUtils.hasText(bban)
+            || StringUtils.hasText(bic)
+            || StringUtils.hasText(iban)
+            || StringUtils.hasText(sortCode)
+            || StringUtils.hasText(maskedPan)
+            || StringUtils.hasText(msisdn);
+    }
 
     public ParticipantAccount() {
     }

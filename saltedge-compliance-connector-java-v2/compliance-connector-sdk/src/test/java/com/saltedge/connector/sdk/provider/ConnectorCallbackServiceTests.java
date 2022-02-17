@@ -285,7 +285,6 @@ public class ConnectorCallbackServiceTests {
 		testService.updatePaymentFundsInformation(false, extraJson, "PDNG");
 
 		// then
-		verify(sessionsCallbackService).createRestTemplate();
 		verifyNoMoreInteractions(sessionsCallbackService);
 	}
 

@@ -201,7 +201,7 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
     String sessionSecret = paymentExtraMap.get(SDKConstants.KEY_SESSION_SECRET);
 
     SessionUpdateCallbackRequest updateParams = new SessionUpdateCallbackRequest(fundsAvailable, status);
-    if (!StringUtils.isEmpty(sessionSecret))  sessionsCallbackService.sendUpdateCallback(sessionSecret, updateParams);
+    if (StringUtils.hasText(sessionSecret)) sessionsCallbackService.sendUpdateCallback(sessionSecret, updateParams);
   }
 
   /**

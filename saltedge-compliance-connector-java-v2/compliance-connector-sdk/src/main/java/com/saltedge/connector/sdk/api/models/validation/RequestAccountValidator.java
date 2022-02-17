@@ -20,18 +20,18 @@
  */
 package com.saltedge.connector.sdk.api.models.validation;
 
-import com.saltedge.connector.sdk.api.models.Account;
+import com.saltedge.connector.sdk.api.models.ParticipantAccount;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-public class RequestAccountValidator implements ConstraintValidator<RequestAccountConstraint, Account> {
+public class RequestAccountValidator implements ConstraintValidator<RequestAccountConstraint, ParticipantAccount> {
     @Override
     public void initialize(RequestAccountConstraint constraintAnnotation) {
     }
 
     @Override
-    public boolean isValid(Account value, ConstraintValidatorContext context) {
-        return value != null && value.hasIdentifier();
+    public boolean isValid(ParticipantAccount value, ConstraintValidatorContext context) {
+        return value == null || value.hasIdentifier();
     }
 }

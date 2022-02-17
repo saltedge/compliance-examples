@@ -138,7 +138,7 @@ public class PaymentsServiceTests extends BaseServicesTests {
     );
     final ArgumentCaptor<SessionUpdateCallbackRequest> callbackCaptor = ArgumentCaptor.forClass(SessionUpdateCallbackRequest.class);
     verify(sessionsCallbackService).sendUpdateCallback(eq("sessionSecret"), callbackCaptor.capture());
-    assertThat(callbackCaptor.getValue().status).isEqualTo(SDKConstants.STATUS_RECEIVED);
+    assertThat(callbackCaptor.getValue().status).isEqualTo(SDKConstants.STATUS_RCVD);
     assertThat(callbackCaptor.getValue().redirectUrl).isEqualTo(redirectUrl);
   }
 
@@ -188,7 +188,7 @@ public class PaymentsServiceTests extends BaseServicesTests {
     );
     final ArgumentCaptor<SessionUpdateCallbackRequest> callbackCaptor = ArgumentCaptor.forClass(SessionUpdateCallbackRequest.class);
     verify(sessionsCallbackService).sendUpdateCallback(eq("sessionSecret"), callbackCaptor.capture());
-    assertThat(callbackCaptor.getValue().status).isEqualTo(SDKConstants.STATUS_RECEIVED);
+    assertThat(callbackCaptor.getValue().status).isEqualTo(SDKConstants.STATUS_RCVD);
     assertThat(callbackCaptor.getValue().redirectUrl).isEqualTo(redirectUrl);
   }
 
@@ -238,7 +238,7 @@ public class PaymentsServiceTests extends BaseServicesTests {
     );
     final ArgumentCaptor<SessionUpdateCallbackRequest> callbackCaptor = ArgumentCaptor.forClass(SessionUpdateCallbackRequest.class);
     verify(sessionsCallbackService).sendUpdateCallback(eq("sessionSecret"), callbackCaptor.capture());
-    assertThat(callbackCaptor.getValue().status).isEqualTo(SDKConstants.STATUS_RECEIVED);
+    assertThat(callbackCaptor.getValue().status).isEqualTo(SDKConstants.STATUS_RCVD);
     assertThat(callbackCaptor.getValue().redirectUrl).isEqualTo(redirectUrl);
   }
 

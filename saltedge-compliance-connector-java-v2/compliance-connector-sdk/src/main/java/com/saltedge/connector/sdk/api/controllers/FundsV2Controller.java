@@ -39,7 +39,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 /**
- * This controller are responsible for checking whether a specific amount is available at point of time of the request
+ * This controller is responsible for checking whether a specific amount is available at point of time of the request
  * on an account addressed by IBAN or other available identifiers.
  * https://priora.saltedge.com/docs/aspsp/v2/piis#piis-connector_endpoints-funds_confirmations
  */
@@ -47,25 +47,25 @@ import javax.validation.constraints.NotNull;
 @RequestMapping(FundsV2Controller.BASE_PATH)
 @Validated
 public class FundsV2Controller extends BaseV2Controller {
-    public final static String BASE_PATH = SDKConstants.API_BASE_PATH + "/funds_confirmations";
-    private static Logger log = LoggerFactory.getLogger(FundsV2Controller.class);
-    @Autowired
-    FundsService checkFundsService;
+  public final static String BASE_PATH = SDKConstants.API_BASE_PATH + "/funds_confirmations";
+  private static final Logger log = LoggerFactory.getLogger(FundsV2Controller.class);
+  @Autowired
+  FundsService checkFundsService;
 
-    /**
-     * Checks whether a specific amount is available at point of time of the request on an account addressed by IBAN
-     * or other available identifiers.
-     *
-     * @param request FundsConfirmationRequest
-     * @param token Token
-     * @return response
-     */
-    @PostMapping
-    public ResponseEntity<FundsConfirmationResponse> checkFunds(
-            @NotNull Token token,
-            @Valid FundsConfirmationRequest request
-    ) {
-        boolean result = checkFundsService.confirmFunds(token, request);
-        return new ResponseEntity<>(new FundsConfirmationResponse(result), HttpStatus.OK);
-    }
+  /**
+   * Checks whether a specific amount is available at point of time of the request on an account addressed by IBAN
+   * or other available identifiers.
+   *
+   * @param request FundsConfirmationRequest
+   * @param token Token
+   * @return response
+   */
+  @PostMapping
+  public ResponseEntity<FundsConfirmationResponse> checkFunds(
+      @NotNull Token token,
+      @Valid FundsConfirmationRequest request
+  ) {
+    boolean result = checkFundsService.confirmFunds(token, request);
+    return new ResponseEntity<>(new FundsConfirmationResponse(result), HttpStatus.OK);
+  }
 }
