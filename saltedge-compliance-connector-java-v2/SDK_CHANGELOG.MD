@@ -1,5 +1,9 @@
 # Salt Edge Compliance Connector SDK Changelog
 
+## 2.10.0 (2022-02-18)
+### Change:
+- Update object parameters and validation
+
 ## 2.9.0 (2021-12-03)
 ### Add:
 - Add updatePaymentFundsInformation() feature for payment session update callback

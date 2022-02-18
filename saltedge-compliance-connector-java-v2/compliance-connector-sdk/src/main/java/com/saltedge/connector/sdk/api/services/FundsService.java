@@ -36,38 +36,38 @@ import java.util.List;
 
 @Service
 public class FundsService extends BaseService {
-    private static Logger log = LoggerFactory.getLogger(FundsService.class);
+  private static final Logger log = LoggerFactory.getLogger(FundsService.class);
 
-    public boolean confirmFunds(@NotNull Token token, @NotNull FundsConfirmationRequest request) {
-        try {
-            List<ExchangeRate> rates = providerService.getExchangeRates();
-            Account account = providerService.getAccountsOfUser(token.userId).stream()
-                    .filter(model -> model.containsAccountIdentifier(request.getAccountIdentifier()))
-                    .findFirst()
-                    .orElse(null);
-            ExchangeRate requestCurrency = findExchangeRateByCode(rates, request.instructedAmount.currency);
-            Float requestAmount = TypeTools.safeParseFloat(request.instructedAmount.amount, null);
+  public boolean confirmFunds(@NotNull Token token, @NotNull FundsConfirmationRequest request) {
+    try {
+      List<ExchangeRate> rates = providerService.getExchangeRates();
+      Account account = providerService.getAccountsOfUser(token.userId).stream()
+          .filter(model -> model.containsAccountIdentifier(request.getAccountIdentifier()))
+          .findFirst()
+          .orElse(null);
+      ExchangeRate requestCurrency = findExchangeRateByCode(rates, request.instructedAmount.currency);
+      Float requestAmount = TypeTools.safeParseFloat(request.instructedAmount.amount, null);
 
-            if (requestCurrency == null || requestAmount == null) {
-                throw new BadRequest.InvalidAttributeValue("FundsConfirmationRequest.currency_code");
-            } else if (account == null) {
-                throw new BadRequest.InvalidAttributeValue("FundsConfirmationRequest.account");
-            } else {
-                float balanceAmount = TypeTools.safeParseFloat(account.getBalance("openingBooked").amount, 0f);
-                float accountExchangeRate = findExchangeRateByCode(rates, account.getCurrencyCode()).exchangeRate;
-                return Math.abs(balanceAmount) * accountExchangeRate >= Math.abs(requestAmount) * requestCurrency.exchangeRate;
-            }
-        } catch (Exception e) {
-            log.error("CheckFundsService.checkFunds:", e);
-            return false;
-        }
+      if (requestCurrency == null || requestAmount == null) {
+        throw new BadRequest.InvalidAttributeValue("FundsConfirmationRequest.currency_code");
+      } else if (account == null) {
+        throw new BadRequest.InvalidAttributeValue("FundsConfirmationRequest.account");
+      } else {
+        float balanceAmount = TypeTools.safeParseFloat(account.getBalance("openingBooked").amount, 0f);
+        float accountExchangeRate = findExchangeRateByCode(rates, account.getCurrencyCode()).exchangeRate;
+        return Math.abs(balanceAmount) * accountExchangeRate >= Math.abs(requestAmount) * requestCurrency.exchangeRate;
+      }
+    } catch (Exception e) {
+      log.error("CheckFundsService.checkFunds:", e);
+      return false;
     }
+  }
 
-    private ExchangeRate findExchangeRateByCode(List<ExchangeRate> rates, String code) {
-        if (rates == null || StringUtils.isEmpty(code)) return null;
-        return rates.stream()
-                .filter(model -> code.equals(model.currencyCode))
-                .findFirst()
-                .orElse(null);
-    }
+  private ExchangeRate findExchangeRateByCode(List<ExchangeRate> rates, String code) {
+    if (rates == null || StringUtils.isEmpty(code)) return null;
+    return rates.stream()
+        .filter(model -> code.equals(model.currencyCode))
+        .findFirst()
+        .orElse(null);
+  }
 }

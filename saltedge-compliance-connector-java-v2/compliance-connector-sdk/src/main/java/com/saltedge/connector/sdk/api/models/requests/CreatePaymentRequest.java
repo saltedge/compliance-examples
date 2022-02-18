@@ -45,7 +45,7 @@ public class CreatePaymentRequest extends PrioraBaseRequest {
   public String appName;
 
   /**
-   * Human readable Provider identifier.
+   * Provider identifier.
    */
   @JsonProperty(KEY_PROVIDER_CODE)
   @NotEmpty

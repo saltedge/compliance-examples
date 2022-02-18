@@ -61,10 +61,6 @@ public class CreateTokenRequestTest extends ValidationTest {
 
 		model.validUntil = LocalDate.MAX;
 
-		assertThat(validator.validate(model)).isNotEmpty();
-
-		model.requestedConsent = new ProviderConsents();
-
 		assertThat(validator.validate(model)).isEmpty();
 	}
 

@@ -20,10 +20,7 @@
  */
 package com.saltedge.connector.sdk.api.services;
 
-import com.saltedge.connector.sdk.api.models.Account;
-import com.saltedge.connector.sdk.api.models.AccountBalance;
-import com.saltedge.connector.sdk.api.models.Amount;
-import com.saltedge.connector.sdk.api.models.ExchangeRate;
+import com.saltedge.connector.sdk.api.models.*;
 import com.saltedge.connector.sdk.api.models.requests.FundsConfirmationRequest;
 import com.saltedge.connector.sdk.models.Token;
 import org.assertj.core.util.Lists;
@@ -47,92 +44,83 @@ public class FundsServiceTests extends BaseServicesTests {
 	@Before
 	public void setUp() throws Exception {
 		super.setUp();
-        given(providerService.getExchangeRates()).willReturn(Lists.list(
-                new ExchangeRate("EUR", 1.0f),
-                new ExchangeRate("USD", 0.90f),
-                new ExchangeRate("GBP", 1.502f)
-        ));
-        Account account = new Account();
-        account.setIban("iban");
-        account.setBalances(Lists.list(new AccountBalance("100.0", "GBP", "openingBooked")));
-        account.setCurrencyCode("EUR");
-        given(providerService.getAccountsOfUser("1")).willReturn(Lists.list(account));
+    given(providerService.getExchangeRates()).willReturn(Lists.list(
+        new ExchangeRate("EUR", 1.0f),
+        new ExchangeRate("USD", 0.90f),
+        new ExchangeRate("GBP", 1.502f)
+    ));
+    Account account = new Account();
+    account.setIban("iban");
+    account.setBalances(Lists.list(new AccountBalance("100.0", "GBP", "openingBooked")));
+    account.setCurrencyCode("EUR");
+    given(providerService.getAccountsOfUser("1")).willReturn(Lists.list(account));
 	}
 
 	@Test
 	public void givenValidRequest_whenConfirmFunds_thenReturnTrue() {
 		// given
-        Token token = new Token("1");
-        Account account = new Account();
-        account.setIban("iban");
-        account.setCurrencyCode("EUR");
-        FundsConfirmationRequest request = new FundsConfirmationRequest(
-                account,
-                new Amount("1.0", "EUR")
-        );
+    Token token = new Token("1");
+    FundsConfirmationRequest request = new FundsConfirmationRequest(
+        "code",
+        ParticipantAccount.createWithIbanAndCurrency("iban", "EUR"),
+        new Amount("1.0", "EUR")
+    );
 
 		// when
-        boolean result = testService.confirmFunds(token, request);
+    boolean result = testService.confirmFunds(token, request);
 
 		// then
-        assertThat(result).isTrue();
+    assertThat(result).isTrue();
 	}
 
-    @Test
-    public void givenValidRequestWithBigAmount_whenConfirmFunds_thenReturnTrue() {
-        // given
-        Token token = new Token("1");
-        Account account = new Account();
-        account.setIban("iban");
-        account.setCurrencyCode("EUR");
-        FundsConfirmationRequest request = new FundsConfirmationRequest(
-                account,
-                new Amount("123456789.0", "USD")
-        );
+  @Test
+  public void givenValidRequestWithBigAmount_whenConfirmFunds_thenReturnTrue() {
+    // given
+    Token token = new Token("1");
+    FundsConfirmationRequest request = new FundsConfirmationRequest(
+        "code",
+        ParticipantAccount.createWithIbanAndCurrency("iban", "EUR"),
+        new Amount("123456789.0", "USD")
+    );
 
-        // when
-        boolean result = testService.confirmFunds(token, request);
+    // when
+    boolean result = testService.confirmFunds(token, request);
 
-        // then
-        assertThat(result).isFalse();
-    }
+    // then
+    assertThat(result).isFalse();
+  }
 
-    @Test
-    public void givenInvalidIban_whenConfirmFunds_thenReturnTrue() {
-        // given
-        Token token = new Token("1");
-        Account account = new Account();
-        account.setIban("iban1");
-        account.setCurrencyCode("EUR");
-        FundsConfirmationRequest request = new FundsConfirmationRequest(
-                account,
-                new Amount("1.0", "USD")
-        );
+  @Test
+  public void givenInvalidIban_whenConfirmFunds_thenReturnTrue() {
+    // given
+    Token token = new Token("1");
+    FundsConfirmationRequest request = new FundsConfirmationRequest(
+        "code",
+        ParticipantAccount.createWithIbanAndCurrency("iban1", "EUR"),
+        new Amount("1.0", "USD")
+    );
 
-        // when
-        boolean result = testService.confirmFunds(token, request);
+    // when
+    boolean result = testService.confirmFunds(token, request);
 
-        // then
-        assertThat(result).isFalse();
-    }
+    // then
+    assertThat(result).isFalse();
+  }
 
-    @Test
-    public void givenInvalidCurrency_whenConfirmFunds_thenReturnTrue() {
-        // given
-        Token token = new Token("1");
-        Account account = new Account();
-        account.setIban("iban1");
-        account.setCurrencyCode("EUR");
-        FundsConfirmationRequest request = new FundsConfirmationRequest(
-                account,
-                new Amount("1.0", "RUB")
-        );
+  @Test
+  public void givenInvalidCurrency_whenConfirmFunds_thenReturnTrue() {
+    // given
+    Token token = new Token("1");
+    FundsConfirmationRequest request = new FundsConfirmationRequest(
+        "code",
+        ParticipantAccount.createWithIbanAndCurrency("iban1", "EUR"),
+        new Amount("1.0", "RUB")
+    );
 
-        // when
-        boolean result = testService.confirmFunds(token, request);
+    // when
+    boolean result = testService.confirmFunds(token, request);
 
-        // then
-        assertThat(result).isFalse();
-    }
-
+    // then
+    assertThat(result).isFalse();
+  }
 }

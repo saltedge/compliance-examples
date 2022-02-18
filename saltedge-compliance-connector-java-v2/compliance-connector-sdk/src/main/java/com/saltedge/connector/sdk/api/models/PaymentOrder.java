@@ -40,6 +40,7 @@ public class PaymentOrder {
    * Creditor account data.
    */
   @JsonProperty("creditor_account")
+  @NotNull
   @RequestAccountConstraint
   public ParticipantAccount creditorAccount;
 

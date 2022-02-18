@@ -22,25 +22,26 @@ package com.saltedge.connector.sdk.api.models.requests;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.saltedge.connector.sdk.api.models.Account;
 import com.saltedge.connector.sdk.api.models.Amount;
+import com.saltedge.connector.sdk.api.models.ParticipantAccount;
 import com.saltedge.connector.sdk.api.models.validation.RequestAccountConstraint;
 import org.springframework.util.StringUtils;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-import static com.saltedge.connector.sdk.SDKConstants.KEY_ACCOUNT;
-import static com.saltedge.connector.sdk.SDKConstants.KEY_INSTRUCTED_AMOUNT;
+import static com.saltedge.connector.sdk.SDKConstants.*;
 
 @JsonIgnoreProperties
-public class FundsConfirmationRequest {
+public class FundsConfirmationRequest extends PrioraBaseRequest {
     /**
      * Account information
      */
     @JsonProperty(KEY_ACCOUNT)
+    @NotNull
     @RequestAccountConstraint
-    public Account account;
+    public ParticipantAccount account;
 
     /**
      * Amount and currency.
@@ -50,10 +51,18 @@ public class FundsConfirmationRequest {
     @Valid
     public Amount instructedAmount;
 
+    /**
+     * Provider identifier.
+     */
+    @JsonProperty(KEY_PROVIDER_CODE)
+    @NotEmpty
+    public String providerCode;
+
     public FundsConfirmationRequest() {
     }
 
-    public FundsConfirmationRequest(Account account, @NotNull @Valid Amount instructedAmount) {
+    public FundsConfirmationRequest(String providerCode, ParticipantAccount account, Amount instructedAmount) {
+        this.providerCode = providerCode;
         this.account = account;
         this.instructedAmount = instructedAmount;
     }
@@ -63,7 +72,22 @@ public class FundsConfirmationRequest {
             if (!StringUtils.isEmpty(account.getIban())) return account.getIban();
             if (!StringUtils.isEmpty(account.getBban())) return account.getBban();
             if (!StringUtils.isEmpty(account.getBic())) return account.getBic();
+            if (!StringUtils.isEmpty(account.getSortCode())) return account.getSortCode();
+            if (!StringUtils.isEmpty(account.getMaskedPan())) return account.getMaskedPan();
+            if (!StringUtils.isEmpty(account.getMsisdn())) return account.getMsisdn();
         }
         return null;
+    }
+
+    public ParticipantAccount getAccount() {
+        return account;
+    }
+
+    public Amount getInstructedAmount() {
+        return instructedAmount;
+    }
+
+    public String getProviderCode() {
+        return providerCode;
     }
 }

@@ -190,4 +190,8 @@ public class Transaction {
     public void setRemittanceInformation(TransactionRemittanceInformation remittanceInformation) {
         this.remittanceInformation = remittanceInformation;
     }
+
+    public Object getExtra() {
+        return null;
+    }
 }

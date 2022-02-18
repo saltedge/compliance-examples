@@ -22,6 +22,7 @@ package com.saltedge.connector.sdk.api.models.requests;
 
 import com.saltedge.connector.sdk.api.models.Account;
 import com.saltedge.connector.sdk.api.models.Amount;
+import com.saltedge.connector.sdk.api.models.ParticipantAccount;
 import com.saltedge.connector.sdk.api.models.ValidationTest;
 import org.junit.Test;
 
@@ -34,13 +35,19 @@ public class FundsConfirmationRequestTest extends ValidationTest {
 
 		assertThat(validator.validate(model)).isNotEmpty();
 
+		model.sessionSecret = "sessionSecret";
+
+		assertThat(validator.validate(model)).isNotEmpty();
+
+		model.providerCode = "providerCode";
+
+		assertThat(validator.validate(model)).isNotEmpty();
+
 		model.instructedAmount = new Amount("1.0", "EUR");
 
 		assertThat(validator.validate(model)).isNotEmpty();
 
-		model.account = new Account();
-		model.account.setCurrencyCode("EUR");
-		model.account.setIban("iban");
+		model.account = ParticipantAccount.createWithIbanAndCurrency("iban", "EUR");
 
 		assertThat(validator.validate(model)).isEmpty();
 	}
@@ -51,9 +58,7 @@ public class FundsConfirmationRequestTest extends ValidationTest {
 
 		assertThat(model.getAccountIdentifier()).isNull();
 
-		model.account = new Account();
-		model.account.setCurrencyCode("EUR");
-		model.account.setIban("iban");
+		model.account = ParticipantAccount.createWithIbanAndCurrency("iban", "EUR");
 
 		assertThat(model.getAccountIdentifier()).isEqualTo("iban");
 
