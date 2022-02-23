@@ -17,18 +17,6 @@ repositories {
     mavenCentral()
 }
 
-//bootJar {
-//    mainClassName = 'com.saltedge.connector.example.ExampleApplication'
-//}
-
-//bootJar {
-//    enabled = false
-//}
-//jar {
-//    enabled = true
-//    archiveClassifier = ''
-//}
-
 dependencies {
     def springVersion = '2.6.3'
     implementation 'org.jetbrains:annotations:22.0.0'
