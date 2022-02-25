@@ -1,5 +1,9 @@
 # Salt Edge Compliance Connector SDK Changelog
 
+## 2.11.0 (2022-02-25)
+### Change:
+- Update Spring Boot version up to 2.6.3
+
 ## 2.10.0 (2022-02-18)
 ### Change:
 - Update object parameters and validation
