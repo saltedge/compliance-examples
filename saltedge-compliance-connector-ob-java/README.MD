@@ -11,7 +11,7 @@ The SDK module implements the Salt Edge PSD2 Compliance API compatible with **Op
    
 ## Application Requirements
 1. JDK, at least version 8 
-2. Spring Boot Framework, at least version 2.5.+
+2. Spring Boot Framework, at least version 2.6.+
 3. Registration & API Keys. [Follow the guide](https://priora.saltedge.com/docs/aspsp/ob#registration_and_api_keys)
 4. Private and public keys. [Follow the guide](https://priora.saltedge.com/docs/aspsp/ob#private_and_public_keys)
   
