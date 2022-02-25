@@ -49,8 +49,8 @@ import java.security.PrivateKey;
 public abstract class CallbackRestClient {
     @Autowired
     public ApplicationProperties applicationProperties;
+
     @Autowired
-    @Qualifier("saltEdgeCallbackRestTemplateBean")
     public RestTemplate callbackRestTemplate;
 
     protected ObjectMapper mapper = JsonTools.createDefaultMapper();
@@ -111,11 +111,5 @@ public abstract class CallbackRestClient {
         } catch (Exception e) {
             getLogger().error(e.getMessage(), e);
         }
-    }
-
-    @Bean
-    @Qualifier("saltEdgeCallbackRestTemplateBean")
-    public RestTemplate createRestTemplate() {
-        return new RestTemplate();
     }
 }
