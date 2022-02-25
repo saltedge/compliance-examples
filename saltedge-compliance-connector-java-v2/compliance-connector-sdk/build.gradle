@@ -29,11 +29,12 @@ jar {
 }
 
 dependencies {
+    def springVersion = '2.6.3'
     implementation 'org.jetbrains:annotations:22.0.0'
-    implementation 'org.springframework.boot:spring-boot-starter'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation "org.springframework.boot:spring-boot-starter:$springVersion"
+    implementation "org.springframework.boot:spring-boot-starter-web:$springVersion"
+    implementation "org.springframework.boot:spring-boot-starter-data-jpa:$springVersion"
+    implementation "org.springframework.boot:spring-boot-starter-validation:$springVersion"
 
     def jjwtVersion = '0.11.2'
     implementation "io.jsonwebtoken:jjwt-api:$jjwtVersion"
@@ -44,7 +45,7 @@ dependencies {
     testImplementation "io.jsonwebtoken:jjwt-api:$jjwtVersion"
     testImplementation "io.jsonwebtoken:jjwt-jackson:$jjwtVersion"
     testImplementation group: 'junit', name: 'junit', version: '4.12'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation "org.springframework.boot:spring-boot-starter-test:$springVersion"
     testImplementation 'com.h2database:h2:1.4.200'
 }
 
