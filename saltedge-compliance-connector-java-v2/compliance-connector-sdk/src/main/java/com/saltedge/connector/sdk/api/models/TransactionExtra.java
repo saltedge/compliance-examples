@@ -23,6 +23,8 @@ package com.saltedge.connector.sdk.api.models;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.time.Instant;
+
 /**
  * Additional information deemed relevant to a payment.
  * All fields are optional
@@ -82,4 +84,34 @@ public class TransactionExtra {
      */
     @JsonProperty("ultimate_debtor")
     public String ultimateDebtor;
+
+    /**
+     * Identification of Creditors, e.g. a SEPA Creditor ID.
+     */
+    @JsonProperty("creditor_id")
+    public String creditorId;
+
+    /**
+     * Debtor ID.
+     */
+    @JsonProperty("debtor_id")
+    public String debtorId;
+
+    /**
+     * Ultimate Creditor ID.
+     */
+    @JsonProperty("ultimate_creditor_id")
+    public String ultimateCreditorId;
+
+    /**
+     * Ultimate Debtor ID.
+     */
+    @JsonProperty("ultimate_debtor_id")
+    public String ultimateDebtorId;
+
+    /**
+     * Execution datetime of the record.
+     */
+    @JsonProperty("transaction_timestamp")
+    public Instant transactionTimestamp;
 }

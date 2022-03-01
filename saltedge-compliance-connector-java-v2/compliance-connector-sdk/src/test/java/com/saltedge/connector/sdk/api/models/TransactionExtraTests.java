@@ -39,5 +39,10 @@ public class TransactionExtraTests {
         assertThat(model.purposeCode).isNull();
         assertThat(model.ultimateCreditor).isNull();
         assertThat(model.ultimateDebtor).isNull();
+        assertThat(model.creditorId).isNull();
+        assertThat(model.debtorId).isNull();
+        assertThat(model.ultimateCreditorId).isNull();
+        assertThat(model.ultimateDebtorId).isNull();
+        assertThat(model.transactionTimestamp).isNull();
     }
 }
