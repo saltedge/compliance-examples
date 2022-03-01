@@ -108,6 +108,12 @@ public class Transaction {
     @JsonProperty("remittance_information")
     private TransactionRemittanceInformation remittanceInformation;
 
+    /**
+     * Additional information deemed relevant to a payment
+     */
+    @JsonProperty(SDKConstants.KEY_EXTRA)
+    private TransactionExtra extra;
+
     public Transaction() {
     }
 
@@ -183,15 +189,19 @@ public class Transaction {
         this.currencyExchange = currencyExchange;
     }
 
+    public TransactionExtra getExtra() {
+        return extra;
+    }
+
+    public void setExtra(TransactionExtra extra) {
+        this.extra = extra;
+    }
+
     public TransactionRemittanceInformation getRemittanceInformation() {
         return remittanceInformation;
     }
 
     public void setRemittanceInformation(TransactionRemittanceInformation remittanceInformation) {
         this.remittanceInformation = remittanceInformation;
-    }
-
-    public Object getExtra() {
-        return null;
     }
 }

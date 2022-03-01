@@ -108,6 +108,10 @@ public class ConnectorTypeConverters {
         exchanges.add(new CurrencyExchange("", "1.0", transaction.postDate, transaction.currencyCode, transaction.currencyCode, transaction.currencyCode));
         result.setCurrencyExchange(exchanges);
 
+        result.setExtra(new TransactionExtra());
+        result.getExtra().ultimateCreditor = result.getCreditorDetails().name;
+        result.getExtra().ultimateDebtor = result.getDebtorDetails().name;
+
         TransactionRemittanceInformation information = new TransactionRemittanceInformation();
         information.structured = transaction.description;
         information.unstructured = transaction.description;
