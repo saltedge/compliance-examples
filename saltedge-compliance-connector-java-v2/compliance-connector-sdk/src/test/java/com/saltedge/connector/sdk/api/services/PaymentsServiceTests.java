@@ -25,6 +25,8 @@ import com.saltedge.connector.sdk.SDKConstants;
 import com.saltedge.connector.sdk.api.models.*;
 import com.saltedge.connector.sdk.api.models.err.HttpErrorParams;
 import com.saltedge.connector.sdk.api.models.requests.CreatePaymentRequest;
+import com.saltedge.connector.sdk.models.ParticipantAccount;
+import com.saltedge.connector.sdk.services.priora.PaymentsService;
 import com.saltedge.connector.sdk.callback.mapping.SessionUpdateCallbackRequest;
 import com.saltedge.connector.sdk.tools.JsonTools;
 import org.junit.Before;
@@ -89,7 +91,7 @@ public class PaymentsServiceTests extends BaseServicesTests {
     final ArgumentCaptor<RuntimeException> captor = ArgumentCaptor.forClass(RuntimeException.class);
     verify(sessionsCallbackService).sendFailCallback(eq("sessionSecret"), captor.capture());
     assertThat(((HttpErrorParams) captor.getValue()).getErrorClass()).isEqualTo("PaymentNotCreated");
-    verifyNoInteractions(tokensRepository);
+    verifyNoInteractions(aisTokensRepository);
   }
 
   @Test

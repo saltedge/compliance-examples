@@ -22,6 +22,7 @@ package com.saltedge.connector.sdk.api.models;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.saltedge.connector.sdk.models.ParticipantAccount;
 
 import static com.saltedge.connector.sdk.SDKConstants.KEY_ACCOUNT;
 import static com.saltedge.connector.sdk.SDKConstants.KEY_NAME;

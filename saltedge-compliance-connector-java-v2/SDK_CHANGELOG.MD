@@ -1,5 +1,10 @@
 # Salt Edge Compliance Connector SDK Changelog
 
+## 2.12.0 (2022-04-01)
+### Change:
+- Add Funds Confirmation Feature
+- Add new domain model `PiisToken` (migration could be required)
+
 ## 2.11.0.1 (2022-03-01)
 ### Change:
 - Update fields for TransactionExtra
@@ -21,7 +26,7 @@
 
 ## 2.8.0 (2021-10-17)
 ### Add:
-- Add support of `psu_ip_address` header in AIS token creation and PIS initiation
+- Add support of `psu_ip_address` header in AIS aisToken creation and PIS initiation
 
 ## 2.7.0.2 (2021-08-31)
 ### Add:
@@ -87,7 +92,7 @@ Add support for the FPS (Faster Payment Service)
 
 ## 2.4.1 (2020-07-15)
 ### Change:  
-- Fix payload format in `token revoke` callback request.
+- Fix payload format in `aisToken revoke` callback request.
 
 ## 2.4.0 (2020-06-12)
 ### Add:  

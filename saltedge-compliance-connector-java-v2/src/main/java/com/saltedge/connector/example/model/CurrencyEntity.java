@@ -20,7 +20,7 @@
  */
 package com.saltedge.connector.example.model;
 
-import com.saltedge.connector.sdk.models.BaseEntity;
+import com.saltedge.connector.sdk.models.domain.BaseEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

@@ -21,17 +21,20 @@
 package com.saltedge.connector.sdk.api.services;
 
 import com.saltedge.connector.sdk.TestTools;
-import com.saltedge.connector.sdk.callback.services.SessionsCallbackService;
-import com.saltedge.connector.sdk.callback.services.TokensCallbackService;
+import com.saltedge.connector.sdk.callback.SessionsCallbackService;
+import com.saltedge.connector.sdk.callback.TokensCallbackService;
 import com.saltedge.connector.sdk.config.ApplicationProperties;
-import com.saltedge.connector.sdk.models.TokensRepository;
+import com.saltedge.connector.sdk.models.domain.AisTokensRepository;
+import com.saltedge.connector.sdk.models.domain.PiisTokensRepository;
 import com.saltedge.connector.sdk.provider.ProviderServiceAbs;
 import org.junit.Before;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 abstract public class BaseServicesTests {
 	@MockBean
-	protected TokensRepository tokensRepository;
+	protected AisTokensRepository aisTokensRepository;
+	@MockBean
+	protected PiisTokensRepository piisTokensRepository;
 	@MockBean
 	protected SessionsCallbackService sessionsCallbackService;
 	@MockBean

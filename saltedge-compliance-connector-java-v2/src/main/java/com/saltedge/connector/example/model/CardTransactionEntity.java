@@ -22,7 +22,7 @@ package com.saltedge.connector.example.model;
 
 import com.saltedge.connector.example.model.converter.FeesConverter;
 import com.saltedge.connector.example.model.converter.StringMapConverter;
-import com.saltedge.connector.sdk.models.BaseEntity;
+import com.saltedge.connector.sdk.models.domain.BaseEntity;
 
 import javax.persistence.*;
 import java.io.Serializable;

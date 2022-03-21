@@ -278,4 +278,23 @@ public class Account {
   public void setExtra(Map<String, String> extra) {
     this.extra = extra;
   }
+
+  @Override
+  public String toString() {
+    return "Account{" +
+        "id='" + id + '\'' +
+        ", name='" + name + '\'' +
+        ", balances=" + balances +
+        ", cashAccountType='" + cashAccountType + '\'' +
+        ", currencyCode='" + currencyCode + '\'' +
+        ", msisdn='" + msisdn + '\'' +
+        ", product='" + product + '\'' +
+        ", status='" + status + '\'' +
+        ", extra=" + extra +
+        ", bban='" + bban + '\'' +
+        ", bic='" + bic + '\'' +
+        ", iban='" + iban + '\'' +
+        ", sortCode='" + sortCode + '\'' +
+        '}';
+  }
 }

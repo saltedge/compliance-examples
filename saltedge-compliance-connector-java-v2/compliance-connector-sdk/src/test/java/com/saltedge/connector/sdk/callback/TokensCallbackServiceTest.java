@@ -21,7 +21,6 @@
 package com.saltedge.connector.sdk.callback;
 
 import com.saltedge.connector.sdk.SDKConstants;
-import com.saltedge.connector.sdk.callback.services.TokensCallbackService;
 import com.saltedge.connector.sdk.config.ApplicationProperties;
 import org.assertj.core.util.Lists;
 import org.junit.Before;
@@ -61,7 +60,7 @@ public class TokensCallbackServiceTest {
     @Test
     public void givenMockingRestTemplate_whenSendRevokeTokenCallback_shouldBeCalledExchangeWithParams() {
         // when
-        service.sendRevokeTokenCallback("accessToken");
+        service.sendRevokeAisTokenCallback("accessToken");
 
         // then
         ArgumentCaptor<String> urlCaptor = ArgumentCaptor.forClass(String.class);

@@ -61,6 +61,13 @@ public abstract class NotFound extends RuntimeException implements HttpErrorPara
         }
     }
 
+    public static class BalanceNotFound extends NotFound {
+        @Override
+        public String getErrorMessage() {
+            return "Balance not found.";
+        }
+    }
+
     public static class PaymentNotFound extends NotFound {
         @Override
         public String getErrorMessage() {

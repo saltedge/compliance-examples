@@ -21,6 +21,7 @@
 package com.saltedge.connector.sdk.models;
 
 import com.saltedge.connector.sdk.api.models.ProviderConsents;
+import com.saltedge.connector.sdk.models.domain.AisToken;
 import org.junit.Test;
 
 import java.time.Instant;
@@ -30,31 +31,31 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class TokenTests {
 	@Test
 	public void isExpiredTest() {
-		Token token = new Token();
+		AisToken aisToken = new AisToken();
 
-		assertThat(token.isExpired()).isTrue();
+		assertThat(aisToken.isExpired()).isTrue();
 
-		token.tokenExpiresAt = Instant.now().minusSeconds(1);
+		aisToken.tokenExpiresAt = Instant.now().minusSeconds(1);
 
-		assertThat(token.isExpired()).isTrue();
+		assertThat(aisToken.isExpired()).isTrue();
 
-		token.tokenExpiresAt = Instant.now().plusSeconds(1);
+		aisToken.tokenExpiresAt = Instant.now().plusSeconds(1);
 
-		assertThat(token.isExpired()).isFalse();
+		assertThat(aisToken.isExpired()).isFalse();
 	}
 
 	@Test
 	public void notGlobalConsentTest() {
-		Token token = new Token();
+		AisToken aisToken = new AisToken();
 
-		assertThat(token.notGlobalConsent()).isTrue();
+		assertThat(aisToken.notGlobalConsent()).isTrue();
 
-		token.providerOfferedConsents = ProviderConsents.buildAllAccountsConsent();
+		aisToken.providerOfferedConsents = ProviderConsents.buildAllAccountsConsent();
 
-		assertThat(token.notGlobalConsent()).isTrue();
+		assertThat(aisToken.notGlobalConsent()).isTrue();
 
-		token.providerOfferedConsents = new ProviderConsents(ProviderConsents.GLOBAL_CONSENT_VALUE);
+		aisToken.providerOfferedConsents = new ProviderConsents(ProviderConsents.GLOBAL_CONSENT_VALUE);
 
-		assertThat(token.notGlobalConsent()).isFalse();
+		assertThat(aisToken.notGlobalConsent()).isFalse();
 	}
 }

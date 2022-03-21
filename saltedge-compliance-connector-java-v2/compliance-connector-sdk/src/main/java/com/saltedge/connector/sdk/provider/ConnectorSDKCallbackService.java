@@ -26,14 +26,16 @@ import com.saltedge.connector.sdk.SDKConstants;
 import com.saltedge.connector.sdk.api.models.ProviderConsents;
 import com.saltedge.connector.sdk.api.models.err.NotFound;
 import com.saltedge.connector.sdk.api.models.err.Unauthorized;
-import com.saltedge.connector.sdk.api.services.tokens.CollectTokensService;
-import com.saltedge.connector.sdk.api.services.tokens.ConfirmTokenService;
-import com.saltedge.connector.sdk.api.services.tokens.RevokeTokenService;
+import com.saltedge.connector.sdk.callback.SessionsCallbackService;
+import com.saltedge.connector.sdk.callback.TokensCallbackService;
 import com.saltedge.connector.sdk.callback.mapping.SessionSuccessCallbackRequest;
 import com.saltedge.connector.sdk.callback.mapping.SessionUpdateCallbackRequest;
-import com.saltedge.connector.sdk.callback.services.SessionsCallbackService;
-import com.saltedge.connector.sdk.callback.services.TokensCallbackService;
-import com.saltedge.connector.sdk.models.Token;
+import com.saltedge.connector.sdk.models.ParticipantAccount;
+import com.saltedge.connector.sdk.models.domain.AisToken;
+import com.saltedge.connector.sdk.models.domain.PiisToken;
+import com.saltedge.connector.sdk.services.provider.ConfirmTokenService;
+import com.saltedge.connector.sdk.services.provider.RevokeTokenByProviderService;
+import com.saltedge.connector.sdk.services.provider.TokensCollectorService;
 import com.saltedge.connector.sdk.tools.JsonTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,8 +45,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -65,24 +65,35 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
   @Autowired
   private ConfirmTokenService confirmTokenService;
   @Autowired
-  private CollectTokensService collectTokensService;
+  private TokensCollectorService tokensCollectorService;
   @Autowired
-  private RevokeTokenService revokeTokenService;
+  private RevokeTokenByProviderService revokeTokenService;
   @Autowired
   private SessionsCallbackService sessionsCallbackService;
   @Autowired
   private TokensCallbackService tokensCallbackService;
 
   /**
-   * Check if User Consent (Bank Offered Consent) is required for authorization session determined by sessionSecret.
+   * Check if User Consent (Bank Offered Consent) is required for AIS authorization session determined by sessionSecret.
    *
    * @param sessionSecret unique identifier of authorization session
    * @return true if User Consent (Bank Offered Consent) is required
    */
   @Override
   public boolean isUserConsentRequired(@NotEmpty String sessionSecret) {
-    Token token = confirmTokenService.findTokenBySessionSecret(sessionSecret);
-    return token != null && token.notGlobalConsent();
+    AisToken aisToken = confirmTokenService.findAisTokenBySessionSecret(sessionSecret);
+    return aisToken != null && aisToken.notGlobalConsent();
+  }
+
+  /**
+   * Collect list of access tokens of active consents (AIS, PIIS)
+   *
+   * @param userId unique identifier of authenticated User
+   * @return list of access tokens of active consents
+   */
+  @Override
+  public List<String> getActiveAccessTokens(@NotEmpty String userId) {
+    return tokensCollectorService.collectActiveAccessTokensByUserId(userId);
   }
 
   /**
@@ -106,29 +117,13 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
     @NotEmpty String accessToken,
     ProviderConsents consents
   ) {
-    Token token = confirmTokenService.confirmToken(
+    AisToken token = confirmTokenService.confirmAisToken(
       sessionSecret,
       userId,
       accessToken,
       consents
     );
     return (token == null) ? null : token.tppRedirectUrl;
-  }
-
-  /**
-   * @deprecated This method is expected to be retained only for back compatibility.
-   * Replaced by {@link #onAccountInformationAuthorizationSuccess(String, String, String, ProviderConsents)}
-   */
-  @Override
-  @Deprecated
-  public String onAccountInformationAuthorizationSuccess(
-    @NotEmpty String sessionSecret,
-    @NotEmpty String userId,
-    @NotEmpty String accessToken,
-    @NotNull Instant accessTokenExpiresAt,
-    ProviderConsents consents
-  ) {
-    return onAccountInformationAuthorizationSuccess(sessionSecret, userId, accessToken, consents);
   }
 
   /**
@@ -140,20 +135,9 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
    */
   @Override
   public String onAccountInformationAuthorizationFail(@NotEmpty String sessionSecret) {
-    Token token = revokeTokenService.revokeTokenBySessionSecret(sessionSecret);
+    AisToken token = revokeTokenService.revokeAisTokenBySessionSecret(sessionSecret);
     sessionsCallbackService.sendFailCallback(sessionSecret, new Unauthorized.AccessDenied());
     return (token == null) ? null : token.tppRedirectUrl;
-  }
-
-  /**
-   * Collect list of access tokens of active consents
-   *
-   * @param userId unique identifier of authenticated User
-   * @return list of access tokens of active consents
-   */
-  @Override
-  public List<String> getActiveAccessTokens(@NotEmpty String userId) {
-    return collectTokensService.collectActiveAccessTokensByUserId(userId);
   }
 
   /**
@@ -165,10 +149,10 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
    */
   @Override
   public boolean revokeAccountInformationConsent(@NotEmpty String userId, @NotEmpty String accessToken) {
-    Token token = revokeTokenService.revokeTokenByUserIdAndAccessToken(userId, accessToken);
-    if (token != null && token.status == Token.Status.REVOKED)
-      tokensCallbackService.sendRevokeTokenCallback(accessToken);
-    return (token != null && token.status == Token.Status.REVOKED);
+    AisToken token = revokeTokenService.revokeAisTokenByUserIdAndAccessToken(userId, accessToken);
+    boolean isRevoked = token != null && token.isRevoked();
+    if (isRevoked) tokensCallbackService.sendRevokeAisTokenCallback(accessToken);
+    return isRevoked;
   }
 
   /**
@@ -190,7 +174,7 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
     String sessionSecret = paymentExtraMap.get(SDKConstants.KEY_SESSION_SECRET);
     String status = getFinalStatusOfPaymentProduct(paymentProduct);
     SessionSuccessCallbackRequest params = new SessionSuccessCallbackRequest(userId, status);
-    if (!StringUtils.isEmpty(sessionSecret)) sessionsCallbackService.sendSuccessCallback(sessionSecret, params);
+    if (StringUtils.hasLength(sessionSecret)) sessionsCallbackService.sendSuccessCallback(sessionSecret, params);
 
     return paymentExtraMap.getOrDefault(SDKConstants.KEY_RETURN_TO_URL, "");
   }
@@ -211,17 +195,62 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
    * @return returnUrl string for final redirection of Payment Authorization session
    */
   @Override
-  public String onPaymentInitiationAuthorizationFail(
-    @NotEmpty String paymentExtra
-  ) {
+  public String onPaymentInitiationAuthorizationFail(@NotEmpty String paymentExtra) {
     Map<String, String> paymentExtraMap = parseExtra(paymentExtra);
 
     String sessionSecret = paymentExtraMap.get(SDKConstants.KEY_SESSION_SECRET);
-    if (!StringUtils.isEmpty(sessionSecret)) {
+    if (StringUtils.hasLength(sessionSecret)) {
       sessionsCallbackService.sendFailCallback(sessionSecret, new NotFound.PaymentNotCreated());
     }
 
     return paymentExtraMap.getOrDefault(SDKConstants.KEY_RETURN_TO_URL, "");
+  }
+
+  /**
+   * Collect Account identifiers of PIIS consents
+   *
+   * @param sessionSecret unique identifier of consent authentication session
+   * @return Account identifiers data
+   */
+  @Override
+  public ParticipantAccount getFundsConfirmationConsentData(@NotEmpty String sessionSecret) {
+    return tokensCollectorService.collectFundsConfirmationConsentData(sessionSecret);
+  }
+
+  /**
+   * Provider notify Connector SDK Module about oAuth success authentication
+   * and provides user consent for accounts (balances/transactions)
+   *
+   * @param sessionSecret of User authorization session.
+   * @param userId        of authenticated User.
+   * @param accessToken   is a unique string that identifies a user access.
+   *                      life period of accessToken is set by TPP and can not be more than 90 days.
+   * @return returnUrl string for final redirection of Authorization session (in browser) back to TPP side.
+   * @see ProviderServiceAbs#getAccountInformationAuthorizationPageUrl
+   * @see ProviderConsents
+   */
+  @Override
+  public String onFundsConfirmationConsentAuthorizationSuccess(
+      @NotEmpty String sessionSecret,
+      @NotEmpty String userId,
+      @NotEmpty String accessToken
+  ) {
+    PiisToken token = confirmTokenService.confirmPiisToken(sessionSecret, userId, accessToken);
+    return (token == null) ? null : token.tppRedirectUrl;
+  }
+
+  /**
+   * Provider notifies Connector SDK Module about oAuth authentication fail
+   * and SDK send fail callback request
+   *
+   * @param sessionSecret of Token Create session
+   * @return returnUrl string for final redirection of Authorization session (in browser) back to TPP side.
+   */
+  @Override
+  public String onFundsConfirmationConsentAuthorizationFail(@NotEmpty String sessionSecret) {
+    PiisToken token = revokeTokenService.revokePiisTokenBySessionSecret(sessionSecret);
+    sessionsCallbackService.sendFailCallback(sessionSecret, new Unauthorized.AccessDenied());
+    return (token == null) ? null : token.tppRedirectUrl;
   }
 
   private String getFinalStatusOfPaymentProduct(@NotEmpty String paymentProduct) {

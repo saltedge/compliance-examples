@@ -21,10 +21,9 @@
 package com.saltedge.connector.sdk.provider;
 
 import com.saltedge.connector.sdk.api.models.ProviderConsents;
+import com.saltedge.connector.sdk.models.ParticipantAccount;
 
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import java.time.Instant;
 import java.util.List;
 
 /**
@@ -41,6 +40,14 @@ public interface ConnectorCallbackAbs {
    * @return True if User Consent (Bank Offered Consent) is required
    */
   boolean isUserConsentRequired(@NotEmpty String sessionSecret);
+
+  /**
+   * Collect list of access tokens of active consents (AIS, PIIS)
+   *
+   * @param userId Unique identifier of authenticated User
+   * @return List of access tokens of active consents
+   */
+  List<String> getActiveAccessTokens(@NotEmpty String userId);
 
   /**
    * Provider notify Connector SDK Module about oAuth success authentication
@@ -62,30 +69,6 @@ public interface ConnectorCallbackAbs {
   );
 
   /**
-   * @param sessionSecret Secret of User authorization session.
-   * @param userId Unique identifier of authenticated User.
-   * @param accessToken Unique string that identifies a user.
-   * @param accessTokenExpiresAt Expiration time of accessToken (UTC time).
-   * @param consents List of balances of accounts and transactions of accounts. Can be null if bank offered consent is not required.
-   * @return URL string for final redirection of Authorization session (in browser) back to TPP side.
-   * @see ProviderServiceAbs#getAccountInformationAuthorizationPageUrl
-   * @see ProviderConsents
-   * @deprecated This method is expected to be retained only for back compatibility.
-   * Replaced by {@link #onAccountInformationAuthorizationSuccess(String, String, String, ProviderConsents)}
-   * <p>
-   * Provider notify Connector SDK Module about oAuth success authentication
-   * and provides user consent for accounts (balances/transactions)
-   */
-  @Deprecated
-  String onAccountInformationAuthorizationSuccess(
-    @NotEmpty String sessionSecret,
-    @NotEmpty String userId,
-    @NotEmpty String accessToken,
-    @NotNull Instant accessTokenExpiresAt,
-    ProviderConsents consents
-  );
-
-  /**
    * Provider notifies Connector SDK Module about oAuth authentication fail
    *
    * @param sessionSecret Secret of Token Create session
@@ -94,19 +77,11 @@ public interface ConnectorCallbackAbs {
   String onAccountInformationAuthorizationFail(@NotEmpty String sessionSecret);
 
   /**
-   * Collect list of access tokens of active consents
-   *
-   * @param userId Unique identifier of authenticated User
-   * @return List of access tokens of active consents
-   */
-  List<String> getActiveAccessTokens(@NotEmpty String userId);
-
-  /**
    * Revoke Account information consent associated with userId and accessToken
    *
    * @param userId Unique identifier of authenticated User
    * @param accessToken Unique string that identifies a user
-   * @return Operation result
+   * @return Operation result, `true` if successful
    */
   boolean revokeAccountInformationConsent(
     @NotEmpty String userId,
@@ -119,7 +94,7 @@ public interface ConnectorCallbackAbs {
    * @param userId Unique identifier of authenticated User
    * @param paymentExtra Extra data of payment order, provided in `ProviderServiceAbs.createPayment(...)`
    * @param paymentProduct Payment product code (Allowed values: sepa-credit-transfers, instant-sepa-credit-transfers, target-2-payments, faster-payment-service, internal-transfer)
-   * @return URL string for final redirection of Payment Authorization session
+   * @return URL as string for final redirection of Payment Authorization session
    */
   String onPaymentInitiationAuthorizationSuccess(
     @NotEmpty String userId,
@@ -143,4 +118,36 @@ public interface ConnectorCallbackAbs {
    * @param status intermediate status
    */
   void updatePaymentFundsInformation(Boolean fundsAvailable, String paymentExtra, String status);
+
+  /**
+   * Collect Account identifiers of PIIS consents
+   *
+   * @param sessionSecret unique identifier of consent authentication session
+   * @return Account identifiers data
+   */
+  ParticipantAccount getFundsConfirmationConsentData(@NotEmpty String sessionSecret);
+
+  /**
+   * Provider notify Connector SDK Module about oAuth success authentication of Funds Confirmation flow
+   *
+   * @param sessionSecret Secret of User authorization session.
+   * @param userId Unique identifier of authenticated User.
+   * @param accessToken Unique string that identifies a user access.
+   * @return returnUrl URL string for final redirection of Authorization session (in browser) back to TPP side.
+   * @see ProviderServiceAbs#getAccountInformationAuthorizationPageUrl
+   * @see ProviderConsents
+   */
+  String onFundsConfirmationConsentAuthorizationSuccess(
+      @NotEmpty String sessionSecret,
+      @NotEmpty String userId,
+      @NotEmpty String accessToken
+  );
+
+  /**
+   * Provider notifies Connector SDK Module about oAuth authentication fail of Funds Confirmation flow
+   *
+   * @param sessionSecret Secret of Token Create session
+   * @return returnUrl URL string for final redirection of Authorization session (in browser) back to TPP side.
+   */
+  String onFundsConfirmationConsentAuthorizationFail(@NotEmpty String sessionSecret);
 }

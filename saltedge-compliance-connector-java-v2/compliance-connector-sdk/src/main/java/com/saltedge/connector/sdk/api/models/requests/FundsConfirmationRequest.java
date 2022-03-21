@@ -23,8 +23,8 @@ package com.saltedge.connector.sdk.api.models.requests;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.saltedge.connector.sdk.api.models.Amount;
-import com.saltedge.connector.sdk.api.models.ParticipantAccount;
 import com.saltedge.connector.sdk.api.models.validation.RequestAccountConstraint;
+import com.saltedge.connector.sdk.models.ParticipantAccount;
 import org.springframework.util.StringUtils;
 
 import javax.validation.Valid;
@@ -69,12 +69,12 @@ public class FundsConfirmationRequest extends PrioraBaseRequest {
 
     public String getAccountIdentifier() {
         if (account != null) {
-            if (!StringUtils.isEmpty(account.getIban())) return account.getIban();
-            if (!StringUtils.isEmpty(account.getBban())) return account.getBban();
-            if (!StringUtils.isEmpty(account.getBic())) return account.getBic();
-            if (!StringUtils.isEmpty(account.getSortCode())) return account.getSortCode();
-            if (!StringUtils.isEmpty(account.getMaskedPan())) return account.getMaskedPan();
-            if (!StringUtils.isEmpty(account.getMsisdn())) return account.getMsisdn();
+            if (StringUtils.hasLength(account.getIban())) return account.getIban();
+            if (StringUtils.hasLength(account.getBban())) return account.getBban();
+            if (StringUtils.hasLength(account.getBic())) return account.getBic();
+            if (StringUtils.hasLength(account.getSortCode())) return account.getSortCode();
+            if (StringUtils.hasLength(account.getMaskedPan())) return account.getMaskedPan();
+            if (StringUtils.hasLength(account.getMsisdn())) return account.getMsisdn();
         }
         return null;
     }

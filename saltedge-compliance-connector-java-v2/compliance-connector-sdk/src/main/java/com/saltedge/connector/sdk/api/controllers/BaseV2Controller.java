@@ -31,9 +31,9 @@ import org.springframework.http.ResponseEntity;
 /**
  * Base Connector v2 controller
  */
-abstract class BaseV2Controller {
+public abstract class BaseV2Controller {
     @Autowired
-    ProviderServiceAbs providerService;
+    public ProviderServiceAbs providerService;
 
     @NotNull
     @Contract(" -> new")
