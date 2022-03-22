@@ -106,7 +106,7 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
    *                      life period of accessToken is set by TPP and can not be more than 90 days.
    * @param consents      bank offered consent with list of balances of accounts and transactions of accounts.
    *                      Can be null if bank offered consent is not required.
-   * @return returnUrl string for final redirection of Authorization session (in browser) back to TPP side.
+   * @return redirectUrl string for final redirection of Authorization session (in browser) back to TPP side.
    * @see ProviderServiceAbs#getAccountInformationAuthorizationPageUrl
    * @see ProviderConsents
    */
@@ -131,7 +131,7 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
    * and SDK send fail callback request
    *
    * @param sessionSecret of Token Create session
-   * @return returnUrl string for final redirection of Authorization session (in browser) back to TPP side.
+   * @return redirectUrl string for final redirection of Authorization session (in browser) back to TPP side.
    */
   @Override
   public String onAccountInformationAuthorizationFail(@NotEmpty String sessionSecret) {
@@ -225,7 +225,7 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
    * @param userId        of authenticated User.
    * @param accessToken   is a unique string that identifies a user access.
    *                      life period of accessToken is set by TPP and can not be more than 90 days.
-   * @return returnUrl string for final redirection of Authorization session (in browser) back to TPP side.
+   * @return redirectUrl string for final redirection of Authorization session (in browser) back to TPP side.
    * @see ProviderServiceAbs#getAccountInformationAuthorizationPageUrl
    * @see ProviderConsents
    */
@@ -244,7 +244,7 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
    * and SDK send fail callback request
    *
    * @param sessionSecret of Token Create session
-   * @return returnUrl string for final redirection of Authorization session (in browser) back to TPP side.
+   * @return redirectUrl string for final redirection of Authorization session (in browser) back to TPP side.
    */
   @Override
   public String onFundsConfirmationConsentAuthorizationFail(@NotEmpty String sessionSecret) {
