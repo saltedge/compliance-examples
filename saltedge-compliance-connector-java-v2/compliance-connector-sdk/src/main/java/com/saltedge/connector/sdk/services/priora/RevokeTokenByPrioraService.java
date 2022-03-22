@@ -1,6 +1,6 @@
 /*
  * @author Constantin Chelban (constantink@saltedge.com)
- * Copyright (c) 2020 Salt Edge.
+ * Copyright (c) 2022 Salt Edge.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
