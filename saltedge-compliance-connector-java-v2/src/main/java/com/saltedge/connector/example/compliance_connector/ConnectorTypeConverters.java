@@ -22,6 +22,7 @@ package com.saltedge.connector.example.compliance_connector;
 
 import com.saltedge.connector.example.model.*;
 import com.saltedge.connector.sdk.api.models.*;
+import com.saltedge.connector.sdk.models.ParticipantAccount;
 
 import java.util.ArrayList;
 import java.util.List;

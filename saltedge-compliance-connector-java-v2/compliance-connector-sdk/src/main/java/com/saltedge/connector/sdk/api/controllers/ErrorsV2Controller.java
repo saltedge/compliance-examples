@@ -20,10 +20,9 @@
  */
 package com.saltedge.connector.sdk.api.controllers;
 
+import com.saltedge.connector.sdk.SDKConstants;
 import com.saltedge.connector.sdk.api.models.EmptyJsonModel;
 import com.saltedge.connector.sdk.api.models.requests.ErrorsRequest;
-import com.saltedge.connector.sdk.SDKConstants;
-import com.saltedge.connector.sdk.models.Token;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,18 +39,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(ErrorsV2Controller.BASE_PATH)
 public class ErrorsV2Controller extends BaseV2Controller {
     public final static String BASE_PATH = SDKConstants.API_BASE_PATH + "/errors";
-    private static Logger log = LoggerFactory.getLogger(ErrorsV2Controller.class);
+    private static final Logger log = LoggerFactory.getLogger(ErrorsV2Controller.class);
 
     /**
      * This endpoint is responsible for receiving validation errors of responses which Connector sends to Salt Edge PSD2 Compliance Solution
      *
-     * @param token linked to Access-Token header
      * @param request which contains error data
      *
      * @return empty JSON object
      */
     @PostMapping
-    public ResponseEntity<EmptyJsonModel> postError(Token token, @NotNull ErrorsRequest request) {
+    public ResponseEntity<EmptyJsonModel> postError(@NotNull ErrorsRequest request) {
         log.error(request.toString());
         return super.createEmptyOkResponseEntity();
     }

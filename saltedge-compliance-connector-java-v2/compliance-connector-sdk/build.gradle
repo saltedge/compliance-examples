@@ -30,8 +30,8 @@ jar {
 }
 
 dependencies {
-    def springVersion = '2.6.3'
-    implementation 'org.jetbrains:annotations:22.0.0'
+    def springVersion = '2.6.4'
+    implementation 'org.jetbrains:annotations:23.0.0'
     implementation "org.springframework.boot:spring-boot-starter:$springVersion"
     implementation "org.springframework.boot:spring-boot-starter-web:$springVersion"
     implementation "org.springframework.boot:spring-boot-starter-data-jpa:$springVersion"

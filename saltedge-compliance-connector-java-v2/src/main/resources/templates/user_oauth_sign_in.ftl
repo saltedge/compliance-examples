@@ -12,12 +12,19 @@
 
         <h3 class="centered">${input_title}</h3>
         <div class="form-container">
-            <form method="post" action="/oauth/authorize/${session_type}">
+            <form method="post" action="/user/consent">
                 <p>Username [username]: <input type="text" name="username">
-                <p>Password [secret]: <input type="password" name="password">
+                <p>Password [secret]:   <input type="password" name="password">
+
+                <#if scope??><input type="hidden" name="scope" value="${scope}"></#if>
                 <#if session_secret??><input type="hidden" name="session_secret" value="${session_secret}"></#if>
                 <#if payment_id??><input type="hidden" name="payment_id" value="${payment_id}"></#if>
-                <p><input type="submit" value="Sign In" class="submit">
+
+                <br><p>
+                <span class="inline">
+                    <button type="submit" name="submit" value="0" class="submit">Go back</button>
+                    <button type="submit" name="submit" value="1" class="submit">Sign In</button>
+                </span>
             </form>
 
             <#if error??>

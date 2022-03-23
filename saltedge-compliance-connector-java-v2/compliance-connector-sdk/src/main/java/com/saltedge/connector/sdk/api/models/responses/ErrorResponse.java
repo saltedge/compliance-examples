@@ -21,8 +21,8 @@
 package com.saltedge.connector.sdk.api.models.responses;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.saltedge.connector.sdk.api.models.err.HttpErrorParams;
 import com.saltedge.connector.sdk.SDKConstants;
+import com.saltedge.connector.sdk.api.models.err.HttpErrorParams;
 
 import javax.validation.constraints.NotBlank;
 

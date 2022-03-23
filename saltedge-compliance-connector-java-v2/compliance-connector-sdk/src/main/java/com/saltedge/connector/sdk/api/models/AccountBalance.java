@@ -69,4 +69,17 @@ public class AccountBalance extends Amount {
         this.currency = currency;
         this.type = type;
     }
+
+    @Override
+    public String toString() {
+        return "AccountBalance{" +
+            "type='" + type + '\'' +
+            ", creditLimitIncluded=" + creditLimitIncluded +
+            ", lastChangeDateTime=" + lastChangeDateTime +
+            ", lastCommittedTransaction='" + lastCommittedTransaction + '\'' +
+            ", referenceDate=" + referenceDate +
+            ", amount='" + amount + '\'' +
+            ", currency='" + currency + '\'' +
+            '}';
+    }
 }

@@ -44,18 +44,7 @@ public class SessionSuccessCallbackRequest extends BaseCallbackRequest {
     @JsonProperty(SDKConstants.KEY_STATUS)
     public String status;
 
-    public SessionSuccessCallbackRequest() {
-    }
-
-    public SessionSuccessCallbackRequest(
-            ProviderConsents providerOfferedConsents,
-            String token,
-            String userId
-    ) {
-        this.providerOfferedConsents = providerOfferedConsents;
-        this.token = token;
-        this.userId = userId;
-    }
+    public SessionSuccessCallbackRequest() {}
 
     public SessionSuccessCallbackRequest(String userId, String status) {
         this.userId = userId;

@@ -21,11 +21,14 @@
 package com.saltedge.connector.sdk.api.controllers;
 
 import com.saltedge.connector.sdk.SDKConstants;
-import com.saltedge.connector.sdk.callback.services.SessionsCallbackService;
-import com.saltedge.connector.sdk.callback.services.TokensCallbackService;
-import com.saltedge.connector.sdk.config.ApplicationProperties;
-import com.saltedge.connector.sdk.models.Token;
-import com.saltedge.connector.sdk.models.TokensRepository;
+import com.saltedge.connector.sdk.callback.SessionsCallbackService;
+import com.saltedge.connector.sdk.callback.TokensCallbackService;
+import com.saltedge.connector.sdk.models.ConsentStatus;
+import com.saltedge.connector.sdk.models.ParticipantAccount;
+import com.saltedge.connector.sdk.models.domain.AisToken;
+import com.saltedge.connector.sdk.models.domain.AisTokensRepository;
+import com.saltedge.connector.sdk.models.domain.PiisToken;
+import com.saltedge.connector.sdk.models.domain.PiisTokensRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -39,7 +42,9 @@ abstract public class ControllerIntegrationTests {
     @LocalServerPort
     private int port = 0;
     @Autowired
-    TokensRepository tokensRepository;
+    AisTokensRepository aisTokensRepository;
+    @Autowired
+    PiisTokensRepository piisTokensRepository;
     @MockBean
     protected SessionsCallbackService callbackService;
     @MockBean
@@ -47,19 +52,26 @@ abstract public class ControllerIntegrationTests {
     protected TestRestTemplate testRestTemplate = new TestRestTemplate();
 
     protected void seedTokensRepository() {
-        Token newToken1 = new Token("sessionSecret", "tppAppName", "oauth", "tppRedirectUrl", Instant.now().plus(24 * 60, ChronoUnit.MINUTES));
-        newToken1.id = 1L;
-        newToken1.userId = "1";
-        newToken1.status = Token.Status.CONFIRMED;
-        newToken1.accessToken = "validToken";
-        tokensRepository.save(newToken1);
+        AisToken newAisToken1 = new AisToken("sessionSecret", "tppAppName", "oauth", "tppRedirectUrl", Instant.now().plus(24 * 60, ChronoUnit.MINUTES));
+        newAisToken1.id = 1L;
+        newAisToken1.userId = "1";
+        newAisToken1.status = ConsentStatus.CONFIRMED;
+        newAisToken1.accessToken = "validToken";
+        aisTokensRepository.save(newAisToken1);
 
-        Token newToken2 = new Token("sessionSecret2", "tppAppName", "oauth", "tppRedirectUrl", Instant.now().plus(24 * 60, ChronoUnit.MINUTES));
-        newToken2.id = 2L;
-        newToken2.userId = "2";
-        newToken2.status = Token.Status.CONFIRMED;
-        newToken2.accessToken = "validToken2";
-        tokensRepository.save(newToken2);
+        AisToken newAisToken2 = new AisToken("sessionSecret2", "tppAppName", "oauth", "tppRedirectUrl", Instant.now().plus(24 * 60, ChronoUnit.MINUTES));
+        newAisToken2.id = 2L;
+        newAisToken2.userId = "2";
+        newAisToken2.status = ConsentStatus.CONFIRMED;
+        newAisToken2.accessToken = "validToken2";
+        aisTokensRepository.save(newAisToken2);
+
+        PiisToken newPiisToken1 = new PiisToken("sessionSecret", "tppAppName", "oauth", "tppRedirectUrl", ParticipantAccount.createWithIbanAndCurrency("iban", "EUR"), null);
+        newPiisToken1.id = 1L;
+        newPiisToken1.userId = "1";
+        newPiisToken1.status = ConsentStatus.CONFIRMED;
+        newPiisToken1.accessToken = "validToken";
+        piisTokensRepository.save(newPiisToken1);
     }
 
     protected LinkedMultiValueMap<String, String> createHeaders() {

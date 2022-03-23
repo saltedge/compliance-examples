@@ -20,7 +20,7 @@
  */
 package com.saltedge.connector.sdk.tools;
 
-import com.saltedge.connector.sdk.api.services.FundsService;
+import com.saltedge.connector.sdk.services.priora.FundsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

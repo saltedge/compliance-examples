@@ -25,13 +25,14 @@ import com.saltedge.connector.sdk.SDKConstants;
 import com.saltedge.connector.sdk.api.models.ProviderConsents;
 import com.saltedge.connector.sdk.api.models.err.NotFound;
 import com.saltedge.connector.sdk.api.models.err.Unauthorized;
-import com.saltedge.connector.sdk.api.services.tokens.ConfirmTokenService;
-import com.saltedge.connector.sdk.api.services.tokens.RevokeTokenService;
+import com.saltedge.connector.sdk.callback.SessionsCallbackService;
+import com.saltedge.connector.sdk.callback.TokensCallbackService;
 import com.saltedge.connector.sdk.callback.mapping.SessionSuccessCallbackRequest;
 import com.saltedge.connector.sdk.callback.mapping.SessionUpdateCallbackRequest;
-import com.saltedge.connector.sdk.callback.services.SessionsCallbackService;
-import com.saltedge.connector.sdk.callback.services.TokensCallbackService;
-import com.saltedge.connector.sdk.models.Token;
+import com.saltedge.connector.sdk.models.ConsentStatus;
+import com.saltedge.connector.sdk.models.domain.AisToken;
+import com.saltedge.connector.sdk.services.provider.ConfirmTokenService;
+import com.saltedge.connector.sdk.services.provider.RevokeTokenByProviderService;
 import com.saltedge.connector.sdk.tools.JsonTools;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -47,7 +48,6 @@ import java.util.HashMap;
 
 import static com.saltedge.connector.sdk.SDKConstants.KEY_DESCRIPTION;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
@@ -61,7 +61,7 @@ public class ConnectorCallbackServiceTests {
 	@MockBean
 	private ConfirmTokenService confirmTokenService;
 	@MockBean
-	private RevokeTokenService revokeTokenService;
+	private RevokeTokenByProviderService revokeTokenService;
 	@MockBean
 	private SessionsCallbackService sessionsCallbackService;
 	@MockBean
@@ -75,7 +75,7 @@ public class ConnectorCallbackServiceTests {
 	@Test
 	public void givenNullToken_whenIsUserConsentRequired_thenReturnFalse() {
 		// given
-		given(confirmTokenService.findTokenBySessionSecret("sessionSecret")).willReturn(null);
+		given(confirmTokenService.findAisTokenBySessionSecret("sessionSecret")).willReturn(null);
 
 		// when
 		boolean result = testService.isUserConsentRequired("sessionSecret");
@@ -87,9 +87,9 @@ public class ConnectorCallbackServiceTests {
 	@Test
 	public void givenTokenWithGlobalConsent_whenIsUserConsentRequired_thenReturnFalse() {
 		// given
-		Token token = new Token();
-		token.providerOfferedConsents = new ProviderConsents(ProviderConsents.GLOBAL_CONSENT_VALUE);
-		given(confirmTokenService.findTokenBySessionSecret("sessionSecret")).willReturn(token);
+		AisToken aisToken = new AisToken();
+		aisToken.providerOfferedConsents = new ProviderConsents(ProviderConsents.GLOBAL_CONSENT_VALUE);
+		given(confirmTokenService.findAisTokenBySessionSecret("sessionSecret")).willReturn(aisToken);
 
 		// when
 		boolean result = testService.isUserConsentRequired("sessionSecret");
@@ -101,8 +101,8 @@ public class ConnectorCallbackServiceTests {
 	@Test
 	public void givenTokenWithNoConsent_whenIsUserConsentRequired_thenReturnTrue() {
 		// given
-		Token token = new Token();
-		given(confirmTokenService.findTokenBySessionSecret("sessionSecret")).willReturn(token);
+		AisToken aisToken = new AisToken();
+		given(confirmTokenService.findAisTokenBySessionSecret("sessionSecret")).willReturn(aisToken);
 
 		// when
 		boolean result = testService.isUserConsentRequired("sessionSecret");
@@ -124,7 +124,7 @@ public class ConnectorCallbackServiceTests {
 	public void givenNullToken_whenOnAccountInformationAuthorizationSuccess_thenReturnNull() {
 		// given
 		ProviderConsents consent = new ProviderConsents();
-		given(confirmTokenService.confirmToken(
+		given(confirmTokenService.confirmAisToken(
 				"sessionSecret",
 				"user1",
 				"accessToken",
@@ -146,14 +146,14 @@ public class ConnectorCallbackServiceTests {
 	@Test
 	public void givenToken_whenOnAccountInformationAuthorizationSuccess_thenConfirmTokenAndReturnRedirectUrl() {
 		// given
-		Token token = new Token("sessionSecret", "tppAppName", "authTypeCode", "http://redirect.to", Instant.parse("2019-11-18T16:04:49.585Z"));
+		AisToken aisToken = new AisToken("sessionSecret", "tppAppName", "authTypeCode", "http://redirect.to", Instant.parse("2019-11-18T16:04:49.585Z"));
 		ProviderConsents consent = new ProviderConsents();
-		given(confirmTokenService.confirmToken(
+		given(confirmTokenService.confirmAisToken(
 				"sessionSecret",
 				"user1",
 				"accessToken",
 				consent
-		)).willReturn(token);
+		)).willReturn(aisToken);
 
 		// when
 		String result = testService.onAccountInformationAuthorizationSuccess(
@@ -175,7 +175,7 @@ public class ConnectorCallbackServiceTests {
 	@Test
 	public void givenNullToken_whenOnAccountInformationAuthorizationFail_thenReturnNullAndSendFailCallback() {
 		// given
-		given(revokeTokenService.revokeTokenBySessionSecret("sessionSecret")).willReturn(null);
+		given(revokeTokenService.revokeAisTokenBySessionSecret("sessionSecret")).willReturn(null);
 
 		// when
 		String result = testService.onAccountInformationAuthorizationFail("sessionSecret");
@@ -188,9 +188,9 @@ public class ConnectorCallbackServiceTests {
 	@Test
 	public void givenToken_whenOnAccountInformationAuthorizationFail_thenRevokeTokenAndReturnRedirectUrlAndSendFailCallback() {
 		// given
-		Token token = new Token("userId");
-		token.tppRedirectUrl = "http://redirect.to";
-		given(revokeTokenService.revokeTokenBySessionSecret("sessionSecret")).willReturn(token);
+		AisToken aisToken = new AisToken("userId");
+		aisToken.tppRedirectUrl = "http://redirect.to";
+		given(revokeTokenService.revokeAisTokenBySessionSecret("sessionSecret")).willReturn(aisToken);
 
 		// when
 		String result = testService.onAccountInformationAuthorizationFail("sessionSecret");
@@ -208,7 +208,7 @@ public class ConnectorCallbackServiceTests {
 	@Test
 	public void givenNullToken_whenRevokeAccountInformationConsent_thenReturnFalse() {
 		// given
-		given(revokeTokenService.revokeTokenByUserIdAndAccessToken("userId", "accessToken")).willReturn(null);
+		given(revokeTokenService.revokeAisTokenByUserIdAndAccessToken("userId", "accessToken")).willReturn(null);
 
 		// when
 		boolean result = testService.revokeAccountInformationConsent("userId", "accessToken");
@@ -220,24 +220,24 @@ public class ConnectorCallbackServiceTests {
 	@Test
 	public void givenRevokedToken_whenRevokeAccountInformationConsent_thenSendRevokeCallbackAndReturnTrue() {
 		// given
-		Token token = new Token("userId");
-		token.status = Token.Status.REVOKED;
-		given(revokeTokenService.revokeTokenByUserIdAndAccessToken("userId", "accessToken")).willReturn(token);
+		AisToken aisToken = new AisToken("userId");
+		aisToken.status = ConsentStatus.REVOKED;
+		given(revokeTokenService.revokeAisTokenByUserIdAndAccessToken("userId", "accessToken")).willReturn(aisToken);
 
 		// when
 		boolean result = testService.revokeAccountInformationConsent("userId", "accessToken");
 
 		// then
 		assertThat(result).isTrue();
-		verify(tokensCallbackService).sendRevokeTokenCallback(eq("accessToken"));
+		verify(tokensCallbackService).sendRevokeAisTokenCallback(eq("accessToken"));
 	}
 
 	@Test
 	public void givenNotRevokedToken_whenRevokeAccountInformationConsent_thenReturnFalse() {
 		// given
-		Token token = new Token("userId");
-		token.status = Token.Status.UNCONFIRMED;
-		given(revokeTokenService.revokeTokenByUserIdAndAccessToken("userId", "accessToken")).willReturn(token);
+		AisToken aisToken = new AisToken("userId");
+		aisToken.status = ConsentStatus.UNCONFIRMED;
+		given(revokeTokenService.revokeAisTokenByUserIdAndAccessToken("userId", "accessToken")).willReturn(aisToken);
 
 		// when
 		boolean result = testService.revokeAccountInformationConsent("userId", "accessToken");
