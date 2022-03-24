@@ -207,7 +207,6 @@ public interface ProviderServiceAbs {
    * Provides url of provider's authorization page designated for authorization of new Consent to access FundsConfirmation data
    *
    * @param sessionSecret Secret of create consent session. Should be returned on authentication success or fail.
-   * @param userConsentIsRequired Flag that indicates if user consent for Account Information (balances, transactions) is required and should be returned on authentication success.
    * @return URL string
    * @see ConnectorSDKCallbackService#onAccountInformationAuthorizationSuccess
    * @see ConnectorSDKCallbackService#onAccountInformationAuthorizationFail

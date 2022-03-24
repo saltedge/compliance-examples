@@ -59,14 +59,14 @@ public class CardAccountsV2Controller extends BaseV2Controller {
     /**
      * Fetch list of card accounts belonging to a PSU (Bank Customer) and all relevant information about them.
      *
-     * @param aisToken linked to Access-Token header
+     * @param token linked to Access-Token header
      * @param request request with sessionSecret
      * @return list of Card Account Data
      */
     @GetMapping
-    public ResponseEntity<CardAccountsResponse> cardAccounts(@NotNull AisToken aisToken, @Valid DefaultRequest request) {
+    public ResponseEntity<CardAccountsResponse> cardAccounts(@NotNull AisToken token, @Valid DefaultRequest request) {
         return new ResponseEntity<>(
-            new CardAccountsResponse(providerService.getCardAccountsOfUser(aisToken.userId)),
+            new CardAccountsResponse(providerService.getCardAccountsOfUser(token.userId)),
             HttpStatus.OK
         );
     }
@@ -74,19 +74,19 @@ public class CardAccountsV2Controller extends BaseV2Controller {
     /**
      * Fetch all transactions related to a card account.
      *
-     * @param aisToken linked to Access-Token header
+     * @param token linked to Access-Token header
      * @param accountId unique id of bank account
      * @param request data
      * @return list of card transactions data with nextId of next page.
      */
     @GetMapping(path = "/{" + SDKConstants.KEY_ACCOUNT_ID + "}/transactions")
     public ResponseEntity<CardTransactionsResponse> transactionsOfCardAccount(
-            @NotNull AisToken aisToken,
+            @NotNull AisToken token,
             @NotEmpty @PathVariable(name = SDKConstants.KEY_ACCOUNT_ID) String accountId,
             @Valid TransactionsRequest request
     ) {
         CardTransactionsPage resultPage = providerService.getTransactionsOfCardAccount(
-                aisToken.userId,
+                token.userId,
                 accountId,
                 request.fromDate,
                 request.toDate,

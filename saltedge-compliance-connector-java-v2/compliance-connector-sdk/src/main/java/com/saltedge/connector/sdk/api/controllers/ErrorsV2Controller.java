@@ -23,11 +23,15 @@ package com.saltedge.connector.sdk.api.controllers;
 import com.saltedge.connector.sdk.SDKConstants;
 import com.saltedge.connector.sdk.api.models.EmptyJsonModel;
 import com.saltedge.connector.sdk.api.models.requests.ErrorsRequest;
+import com.saltedge.connector.sdk.models.domain.AisTokensRepository;
+import com.saltedge.connector.sdk.models.domain.PiisTokensRepository;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -38,19 +42,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(ErrorsV2Controller.BASE_PATH)
 public class ErrorsV2Controller extends BaseV2Controller {
-    public final static String BASE_PATH = SDKConstants.API_BASE_PATH + "/errors";
-    private static final Logger log = LoggerFactory.getLogger(ErrorsV2Controller.class);
+  public final static String BASE_PATH = SDKConstants.API_BASE_PATH + "/errors";
+  private static final Logger log = LoggerFactory.getLogger(ErrorsV2Controller.class);
 
-    /**
-     * This endpoint is responsible for receiving validation errors of responses which Connector sends to Salt Edge PSD2 Compliance Solution
-     *
-     * @param request which contains error data
-     *
-     * @return empty JSON object
-     */
-    @PostMapping
-    public ResponseEntity<EmptyJsonModel> postError(@NotNull ErrorsRequest request) {
-        log.error(request.toString());
-        return super.createEmptyOkResponseEntity();
-    }
+  /**
+   * This endpoint is responsible for receiving validation errors of responses which Connector sends to Salt Edge PSD2 Compliance Solution
+   *
+   * @param request which contains error data
+   *
+   * @return empty JSON object
+   */
+  @PostMapping
+  public ResponseEntity<EmptyJsonModel> postError(@NotNull ErrorsRequest request) {
+    log.error(request.toString());
+    return super.createEmptyOkResponseEntity();
+  }
 }

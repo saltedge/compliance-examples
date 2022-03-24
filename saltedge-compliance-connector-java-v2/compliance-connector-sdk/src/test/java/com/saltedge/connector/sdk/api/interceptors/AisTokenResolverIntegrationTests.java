@@ -103,10 +103,10 @@ public class AisTokenResolverIntegrationTests {
     @Before
     public void setUp() {
         if (aisTokensRepository.count() == 0) {
-            AisToken aisToken = new AisToken("sessionSecret", "tppAppName", "authTypeCode", "tppRedirectUrl", Instant.now().minusSeconds(1));
-            aisToken.id = 1L;
-            aisToken.accessToken = "validToken";
-            aisTokensRepository.save(aisToken);
+            AisToken token = new AisToken("sessionSecret", "tppAppName", "authTypeCode", "tppRedirectUrl", Instant.now().minusSeconds(1));
+            token.id = 1L;
+            token.accessToken = "validToken";
+            aisTokensRepository.save(token);
         }
     }
 

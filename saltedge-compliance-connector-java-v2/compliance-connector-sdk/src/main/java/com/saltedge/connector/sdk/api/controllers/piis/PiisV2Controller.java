@@ -81,7 +81,7 @@ public class PiisV2Controller extends BaseV2Controller {
   /**
    * Revoke an already existing and active PIIS access token.
    *
-   * @param aisToken linked to Access-Token header
+   * @param token linked to Access-Token header
    * @param request with sessionSecret
    * @return empty JSON object
    */

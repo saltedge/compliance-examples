@@ -46,10 +46,7 @@ public class ErrorsV2ControllerTests {
         ErrorsV2Controller controller = new ErrorsV2Controller();
         controller.providerService = mockProviderService;
 
-        ResponseEntity<EmptyJsonModel> result = controller.postError(
-                new AisToken("1"),
-                new ErrorsRequest()
-        );
+        ResponseEntity<EmptyJsonModel> result = controller.postError(new ErrorsRequest());
 
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(result.getBody()).isNotNull();

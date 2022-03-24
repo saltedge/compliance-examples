@@ -57,14 +57,14 @@ public class AccountsV2Controller extends BaseV2Controller {
     /**
      * Fetch list of accounts belonging to a Customer (User) and all relevant information about them being Berlin Group compatible.
      *
-     * @param aisToken linked to Access-Token header
+     * @param token linked to Access-Token header
      * @param request request with sessionSecret
      * @return list of Account Data
      */
     @GetMapping
-    public ResponseEntity<AccountsResponse> accounts(@NotNull AisToken aisToken, @Valid DefaultRequest request) {
+    public ResponseEntity<AccountsResponse> accounts(@NotNull AisToken token, @Valid DefaultRequest request) {
         return new ResponseEntity<>(
-            new AccountsResponse(providerService.getAccountsOfUser(aisToken.userId)),
+            new AccountsResponse(providerService.getAccountsOfUser(token.userId)),
             HttpStatus.OK
         );
     }
@@ -72,19 +72,19 @@ public class AccountsV2Controller extends BaseV2Controller {
     /**
      * Fetch transactions related to a bank account.
      *
-     * @param aisToken linked to Access-Token header
+     * @param token linked to Access-Token header
      * @param accountId unique id of bank account
      * @param request data
      * @return list of transactions data with nextId of next page
      */
     @GetMapping(path = "/{" + SDKConstants.KEY_ACCOUNT_ID + "}/transactions")
     public ResponseEntity<TransactionsResponse> transactionsOfAccount(
-            @NotNull AisToken aisToken,
+            @NotNull AisToken token,
             @NotEmpty @PathVariable(name = SDKConstants.KEY_ACCOUNT_ID) String accountId,
             @Valid TransactionsRequest request
     ) {
         TransactionsPage resultPage = providerService.getTransactionsOfAccount(
-                aisToken.userId,
+                token.userId,
                 accountId,
                 request.fromDate,
                 request.toDate,
