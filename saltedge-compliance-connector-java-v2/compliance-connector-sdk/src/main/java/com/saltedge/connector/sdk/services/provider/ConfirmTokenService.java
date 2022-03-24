@@ -95,18 +95,18 @@ public class ConfirmTokenService extends BaseService {
     return token;
   }
 
-  private void sendAisSessionSuccess(AisToken aisToken) {
+  private void sendAisSessionSuccess(AisToken token) {
     SessionSuccessCallbackRequest params = new SessionSuccessCallbackRequest();
-    params.providerOfferedConsents = aisToken.providerOfferedConsents;
-    params.token = aisToken.accessToken;
-    params.userId = aisToken.userId;
-    callbackService.sendSuccessCallback(aisToken.sessionSecret, params);
+    params.providerOfferedConsents = token.providerOfferedConsents;
+    params.token = token.accessToken;
+    params.userId = token.userId;
+    callbackService.sendSuccessCallback(token.sessionSecret, params);
   }
 
-  private void sendPiisSessionSuccess(PiisToken piisToken) {
+  private void sendPiisSessionSuccess(PiisToken token) {
     SessionSuccessCallbackRequest params = new SessionSuccessCallbackRequest();
-    params.token = piisToken.accessToken;
-    params.userId = piisToken.userId;
-    callbackService.sendSuccessCallback(piisToken.sessionSecret, params);
+    params.token = token.accessToken;
+    params.userId = token.userId;
+    callbackService.sendSuccessCallback(token.sessionSecret, params);
   }
 }

@@ -61,14 +61,14 @@ public class TokensV2ControllerTests {
 
     @Test
     public void whenRevoke_thenReturnStatus200AndEmptyResponse() {
-        AisToken aisToken = new AisToken();
-        aisToken.accessToken = "accessToken";
+        AisToken token = new AisToken();
+        token.accessToken = "accessToken";
         RevokeTokenRequest request = new RevokeTokenRequest();
-        ResponseEntity<EmptyJsonModel> result = controller.revoke(aisToken, request);
+        ResponseEntity<EmptyJsonModel> result = controller.revoke(token, request);
 
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(result.getBody()).isNotNull();
-        verify(mockRevokeTokenService).revokeTokenAsync(aisToken);
+        verify(mockRevokeTokenService).revokeTokenAsync(token);
         verifyNoInteractions(mockConfirmTokenService, mockCreateAisTokenService);
     }
 

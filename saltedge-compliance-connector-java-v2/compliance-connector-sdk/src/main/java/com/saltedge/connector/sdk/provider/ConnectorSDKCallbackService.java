@@ -81,8 +81,8 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
    */
   @Override
   public boolean isUserConsentRequired(@NotEmpty String sessionSecret) {
-    AisToken aisToken = confirmTokenService.findAisTokenBySessionSecret(sessionSecret);
-    return aisToken != null && aisToken.notGlobalConsent();
+    AisToken token = confirmTokenService.findAisTokenBySessionSecret(sessionSecret);
+    return token != null && token.notGlobalConsent();
   }
 
   /**
