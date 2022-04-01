@@ -1,6 +1,6 @@
 # Salt Edge Compliance Connector SDK Changelog
 
-## 2.12.0 (2022-04-01)
+## 2.12.0 (2022-03-21)
 ### Change:
 - Add Funds Confirmation Feature
 - Add new domain model `PiisToken` (migration could be required)
