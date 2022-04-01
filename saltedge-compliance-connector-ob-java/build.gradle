@@ -1,19 +1,25 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '2.6.3'
+    id 'org.springframework.boot' version '2.6.6'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 }
 
 group 'com.saltedge.connector'
 version '1.1.0'
 
+compileJava {
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+}
+
 repositories {
+    mavenLocal()
     mavenCentral()
 }
 
 dependencies {
-    def springVersion = '2.6.3'
-    implementation 'org.jetbrains:annotations:22.0.0'
+    def springVersion = '2.6.6'
+    implementation 'org.jetbrains:annotations:23.0.0'
     implementation "org.springframework.boot:spring-boot-starter:$springVersion"
     implementation "org.springframework.boot:spring-boot-starter-web:$springVersion"
     implementation "org.springframework.boot:spring-boot-starter-freemarker:$springVersion"
