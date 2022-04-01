@@ -60,7 +60,7 @@ public class ObAccountsConsentsIntegrationTests extends ControllerIntegrationTes
         request.tppAppName = "name";
         request.providerCode = "code";
         request.consentId = "123";
-        request.permissions = List.of("ReadAccountsBasic");
+        request.permissions = Collections.singletonList("ReadAccountsBasic");
 
         String auth = TestTools.createAuthorizationHeaderValue(request, TestTools.getInstance().getRsaPrivateKey());
         LinkedMultiValueMap<String, String> headers = createHeaders();
