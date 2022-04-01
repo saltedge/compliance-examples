@@ -1,5 +1,13 @@
 # Salt Edge Compliance Connector SDK Changelog
 
+## 2.12.1 (2022-04-01)
+### Dependency Upgrades
+- Update to Spring Boot 2.6.6 (fix for CVE-2022-22965)
+
+## 2.11.1 (2022-04-01)
+### Dependency Upgrades
+- Update to Spring Boot 2.6.6 (fix for CVE-2022-22965)
+
 ## 2.12.0 (2022-03-21)
 ### Change:
 - Add Funds Confirmation Feature
