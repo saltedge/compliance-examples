@@ -6,9 +6,11 @@ _This application is just a Proof Of Concept._
     
 This codebase contains SDK module which is the set of tools for simplification of communication between ASPSP/Bank and Salt Edge PSD2 Compliance Solution.    
 The SDK module implements the Salt Edge PSD2 Compliance v2 API compatible with **Berlin Group NextGenPSD2 XS2A API**.
-[See how to add SDK to your application](compliance-connector-sdk/README.MD)  
+[See how to add SDK to your application](compliance-connector-sdk/README.MD)
+
+> `com.saltedge.connector.sdk:compliance-connector-sdk:2.11.+` supports only AIS and PIS flows.  
   
-> `Priora` is the alias of Salt Edge PSD2 Compliance Solution
+> `Priora` is the alias of Salt Edge PSD2 Compliance Solution.  
    
 ## Application Requirements
 1. JDK, at least version 8 

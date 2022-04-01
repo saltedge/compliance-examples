@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '2.6.3'
+    id 'org.springframework.boot' version '2.6.6'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 }
 
@@ -18,8 +18,8 @@ repositories {
 }
 
 dependencies {
-    def springVersion = '2.6.3'
-    implementation 'org.jetbrains:annotations:22.0.0'
+    def springVersion = '2.6.6'
+    implementation 'org.jetbrains:annotations:23.0.0'
     implementation "org.springframework.boot:spring-boot-starter:$springVersion"
     implementation "org.springframework.boot:spring-boot-starter-web:$springVersion"
     implementation "org.springframework.boot:spring-boot-starter-freemarker:$springVersion"
@@ -32,7 +32,7 @@ dependencies {
     implementation project(':compliance-connector-sdk')
 
     // COMPLIANCE-CONNECTOR-SDK AS MAVEN CENTRAL DEPENDENCY
-//    implementation 'com.saltedge.connector.sdk:compliance-connector-sdk:2.10.0'
+//    implementation 'com.saltedge.connector.sdk:compliance-connector-sdk:2.11.1'
 //    def jjwtVersion = '0.11.2'
 //    implementation "io.jsonwebtoken:jjwt-api:$jjwtVersion"
 //    runtime "io.jsonwebtoken:jjwt-impl:$jjwtVersion", "io.jsonwebtoken:jjwt-jackson:$jjwtVersion"

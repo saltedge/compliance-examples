@@ -1,5 +1,9 @@
 # Salt Edge Compliance Connector SDK Changelog
 
+## 2.11.1 (2022-04-01)
+### Dependency Upgrades
+- Update to Spring Boot 2.6.6 (fix for CVE-2022-22965)
+
 ## 2.11.0.1 (2022-03-01)
 ### Change:
 - Update fields for TransactionExtra
