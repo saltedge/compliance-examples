@@ -4,6 +4,7 @@ build/
 *.iml
 /compliance-connector-sdk/gradle.properties
 *.gpg
+.DS_Store
 # Dev config
 application.properties
 application.yml
