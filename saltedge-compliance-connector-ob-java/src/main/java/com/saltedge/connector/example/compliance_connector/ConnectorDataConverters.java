@@ -43,7 +43,7 @@ public class ConnectorDataConverters {
     public static ObAccount convertAccountToAccountData(AccountEntity accountEntry, UserEntity user) {
         ArrayList<ObBalance> balances = new ArrayList<>();
         balances.add(new ObBalance(new ObAmount(accountEntry.availableAmount, accountEntry.currencyCode), "debit", "InterimAvailable", accountEntry.getUpdatedAt().toInstant()));
-        balances.add(new ObBalance(new ObAmount(accountEntry.balance, accountEntry.currencyCode), "debit", "openingAvailable", accountEntry.getUpdatedAt().toInstant()));
+        balances.add(new ObBalance(new ObAmount(accountEntry.balance, accountEntry.currencyCode), "debit", "OpeningAvailable", accountEntry.getUpdatedAt().toInstant()));
 
         ArrayList<ObAccountIdentifier> identifiers = new ArrayList<>();
         identifiers.add(new ObAccountIdentifier(
@@ -67,7 +67,7 @@ public class ConnectorDataConverters {
             accountEntry.getUpdatedAt().toInstant(),
             "processing",
             identifiers,
-            new ObAccountIdentifier("UK.OBIE.SortCodeAccountNumber", accountEntry.accountNumber)
+            new ObAccountIdentifier("UK.OBIE.BICFI", accountEntry.accountNumber)
         );
     }
 

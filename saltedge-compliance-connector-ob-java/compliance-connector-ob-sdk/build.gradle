@@ -8,7 +8,7 @@ plugins {
 }
 
 group 'com.saltedge.connector.sdk'
-version '1.2.1'
+version '1.2.2'
 
 compileJava {
     sourceCompatibility = 1.8
@@ -29,14 +29,14 @@ jar {
 }
 
 dependencies {
-    def springVersion = '2.6.6'
+    def springVersion = '2.7.1'
     implementation 'org.jetbrains:annotations:23.0.0'
     implementation "org.springframework.boot:spring-boot-starter:$springVersion"
     implementation "org.springframework.boot:spring-boot-starter-web:$springVersion"
     implementation "org.springframework.boot:spring-boot-starter-data-jpa:$springVersion"
     implementation "org.springframework.boot:spring-boot-starter-validation:$springVersion"
 
-    def jjwtVersion = '0.11.2'
+    def jjwtVersion = '0.11.5'
     implementation "io.jsonwebtoken:jjwt-api:$jjwtVersion"
     runtimeOnly "io.jsonwebtoken:jjwt-impl:$jjwtVersion", "io.jsonwebtoken:jjwt-jackson:$jjwtVersion", 'org.bouncycastle:bcprov-jdk15on:1.60'
     implementation "io.jsonwebtoken:jjwt-jackson:$jjwtVersion"
@@ -47,7 +47,7 @@ dependencies {
     testImplementation "io.jsonwebtoken:jjwt-api:$jjwtVersion"
     testImplementation "io.jsonwebtoken:jjwt-jackson:$jjwtVersion"
     testImplementation "org.springframework.boot:spring-boot-starter-test:$springVersion"
-    testImplementation 'com.h2database:h2:1.4.200'
+    testImplementation 'com.h2database:h2:2.1.214'
 }
 
 test {
