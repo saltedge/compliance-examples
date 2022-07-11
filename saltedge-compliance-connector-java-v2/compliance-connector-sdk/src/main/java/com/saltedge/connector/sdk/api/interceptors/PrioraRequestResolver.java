@@ -53,10 +53,11 @@ public class PrioraRequestResolver implements HandlerMethodArgumentResolver {
     @Override
     public boolean supportsParameter(MethodParameter parameter) {//TODO TRY TO USE ONLY PARENT CLASS
         Class<?> type = parameter.getParameterType();
-        return type.equals(CreateTokenRequest.class)
+        return type.equals(CreateAisTokenRequest.class)
                 || type.equals(RevokeTokenRequest.class)
                 || type.equals(TransactionsRequest.class)
                 || type.equals(CreatePaymentRequest.class)
+                || type.equals(CreatePiisTokenRequest.class)
                 || type.equals(FundsConfirmationRequest.class)
                 || type.equals(ErrorsRequest.class)
                 || type.equals(DefaultRequest.class)

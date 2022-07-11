@@ -81,4 +81,9 @@ public class TestProviderService implements ProviderServiceAbs {
   public String createFPSPayment(String paymentProduct, String creditorBban, String creditorSortCode, String creditorName, ParticipantAddress creditorAddress, String creditorAgentName, String debtorBban, String debtorSortCode, String amount, String currency, String description, @NotNull String extraData, @NotEmpty String psuIpAddress) {
     return null;
   }
+
+  @Override
+  public String getFundsConfirmationAuthorizationPageUrl(String sessionSecret) {
+    return null;
+  }
 }

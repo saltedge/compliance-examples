@@ -20,9 +20,8 @@
  */
 package com.saltedge.connector.sdk.api.models.requests;
 
-import com.saltedge.connector.sdk.api.models.Account;
 import com.saltedge.connector.sdk.api.models.Amount;
-import com.saltedge.connector.sdk.api.models.ParticipantAccount;
+import com.saltedge.connector.sdk.models.ParticipantAccount;
 import com.saltedge.connector.sdk.api.models.ValidationTest;
 import org.junit.Test;
 

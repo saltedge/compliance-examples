@@ -8,7 +8,7 @@
     }
     .top-header {
         color:white;
-        background-color:#009E47;
+        background-color:#00749e;
         text-align:center;
     }
     h2 {
@@ -26,13 +26,13 @@
       text-align: center;
     }
     fieldset {
-        border: 0;
+      border: 0;
     }
     .submit {
         font-size: larger;
         padding: 5px 10px;
         color: white;
-        background-color: green;
+        background-color:#00749e;
     }
     .inline {
         display: inline;

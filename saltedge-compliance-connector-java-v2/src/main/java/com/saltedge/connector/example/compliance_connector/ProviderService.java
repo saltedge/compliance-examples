@@ -22,7 +22,7 @@ package com.saltedge.connector.example.compliance_connector;
 
 import com.saltedge.connector.example.compliance_connector.collector.AccountsCollector;
 import com.saltedge.connector.example.compliance_connector.config.AuthorizationTypes;
-import com.saltedge.connector.example.controllers.consent.UserOAuthAuthController;
+import com.saltedge.connector.example.controllers.consent.UserAuthenticateController;
 import com.saltedge.connector.example.model.*;
 import com.saltedge.connector.example.model.repository.*;
 import com.saltedge.connector.sdk.SDKConstants;
@@ -32,7 +32,6 @@ import com.saltedge.connector.sdk.api.models.err.NotFound;
 import com.saltedge.connector.sdk.models.CardTransactionsPage;
 import com.saltedge.connector.sdk.models.TransactionsPage;
 import com.saltedge.connector.sdk.provider.ProviderServiceAbs;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +43,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.validation.constraints.NotEmpty;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.function.Supplier;
@@ -78,18 +76,10 @@ public class ProviderService implements ProviderServiceAbs {
   @Override
   public String getAccountInformationAuthorizationPageUrl(
     String sessionSecret,
-    boolean userConsentIsRequired,
+    boolean userConsentIsRequired,//TODO
     String psuIpAddress
   ) {
-    try {
-      return getAuthorizationPageUrlWithQueryParam(
-        UserOAuthAuthController.ACCOUNTS_BASE_PATH,
-        new AbstractMap.SimpleImmutableEntry<>(SDKConstants.KEY_SESSION_SECRET, sessionSecret)
-      );
-    } catch (Exception e) {
-      log.error(e.getMessage(), e);
-      return null;
-    }
+    return getSessionAuthorizationPageUrl(UserAuthenticateController.Scope.accounts, sessionSecret);
   }
 
   @Override
@@ -133,7 +123,7 @@ public class ProviderService implements ProviderServiceAbs {
     AccountEntity account = accountsRepository
         .findFirstByIdAndUserId(Long.parseLong(accountId), user.id)
         .orElseThrow((Supplier<RuntimeException>) NotFound.AccountNotFound::new);
-    int fromIdValue = (StringUtils.isEmpty(fromId)) ? 0 : Integer.parseInt(fromId);
+    int fromIdValue = (StringUtils.hasLength(fromId)) ? Integer.parseInt(fromId) : 0;
     Page<TransactionEntity> pagedResult = transactionsRepository.findByAccountIdAndMadeOnBetween(
         account.id,
         fromDate, toDate,
@@ -169,7 +159,7 @@ public class ProviderService implements ProviderServiceAbs {
       .findFirstByIdAndUserId(Long.valueOf(accountId), user.id)
       .orElseThrow((Supplier<RuntimeException>) NotFound.AccountNotFound::new);
 
-    int fromIdValue = (StringUtils.isEmpty(fromId)) ? 0 : Integer.parseInt(fromId);
+    int fromIdValue = (StringUtils.hasLength(fromId)) ? Integer.parseInt(fromId) : 0;
     Page<CardTransactionEntity> pagedResult = cardTransactionsRepository.findByCardAccountIdAndMadeOnBetween(
       account.id,
       fromDate, toDate,
@@ -266,10 +256,27 @@ public class ProviderService implements ProviderServiceAbs {
     return getPaymentAuthorizationPageUrl(payment.id.toString());
   }
 
+  @Override
+  public String getFundsConfirmationAuthorizationPageUrl(String sessionSecret) {
+    return getSessionAuthorizationPageUrl(UserAuthenticateController.Scope.funds, sessionSecret);
+  }
+
+  private String getSessionAuthorizationPageUrl(UserAuthenticateController.Scope scope, String sessionSecret) {
+    try {
+      return getAuthorizationPageUrlWithQueryParam(
+          new AbstractMap.SimpleImmutableEntry<>(SDKConstants.KEY_SCOPE, scope.toString()),
+          new AbstractMap.SimpleImmutableEntry<>(SDKConstants.KEY_SESSION_SECRET, sessionSecret)
+      );
+    } catch (Exception e) {
+      log.error(e.getMessage(), e);
+      return null;
+    }
+  }
+
   private String getPaymentAuthorizationPageUrl(String paymentId) {
     try {
       return getAuthorizationPageUrlWithQueryParam(
-          UserOAuthAuthController.PAYMENTS_BASE_PATH,
+          new AbstractMap.SimpleImmutableEntry<>(SDKConstants.KEY_SCOPE, UserAuthenticateController.Scope.payments.toString()),
           new AbstractMap.SimpleImmutableEntry<>(SDKConstants.KEY_PAYMENT_ID, paymentId)
       );
     } catch (Exception e) {
@@ -278,20 +285,18 @@ public class ProviderService implements ProviderServiceAbs {
     }
   }
 
-  private UserEntity findAndValidateUser(String userId) {
-    return usersRepository.findById(Long.valueOf(userId))
-      .orElseThrow((Supplier<RuntimeException>) NotFound.UserNotFound::new);
-  }
-
   @SafeVarargs
-  private final String getAuthorizationPageUrlWithQueryParam(
-    String path,
-    AbstractMap.SimpleImmutableEntry<String, String>... params
-  ) {
+  private final String getAuthorizationPageUrlWithQueryParam(AbstractMap.SimpleImmutableEntry<String, String>... params) {
     String urlString = env.getProperty("app.url");
     if (urlString == null) return null;
-    UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(urlString).path(path);
+
+    UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(urlString).path(UserAuthenticateController.BASE_PATH);
     Arrays.stream(params).forEach(item -> builder.queryParam(item.getKey(), item.getValue()));
     return builder.build().toUriString();
+  }
+
+  private UserEntity findAndValidateUser(String userId) {
+    return usersRepository.findById(Long.valueOf(userId))
+        .orElseThrow((Supplier<RuntimeException>) NotFound.UserNotFound::new);
   }
 }

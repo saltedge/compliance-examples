@@ -42,11 +42,10 @@ public class SessionSuccessCallbackRequestTests {
 
 	@Test
 	public void givenBankConsent_whenSerialize_thenReturnJsonString() throws JsonProcessingException {
-		SessionSuccessCallbackRequest model = new SessionSuccessCallbackRequest(
-				ProviderConsents.buildAllAccountsConsent(),
-				"accessToken",
-				"userId"
-		);
+		SessionSuccessCallbackRequest model = new SessionSuccessCallbackRequest();
+		model.providerOfferedConsents = ProviderConsents.buildAllAccountsConsent();
+		model.token = "accessToken";
+		model.userId = "userId";
 
 		ObjectMapper mapper = JsonTools.createDefaultMapper();
 		String json = mapper.writeValueAsString(model);
@@ -56,11 +55,10 @@ public class SessionSuccessCallbackRequestTests {
 
 	@Test
 	public void givenGlobalConsent_whenSerialize_thenReturnJsonString() throws JsonProcessingException {
-		SessionSuccessCallbackRequest model = new SessionSuccessCallbackRequest(
-				new ProviderConsents(ProviderConsents.GLOBAL_CONSENT_VALUE),
-				"accessToken",
-				"userId"
-		);
+		SessionSuccessCallbackRequest model = new SessionSuccessCallbackRequest();
+		model.providerOfferedConsents = new ProviderConsents(ProviderConsents.GLOBAL_CONSENT_VALUE);
+		model.token = "accessToken";
+		model.userId = "userId";
 
 		ObjectMapper mapper = JsonTools.createDefaultMapper();
 		String json = mapper.writeValueAsString(model);

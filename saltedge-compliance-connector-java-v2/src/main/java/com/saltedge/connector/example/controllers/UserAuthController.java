@@ -29,7 +29,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @RequestMapping
-public class UserAuthController extends UserBaseController {
+public class UserAuthController extends BaseController {
     private static final Logger log = LoggerFactory.getLogger(UserAuthController.class);
     public final static String BASE_PATH = "/users/auth";
 

@@ -27,8 +27,6 @@ import com.saltedge.connector.sdk.config.PrioraProperties;
 import com.saltedge.connector.sdk.tools.JsonTools;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;

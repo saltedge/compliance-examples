@@ -20,7 +20,7 @@
  */
 package com.saltedge.connector.sdk.api.models.validation;
 
-import com.saltedge.connector.sdk.api.models.ParticipantAccount;
+import com.saltedge.connector.sdk.models.ParticipantAccount;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

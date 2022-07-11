@@ -58,6 +58,7 @@ public class ObFundsControllerTests {
     public void givenValidParams_whenFundsConfirmation_thenReturnStatus200AndEmptyResponse() {
         //given
         Consent consent = new Consent();
+        consent.id = 1L;
         consent.userId = userId;
         consent.debtorAccount = debtorAccount;
         ObAmount instructedAmount = new ObAmount("100.0", "GBP");
@@ -78,6 +79,7 @@ public class ObFundsControllerTests {
         assertThrows(Unauthorized.AccessDenied.class, () -> {
             //given
             Consent consent = new Consent();
+            consent.id = 1L;
             consent.userId = userId;
             consent.debtorAccount = null;
             ObAmount instructedAmount = new ObAmount("100.0", "GBP");

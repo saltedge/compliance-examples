@@ -23,6 +23,7 @@ package com.saltedge.connector.sdk.api.models;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.saltedge.connector.sdk.api.models.validation.RequestAccountConstraint;
+import com.saltedge.connector.sdk.models.ParticipantAccount;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;

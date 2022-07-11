@@ -100,7 +100,7 @@ public interface ProviderServiceAbs {
 
   /**
    * Provides card accounts information of user.
-   * Serves accounts endpoint (https://priora.saltedge.com/docs/aspsp/v2/ais#ais-connector_endpoints-card_accounts-get)
+   * Serves card accounts endpoint (https://priora.saltedge.com/docs/aspsp/v2/ais#ais-connector_endpoints-card_accounts-get)
    *
    * @param userId User identifier on Provider side
    * @return List of CardAccount objects
@@ -110,7 +110,7 @@ public interface ProviderServiceAbs {
 
   /**
    * Provides transactions which belong to a card account of user.
-   * Serves transactions endpoint (https://priora.saltedge.com/docs/aspsp/v2/ais#ais-connector_endpoints-card_accounts-transactions)
+   * Serves card transactions endpoint (https://priora.saltedge.com/docs/aspsp/v2/ais#ais-connector_endpoints-card_accounts-transactions)
    *
    * @param userId User identifier on Provider side
    * @param accountId An account identifier on Provider side
@@ -202,4 +202,14 @@ public interface ProviderServiceAbs {
     @NotNull String extraData,
     @NotEmpty String psuIpAddress
   );
+
+  /**
+   * Provides url of provider's authorization page designated for authorization of new Consent to access FundsConfirmation data
+   *
+   * @param sessionSecret Secret of create consent session. Should be returned on authentication success or fail.
+   * @return URL string
+   * @see ConnectorSDKCallbackService#onAccountInformationAuthorizationSuccess
+   * @see ConnectorSDKCallbackService#onAccountInformationAuthorizationFail
+   */
+  String getFundsConfirmationAuthorizationPageUrl(@NotEmpty String sessionSecret);
 }

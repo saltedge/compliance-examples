@@ -20,8 +20,9 @@
  */
 package com.saltedge.connector.sdk.config;
 
+import com.saltedge.connector.sdk.api.interceptors.AisTokenResolver;
+import com.saltedge.connector.sdk.api.interceptors.PiisTokenResolver;
 import com.saltedge.connector.sdk.api.interceptors.PrioraRequestResolver;
-import com.saltedge.connector.sdk.api.interceptors.TokenResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -37,11 +38,14 @@ public class InterceptorsAppConfig implements WebMvcConfigurer {
     @Autowired
     PrioraRequestResolver prioraRequestResolver;
     @Autowired
-    TokenResolver tokenResolver;
+    AisTokenResolver aisTokenResolver;
+    @Autowired
+    PiisTokenResolver piisTokenResolver;
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(prioraRequestResolver);
-        resolvers.add(tokenResolver);
+        resolvers.add(aisTokenResolver);
+        resolvers.add(piisTokenResolver);
     }
 }

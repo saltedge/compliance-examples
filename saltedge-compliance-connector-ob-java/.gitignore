@@ -2,6 +2,7 @@
 /.gradle/
 /build/
 *.iml
+.DS_Store
 # Dev config
 application.properties
 application.yml
