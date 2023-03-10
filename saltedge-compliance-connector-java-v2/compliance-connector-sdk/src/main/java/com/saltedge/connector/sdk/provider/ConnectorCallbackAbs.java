@@ -55,7 +55,7 @@ public interface ConnectorCallbackAbs {
    *
    * @param sessionSecret Secret of User authorization session.
    * @param userId Unique identifier of authenticated User.
-   * @param accessToken Unique string that identifies a user access. Life period of accessToken is set by TPP and can not be more than 90 days.
+   * @param accessToken Unique string that identifies a user access. Life period of accessToken is set by TPP and can not be more than 180 days.
    * @param consents List of balances and transactions of accounts for which is offered consent. Can be null if bank offered consent is not required.
    * @return returnUrl URL string for final redirection of Authorization session (in browser) back to TPP side.
    * @see ProviderServiceAbs#getAccountInformationAuthorizationPageUrl

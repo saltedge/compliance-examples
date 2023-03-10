@@ -10,7 +10,7 @@ class Token < ApplicationRecord
 
   def set_defaults
     self.token ||= SecureRandom.uuid
-    self.expires_at ||= 90.days.from_now
+    self.expires_at ||= 180.days.from_now
     self.status = INITIATED
   end
 end

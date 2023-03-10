@@ -64,7 +64,7 @@ import java.util.function.Supplier;
 @Validated
 public class ComplianceConnectorService implements ProviderServiceAbs {
   private static final Logger log = LoggerFactory.getLogger(ComplianceConnectorService.class);
-  public static int PAGE_SIZE = 90;
+  public static int PAGE_SIZE = 100;
   @Autowired
   private Environment env;
   @Autowired

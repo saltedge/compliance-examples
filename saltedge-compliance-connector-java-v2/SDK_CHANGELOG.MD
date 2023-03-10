@@ -129,7 +129,7 @@ Add support for the FPS (Faster Payment Service)
 ## 2.3.1 (2020-05-08)
 ### Add:  
 - Add valid_until param to Consent (Token) create request.   
-  This param is set by TPP. Consent (Token) life period can not be more than 90 days from now.     
+  This param is set by TPP. Consent (Token) life period can not be more than 180 days from now.     
   
 ### Change:  
 - In ConnectorSDKCallbackService deprecated onAccountInformationAuthorizationSuccess(...) method.  

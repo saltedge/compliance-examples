@@ -44,7 +44,7 @@ public class CreateAisTokenRequest extends CreateTokenRequest {
     /**
      * A valid until date for the requested consent.
      * Date in ISODate Format, e.g. 2017-10-30.
-     * If not set will be replaced with maximum possible date (now + 90 days)
+     * If not set will be replaced with maximum possible date (now + 180 days)
      */
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     @JsonProperty("valid_until")
