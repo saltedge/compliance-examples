@@ -8,10 +8,10 @@ gem "sidekiq"
 gem "rest-client"
 gem "hiredis"
 gem "redis-namespace"
-gem "redis", require: ["redis", "redis/connection/hiredis"]
+gem "redis", "<5", require: ["redis", "redis/connection/hiredis"]
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 6.0', '>= 6.0.2.2'
+gem 'rails', '~> 6.1', '>= 6.1.7.3'
 # Use Puma as the app server
 gem 'puma', '~> 3.11'
 # Use SCSS for stylesheets
@@ -40,7 +40,7 @@ gem 'jbuilder', '~> 2.5'
 # gem 'capistrano-rails', group: :development
 
 # Reduces boot times through caching; required in config/boot.rb
-gem 'bootsnap', '>= 1.1.0', require: false
+gem 'bootsnap', '>= 1.4.4', require: false
 
 group :development do
   # Access an interactive console on exception pages or by calling 'console' anywhere in the code.
