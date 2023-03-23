@@ -1,6 +1,9 @@
 Rails.application.routes.draw do
 
-  default_url_options host: Rails.application.credentials[:default][:url]
+  # default_url_options host: Rails.application.credentials[:default][:url]
+
+  protocol = Rails.env.staging? || Rails.env.production? ? :https : :http
+  default_url_options host: Settings.application.host, protocol: protocol
 
   devise_for :users, controllers: {
     sessions: "users/sessions"

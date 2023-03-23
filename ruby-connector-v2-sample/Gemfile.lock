@@ -247,6 +247,7 @@ GEM
       sprockets (> 3.0)
       sprockets-rails
       tilt
+    settingslogic (2.0.9)
     sidekiq (6.5.5)
       connection_pool (>= 2.2.2)
       rack (~> 2.0)
@@ -316,6 +317,7 @@ DEPENDENCIES
   rspec-core (= 3.8.0)
   rspec-rails (= 3.8.2)
   sass-rails
+  settingslogic
   sidekiq
   spring
   spring-watcher-listen (~> 2.0.0)

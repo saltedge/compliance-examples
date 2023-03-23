@@ -3,7 +3,7 @@ class Api::Priora::V2::BaseController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   ApiError = Class.new(Exception) { attr_accessor :message, :code }
-  PRIORA_PUBLIC_KEY = OpenSSL::PKey::RSA.new(File.read(Rails.application.credentials.priora[:public_key]))
+  PRIORA_PUBLIC_KEY = OpenSSL::PKey::RSA.new(File.read(Settings.priora[:public_key]))
 
   rescue_from StandardError, with: :internal_server_error
   rescue_from ApiError, with: :api_error

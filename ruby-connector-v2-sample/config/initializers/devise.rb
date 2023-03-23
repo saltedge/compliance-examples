@@ -2,7 +2,7 @@ Devise.setup do |config|
   require 'devise/orm/active_record'
   # config.mailer_sender                = Settings.devise.mailer_sender
   # config.mailer.default_url_options   = { host: Settings.application.host }
-  config.secret_key                   = Rails.application.credentials.devise[:secret_key]
+  config.secret_key                   = Settings.devise.secret_key
   config.authentication_keys          = [:email]
   config.case_insensitive_keys        = [:email]
   config.strip_whitespace_keys        = [:email]
