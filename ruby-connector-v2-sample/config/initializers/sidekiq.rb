@@ -12,6 +12,3 @@ Sidekiq.configure_client { |config| config.redis = options }
 Sidekiq.configure_server do |config|
   config.redis = options
 end
-
-Sidekiq::Extensions.enable_delay!
-
