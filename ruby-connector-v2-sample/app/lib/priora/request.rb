@@ -33,8 +33,8 @@ class Priora::Request
   def headers
     @headers.merge(
       "Authorization" => self.class.token_from(params),
-      "App-Id" => Rails.application.credentials.priora[:app_id],
-      "App-Secret" => Rails.application.credentials.priora[:app_secret]
+      "App-Id" => Settings.priora[:app_id],
+      "App-Secret" => Settings.priora[:app_secret]
     )
   end
 
@@ -44,7 +44,7 @@ class Priora::Request
         exp:  1.minute.from_now.to_i,
         data: payload
       },
-      OpenSSL::PKey::RSA.new(File.read(Rails.application.credentials.priora[:private_key_file])),
+      OpenSSL::PKey::RSA.new(File.read(Settings.priora[:private_key_file])),
       'RS256'
     ).to_s
   end

@@ -1,9 +1,10 @@
-settings = Rails.application.credentials
-password = settings.sidekiq[:password].empty? ? "" : ":#{settings.sidekiq[:password]}@"
+require './config/settings.rb' unless defined? Settings
+
+password = Settings.sidekiq[:password].empty? ? "" : ":#{Settings.sidekiq[:password]}@"
 
 options = {
-  namespace: settings.sidekiq[:namespace],
-  url:       "redis://#{password}#{settings.sidekiq[:host]}:#{settings.sidekiq[:port]}/#{settings.sidekiq[:database]}"
+  namespace: Settings.sidekiq[:namespace],
+  url:       "redis://#{password}#{Settings.sidekiq[:host]}:#{Settings.sidekiq[:port]}/#{Settings.sidekiq[:database]}"
 }
 
 Sidekiq.configure_client { |config| config.redis = options }
@@ -11,6 +12,3 @@ Sidekiq.configure_client { |config| config.redis = options }
 Sidekiq.configure_server do |config|
   config.redis = options
 end
-
-Sidekiq::Extensions.enable_delay!
-
