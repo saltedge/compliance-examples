@@ -32,8 +32,8 @@ RSpec.describe "AIS flow", type: :request do
   end
   let(:base_headers) do
     {
-      "App-Id"     => Rails.application.credentials.priora[:app_id],
-      "App-Secret" => Rails.application.credentials.priora[:app_secret]
+      "App-Id"     => Settings.priora[:app_id],
+      "App-Secret" => Settings.priora[:app_secret]
     }
   end
 
