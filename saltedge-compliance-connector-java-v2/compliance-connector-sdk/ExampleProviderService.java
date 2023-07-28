@@ -168,6 +168,11 @@ public class ExampleProviderService implements ProviderServiceAbs {
         return fakeAccounts;
     }
 
+    @Override
+    public void refresh(String providerCode, String sessionSecret) {
+
+    }
+
     /**
      * Provides transactions which belong to an account of user.
      * Serves transactions endpoint

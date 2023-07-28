@@ -22,7 +22,9 @@ package com.saltedge.connector.sdk.api.controllers.ais;
 
 import com.saltedge.connector.sdk.SDKConstants;
 import com.saltedge.connector.sdk.api.controllers.BaseV2Controller;
+import com.saltedge.connector.sdk.api.models.CardTransaction;
 import com.saltedge.connector.sdk.api.models.Meta;
+import com.saltedge.connector.sdk.api.models.Transaction;
 import com.saltedge.connector.sdk.api.models.requests.DefaultRequest;
 import com.saltedge.connector.sdk.api.models.requests.TransactionsRequest;
 import com.saltedge.connector.sdk.api.models.responses.CardAccountsResponse;
@@ -42,6 +44,9 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * This controller is responsible for fetching card account information for Account Information Service.

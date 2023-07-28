@@ -78,6 +78,14 @@ public interface ProviderServiceAbs {
   List<Account> getAccountsOfUser(@NotEmpty String userId);
 
   /**
+   * In case the connector uses a different database from Core Banking, this endpoint enables the process of refreshing accounts and transactions on connector side before sending them to Salt Edge PSD2 Compliance Solution.
+   *
+   * @param providerCode Human readable Provider identifier.
+   * @param sessionSecret Session identifier in Salt Edge PSD2 Compliance.
+   */
+  void refresh(String providerCode, String sessionSecret);
+
+  /**
    * Provides transactions which belong to an account of user.
    * Serves transactions endpoint (https://priora.saltedge.com/docs/aspsp/v2/ais#ais-connector_endpoints-accounts-transactions)
    *

@@ -58,6 +58,10 @@ public class TestProviderService implements ProviderServiceAbs {
   }
 
   @Override
+  public void refresh(String providerCode, String sessionSecret) {
+  }
+
+  @Override
   public TransactionsPage getTransactionsOfAccount(String userId, String accountId, @NotNull LocalDate fromDate, @NotNull LocalDate toDate, String fromId) {
     return null;
   }
