@@ -23,7 +23,7 @@ package com.saltedge.connector.sdk.api.models.requests;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import javax.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotEmpty;
 
 import static com.saltedge.connector.sdk.SDKConstants.KEY_PROVIDER_CODE;
 

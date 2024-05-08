@@ -3,12 +3,12 @@ plugins {
     id 'java-library'
     id 'org.springframework.boot'
     id 'io.spring.dependency-management'
-//    id 'maven'
+//    id 'maven' // Temporally commented before fixing deploy to maven central.
 //    id 'com.bmuschko.nexus' version '2.3.1'
 }
 
 group 'com.saltedge.connector.sdk'
-version '2.12.2'
+version '2.13.0'
 
 compileJava {
     sourceCompatibility = JavaVersion.VERSION_17
@@ -16,10 +16,9 @@ compileJava {
 }
 
 repositories {
-    mavenLocal()
     mavenCentral()
 }
-
+// Temporally commented before fixing deploy to maven central.
 //bootJar {
 //    enabled = false
 //}
@@ -45,11 +44,13 @@ dependencies {
 
     testImplementation "io.jsonwebtoken:jjwt-api:$jjwtVersion"
     testImplementation "io.jsonwebtoken:jjwt-jackson:$jjwtVersion"
-    testImplementation group: 'junit', name: 'junit', version: '4.12'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.2'
     testImplementation "org.springframework.boot:spring-boot-starter-test:$springVersion"
     testImplementation 'com.h2database:h2:2.2.224'
 }
 
+// Temporally commented before fixing deploy to maven central.
 // UPLOAD JAR TO MAVEN CENTRAL REPO
 //modifyPom {
 //    project {

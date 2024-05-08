@@ -15,8 +15,8 @@ The SDK module implements the Salt Edge PSD2 Compliance v2 API compatible with *
 > `Priora` is the alias of Salt Edge PSD2 Compliance Solution
    
 ## Application Requirements
-1. JDK, at least version 8 
-1. Spring Boot Framework, version `2.7.+`, minimal version `2.7.1`
+1. JDK, at least version 17
+1. Spring Boot Framework, version `3.2.+`
 1. Registration & API Keys  
    Follow the guide on how to [register and add API keys](https://priora.saltedge.com/docs/aspsp/v1#registrationandapikeys)
   
@@ -56,7 +56,9 @@ app.url=https://my_host.org
 * Configuration properties application.yml
 ```yaml
 spring:
-  profiles: prod
+   config:
+      activate:
+         on-profile: prod
 connector:
   private_key_name: connector_private_prod.pem
   private_key_pem: -----BEGIN PRIVATE KEY-----\nXXXXX\n-----END PRIVATE KEY-----

@@ -22,8 +22,8 @@ package com.saltedge.connector.sdk.api.models.validation;
 
 import com.saltedge.connector.sdk.models.ParticipantAccount;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
 public class RequestAccountValidator implements ConstraintValidator<RequestAccountConstraint, ParticipantAccount> {
     @Override

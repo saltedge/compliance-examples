@@ -28,7 +28,7 @@ import com.saltedge.connector.sdk.api.models.ProviderConsents;
 import com.saltedge.connector.sdk.tools.KeyTools;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotEmpty;
 
 abstract public class ConsentBaseController extends BaseController {
 

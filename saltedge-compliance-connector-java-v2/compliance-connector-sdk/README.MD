@@ -9,8 +9,8 @@ When you migrate to the new version of Salt Edge Compliance Connector SDK, pleas
   
 ## Application Requirements
   
-1. JDK, at least version 8 
-1. Spring Boot Framework, version `2.6.+`, minimal version `2.6.6`
+1. JDK, at least version 17
+1. Spring Boot Framework, version `3.2.+`
 1. Registration & API Keys  
    Follow the guide on how to [register and add API keys](https://priora.saltedge.com/docs/aspsp/v1#registrationandapikeys)  
   
@@ -40,7 +40,7 @@ SDK requires next third-party dependencies:
   implementation 'org.springframework.boot:spring-boot-starter-web'
   implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
-  def jjwtVersion = '0.11.2'
+  def jjwtVersion = '0.12.5'
   implementation "io.jsonwebtoken:jjwt-api:$jjwtVersion"
   runtime "io.jsonwebtoken:jjwt-impl:$jjwtVersion", "io.jsonwebtoken:jjwt-jackson:$jjwtVersion"
   implementation "io.jsonwebtoken:jjwt-impl:$jjwtVersion"

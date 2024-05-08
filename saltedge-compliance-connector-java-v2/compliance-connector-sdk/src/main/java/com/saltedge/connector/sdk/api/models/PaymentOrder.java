@@ -25,9 +25,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.saltedge.connector.sdk.api.models.validation.RequestAccountConstraint;
 import com.saltedge.connector.sdk.models.ParticipantAccount;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 import static com.saltedge.connector.sdk.SDKConstants.KEY_END_TO_END_IDENTIFICATION;
 import static com.saltedge.connector.sdk.SDKConstants.KEY_INSTRUCTED_AMOUNT;
