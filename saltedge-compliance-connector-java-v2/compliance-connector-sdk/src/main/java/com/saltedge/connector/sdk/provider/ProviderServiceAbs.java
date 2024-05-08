@@ -24,8 +24,8 @@ import com.saltedge.connector.sdk.api.models.*;
 import com.saltedge.connector.sdk.models.CardTransactionsPage;
 import com.saltedge.connector.sdk.models.TransactionsPage;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -76,6 +76,14 @@ public interface ProviderServiceAbs {
    * @see Account
    */
   List<Account> getAccountsOfUser(@NotEmpty String userId);
+
+  /**
+   * In case the connector uses a different database from Core Banking, this endpoint enables the process of refreshing accounts and transactions on connector side before sending them to Salt Edge PSD2 Compliance Solution.
+   *
+   * @param providerCode Human readable Provider identifier.
+   * @param sessionSecret Session identifier in Salt Edge PSD2 Compliance.
+   */
+  void refresh(String providerCode, String sessionSecret);
 
   /**
    * Provides transactions which belong to an account of user.

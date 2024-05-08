@@ -1,5 +1,10 @@
 # Salt Edge Compliance Connector SDK Changelog
 
+## 2.13.0 (2024-05-08)
+### Dependency Upgrades
+- Update Spring Boot to 3.2.5
+- Update Java to 17
+
 ## 2.11.2 (2022-07-11)
 ### Dependency Upgrades
 - Update to Spring Boot 2.7.1

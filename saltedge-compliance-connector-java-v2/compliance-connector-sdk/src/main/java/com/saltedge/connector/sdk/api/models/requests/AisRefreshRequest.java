@@ -1,6 +1,6 @@
 /*
  * @author Constantin Chelban (constantink@saltedge.com)
- * Copyright (c) 2020 Salt Edge.
+ * Copyright (c) 2023 Salt Edge.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,64 +18,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.saltedge.connector.sdk.api.models;
+package com.saltedge.connector.sdk.api.models.requests;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.saltedge.connector.sdk.SDKConstants;
 
 import jakarta.validation.constraints.NotEmpty;
 
+import static com.saltedge.connector.sdk.SDKConstants.KEY_PROVIDER_CODE;
+
 /**
- * Amount information
+ * Model of Ais refresh request from Salt Edge to Connector
  */
-@JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties
-public class Amount {
+public class AisRefreshRequest extends PrioraBaseRequest {
   /**
-   * Amount value.
+   * Provider identifier.
    */
-  @JsonProperty(SDKConstants.KEY_AMOUNT)
+  @JsonProperty(KEY_PROVIDER_CODE)
   @NotEmpty
-  public String amount;
+  public String providerCode;
 
-  /**
-   * Currency code of balance (ISO 4217).
-   */
-  @JsonProperty(SDKConstants.KEY_CURRENCY)
-  @NotEmpty
-  public String currency;
-
-  public Amount() {
+  public AisRefreshRequest() {
   }
 
-  public Amount(String amount, String currency) {
-    this.amount = amount;
-    this.currency = currency;
+  public AisRefreshRequest(@NotEmpty String providerCode) {
+    this.providerCode = providerCode;
   }
 
-  public String getAmount() {
-    return amount;
+  public String getProviderCode() {
+    return providerCode;
   }
 
-  public void setAmount(String amount) {
-    this.amount = amount;
-  }
-
-  public String getCurrency() {
-    return currency;
-  }
-
-  public void setCurrency(String currency) {
-    this.currency = currency;
-  }
-
-  @Override
-  public String toString() {
-    return "Amount{" +
-        "amount='" + amount + '\'' +
-        ", currency='" + currency + '\'' +
-        '}';
+  public void setProviderCode(String providerCode) {
+    this.providerCode = providerCode;
   }
 }

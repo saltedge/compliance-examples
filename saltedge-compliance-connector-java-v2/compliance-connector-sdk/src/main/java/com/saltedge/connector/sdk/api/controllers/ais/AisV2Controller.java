@@ -1,6 +1,6 @@
 /*
  * @author Constantin Chelban (constantink@saltedge.com)
- * Copyright (c) 2020 Salt Edge.
+ * Copyright (c) 2023 Salt Edge.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,8 +22,10 @@ package com.saltedge.connector.sdk.api.controllers.ais;
 
 import com.saltedge.connector.sdk.SDKConstants;
 import com.saltedge.connector.sdk.api.controllers.BaseV2Controller;
+import com.saltedge.connector.sdk.api.models.EmptyJsonModel;
 import com.saltedge.connector.sdk.api.models.Meta;
-import com.saltedge.connector.sdk.api.models.Transaction;
+import com.saltedge.connector.sdk.api.models.requests.AisRefreshRequest;
+import com.saltedge.connector.sdk.api.models.requests.CreatePaymentRequest;
 import com.saltedge.connector.sdk.api.models.requests.DefaultRequest;
 import com.saltedge.connector.sdk.api.models.requests.TransactionsRequest;
 import com.saltedge.connector.sdk.api.models.responses.AccountsResponse;
@@ -35,68 +37,34 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
- * This controller is responsible for fetching account information for Account Information Service.
- * https://priora.saltedge.com/docs/aspsp/v2/ais#ais-connector_endpoints-accounts
+ * This controller is responsible for receiving refresh request of account information for Account Information Service.
+ * <a href="https://priora.saltedge.com/docs/aspsp/v2/ais">AIS</a>
  */
 @RestController
-@RequestMapping(AccountsV2Controller.BASE_PATH)
+@RequestMapping(AisV2Controller.BASE_PATH)
 @Validated
-public class AccountsV2Controller extends BaseV2Controller {
-    public final static String BASE_PATH = SDKConstants.API_BASE_PATH + "/accounts";
-    private static final Logger log = LoggerFactory.getLogger(AccountsV2Controller.class);
+public class AisV2Controller extends BaseV2Controller {
+    public final static String BASE_PATH = SDKConstants.API_BASE_PATH + "/ais";
+    private static final Logger log = LoggerFactory.getLogger(AisV2Controller.class);
 
     /**
-     * Fetch list of accounts belonging to a Customer (User) and all relevant information about them being Berlin Group compatible.
-     *
-     * @param token linked to Access-Token header
-     * @param request request with sessionSecret
-     * @return list of Account Data
-     */
-    @GetMapping
-    public ResponseEntity<AccountsResponse> accounts(@NotNull AisToken token, @Valid DefaultRequest request) {
-        return new ResponseEntity<>(
-            new AccountsResponse(providerService.getAccountsOfUser(token.userId)),
-            HttpStatus.OK
-        );
-    }
-
-    /**
-     * Fetch transactions related to a bank account.
+     * This endpoint is responsible for refreshing account information on connector side.
      *
      * @param token linked to Access-Token header
      * @param accountId unique id of bank account
      * @param request data
      * @return list of transactions data with nextId of next page
      */
-    @GetMapping(path = "/{" + SDKConstants.KEY_ACCOUNT_ID + "}/transactions")
-    public ResponseEntity<TransactionsResponse> transactionsOfAccount(
-            @NotNull AisToken token,
-            @NotEmpty @PathVariable(name = SDKConstants.KEY_ACCOUNT_ID) String accountId,
-            @Valid TransactionsRequest request
-    ) {
-        TransactionsPage resultPage = providerService.getTransactionsOfAccount(
-                token.userId,
-                accountId,
-                request.fromDate,
-                request.toDate,
-                request.fromId
-        );
-        return new ResponseEntity<>(
-            new TransactionsResponse(resultPage.transactions, new Meta(resultPage.nextId)),
-            HttpStatus.OK
-        );
+    @PostMapping(path = "/refresh")
+    public ResponseEntity<EmptyJsonModel> create(@Valid AisRefreshRequest request) {
+        providerService.refresh(request.getProviderCode(), request.getSessionSecret());
+        return super.createEmptyOkResponseEntity();
     }
 }

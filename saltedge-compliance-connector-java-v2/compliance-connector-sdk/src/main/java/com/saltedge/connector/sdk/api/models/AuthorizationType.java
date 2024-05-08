@@ -20,7 +20,7 @@
  */
 package com.saltedge.connector.sdk.api.models;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 
 /**
  * Unique Authorization Type which corresponds to data registered in `Dashboard/Settings/Authorization types` for Customer.

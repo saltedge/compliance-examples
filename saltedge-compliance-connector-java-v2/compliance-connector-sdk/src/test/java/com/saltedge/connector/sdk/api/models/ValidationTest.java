@@ -23,9 +23,9 @@ package com.saltedge.connector.sdk.api.models;
 import org.junit.After;
 import org.junit.Before;
 
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
 
 public abstract class ValidationTest {
 	private static ValidatorFactory validatorFactory;

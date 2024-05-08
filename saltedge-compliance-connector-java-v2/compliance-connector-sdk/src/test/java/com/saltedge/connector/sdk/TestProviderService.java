@@ -27,7 +27,7 @@ import com.saltedge.connector.sdk.provider.ProviderServiceAbs;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
-import javax.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotEmpty;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -55,6 +55,10 @@ public class TestProviderService implements ProviderServiceAbs {
   @Override
   public List<Account> getAccountsOfUser(@NotNull String userId) {
     return null;
+  }
+
+  @Override
+  public void refresh(String providerCode, String sessionSecret) {
   }
 
   @Override

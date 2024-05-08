@@ -54,6 +54,7 @@ public class PrioraRequestResolver implements HandlerMethodArgumentResolver {
     public boolean supportsParameter(MethodParameter parameter) {//TODO TRY TO USE ONLY PARENT CLASS
         Class<?> type = parameter.getParameterType();
         return type.equals(CreateAisTokenRequest.class)
+                || type.equals(AisRefreshRequest.class)
                 || type.equals(RevokeTokenRequest.class)
                 || type.equals(TransactionsRequest.class)
                 || type.equals(CreatePaymentRequest.class)
@@ -78,7 +79,7 @@ public class PrioraRequestResolver implements HandlerMethodArgumentResolver {
     private <T> T parsePayloadAndValidate(String authorization, Class<T> clazz) throws BadRequest.JWTExpiredSignature, BadRequest.JWTDecodeError {
         try {
             String bearerToken = authorization.replace("Bearer ", "");
-            Jws<Claims> claims = Jwts.parserBuilder()
+            Jws<Claims> claims = Jwts.parser()
               .setSigningKey(applicationProperties.getPrioraPublicKey())
               .build()
               .parseClaimsJws(bearerToken);

@@ -29,6 +29,8 @@ import com.saltedge.connector.sdk.SDKConstants;
 import com.saltedge.connector.sdk.api.models.*;
 import com.saltedge.connector.sdk.api.models.err.BadRequest;
 import com.saltedge.connector.sdk.api.models.err.NotFound;
+import com.saltedge.connector.sdk.callback.SessionsCallbackService;
+import com.saltedge.connector.sdk.callback.mapping.SessionSuccessCallbackRequest;
 import com.saltedge.connector.sdk.models.CardTransactionsPage;
 import com.saltedge.connector.sdk.models.TransactionsPage;
 import com.saltedge.connector.sdk.provider.ProviderServiceAbs;
@@ -72,6 +74,8 @@ public class ProviderService implements ProviderServiceAbs {
   private CardAccountsRepository cardAccountsRepository;
   @Autowired
   private PaymentsRepository paymentsRepository;
+  @Autowired
+  protected SessionsCallbackService callbackService;
 
   @Override
   public String getAccountInformationAuthorizationPageUrl(
@@ -109,6 +113,11 @@ public class ProviderService implements ProviderServiceAbs {
   public List<Account> getAccountsOfUser(String userId) {
     UserEntity user = findAndValidateUser(userId);
     return AccountsCollector.collectAccounts(accountsRepository, user);
+  }
+
+  @Override
+  public void refresh(String providerCode, String sessionSecret) {
+    callbackService.sendSuccessCallback(sessionSecret, new SessionSuccessCallbackRequest());
   }
 
   @Override

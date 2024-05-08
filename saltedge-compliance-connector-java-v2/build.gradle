@@ -1,31 +1,30 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '2.7.1'
-    id 'io.spring.dependency-management' version '1.0.12.RELEASE'
+    id 'org.springframework.boot' version '3.2.5'
+    id 'io.spring.dependency-management' version '1.1.5'
 }
 
 group 'com.saltedge.connector.example'
-version '1.1.0'
+version '1.2.0'
 
 compileJava {
-    sourceCompatibility = 1.8
-    targetCompatibility = 1.8
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
 }
 
 repositories {
-    mavenLocal()
     mavenCentral()
 }
 
 dependencies {
-    def springVersion = '2.7.1'
-    implementation 'org.jetbrains:annotations:23.0.0'
+    def springVersion = '3.2.5'
+    implementation 'org.jetbrains:annotations:24.1.0'
     implementation "org.springframework.boot:spring-boot-starter:$springVersion"
     implementation "org.springframework.boot:spring-boot-starter-web:$springVersion"
     implementation "org.springframework.boot:spring-boot-starter-freemarker:$springVersion"
     implementation "org.springframework.boot:spring-boot-starter-data-jpa:$springVersion"
     implementation "org.springframework.boot:spring-boot-starter-validation:$springVersion"
-    implementation 'com.h2database:h2:2.1.214'
+    implementation 'com.h2database:h2:2.2.224'
     implementation 'joda-time:joda-time:2.10.14'
 
     // COMPLIANCE-CONNECTOR-SDK AS LOCAL MODULE
@@ -39,6 +38,7 @@ dependencies {
 //    implementation "io.jsonwebtoken:jjwt-impl:$jjwtVersion"
 //    implementation "io.jsonwebtoken:jjwt-jackson:$jjwtVersion"
 
-    testImplementation group: 'junit', name: 'junit', version: '4.12'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.2'
+    testImplementation "org.springframework.boot:spring-boot-starter-test:$springVersion"
 }

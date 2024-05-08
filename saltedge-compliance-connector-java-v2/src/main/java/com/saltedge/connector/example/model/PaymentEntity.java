@@ -24,7 +24,7 @@ import com.saltedge.connector.example.model.converter.FeesConverter;
 import com.saltedge.connector.example.model.converter.ObjectMapConverter;
 import com.saltedge.connector.sdk.models.domain.BaseEntity;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
