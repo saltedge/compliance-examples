@@ -18,23 +18,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package com.saltedge.connector.sdk;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class SDKConstantsTest {
-	@Test
-	public void valuesTest() {
-		assertThat(SDKConstants.API_BASE_PATH).isEqualTo("/api/priora/v2");
-		assertThat(SDKConstants.CALLBACK_BASE_PATH).isEqualTo("/api/connectors/v2");
-		assertThat(SDKConstants.HEADER_AUTHORIZATION).isEqualTo("authorization");
-		assertThat(SDKConstants.HEADER_CLIENT_ID).isEqualTo("client-id");
-		assertThat(SDKConstants.HEADER_ACCESS_TOKEN).isEqualTo("access-token");
-		assertThat(SDKConstants.STATUS_WAITING_CONFIRMATION_CODE).isEqualTo("waiting_confirmation_code");
-		assertThat(SDKConstants.STATUS_RECEIVED).isEqualTo("received");
-		assertThat(SDKConstants.STATUS_RCVD).isEqualTo("RCVD");
-	}
+    @Test
+    public void valuesTest() {
+        assertThat(SDKConstants.API_BASE_PATH).isEqualTo("/api/priora/v2");
+        assertThat(SDKConstants.CALLBACK_BASE_PATH).isEqualTo("/api/connectors/v2");
+        assertThat(SDKConstants.HEADER_AUTHORIZATION).isEqualTo("authorization");
+        assertThat(SDKConstants.HEADER_CLIENT_ID).isEqualTo("client-id");
+        assertThat(SDKConstants.HEADER_ACCESS_TOKEN).isEqualTo("access-token");
+        assertThat(SDKConstants.STATUS_WAITING_CONFIRMATION_CODE).isEqualTo("waiting_confirmation_code");
+        assertThat(SDKConstants.STATUS_RECEIVED).isEqualTo("received");
+        assertThat(SDKConstants.STATUS_RCVD).isEqualTo("RCVD");
+    }
 }

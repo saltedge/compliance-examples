@@ -22,10 +22,12 @@ package com.saltedge.connector.example.model.repository;
 
 import com.saltedge.connector.example.model.AccountEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public interface AccountsRepository extends JpaRepository<AccountEntity, Long> {
     AccountEntity findFirstByIbanOrBban(String iban, String bban);
     Optional<AccountEntity> findFirstByIdAndUserId(Long id, Long userId);

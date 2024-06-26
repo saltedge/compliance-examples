@@ -21,9 +21,11 @@
 package com.saltedge.connector.sdk.models.domain;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface PiisTokensRepository extends JpaRepository<PiisToken, Long> {
     PiisToken findFirstBySessionSecret(String sessionSecret);
     PiisToken findFirstByAccessToken(String accessToken);

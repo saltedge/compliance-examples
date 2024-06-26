@@ -34,26 +34,24 @@ import com.saltedge.connector.sdk.models.domain.AisToken;
 import com.saltedge.connector.sdk.services.provider.ConfirmTokenService;
 import com.saltedge.connector.sdk.services.provider.RevokeTokenByProviderService;
 import com.saltedge.connector.sdk.tools.JsonTools;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import jakarta.validation.ConstraintViolationException;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit4.SpringRunner;
 
-import jakarta.validation.ConstraintViolationException;
 import java.time.Instant;
 import java.util.HashMap;
 
 import static com.saltedge.connector.sdk.SDKConstants.KEY_DESCRIPTION;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
-@RunWith(SpringRunner.class)
 @SpringBootTest
 public class ConnectorCallbackServiceTests {
 	@Autowired
@@ -67,9 +65,9 @@ public class ConnectorCallbackServiceTests {
 	@MockBean
 	private TokensCallbackService tokensCallbackService;
 
-	@Test(expected = ConstraintViolationException.class)
+	@Test
 	public void givenInvalidParams_whenIsUserConsentRequired_thenThrowConstraintViolationException() {
-		testService.isUserConsentRequired("");
+		assertThrows(ConstraintViolationException.class, () -> testService.isUserConsentRequired(""));
 	}
 
 	@Test
@@ -111,13 +109,15 @@ public class ConnectorCallbackServiceTests {
 		assertThat(result).isTrue();
 	}
 
-	@Test(expected = ConstraintViolationException.class)
+	@Test
 	public void givenInvalidParams_whenOnAccountInformationAuthorizationSuccess_thenThrowConstraintViolationException() {
-		testService.onAccountInformationAuthorizationSuccess(
-				"",
-				"",
-				"",
-				null);
+		assertThrows(ConstraintViolationException.class, () -> {
+			testService.onAccountInformationAuthorizationSuccess(
+					"",
+					"",
+					"",
+					null);
+		});
 	}
 
 	@Test
@@ -167,9 +167,9 @@ public class ConnectorCallbackServiceTests {
 		assertThat(result).isEqualTo("http://redirect.to");
 	}
 
-	@Test(expected = ConstraintViolationException.class)
+	@Test
 	public void givenInvalidParams_whenOnAccountInformationAuthorizationFail_thenThrowConstraintViolationException() {
-		testService.onAccountInformationAuthorizationFail("");
+		assertThrows(ConstraintViolationException.class, () -> testService.onAccountInformationAuthorizationFail(""));
 	}
 
 	@Test
@@ -200,9 +200,9 @@ public class ConnectorCallbackServiceTests {
 		verify(sessionsCallbackService).sendFailCallback(eq("sessionSecret"), eq(new Unauthorized.AccessDenied()));
 	}
 
-	@Test(expected = ConstraintViolationException.class)
+	@Test
 	public void givenInvalidParams_whenRevokeAccountInformationConsent_thenThrowConstraintViolationException() {
-		testService.revokeAccountInformationConsent("", "");
+		assertThrows(ConstraintViolationException.class, () -> testService.revokeAccountInformationConsent("", ""));
 	}
 
 	@Test
@@ -288,22 +288,14 @@ public class ConnectorCallbackServiceTests {
 		verifyNoMoreInteractions(sessionsCallbackService);
 	}
 
-	@Test(expected = ConstraintViolationException.class)
+	@Test
 	public void givenEmptyUserId_whenOnPaymentInitiationAuthorizationSuccess_thenThrowConstraintViolationException() {
-		// when
-		String result = testService.onPaymentInitiationAuthorizationSuccess("", "", "sepa-credit-transfers");
-
-		// then
-		assertThat(result).isEqualTo("");
+		assertThrows(ConstraintViolationException.class, () -> testService.onPaymentInitiationAuthorizationSuccess("", "", "sepa-credit-transfers"));
 	}
 
-	@Test(expected = ConstraintViolationException.class)
+	@Test
 	public void givenEmptyExtra_whenOnPaymentInitiationAuthorizationSuccess_thenThrowConstraintViolationException() {
-		// when
-		String result = testService.onPaymentInitiationAuthorizationSuccess("userId", "", "sepa-credit-transfers");
-
-		// then
-		assertThat(result).isEqualTo("");
+		assertThrows(ConstraintViolationException.class, () -> testService.onPaymentInitiationAuthorizationSuccess("userId", "", "sepa-credit-transfers"));
 	}
 
 	@Test
@@ -368,10 +360,9 @@ public class ConnectorCallbackServiceTests {
 		verify(sessionsCallbackService).sendSuccessCallback(eq("sessionSecret"), eq(new SessionSuccessCallbackRequest("user1", "ACSC")));
 	}
 
-	@Test(expected = ConstraintViolationException.class)
+	@Test
 	public void givenEmptyExtra_whenOnPaymentInitiationAuthorizationFail_thenThrowConstraintViolationException() {
-		// when
-		testService.onPaymentInitiationAuthorizationFail("");
+		assertThrows(ConstraintViolationException.class, () -> testService.onPaymentInitiationAuthorizationFail(""));
 	}
 
 	@Test

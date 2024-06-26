@@ -22,78 +22,75 @@ package com.saltedge.connector.sdk.models;
 
 import com.saltedge.connector.sdk.models.domain.AisToken;
 import com.saltedge.connector.sdk.models.domain.AisTokensRepository;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.Instant;
 import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(SpringRunner.class)
 @DataJpaTest
 public class AisTokensRepositoryIntegrationTests {
-	@Autowired
-	private TestEntityManager entityManager;
-	@Autowired
-	private AisTokensRepository aisTokensRepository;
+    @Autowired
+    private TestEntityManager entityManager;
+    @Autowired
+    private AisTokensRepository aisTokensRepository;
 
-	@Test
-	public void whenFindFirstBySessionSecret_thenReturnToken() {
-		// given
-		AisToken aisToken = new AisToken("secret1", "tppAppName", "authTypeCode", null, Instant.parse("2019-11-18T16:04:50.915Z"));
-		aisToken.accessToken = "123456";
-		entityManager.persist(aisToken);
-		entityManager.flush();
+    @Test
+    public void whenFindFirstBySessionSecret_thenReturnToken() {
+        // given
+        AisToken aisToken = new AisToken("secret1", "tppAppName", "authTypeCode", null, Instant.parse("2019-11-18T16:04:50.915Z"));
+        aisToken.accessToken = "123456";
+        entityManager.persist(aisToken);
+        entityManager.flush();
 
-		// when
-		AisToken found = aisTokensRepository.findFirstBySessionSecret("secret1");
+        // when
+        AisToken found = aisTokensRepository.findFirstBySessionSecret("secret1");
 
-		// then
-		assertThat(found.accessToken).isEqualTo("123456");
-		assertThat(found.sessionSecret).isEqualTo("secret1");
-		assertThat(found.id).isGreaterThan(0L);
+        // then
+        assertThat(found.accessToken).isEqualTo("123456");
+        assertThat(found.sessionSecret).isEqualTo("secret1");
+        assertThat(found.id).isGreaterThan(0L);
 
-		found.setCreatedAt(new Date(0));
-		found.setUpdatedAt(new Date(0));
+        found.setCreatedAt(new Date(0));
+        found.setUpdatedAt(new Date(0));
 
-		assertThat(found.getCreatedAt()).isEqualTo(new Date(0));
-		assertThat(found.getUpdatedAt()).isEqualTo(new Date(0));
-	}
+        assertThat(found.getCreatedAt()).isEqualTo(new Date(0));
+        assertThat(found.getUpdatedAt()).isEqualTo(new Date(0));
+    }
 
-	@Test
-	public void whenFindFirstByAccessToken_thenReturnToken() {
-		// given
-		AisToken aisToken = new AisToken("secret1", "tppAppName", "authTypeCode", null, Instant.parse("2019-11-18T16:04:50.915Z"));
-		aisToken.accessToken = "123456";
-		entityManager.persist(aisToken);
-		entityManager.flush();
+    @Test
+    public void whenFindFirstByAccessToken_thenReturnToken() {
+        // given
+        AisToken aisToken = new AisToken("secret1", "tppAppName", "authTypeCode", null, Instant.parse("2019-11-18T16:04:50.915Z"));
+        aisToken.accessToken = "123456";
+        entityManager.persist(aisToken);
+        entityManager.flush();
 
-		// when
-		AisToken found = aisTokensRepository.findFirstByAccessToken("123456");
+        // when
+        AisToken found = aisTokensRepository.findFirstByAccessToken("123456");
 
-		// then
-		assertThat(found.accessToken).isEqualTo("123456");
-		assertThat(found.tokenExpiresAt.toString()).isEqualTo("2019-11-18T16:04:50.915Z");
-		assertThat(found.sessionSecret).isEqualTo("secret1");
-	}
+        // then
+        assertThat(found.accessToken).isEqualTo("123456");
+        assertThat(found.tokenExpiresAt.toString()).isEqualTo("2019-11-18T16:04:50.915Z");
+        assertThat(found.sessionSecret).isEqualTo("secret1");
+    }
 
-	@Test
-	public void whenFindFirstByAccessToken_thenReturnNull() {
-		// given
-		AisToken aisToken = new AisToken("secret1", "tppAppName", "authTypeCode", null, Instant.parse("2019-11-18T16:04:50.915Z"));
-		aisToken.accessToken = "123456";
-		entityManager.persist(aisToken);
-		entityManager.flush();
+    @Test
+    public void whenFindFirstByAccessToken_thenReturnNull() {
+        // given
+        AisToken aisToken = new AisToken("secret1", "tppAppName", "authTypeCode", null, Instant.parse("2019-11-18T16:04:50.915Z"));
+        aisToken.accessToken = "123456";
+        entityManager.persist(aisToken);
+        entityManager.flush();
 
-		// when
-		AisToken found = aisTokensRepository.findFirstByAccessToken("654321");
+        // when
+        AisToken found = aisTokensRepository.findFirstByAccessToken("654321");
 
-		// then
-		assertThat(found).isNull();
-	}
+        // then
+        assertThat(found).isNull();
+    }
 }

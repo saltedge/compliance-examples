@@ -21,9 +21,9 @@
 package com.saltedge.connector.sdk.api.models.requests;
 
 import com.saltedge.connector.sdk.api.models.Amount;
-import com.saltedge.connector.sdk.models.ParticipantAccount;
 import com.saltedge.connector.sdk.api.models.ValidationTest;
-import org.junit.Test;
+import com.saltedge.connector.sdk.models.ParticipantAccount;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

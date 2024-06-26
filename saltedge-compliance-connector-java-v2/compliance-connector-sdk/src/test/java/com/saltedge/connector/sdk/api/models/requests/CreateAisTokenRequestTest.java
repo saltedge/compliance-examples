@@ -22,7 +22,7 @@ package com.saltedge.connector.sdk.api.models.requests;
 
 import com.saltedge.connector.sdk.api.models.ProviderConsents;
 import com.saltedge.connector.sdk.api.models.ValidationTest;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 

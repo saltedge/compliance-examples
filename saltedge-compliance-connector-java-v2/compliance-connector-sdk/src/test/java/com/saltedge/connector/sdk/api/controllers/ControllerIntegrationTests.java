@@ -32,7 +32,7 @@ import com.saltedge.connector.sdk.models.domain.PiisTokensRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.util.LinkedMultiValueMap;
 
 import java.time.Instant;
@@ -40,7 +40,8 @@ import java.time.temporal.ChronoUnit;
 
 abstract public class ControllerIntegrationTests {
     @LocalServerPort
-    private int port = 0;
+    protected int port = 0;
+
     @Autowired
     AisTokensRepository aisTokensRepository;
     @Autowired

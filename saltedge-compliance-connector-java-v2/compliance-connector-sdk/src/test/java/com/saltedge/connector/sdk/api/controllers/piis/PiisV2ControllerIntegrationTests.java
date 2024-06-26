@@ -28,15 +28,14 @@ import com.saltedge.connector.sdk.models.ParticipantAccount;
 import com.saltedge.connector.sdk.api.models.requests.FundsConfirmationRequest;
 import com.saltedge.connector.sdk.api.models.responses.ErrorResponse;
 import com.saltedge.connector.sdk.api.models.responses.FundsConfirmationResponse;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.LinkedMultiValueMap;
 
 import java.time.Instant;
@@ -47,109 +46,108 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * Tests Interceptors + FundsV2Controller
  */
-@RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class PiisV2ControllerIntegrationTests extends ControllerIntegrationTests {
-  @Before
-  public void setUp() {
-    seedTokensRepository();
-  }
+    @BeforeEach
+    public void setUp() {
+        seedTokensRepository();
+    }
 
-  @Test
-  public void givenHeaderWithValidAuthorization_whenMakeRequest_thenReturnOK() {
-    // given
-    FundsConfirmationRequest request = new FundsConfirmationRequest(
-        "provider_code",
-        ParticipantAccount.createWithIbanAndCurrency("iban", "EUR"),
-        new Amount("1.0", "EUR")
-    );
-    request.sessionSecret = "session_secret";
-    String auth = TestTools.createAuthorizationHeaderValue(
-        request,
-        TestTools.getInstance().getRsaPrivateKey()
-    );
-    LinkedMultiValueMap<String, String> headers = createHeaders();
-    headers.add(SDKConstants.HEADER_AUTHORIZATION, auth);
+    @Test
+    public void givenHeaderWithValidAuthorization_whenMakeRequest_thenReturnOK() {
+        // given
+        FundsConfirmationRequest request = new FundsConfirmationRequest(
+                "provider_code",
+                ParticipantAccount.createWithIbanAndCurrency("iban", "EUR"),
+                new Amount("1.0", "EUR")
+        );
+        request.sessionSecret = "session_secret";
+        String auth = TestTools.createAuthorizationHeaderValue(
+                request,
+                TestTools.getInstance().getRsaPrivateKey()
+        );
+        LinkedMultiValueMap<String, String> headers = createHeaders();
+        headers.add(SDKConstants.HEADER_AUTHORIZATION, auth);
 
-    // when
-    ResponseEntity<FundsConfirmationResponse> response = testRestTemplate.exchange(
-        createURLWithPort(PiisV2Controller.BASE_PATH),
-        HttpMethod.POST,
-        new HttpEntity<>(headers),
-        FundsConfirmationResponse.class
-    );
+        // when
+        ResponseEntity<FundsConfirmationResponse> response = testRestTemplate.exchange(
+                createURLWithPort(PiisV2Controller.BASE_PATH),
+                HttpMethod.POST,
+                new HttpEntity<>(headers),
+                FundsConfirmationResponse.class
+        );
 
-    // then
-    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-  }
+        // then
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
 
-  @Test
-  public void givenHeaderWithExpiredSignature_whenMakeRequest_thenReturnJWTExpiredSignature() {
-    // given
-    FundsConfirmationRequest request = new FundsConfirmationRequest();
-    String auth = TestTools.createAuthorizationHeaderValue(
-        request,
-        TestTools.getInstance().getRsaPrivateKey(),
-        Instant.now().minus(1, ChronoUnit.MINUTES)
-    );
-    LinkedMultiValueMap<String, String> headers = createHeaders();
-    headers.add(SDKConstants.HEADER_AUTHORIZATION, auth);
+    @Test
+    public void givenHeaderWithExpiredSignature_whenMakeRequest_thenReturnJWTExpiredSignature() {
+        // given
+        FundsConfirmationRequest request = new FundsConfirmationRequest();
+        String auth = TestTools.createAuthorizationHeaderValue(
+                request,
+                TestTools.getInstance().getRsaPrivateKey(),
+                Instant.now().minus(1, ChronoUnit.MINUTES)
+        );
+        LinkedMultiValueMap<String, String> headers = createHeaders();
+        headers.add(SDKConstants.HEADER_AUTHORIZATION, auth);
 
-    // when
-    ResponseEntity<ErrorResponse> response = testRestTemplate.exchange(
-        createURLWithPort(PiisV2Controller.BASE_PATH),
-        HttpMethod.POST,
-        new HttpEntity<>(headers),
-        ErrorResponse.class
-    );
+        // when
+        ResponseEntity<ErrorResponse> response = testRestTemplate.exchange(
+                createURLWithPort(PiisV2Controller.BASE_PATH),
+                HttpMethod.POST,
+                new HttpEntity<>(headers),
+                ErrorResponse.class
+        );
 
-    // then
-    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-    assertThat(response.getBody().errorClass).isEqualTo("JWTExpiredSignature");
-    assertThat(response.getBody().errorMessage).isEqualTo("JWT Expired Signature.");
-  }
+        // then
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(response.getBody().errorClass).isEqualTo("JWTExpiredSignature");
+        assertThat(response.getBody().errorMessage).isEqualTo("JWT Expired Signature.");
+    }
 
-  @Test
-  public void givenHeaderWithInvalidAuthorizationsHeader_whenMakeRequest_thenReturnJWTDecodeError() {
-    // given
-    LinkedMultiValueMap<String, String> headers = createHeaders();
-    headers.add(SDKConstants.HEADER_AUTHORIZATION, "Bearer ABCDEFGH1234567890");
+    @Test
+    public void givenHeaderWithInvalidAuthorizationsHeader_whenMakeRequest_thenReturnJWTDecodeError() {
+        // given
+        LinkedMultiValueMap<String, String> headers = createHeaders();
+        headers.add(SDKConstants.HEADER_AUTHORIZATION, "Bearer ABCDEFGH1234567890");
 
-    // when
-    ResponseEntity<ErrorResponse> response = testRestTemplate.exchange(
-        createURLWithPort(PiisV2Controller.BASE_PATH),
-        HttpMethod.POST,
-        new HttpEntity<>(headers),
-        ErrorResponse.class
-    );
+        // when
+        ResponseEntity<ErrorResponse> response = testRestTemplate.exchange(
+                createURLWithPort(PiisV2Controller.BASE_PATH),
+                HttpMethod.POST,
+                new HttpEntity<>(headers),
+                ErrorResponse.class
+        );
 
-    // then
-    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-    assertThat(response.getBody().errorClass).isEqualTo("JWTDecodeError");
-    assertThat(response.getBody().errorMessage).isEqualTo("JWT strings must contain exactly 2 period characters. Found: 0");
-  }
+        // then
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(response.getBody().errorClass).isEqualTo("JWTDecodeError");
+        assertThat(response.getBody().errorMessage).isEqualTo("JWT strings must contain exactly 2 period characters. Found: 0");
+    }
 
-  @Test
-  public void givenHeaderWithValidAuthorization_whenMakeRequest_thenReturnWrongRequestFormat() {
-    // given
-    FundsConfirmationRequest request = new FundsConfirmationRequest();
-    String auth = TestTools.createAuthorizationHeaderValue(
-        request,
-        TestTools.getInstance().getRsaPrivateKey()
-    );
-    LinkedMultiValueMap<String, String> headers = createHeaders();
-    headers.add(SDKConstants.HEADER_AUTHORIZATION, auth);
+    @Test
+    public void givenHeaderWithValidAuthorization_whenMakeRequest_thenReturnWrongRequestFormat() {
+        // given
+        FundsConfirmationRequest request = new FundsConfirmationRequest();
+        String auth = TestTools.createAuthorizationHeaderValue(
+                request,
+                TestTools.getInstance().getRsaPrivateKey()
+        );
+        LinkedMultiValueMap<String, String> headers = createHeaders();
+        headers.add(SDKConstants.HEADER_AUTHORIZATION, auth);
 
-    // when
-    ResponseEntity<ErrorResponse> response = testRestTemplate.exchange(
-        createURLWithPort(PiisV2Controller.BASE_PATH),
-        HttpMethod.POST,
-        new HttpEntity<>(headers),
-        ErrorResponse.class
-    );
+        // when
+        ResponseEntity<ErrorResponse> response = testRestTemplate.exchange(
+                createURLWithPort(PiisV2Controller.BASE_PATH),
+                HttpMethod.POST,
+                new HttpEntity<>(headers),
+                ErrorResponse.class
+        );
 
-    // then
-    assertThat(response.getBody().errorClass).isEqualTo("WrongRequestFormat");
-    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-  }
+        // then
+        assertThat(response.getBody().errorClass).isEqualTo("WrongRequestFormat");
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    }
 }

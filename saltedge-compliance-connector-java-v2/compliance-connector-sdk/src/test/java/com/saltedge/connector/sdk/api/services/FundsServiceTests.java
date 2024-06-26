@@ -20,127 +20,125 @@
  */
 package com.saltedge.connector.sdk.api.services;
 
-import com.saltedge.connector.sdk.api.models.*;
+import com.saltedge.connector.sdk.api.models.Account;
+import com.saltedge.connector.sdk.api.models.AccountBalance;
+import com.saltedge.connector.sdk.api.models.Amount;
+import com.saltedge.connector.sdk.api.models.ExchangeRate;
 import com.saltedge.connector.sdk.api.models.err.BadRequest;
 import com.saltedge.connector.sdk.api.models.err.NotFound;
 import com.saltedge.connector.sdk.api.models.requests.FundsConfirmationRequest;
 import com.saltedge.connector.sdk.models.ParticipantAccount;
 import com.saltedge.connector.sdk.models.domain.PiisToken;
 import com.saltedge.connector.sdk.services.priora.FundsService;
-import com.saltedge.connector.sdk.models.domain.AisToken;
 import org.assertj.core.util.Lists;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
-
-import jakarta.validation.ConstraintViolationException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 
-@RunWith(SpringRunner.class)
 @SpringBootTest
 public class FundsServiceTests extends BaseServicesTests {
-	@Autowired
-	protected FundsService testService;
+    @Autowired
+    protected FundsService testService;
 
-	@Override
-	@Before
-	public void setUp() throws Exception {
-		super.setUp();
-    given(providerService.getExchangeRates()).willReturn(Lists.list(
-        new ExchangeRate("EUR", 1.0f),
-        new ExchangeRate("USD", 0.90f),
-        new ExchangeRate("GBP", 1.502f)
-    ));
-    Account account = new Account();
-    account.setIban("iban");
-    account.setBalances(Lists.list(new AccountBalance("100.0", "GBP", "openingBooked")));
-    account.setCurrencyCode("EUR");
-    given(providerService.getAccountsOfUser("1")).willReturn(Lists.list(account));
-	}
+    @Override
+    @BeforeEach
+    public void setUp() throws Exception {
+        super.setUp();
+        given(providerService.getExchangeRates()).willReturn(Lists.list(
+                new ExchangeRate("EUR", 1.0f),
+                new ExchangeRate("USD", 0.90f),
+                new ExchangeRate("GBP", 1.502f)
+        ));
+        Account account = new Account();
+        account.setIban("iban");
+        account.setBalances(Lists.list(new AccountBalance("100.0", "GBP", "openingBooked")));
+        account.setCurrencyCode("EUR");
+        given(providerService.getAccountsOfUser("1")).willReturn(Lists.list(account));
+    }
 
-	@Test
-	public void givenValidRequest_whenConfirmFunds_thenReturnTrue() {
-		// given
-    PiisToken token = new PiisToken("1");
-    token.account = ParticipantAccount.createWithIbanAndCurrency("iban", "EUR");
-    FundsConfirmationRequest request = new FundsConfirmationRequest(
-        "code",
-        ParticipantAccount.createWithIbanAndCurrency("iban", "EUR"),
-        new Amount("1.0", "EUR")
-    );
+    @Test
+    public void givenValidRequest_whenConfirmFunds_thenReturnTrue() {
+        // given
+        PiisToken token = new PiisToken("1");
+        token.account = ParticipantAccount.createWithIbanAndCurrency("iban", "EUR");
+        FundsConfirmationRequest request = new FundsConfirmationRequest(
+                "code",
+                ParticipantAccount.createWithIbanAndCurrency("iban", "EUR"),
+                new Amount("1.0", "EUR")
+        );
 
-		// when
-    boolean result = testService.confirmFundsAvailability(token, request);
+        // when
+        boolean result = testService.confirmFundsAvailability(token, request);
 
-		// then
-    assertThat(result).isTrue();
-	}
+        // then
+        assertThat(result).isTrue();
+    }
 
-  @Test
-  public void givenValidRequestWithBigAmount_whenConfirmFunds_thenReturnFalse() {
-    // given
-    PiisToken token = new PiisToken("1");
-    token.account = ParticipantAccount.createWithIbanAndCurrency("iban", "EUR");
-    FundsConfirmationRequest request = new FundsConfirmationRequest(
-        "code",
-        ParticipantAccount.createWithIbanAndCurrency("iban", "EUR"),
-        new Amount("123456789.0", "USD")
-    );
+    @Test
+    public void givenValidRequestWithBigAmount_whenConfirmFunds_thenReturnFalse() {
+        // given
+        PiisToken token = new PiisToken("1");
+        token.account = ParticipantAccount.createWithIbanAndCurrency("iban", "EUR");
+        FundsConfirmationRequest request = new FundsConfirmationRequest(
+                "code",
+                ParticipantAccount.createWithIbanAndCurrency("iban", "EUR"),
+                new Amount("123456789.0", "USD")
+        );
 
-    // when
-    boolean result = testService.confirmFundsAvailability(token, request);
+        // when
+        boolean result = testService.confirmFundsAvailability(token, request);
 
-    // then
-    assertThat(result).isFalse();
-  }
+        // then
+        assertThat(result).isFalse();
+    }
 
-  @Test(expected = BadRequest.InvalidAttributeValue.class)
-  public void givenInvalidIban_whenConfirmFunds_thenException() {
-    // given
-    PiisToken token = new PiisToken("1");
-    token.account = ParticipantAccount.createWithIbanAndCurrency("iban", "EUR");
-    FundsConfirmationRequest request = new FundsConfirmationRequest(
-        "code",
-        ParticipantAccount.createWithIbanAndCurrency("iban1", "EUR"),
-        new Amount("1.0", "USD")
-    );
+    @Test
+    public void givenInvalidIban_whenConfirmFunds_thenException() {
+        // given
+        PiisToken token = new PiisToken("1");
+        token.account = ParticipantAccount.createWithIbanAndCurrency("iban", "EUR");
+        FundsConfirmationRequest request = new FundsConfirmationRequest(
+                "code",
+                ParticipantAccount.createWithIbanAndCurrency("iban1", "EUR"),
+                new Amount("1.0", "USD")
+        );
 
-    // when
-    testService.confirmFundsAvailability(token, request);
-  }
+        // when
+        assertThrows(BadRequest.InvalidAttributeValue.class, () -> testService.confirmFundsAvailability(token, request));
+    }
 
-  @Test(expected = BadRequest.InvalidAttributeValue.class)
-  public void givenInvalidCurrency_whenConfirmFunds_thenException() {
-    // given
-    PiisToken token = new PiisToken("1");
-    token.account = ParticipantAccount.createWithIbanAndCurrency("iban", "EUR");
-    FundsConfirmationRequest request = new FundsConfirmationRequest(
-        "code",
-        ParticipantAccount.createWithIbanAndCurrency("iban", "RUB"),
-        new Amount("1.0", "RUB")
-    );
+    @Test
+    public void givenInvalidCurrency_whenConfirmFunds_thenException() {
+        // given
+        PiisToken token = new PiisToken("1");
+        token.account = ParticipantAccount.createWithIbanAndCurrency("iban", "EUR");
+        FundsConfirmationRequest request = new FundsConfirmationRequest(
+                "code",
+                ParticipantAccount.createWithIbanAndCurrency("iban", "RUB"),
+                new Amount("1.0", "RUB")
+        );
 
-    // when
-    testService.confirmFundsAvailability(token, request);
-  }
+        // when
+        assertThrows(BadRequest.InvalidAttributeValue.class, () -> testService.confirmFundsAvailability(token, request));
+    }
 
-  @Test(expected = NotFound.AccountNotFound.class)
-  public void givenInvalidAccount_whenConfirmFunds_thenException() {
-    // given
-    PiisToken token = new PiisToken("1");
-    token.account = ParticipantAccount.createWithIbanAndCurrency("iban1", "EUR");
-    FundsConfirmationRequest request = new FundsConfirmationRequest(
-        "code",
-        ParticipantAccount.createWithIbanAndCurrency("iban1", "EUR"),
-        new Amount("1.0", "RUB")
-    );
+    @Test
+    public void givenInvalidAccount_whenConfirmFunds_thenException() {
+        // given
+        PiisToken token = new PiisToken("1");
+        token.account = ParticipantAccount.createWithIbanAndCurrency("iban1", "EUR");
+        FundsConfirmationRequest request = new FundsConfirmationRequest(
+                "code",
+                ParticipantAccount.createWithIbanAndCurrency("iban1", "EUR"),
+                new Amount("1.0", "RUB")
+        );
 
-    // when
-    testService.confirmFundsAvailability(token, request);
-  }
+        // when
+        assertThrows(NotFound.AccountNotFound.class, () -> testService.confirmFundsAvailability(token, request));
+    }
 }

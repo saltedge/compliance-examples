@@ -27,7 +27,7 @@ import com.saltedge.connector.sdk.config.ApplicationProperties;
 import com.saltedge.connector.sdk.models.domain.AisTokensRepository;
 import com.saltedge.connector.sdk.models.domain.PiisTokensRepository;
 import com.saltedge.connector.sdk.provider.ProviderServiceAbs;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 abstract public class BaseServicesTests {
@@ -42,7 +42,7 @@ abstract public class BaseServicesTests {
 	@MockBean
 	protected ProviderServiceAbs providerService;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		sessionsCallbackService.applicationProperties = new ApplicationProperties();
 		TestTools.initProviderApiMocks(providerService);

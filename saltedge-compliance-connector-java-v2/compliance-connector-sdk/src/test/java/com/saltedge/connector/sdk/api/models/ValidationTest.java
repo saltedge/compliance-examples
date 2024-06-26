@@ -20,24 +20,23 @@
  */
 package com.saltedge.connector.sdk.api.models;
 
-import org.junit.After;
-import org.junit.Before;
-
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 
 public abstract class ValidationTest {
 	private static ValidatorFactory validatorFactory;
 	protected static Validator validator;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		validatorFactory = Validation.buildDefaultValidatorFactory();
 		validator = validatorFactory.getValidator();
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 		validatorFactory.close();
 	}
