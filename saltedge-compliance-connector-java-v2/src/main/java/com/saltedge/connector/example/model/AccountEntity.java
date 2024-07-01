@@ -86,8 +86,7 @@ public class AccountEntity extends BaseEntity implements Serializable {
   @JoinColumn
   public UserEntity user;
 
-  @LazyCollection(LazyCollectionOption.FALSE)
-  @OneToMany(mappedBy = "account")
+  @OneToMany(mappedBy = "account", fetch = FetchType.EAGER)
   public List<TransactionEntity> transactions;
 
   public AccountEntity() {

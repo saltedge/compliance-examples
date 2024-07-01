@@ -95,14 +95,15 @@ public class AisTokenResolverIntegrationTests {
         ResponseEntity<ErrorResponse> response = doRequest(headers);
 
         // then
-        assertThat(response.getBody().errorClass).isEqualTo("TokenExpired");
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+        ErrorResponse body = response.getBody();
+        assertThat(body.errorClass).isEqualTo("TokenExpired");
     }
 
     @BeforeEach
     public void setUp() {
         if (aisTokensRepository.count() == 0) {
-            AisToken token = new AisToken("sessionSecret", "tppAppName", "authTypeCode", "tppRedirectUrl", Instant.now().minusSeconds(1));
+            AisToken token = new AisToken("sessionSecret", "tppAppName", "authTypeCode", "tppRedirectUrl", Instant.now().minusSeconds(1), null);
             token.id = 1L;
             token.accessToken = "validToken";
             aisTokensRepository.save(token);

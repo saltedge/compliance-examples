@@ -10,37 +10,37 @@
     <div class="container">
         <h1 class="top-header">Accounts Information Consent</h1>
 
-        <#if session_secret?? && accounts?? && card_accounts??>
+        <#if state??>
         <div class="form-container">
             <form action="/consent/authorize/accounts" method="post">
-                <#list accounts>
-                    <h2>Accounts</h2>
-                    <#items as item>
-                        <h3 class="account-name">${item.name}</h3>
-                        <fieldset>
-                            <label><input type="checkbox" name="balances" value="${item.id}"/> Balance</label>
-                            <label><input type="checkbox" name="transactions" value="${item.id}"/> Transactions</label>
-                        </fieldset>
-                    </#items>
-                <#else>
-                    <h2>No Accounts</h2>
-                </#list>
+                <#if accounts?? && card_accounts??>
+                    <#list accounts>
+                        <h2>Accounts</h2>
+                        <#items as item>
+                            <label><input type="checkbox" name="accounts_ids" value="${item.id}"/>${item.name}</label><br>
+                        </#items>
+                    <#else>
+                        <h2>No Accounts</h2>
+                    </#list>
+                    <hr>
+                    <#list card_accounts>
+                        <h2>Cards</h2>
+                        <#items as item>
+                            <label><input type="checkbox" name="card_accounts_ids" value="${item.id}"/>${item.maskedPan}</label>
+                        </#items>
+                    <#else>
+                        <h2>No Card Accounts</h2>
+                    </#list>
+                <#elseif preselected_identifiers?? && no_preselected_accounts_error??>
+                    <#if no_preselected_accounts_error>
+                        <h2>User has no preselected accounts.</h2>
+                    <#else>
+                        <h2>TPP preselected accounts.</h2>
+                    </#if>
+                    <p>${preselected_identifiers}</p>
+                </#if>
                 <hr>
-                <#list card_accounts>
-                    <h2>Cards</h2>
-                    <#items as item>
-                        <h3 class="account-name">${item.maskedPan}</h3>
-                        <fieldset>
-                            <label><input type="checkbox" name="card_balances" value="${item.id}"/> Balance</label>
-                            <label><input type="checkbox" name="card_transactions" value="${item.id}"/> Transactions</label>
-                        </fieldset>
-                    </#items>
-                <#else>
-                    <h2>No Card Accounts</h2>
-                </#list>
-
-                <hr>
-                <input type="hidden" name="session_secret" value="${session_secret}">
+                <input type="hidden" name="state" value="${state}">
                 <input type="hidden" name="user_id" value="${user_id}">
 
                 <br><p>

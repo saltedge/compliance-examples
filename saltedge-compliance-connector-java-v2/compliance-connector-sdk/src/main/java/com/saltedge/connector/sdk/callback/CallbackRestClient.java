@@ -100,12 +100,7 @@ public abstract class CallbackRestClient {
 
     public void printPayload(String url, LinkedMultiValueMap<String, String> headers, Object params) {
         try {
-            getLogger().info("CallbackRequest:"
-                    + "\nPATCH: " + url
-                    + "\nHEADERS: " + mapper.writeValueAsString(headers)
-                    + "\nAuthorization header params: " + ((params == null) ? "null" : mapper.writeValueAsString(params))
-                    + "\n"
-            );
+            getLogger().info("CallbackRequest:\nPATCH: {}\nHEADERS: {}\nAuthorization header params: {}\n", url, mapper.writeValueAsString(headers), (params == null) ? "null" : mapper.writeValueAsString(params));
         } catch (Exception e) {
             getLogger().error(e.getMessage(), e);
         }

@@ -200,7 +200,7 @@ public class PaymentsV2ControllerIntegrationTests extends ControllerIntegrationT
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     assertNotNull(response.getBody());
     assertThat(response.getBody().errorClass).isEqualTo("JWTDecodeError");
-    assertThat(response.getBody().errorMessage).isEqualTo("JWT strings must contain exactly 2 period characters. Found: 0");
+    assertThat(response.getBody().errorMessage).isEqualTo("Invalid compact JWT string: Compact JWSs must contain exactly 2 period characters, and compact JWEs must contain exactly 4.  Found: 0");
   }
 
   private ResponseEntity<ErrorResponse> doCreatePaymentRequestForError(LinkedMultiValueMap<String, String> headers) {

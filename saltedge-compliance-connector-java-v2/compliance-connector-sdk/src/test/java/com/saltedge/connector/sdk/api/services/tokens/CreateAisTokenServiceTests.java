@@ -79,7 +79,8 @@ public class CreateAisTokenServiceTests extends BaseServicesTests {
 		// given
 		given(providerService.getAccountInformationAuthorizationPageUrl("sessionSecret", true, psuIpAddress))
 				.willReturn("http://example.com?session_secret=sessionSecret");
-		CreateAisTokenRequest request = createTokenRequest(ProviderConsents.buildAllAccountsConsent());
+		ProviderConsents providerConsents = ProviderConsents.buildAllAccountsConsent();
+		CreateAisTokenRequest request = createTokenRequest(providerConsents);
 		request.authorizationType = "oauth";
 
 		// when
@@ -95,7 +96,7 @@ public class CreateAisTokenServiceTests extends BaseServicesTests {
 		verify(aisTokensRepository).save(tokenCaptor.capture());
 		assertThat(tokenCaptor.getValue().status).isEqualTo(ConsentStatus.UNCONFIRMED);
 		assertThat(tokenCaptor.getValue().sessionSecret).isEqualTo("sessionSecret");
-		assertThat(tokenCaptor.getValue().providerOfferedConsents).isNull();
+		assertThat(tokenCaptor.getValue().providerOfferedConsents).isEqualTo(providerConsents);
 		assertThat(tokenCaptor.getValue().tokenExpiresAt.toString()).isEqualTo("2030-12-31T23:59:59.999Z");
 	}
 

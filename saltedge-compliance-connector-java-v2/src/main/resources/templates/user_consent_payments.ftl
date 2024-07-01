@@ -17,9 +17,9 @@
             <p>
         </div>
         <div class="form-container">
-            <#if payment_id??>
+            <#if state??>
                 <form action="/consent/authorize/payments" method="post">
-                    <input type="hidden" name="payment_id" value="${payment_id}">
+                    <input type="hidden" name="state" value="${state}">
                     <input type="hidden" name="user_id" value="${user_id}">
 
                     <br><p>

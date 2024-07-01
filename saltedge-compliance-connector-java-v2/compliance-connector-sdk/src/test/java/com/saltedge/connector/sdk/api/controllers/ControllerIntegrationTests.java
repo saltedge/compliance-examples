@@ -53,14 +53,14 @@ abstract public class ControllerIntegrationTests {
     protected TestRestTemplate testRestTemplate = new TestRestTemplate();
 
     protected void seedTokensRepository() {
-        AisToken newAisToken1 = new AisToken("sessionSecret", "tppAppName", "oauth", "tppRedirectUrl", Instant.now().plus(24 * 60, ChronoUnit.MINUTES));
+        AisToken newAisToken1 = new AisToken("sessionSecret", "tppAppName", "oauth", "tppRedirectUrl", Instant.now().plus(24 * 60, ChronoUnit.MINUTES), null);
         newAisToken1.id = 1L;
         newAisToken1.userId = "1";
         newAisToken1.status = ConsentStatus.CONFIRMED;
         newAisToken1.accessToken = "validToken";
         aisTokensRepository.save(newAisToken1);
 
-        AisToken newAisToken2 = new AisToken("sessionSecret2", "tppAppName", "oauth", "tppRedirectUrl", Instant.now().plus(24 * 60, ChronoUnit.MINUTES));
+        AisToken newAisToken2 = new AisToken("sessionSecret2", "tppAppName", "oauth", "tppRedirectUrl", Instant.now().plus(24 * 60, ChronoUnit.MINUTES), null);
         newAisToken2.id = 2L;
         newAisToken2.userId = "2";
         newAisToken2.status = ConsentStatus.CONFIRMED;

@@ -23,6 +23,7 @@ package com.saltedge.connector.sdk.api.models;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.saltedge.connector.sdk.SDKConstants;
+import jakarta.annotation.Nullable;
 import org.springframework.util.StringUtils;
 
 import jakarta.validation.constraints.NotBlank;
@@ -30,6 +31,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Account information
@@ -159,6 +161,22 @@ public class Account {
     else return false;
   }
 
+  /**
+   * Check if `bban` or `bic` or `iban` or `sort_code` field intersects with identifiers
+   *
+   * @param identifiers a list of unique account codes (can be iban or bban or bic or sort_code)
+   * @return true if one of identifiers intersects with identifiers. If identifiers is NULL or Empty returns true.
+   */
+  public boolean containsAccountIdentifiers(@Nullable List<ProviderOfferedConsent> identifiers) {
+    if (identifiers == null || identifiers.isEmpty()) return true;
+
+    return identifiers.stream().anyMatch(identifier ->
+            (StringUtils.hasText(identifier.iban) && Objects.equals(this.iban, identifier.iban))
+                    || (StringUtils.hasText(identifier.bban) && Objects.equals(this.bban, identifier.bban))
+                    || (StringUtils.hasText(identifier.bic) && Objects.equals(this.bic, identifier.bic))
+                    || (StringUtils.hasText(identifier.bankAccountIdentifier) && Objects.equals(this.sortCode, identifier.bankAccountIdentifier))
+    );
+  }
 
   /**
    * Find first Account balance object by it type.

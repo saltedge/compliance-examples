@@ -42,7 +42,7 @@ public class AisTokensRepositoryIntegrationTests {
     @Test
     public void whenFindFirstBySessionSecret_thenReturnToken() {
         // given
-        AisToken aisToken = new AisToken("secret1", "tppAppName", "authTypeCode", null, Instant.parse("2019-11-18T16:04:50.915Z"));
+        AisToken aisToken = new AisToken("secret1", "tppAppName", "authTypeCode", null, Instant.parse("2019-11-18T16:04:50.915Z"), null);
         aisToken.accessToken = "123456";
         entityManager.persist(aisToken);
         entityManager.flush();
@@ -65,7 +65,7 @@ public class AisTokensRepositoryIntegrationTests {
     @Test
     public void whenFindFirstByAccessToken_thenReturnToken() {
         // given
-        AisToken aisToken = new AisToken("secret1", "tppAppName", "authTypeCode", null, Instant.parse("2019-11-18T16:04:50.915Z"));
+        AisToken aisToken = new AisToken("secret1", "tppAppName", "authTypeCode", null, Instant.parse("2019-11-18T16:04:50.915Z"), null);
         aisToken.accessToken = "123456";
         entityManager.persist(aisToken);
         entityManager.flush();
@@ -82,7 +82,7 @@ public class AisTokensRepositoryIntegrationTests {
     @Test
     public void whenFindFirstByAccessToken_thenReturnNull() {
         // given
-        AisToken aisToken = new AisToken("secret1", "tppAppName", "authTypeCode", null, Instant.parse("2019-11-18T16:04:50.915Z"));
+        AisToken aisToken = new AisToken("secret1", "tppAppName", "authTypeCode", null, Instant.parse("2019-11-18T16:04:50.915Z"), null);
         aisToken.accessToken = "123456";
         entityManager.persist(aisToken);
         entityManager.flush();

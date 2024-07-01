@@ -33,6 +33,7 @@ import com.saltedge.connector.sdk.models.ConsentStatus;
 import com.saltedge.connector.sdk.models.domain.AisToken;
 import com.saltedge.connector.sdk.services.provider.ConfirmTokenService;
 import com.saltedge.connector.sdk.services.provider.RevokeTokenByProviderService;
+import com.saltedge.connector.sdk.services.provider.TokensCollectorService;
 import com.saltedge.connector.sdk.tools.JsonTools;
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
@@ -64,46 +65,48 @@ public class ConnectorCallbackServiceTests {
 	private SessionsCallbackService sessionsCallbackService;
 	@MockBean
 	private TokensCallbackService tokensCallbackService;
+	@MockBean
+	private TokensCollectorService tokensCollectorService;
 
 	@Test
-	public void givenInvalidParams_whenIsUserConsentRequired_thenThrowConstraintViolationException() {
-		assertThrows(ConstraintViolationException.class, () -> testService.isUserConsentRequired(""));
+	public void givenInvalidParams_whenIsAccountSelectionRequired_thenThrowConstraintViolationException() {
+		assertThrows(ConstraintViolationException.class, () -> testService.isAccountSelectionRequired(""));
 	}
 
 	@Test
-	public void givenNullToken_whenIsUserConsentRequired_thenReturnFalse() {
+	public void givenNullToken_whenIsAccountSelectionRequired_thenReturnFalse() {
 		// given
-		given(confirmTokenService.findAisTokenBySessionSecret("sessionSecret")).willReturn(null);
+		given(tokensCollectorService.findAisTokenBySessionSecret("sessionSecret")).willReturn(null);
 
 		// when
-		boolean result = testService.isUserConsentRequired("sessionSecret");
+		boolean result = testService.isAccountSelectionRequired("sessionSecret");
 
 		// then
 		assertThat(result).isFalse();
 	}
 
 	@Test
-	public void givenTokenWithGlobalConsent_whenIsUserConsentRequired_thenReturnFalse() {
+	public void givenTokenWithGlobalConsent_whenIsAccountSelectionRequired_thenReturnFalse() {
 		// given
 		AisToken aisToken = new AisToken();
 		aisToken.providerOfferedConsents = new ProviderConsents(ProviderConsents.GLOBAL_CONSENT_VALUE);
-		given(confirmTokenService.findAisTokenBySessionSecret("sessionSecret")).willReturn(aisToken);
+		given(tokensCollectorService.findAisTokenBySessionSecret("sessionSecret")).willReturn(aisToken);
 
 		// when
-		boolean result = testService.isUserConsentRequired("sessionSecret");
+		boolean result = testService.isAccountSelectionRequired("sessionSecret");
 
 		// then
 		assertThat(result).isFalse();
 	}
 
 	@Test
-	public void givenTokenWithNoConsent_whenIsUserConsentRequired_thenReturnTrue() {
+	public void givenTokenWithNoConsent_whenIsisAccountSelectionRequired_thenReturnTrue() {
 		// given
 		AisToken aisToken = new AisToken();
-		given(confirmTokenService.findAisTokenBySessionSecret("sessionSecret")).willReturn(aisToken);
+		given(tokensCollectorService.findAisTokenBySessionSecret("sessionSecret")).willReturn(aisToken);
 
 		// when
-		boolean result = testService.isUserConsentRequired("sessionSecret");
+		boolean result = testService.isAccountSelectionRequired("sessionSecret");
 
 		// then
 		assertThat(result).isTrue();
@@ -146,7 +149,7 @@ public class ConnectorCallbackServiceTests {
 	@Test
 	public void givenToken_whenOnAccountInformationAuthorizationSuccess_thenConfirmTokenAndReturnRedirectUrl() {
 		// given
-		AisToken aisToken = new AisToken("sessionSecret", "tppAppName", "authTypeCode", "http://redirect.to", Instant.parse("2019-11-18T16:04:49.585Z"));
+		AisToken aisToken = new AisToken("sessionSecret", "tppAppName", "authTypeCode", "http://redirect.to", Instant.parse("2019-11-18T16:04:49.585Z"), null);
 		ProviderConsents consent = new ProviderConsents();
 		given(confirmTokenService.confirmAisToken(
 				"sessionSecret",

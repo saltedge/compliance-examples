@@ -17,8 +17,7 @@
                 <p>Password [secret]:   <input type="password" name="password">
 
                 <#if scope??><input type="hidden" name="scope" value="${scope}"></#if>
-                <#if session_secret??><input type="hidden" name="session_secret" value="${session_secret}"></#if>
-                <#if payment_id??><input type="hidden" name="payment_id" value="${payment_id}"></#if>
+                <#if state??><input type="hidden" name="state" value="${state}"></#if>
 
                 <br><p>
                 <span class="inline">

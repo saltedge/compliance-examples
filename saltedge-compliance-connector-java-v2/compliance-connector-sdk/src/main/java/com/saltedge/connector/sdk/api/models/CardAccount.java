@@ -24,8 +24,12 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.saltedge.connector.sdk.SDKConstants;
 
+import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotBlank;
+import org.springframework.util.StringUtils;
+
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Card account information
@@ -116,6 +120,20 @@ public class CardAccount {
         this.balances = balances;
         this.creditLimit = creditLimit;
         this.extra = extra;
+    }
+
+    /**
+     * Check if `maskedPan` field intersects with identifiers
+     *
+     * @param identifiers a list of unique account codes (can be iban or bban or bic or sort_code, maskedPan)
+     * @return true if one of identifiers intersects with maskedPan. If identifiers is NULL or Empty returns true.
+     */
+    public boolean containsAccountIdentifier(@Nullable List<ProviderOfferedConsent> identifiers) {
+        if (identifiers == null || identifiers.isEmpty()) return true;
+
+        return identifiers.stream().anyMatch(identifier ->
+                (StringUtils.hasText(identifier.maskedPan) && Objects.equals(this.maskedPan, identifier.maskedPan))
+        );
     }
 
     public String getId() {
