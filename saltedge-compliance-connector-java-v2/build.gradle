@@ -31,8 +31,8 @@ dependencies {
     implementation project(':compliance-connector-sdk')
 
     // COMPLIANCE-CONNECTOR-SDK AS MAVEN CENTRAL DEPENDENCY
-//    implementation 'com.saltedge.connector.sdk:compliance-connector-sdk:2.12.1'
-//    def jjwtVersion = '0.11.5'
+//    implementation 'com.saltedge.connector.sdk:compliance-connector-sdk:2.14.0'
+//    def jjwtVersion = '0.12.5'
 //    implementation "io.jsonwebtoken:jjwt-api:$jjwtVersion"
 //    runtime "io.jsonwebtoken:jjwt-impl:$jjwtVersion", "io.jsonwebtoken:jjwt-jackson:$jjwtVersion"
 //    implementation "io.jsonwebtoken:jjwt-impl:$jjwtVersion"
