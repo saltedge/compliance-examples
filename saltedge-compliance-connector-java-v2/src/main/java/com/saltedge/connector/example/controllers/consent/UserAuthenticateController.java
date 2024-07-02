@@ -33,84 +33,81 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 @RequestMapping
 public class UserAuthenticateController extends ConsentBaseController {
-  public final static String BASE_PATH = "/user/consent";
-  private static final Logger log = LoggerFactory.getLogger(UserAuthenticateController.class);
+    public final static String BASE_PATH = "/user/consent";
+    private static final Logger log = LoggerFactory.getLogger(UserAuthenticateController.class);
 
-  // Show SignIn page
-  @GetMapping(BASE_PATH)
-  public ModelAndView showSignIn(
-      @RequestParam(name = SDKConstants.KEY_SCOPE) Scope scope,
-      @RequestParam(name = SDKConstants.KEY_STATE, required = false) String state
-//      @RequestParam(name = SDKConstants.KEY_PAYMENT_ID, required = false) String paymentId
-  ) {
-    if (scope == null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid scope");
-    if (!StringUtils.hasLength(state)) {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "no state");
+    // Show SignIn page
+    @GetMapping(BASE_PATH)
+    public ModelAndView showSignIn(
+            @RequestParam(name = SDKConstants.KEY_SCOPE) Scope scope,
+            @RequestParam(name = SDKConstants.KEY_STATE, required = false) String state
+    ) {
+        if (scope == null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "invalid scope");
+        if (!StringUtils.hasLength(state)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "no state");
+        }
+
+        return createSignInModel(scope).addObject(SDKConstants.KEY_STATE, state);
     }
 
-    return createSignInModel(scope).addObject(SDKConstants.KEY_STATE, state);
-  }
+    // Receive SignIn page credentials
+    @PostMapping(BASE_PATH)
+    public ModelAndView onSubmitCredentials(
+            @RequestParam(name = "submit") boolean positiveAction,
+            @RequestParam(name = SDKConstants.KEY_SCOPE) Scope scope,
+            @RequestParam(name = SDKConstants.KEY_STATE, required = false) String state,//AIS, PIS, PIIS session secret
+            @RequestParam String username,
+            @RequestParam String password
+    ) {
+        if (!positiveAction) {
+            return switch (scope) {
+                case accounts -> onAisDenied(state);
+                case payments -> onPisDenied(Long.parseLong(state));
+                case funds -> onPiisDenied(state);
+            };
+        }
+        if (scope == null || !StringUtils.hasLength(state)) {
+            return createSignInModel(scope).addObject("error", "Unauthorized access.");
+        }
+        Long userId = findUser(username, password);// Find user by credentials
+        if (userId == null) return createSignInModel(scope).addObject("error", "Invalid credentials.");
 
-  // Receive SignIn page credentials
-  @PostMapping(BASE_PATH)
-  public ModelAndView onSubmitCredentials(
-      @RequestParam(name = "submit") boolean positiveAction,
-      @RequestParam(name = SDKConstants.KEY_SCOPE) Scope scope,
-      @RequestParam(name = SDKConstants.KEY_STATE, required = false) String state,//AIS, PIS, PIIS session secret
-//      @RequestParam(name = SDKConstants.KEY_PAYMENT_ID, required = false) String paymentId,//
-      @RequestParam String username,
-      @RequestParam String password
-  ) {
-    if (!positiveAction) {
+        ModelAndView consentRedirect = new ModelAndView("redirect:" + ConsentController.BASE_PATH + "/" + scope);
+        consentRedirect.addObject(SDKConstants.KEY_SCOPE, scope.toString());
+        consentRedirect.addObject(SDKConstants.KEY_USER_ID, userId);
+        consentRedirect.addObject(SDKConstants.KEY_STATE, state);
+
+        switch (scope) {
+            case payments:
+            case funds:
+                return consentRedirect;
+            case accounts:
+                if (connectorCallbackService.isAccountSelectionRequired(state)) {//Redirect to bank Offered Consent Page
+                    return consentRedirect;
+                } else {
+                    return onAisSuccess(state, String.valueOf(userId), null);
+                }
+            default:
+                return createSignInModel(scope).addObject("error", "Unknown scope.");
+        }
+    }
+
+    private ModelAndView createSignInModel(Scope scope) {
+        ModelAndView result = new ModelAndView("user_oauth_sign_in");
+        result.addObject("input_title", createInputTitle(scope));
+        result.addObject(SDKConstants.KEY_SCOPE, scope.toString());
+        return result;
+    }
+
+    private String createInputTitle(Scope scope) {
         return switch (scope) {
-            case accounts -> onAisDenied(state);
-            case payments -> onPisDenied(Long.parseLong(state));
-            case funds -> onPiisDenied(state);
+            case payments -> "Authorization of payment initiation";
+            case accounts -> "Authorization of access to accounts information";
+            case funds -> "Authorization of access to funds confirmation information";
         };
     }
-    if (scope == null || !StringUtils.hasLength(state)) {
-      return createSignInModel(scope).addObject("error", "Unauthorized access.");
+
+    public enum Scope {
+        accounts, payments, funds
     }
-    Long userId = findUser(username, password);// Find user by credentials
-    if (userId == null) return createSignInModel(scope).addObject("error", "Invalid credentials.");
-
-    ModelAndView consentRedirect = new ModelAndView("redirect:" + ConsentController.BASE_PATH + "/" + scope);
-    consentRedirect.addObject(SDKConstants.KEY_SCOPE, scope.toString());
-    consentRedirect.addObject(SDKConstants.KEY_USER_ID, userId);
-    consentRedirect.addObject(SDKConstants.KEY_STATE, state);
-//    if (paymentId != null) consentRedirect.addObject(SDKConstants.KEY_PAYMENT_ID, paymentId);
-
-    switch (scope) {
-      case payments:
-      case funds:
-        return consentRedirect;
-      case accounts:
-        if (connectorCallbackService.isAccountSelectionRequired(state)) {//Redirect to bank Offered Consent Page
-          return consentRedirect;
-        } else {
-          return onAisSuccess(state, String.valueOf(userId), null);
-        }
-      default:
-        return createSignInModel(scope).addObject("error", "Unknown scope.");
-    }
-  }
-
-  private ModelAndView createSignInModel(Scope scope) {
-    ModelAndView result = new ModelAndView("user_oauth_sign_in");
-    result.addObject("input_title", createInputTitle(scope));
-    result.addObject(SDKConstants.KEY_SCOPE, scope.toString());
-    return result;
-  }
-
-  private String createInputTitle(Scope scope) {
-      return switch (scope) {
-          case payments -> "Authorization of payment initiation";
-          case accounts -> "Authorization of access to accounts information";
-          case funds -> "Authorization of access to funds confirmation information";
-      };
-  }
-
-  public enum Scope {
-    accounts, payments, funds
-  }
 }

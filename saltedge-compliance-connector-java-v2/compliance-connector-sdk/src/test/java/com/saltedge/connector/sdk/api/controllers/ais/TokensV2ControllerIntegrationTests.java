@@ -29,7 +29,6 @@ import com.saltedge.connector.sdk.api.models.requests.CreateAisTokenRequest;
 import com.saltedge.connector.sdk.api.models.requests.DefaultRequest;
 import com.saltedge.connector.sdk.api.models.responses.ErrorResponse;
 import com.saltedge.connector.sdk.config.ApplicationProperties;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
