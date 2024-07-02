@@ -24,9 +24,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.saltedge.connector.sdk.SDKConstants;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.util.StringUtils;
 
-import jakarta.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -132,12 +132,18 @@ public class ProviderConsents {
     }
 
     private static ProviderOfferedConsent convertAccountToConsent(Account account) {
-        if (account == null || StringUtils.isEmpty(account.getIban())) return null;
-        return ProviderOfferedConsent.createAccountConsent(account.getIban());
+        if (account == null) return null;
+        if (!account.hasIdentifier()) return null;
+
+        if (StringUtils.hasText(account.getIban())) {
+            return ProviderOfferedConsent.createAccountConsentFromIban(account.getIban());
+        } else {
+            return ProviderOfferedConsent.createAccountConsentFromBban(account.getBban());
+        }
     }
 
     private static ProviderOfferedConsent convertAccountToConsent(CardAccount card) {
-        if (card == null || StringUtils.isEmpty(card.getMaskedPan())) return null;
+        if (card == null || !StringUtils.hasText(card.getMaskedPan())) return null;
         return ProviderOfferedConsent.createCardConsent(card.getMaskedPan());
     }
 

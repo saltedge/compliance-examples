@@ -21,7 +21,7 @@
 package com.saltedge.connector.sdk.api.models;
 
 import org.assertj.core.util.Lists;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

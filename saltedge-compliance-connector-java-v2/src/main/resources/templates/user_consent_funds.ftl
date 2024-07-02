@@ -19,9 +19,9 @@
             <p>
         </div>
         <div class="form-container">
-            <#if session_secret??>
+            <#if state??>
                 <form action="/consent/authorize/funds" method="post">
-                    <input type="hidden" name="session_secret" value="${session_secret}">
+                    <input type="hidden" name="state" value="${state}">
                     <input type="hidden" name="user_id" value="${user_id}">
 
                     <br><p>

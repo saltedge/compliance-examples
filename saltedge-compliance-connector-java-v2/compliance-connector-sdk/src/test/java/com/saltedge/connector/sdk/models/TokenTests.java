@@ -22,7 +22,7 @@ package com.saltedge.connector.sdk.models;
 
 import com.saltedge.connector.sdk.api.models.ProviderConsents;
 import com.saltedge.connector.sdk.models.domain.AisToken;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
 

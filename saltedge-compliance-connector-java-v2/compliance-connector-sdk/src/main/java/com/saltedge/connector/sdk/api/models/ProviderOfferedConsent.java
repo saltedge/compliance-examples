@@ -20,13 +20,15 @@
  */
 package com.saltedge.connector.sdk.api.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.saltedge.connector.sdk.SDKConstants;
+import org.springframework.util.StringUtils;
 
 import java.util.Objects;
 
-@JsonIgnoreProperties
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ProviderOfferedConsent {
     /**
      * International Bank Account Number
@@ -47,6 +49,12 @@ public class ProviderOfferedConsent {
     public String bic;
 
     /**
+     * Internal bank account identifier.
+     */
+    @JsonProperty(SDKConstants.KEY_BANK_ACCOUNT_IDENTIFIER)
+    public String bankAccountIdentifier;
+
+    /**
      * A number uniquely identifying a subscription in a Global System for Mobile communications
      * or a Universal Mobile Telecommunications System mobile network.
      */
@@ -62,17 +70,31 @@ public class ProviderOfferedConsent {
     public ProviderOfferedConsent() {
     }
 
-    public ProviderOfferedConsent(String iban, String bban, String bic, String msisdn, String maskedPan) {
+    public ProviderOfferedConsent(
+            String iban,
+            String bban,
+            String bic,
+            String bankAccountIdentifier,
+            String msisdn,
+            String maskedPan
+    ) {
         this.iban = iban;
         this.bban = bban;
         this.bic = bic;
+        this.bankAccountIdentifier = bankAccountIdentifier;
         this.msisdn = msisdn;
         this.maskedPan = maskedPan;
     }
 
-    public static ProviderOfferedConsent createAccountConsent(String iban) {
+    public static ProviderOfferedConsent createAccountConsentFromIban(String iban) {
         ProviderOfferedConsent result = new ProviderOfferedConsent();
         result.iban = iban;
+        return result;
+    }
+
+    public static ProviderOfferedConsent createAccountConsentFromBban(String bban) {
+        ProviderOfferedConsent result = new ProviderOfferedConsent();
+        result.bban = bban;
         return result;
     }
 
@@ -80,6 +102,17 @@ public class ProviderOfferedConsent {
         ProviderOfferedConsent result = new ProviderOfferedConsent();
         result.maskedPan = maskedPan;
         return result;
+    }
+
+    @JsonIgnore
+    public String fetchAnyIdentifier() {
+        if (StringUtils.hasText(iban)) return iban;
+        else if (StringUtils.hasText(bban)) return bban;
+        else if (StringUtils.hasText(bic)) return bic;
+        else if (StringUtils.hasText(bankAccountIdentifier)) return bankAccountIdentifier;
+        else if (StringUtils.hasText(msisdn)) return msisdn;
+        else if (StringUtils.hasText(maskedPan)) return maskedPan;
+        else return null;
     }
 
     @Override
@@ -90,13 +123,14 @@ public class ProviderOfferedConsent {
         return Objects.equals(iban, that.iban) &&
                 Objects.equals(bban, that.bban) &&
                 Objects.equals(bic, that.bic) &&
+                Objects.equals(bankAccountIdentifier, that.bankAccountIdentifier) &&
                 Objects.equals(msisdn, that.msisdn) &&
                 Objects.equals(maskedPan, that.maskedPan);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(iban, bban, bic, msisdn, maskedPan);
+        return Objects.hash(iban, bban, bic, bankAccountIdentifier, msisdn, maskedPan);
     }
 
     @Override
@@ -105,6 +139,7 @@ public class ProviderOfferedConsent {
                 "iban='" + iban + '\'' +
                 ", bban='" + bban + '\'' +
                 ", bic='" + bic + '\'' +
+                ", bankAccountIdentifier='" + bankAccountIdentifier + '\'' +
                 ", msisdn='" + msisdn + '\'' +
                 ", maskedPan='" + maskedPan + '\'' +
                 '}';

@@ -32,66 +32,63 @@ import jakarta.validation.constraints.NotEmpty;
 
 abstract public class ConsentBaseController extends BaseController {
 
-  protected ModelAndView onAisSuccess(
-      @NotEmpty String sessionSecret,
-      @NotEmpty String userId,
-      ProviderConsents consents
-  ) {
-    String returnToUrl = connectorCallbackService.onAccountInformationAuthorizationSuccess(
-        sessionSecret,
-        userId,
-        KeyTools.generateToken(32),
-        consents
-    );
-    if (returnToUrl == null) return redirectToAccountsAuth(sessionSecret, userId);
-    else return new ModelAndView("redirect:" + returnToUrl);
-  }
-
-  protected ModelAndView onAisDenied(@NotEmpty String sessionSecret) {
-    String returnToUrl = connectorCallbackService.onAccountInformationAuthorizationFail(sessionSecret);
-    if (returnToUrl == null) return redirectToAccountsAuth(sessionSecret, null);
-    else return new ModelAndView("redirect:" + returnToUrl);
-  }
-
-  protected ModelAndView onPisDenied(long paymentId) {
-    PaymentEntity payment = paymentsRepository.findById(paymentId).orElse(null);
-    String extra = "";
-    if (payment != null) {
-      extra = payment.extra;
-      payment.status = PaymentStatus.FAILED;
-      paymentsRepository.save(payment);
+    protected ModelAndView onAisSuccess(
+            @NotEmpty String sessionSecret,
+            @NotEmpty String userId,
+            ProviderConsents consents
+    ) {
+        String returnToUrl = connectorCallbackService.onAccountInformationAuthorizationSuccess(
+                sessionSecret,
+                userId,
+                KeyTools.generateToken(32),
+                consents
+        );
+        if (returnToUrl == null) return redirectToAccountsAuth(sessionSecret, userId);
+        else return new ModelAndView("redirect:" + returnToUrl);
     }
-    String returnToUrl = connectorCallbackService.onPaymentInitiationAuthorizationFail(extra);
 
-    if (returnToUrl != null) return new ModelAndView("redirect:" + returnToUrl);
-    return redirectToPaymentsAuth(paymentId, null);
-  }
+    protected ModelAndView onAisDenied(@NotEmpty String sessionSecret) {
+        String returnToUrl = connectorCallbackService.onAccountInformationAuthorizationFail(sessionSecret);
+        if (returnToUrl == null) return redirectToAccountsAuth(sessionSecret, null);
+        else return new ModelAndView("redirect:" + returnToUrl);
+    }
 
-  protected ModelAndView onPiisDenied(@NotEmpty String sessionSecret) {
-    String returnToUrl = connectorCallbackService.onFundsConfirmationConsentAuthorizationFail(sessionSecret);
-    if (returnToUrl == null) return redirectToFundsAuth(sessionSecret, null);
-    else return new ModelAndView("redirect:" + returnToUrl);
-  }
+    protected ModelAndView onPisDenied(long paymentId) {
+        PaymentEntity payment = paymentsRepository.findById(paymentId).orElse(null);
+        String extra = "";
+        if (payment != null) {
+            extra = payment.extra;
+            payment.status = PaymentStatus.FAILED;
+            paymentsRepository.save(payment);
+        }
+        String returnToUrl = connectorCallbackService.onPaymentInitiationAuthorizationFail(extra);
 
-  protected ModelAndView redirectToPaymentsAuth(long paymentId, Long userId) {
-    ModelAndView redirectModel = new ModelAndView("redirect:" + ConsentController.BASE_PATH);
-    redirectModel.addObject(SDKConstants.KEY_SCOPE, UserAuthenticateController.Scope.payments.toString());
-    redirectModel.addObject(SDKConstants.KEY_PAYMENT_ID, paymentId);
-    redirectModel.addObject(SDKConstants.KEY_USER_ID, userId);
-    return redirectModel;
-  }
+        if (returnToUrl != null) return new ModelAndView("redirect:" + returnToUrl);
+        return redirectToPaymentsAuth(String.valueOf(paymentId), null);
+    }
 
-  protected ModelAndView redirectToFundsAuth(String sessionSecret, String userId) {
-    return new ModelAndView("redirect:" + UserAuthenticateController.BASE_PATH)
-        .addObject(SDKConstants.KEY_SCOPE, UserAuthenticateController.Scope.funds.toString())
-        .addObject(SDKConstants.KEY_SESSION_SECRET, sessionSecret)
-        .addObject(SDKConstants.KEY_USER_ID, userId);
-  }
+    protected ModelAndView onPiisDenied(@NotEmpty String sessionSecret) {
+        String returnToUrl = connectorCallbackService.onFundsConfirmationConsentAuthorizationFail(sessionSecret);
+        if (returnToUrl == null) return redirectToFundsAuth(sessionSecret, null);
+        else return new ModelAndView("redirect:" + returnToUrl);
+    }
 
-  private ModelAndView redirectToAccountsAuth(String sessionSecret, String userId) {
-    return new ModelAndView("redirect:" + UserAuthenticateController.BASE_PATH)
-        .addObject(SDKConstants.KEY_SCOPE, UserAuthenticateController.Scope.accounts.toString())
-        .addObject(SDKConstants.KEY_SESSION_SECRET, sessionSecret)
-        .addObject(SDKConstants.KEY_USER_ID, userId);
-  }
+    protected ModelAndView redirectToPaymentsAuth(String state, String userId) {
+        return redirectToModelAuth(UserAuthenticateController.Scope.payments.toString(),state, userId);
+    }
+
+    protected ModelAndView redirectToFundsAuth(String state, String userId) {
+        return redirectToModelAuth(UserAuthenticateController.Scope.funds.toString(),state, userId);
+    }
+
+    private ModelAndView redirectToAccountsAuth(String state, String userId) {
+        return redirectToModelAuth(UserAuthenticateController.Scope.accounts.toString(),state, userId);
+    }
+
+    private ModelAndView redirectToModelAuth(String scope, String state, String userId) {
+        return new ModelAndView("redirect:" + UserAuthenticateController.BASE_PATH)
+                .addObject(SDKConstants.KEY_SCOPE, scope)
+                .addObject(SDKConstants.KEY_STATE, state)
+                .addObject(SDKConstants.KEY_USER_ID, userId);
+    }
 }

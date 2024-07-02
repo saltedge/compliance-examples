@@ -8,7 +8,7 @@ plugins {
 }
 
 group 'com.saltedge.connector.sdk'
-version '2.13.0'
+version '2.14.0'
 
 compileJava {
     sourceCompatibility = JavaVersion.VERSION_17
@@ -48,6 +48,14 @@ dependencies {
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.2'
     testImplementation "org.springframework.boot:spring-boot-starter-test:$springVersion"
     testImplementation 'com.h2database:h2:2.2.224'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+tasks.test {
+    useJUnitPlatform()
 }
 
 // Temporally commented before fixing deploy to maven central.

@@ -50,66 +50,63 @@ import java.time.temporal.ChronoUnit;
 @Service
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class CreateAisTokenService extends BaseService {
-  private static final Logger log = LoggerFactory.getLogger(CreateAisTokenService.class);
-  @Autowired
-  protected AisTokensRepository tokensRepository;
+    private static final Logger log = LoggerFactory.getLogger(CreateAisTokenService.class);
+    @Autowired
+    protected AisTokensRepository tokensRepository;
 
-  @Async
-  public void startAuthorization(CreateAisTokenRequest params) {
-    try {
-      AuthorizationType type = getAuthorizationTypeByCode(params.authorizationType);
-      if (type == null) throw new BadRequest.InvalidAuthorizationType();
+    @Async
+    public void startAuthorization(CreateAisTokenRequest params) {
+        try {
+            AuthorizationType type = getAuthorizationTypeByCode(params.authorizationType);
+            if (type == null) throw new BadRequest.InvalidAuthorizationType();
 
-      if (AuthMode.OAUTH == type.mode) {
-        AisToken token = initToken(type, params);
-        tokensRepository.save(token);
-        oAuthAuthorize(token, params.psuIpAddress);
-      } else {
-        //TODO replace with embeddedAuthorize() when embedded type will be supported by Salt Edge PSD2 Compliance
-        throw new BadRequest.InvalidAuthorizationType();
-      }
-    } catch (Exception e) {
-      log.error("startAuthorization:", e);
-      if (e instanceof HttpErrorParams) sessionCallbackService.sendFailCallback(params.sessionSecret, e);
-      else sessionCallbackService.sendFailCallback(params.sessionSecret, new NotFound.AccountNotFound());
+            if (AuthMode.OAUTH == type.mode) {
+                AisToken token = initToken(type, params);
+                tokensRepository.save(token);
+                oAuthAuthorize(token, params.psuIpAddress);
+            } else {
+                //TODO replace with embeddedAuthorize() when embedded type will be supported by Salt Edge PSD2 Compliance
+                throw new BadRequest.InvalidAuthorizationType();
+            }
+        } catch (Exception e) {
+            log.error("startAuthorization:", e);
+            if (e instanceof HttpErrorParams) sessionCallbackService.sendFailCallback(params.sessionSecret, e);
+            else sessionCallbackService.sendFailCallback(params.sessionSecret, new NotFound.AccountNotFound());
+        }
     }
-  }
 
-  private void oAuthAuthorize(AisToken token, String psuIpAddress) {
-    String url = providerService.getAccountInformationAuthorizationPageUrl(
-        token.sessionSecret,
-        token.notGlobalConsent(),
-        psuIpAddress
-    );
-    SessionUpdateCallbackRequest params = new SessionUpdateCallbackRequest(url, SDKConstants.STATUS_RECEIVED);
-    sessionCallbackService.sendUpdateCallback(token.sessionSecret, params);
-  }
-
-  private AisToken initToken(AuthorizationType authType, CreateAisTokenRequest requestParams) {
-    LocalDate validUntil = requestParams.validUntil;
-    Instant tokenExpiresAt = validUntil.atStartOfDay().toInstant(ZoneOffset.UTC).plus(1, ChronoUnit.DAYS).minusMillis(1);
-    AisToken result = new AisToken(
-        requestParams.sessionSecret,
-        requestParams.tppAppName,
-        authType.code,
-        requestParams.redirectUrl,
-        tokenExpiresAt
-    );
-    if (requestParams.requestedConsent.hasGlobalConsent()) {
-      result.providerOfferedConsents = requestParams.requestedConsent;
+    private void oAuthAuthorize(AisToken token, String psuIpAddress) {
+        String url = providerService.getAccountInformationAuthorizationPageUrl(
+                token.sessionSecret,
+                token.notGlobalConsent(),
+                psuIpAddress
+        );
+        SessionUpdateCallbackRequest params = new SessionUpdateCallbackRequest(url, SDKConstants.STATUS_RECEIVED);
+        sessionCallbackService.sendUpdateCallback(token.sessionSecret, params);
     }
-    return result;
-  }
 
-  private AuthorizationType getAuthorizationTypeByCode(String authTypeCode) {
-    if (!StringUtils.hasLength(authTypeCode)) return null;
-    return providerService.getAuthorizationTypes().stream()
-        .filter(type -> authTypeCode.equals(type.code))
-        .findFirst()
-        .orElse(null);
-  }
+    private AisToken initToken(AuthorizationType authType, CreateAisTokenRequest requestParams) {
+        LocalDate validUntil = requestParams.validUntil;
+        Instant tokenExpiresAt = validUntil.atStartOfDay().toInstant(ZoneOffset.UTC).plus(1, ChronoUnit.DAYS).minusMillis(1);
+        return new AisToken(
+                requestParams.sessionSecret,
+                requestParams.tppAppName,
+                authType.code,
+                requestParams.redirectUrl,
+                tokenExpiresAt,
+                requestParams.requestedConsent
+        );
+    }
 
-  private void embeddedAuthorize() throws RuntimeException {
-    //TODO Implement when embedded type will be supported by Salt Edge PSD2 Compliance
-  }
+    private AuthorizationType getAuthorizationTypeByCode(String authTypeCode) {
+        if (!StringUtils.hasLength(authTypeCode)) return null;
+        return providerService.getAuthorizationTypes().stream()
+                .filter(type -> authTypeCode.equals(type.code))
+                .findFirst()
+                .orElse(null);
+    }
+
+    private void embeddedAuthorize() throws RuntimeException {
+        //TODO Implement when embedded type will be supported by Salt Edge PSD2 Compliance
+    }
 }

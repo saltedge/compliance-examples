@@ -27,16 +27,14 @@ import com.saltedge.connector.sdk.callback.mapping.BaseFailRequest;
 import com.saltedge.connector.sdk.callback.mapping.SessionSuccessCallbackRequest;
 import com.saltedge.connector.sdk.config.ApplicationProperties;
 import org.assertj.core.util.Lists;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.*;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.RestTemplate;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -44,7 +42,6 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
-@RunWith(SpringRunner.class)
 @SpringBootTest
 public class SessionCallbackServiceTest {
     @Mock
@@ -54,7 +51,7 @@ public class SessionCallbackServiceTest {
     @InjectMocks
     private SessionsCallbackService service = new SessionsCallbackService();
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         service.applicationProperties = applicationProperties;
         given(restTemplate.exchange(anyString(), eq(HttpMethod.POST), any(HttpEntity.class), eq(Object.class)))

@@ -50,37 +50,37 @@ import jakarta.validation.Valid;
 @RequestMapping(TokensV2Controller.BASE_PATH)
 @Validated
 public class TokensV2Controller extends BaseV2Controller {
-  public final static String BASE_PATH = SDKConstants.API_BASE_PATH + "/tokens";
-  private static final Logger log = LoggerFactory.getLogger(TokensV2Controller.class);
-  @Autowired
-  CreateAisTokenService createAisTokenService;
-  @Autowired
-  RevokeTokenByPrioraService revokeService;
+    public final static String BASE_PATH = SDKConstants.API_BASE_PATH + "/tokens";
+    private static final Logger log = LoggerFactory.getLogger(TokensV2Controller.class);
+    @Autowired
+    CreateAisTokenService createAisTokenService;
+    @Autowired
+    RevokeTokenByPrioraService revokeService;
 
-  /**
-   * Create an access token with a set of access rights, named scopes for account information.
-   * As a result, Connector will send an update or fail callback to Salt Edge PSD2 Compliance with result of the operation,
-   * be it success, fail or request for additional steps.
-   *
-   * @param request for token creation
-   * @return empty JSON object
-   */
-  @PostMapping
-  public ResponseEntity<EmptyJsonModel> create(@Valid CreateAisTokenRequest request) {
-    createAisTokenService.startAuthorization(request);
-    return super.createEmptyOkResponseEntity();
-  }
+    /**
+     * Create an access token with a set of access rights, named scopes for account information.
+     * As a result, Connector will send an update or fail callback to Salt Edge PSD2 Compliance with result of the operation,
+     * be it success, fail or request for additional steps.
+     *
+     * @param request for token creation
+     * @return empty JSON object
+     */
+    @PostMapping
+    public ResponseEntity<EmptyJsonModel> create(@Valid CreateAisTokenRequest request) {
+        createAisTokenService.startAuthorization(request);
+        return super.createEmptyOkResponseEntity();
+    }
 
-  /**
-   * Revoke an already existing and active access token.
-   *
-   * @param token linked to Access-Token header
-   * @param request with sessionSecret
-   * @return empty JSON object
-   */
-  @PatchMapping("/revoke")
-  public ResponseEntity<EmptyJsonModel> revoke(AisToken token, @Valid RevokeTokenRequest request) {
-    revokeService.revokeTokenAsync(token);
-    return super.createEmptyOkResponseEntity();
-  }
+    /**
+     * Revoke an already existing and active access token.
+     *
+     * @param token linked to Access-Token header
+     * @param request with sessionSecret
+     * @return empty JSON object
+     */
+    @PatchMapping("/revoke")
+    public ResponseEntity<EmptyJsonModel> revoke(AisToken token, @Valid RevokeTokenRequest request) {
+        revokeService.revokeTokenAsync(token);
+        return super.createEmptyOkResponseEntity();
+    }
 }

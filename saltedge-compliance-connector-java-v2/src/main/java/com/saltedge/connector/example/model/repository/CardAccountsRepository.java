@@ -22,10 +22,12 @@ package com.saltedge.connector.example.model.repository;
 
 import com.saltedge.connector.example.model.CardAccountEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public interface CardAccountsRepository extends JpaRepository<CardAccountEntity, Long> {
     Optional<CardAccountEntity> findFirstByIdAndUserId(Long id, Long userId);
     List<CardAccountEntity> findByUserId(Long userId);

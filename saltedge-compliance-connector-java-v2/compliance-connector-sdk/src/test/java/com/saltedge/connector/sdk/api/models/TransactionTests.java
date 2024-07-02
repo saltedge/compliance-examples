@@ -23,7 +23,7 @@ package com.saltedge.connector.sdk.api.models;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.saltedge.connector.sdk.tools.JsonTools;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 

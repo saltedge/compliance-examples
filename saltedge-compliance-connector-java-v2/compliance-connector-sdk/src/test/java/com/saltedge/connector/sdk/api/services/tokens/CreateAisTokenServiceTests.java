@@ -29,13 +29,11 @@ import com.saltedge.connector.sdk.callback.mapping.SessionUpdateCallbackRequest;
 import com.saltedge.connector.sdk.models.ConsentStatus;
 import com.saltedge.connector.sdk.models.domain.AisToken;
 import com.saltedge.connector.sdk.services.priora.CreateAisTokenService;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDate;
 import java.util.Collections;
@@ -46,7 +44,6 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 
-@RunWith(SpringRunner.class)
 @SpringBootTest
 public class CreateAisTokenServiceTests extends BaseServicesTests {
 	@Autowired
@@ -56,7 +53,7 @@ public class CreateAisTokenServiceTests extends BaseServicesTests {
 	private final LocalDate validUntil = LocalDate.parse("2030-12-31");
 
 	@Override
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		super.setUp();
 	}
@@ -82,7 +79,8 @@ public class CreateAisTokenServiceTests extends BaseServicesTests {
 		// given
 		given(providerService.getAccountInformationAuthorizationPageUrl("sessionSecret", true, psuIpAddress))
 				.willReturn("http://example.com?session_secret=sessionSecret");
-		CreateAisTokenRequest request = createTokenRequest(ProviderConsents.buildAllAccountsConsent());
+		ProviderConsents providerConsents = ProviderConsents.buildAllAccountsConsent();
+		CreateAisTokenRequest request = createTokenRequest(providerConsents);
 		request.authorizationType = "oauth";
 
 		// when
@@ -98,7 +96,7 @@ public class CreateAisTokenServiceTests extends BaseServicesTests {
 		verify(aisTokensRepository).save(tokenCaptor.capture());
 		assertThat(tokenCaptor.getValue().status).isEqualTo(ConsentStatus.UNCONFIRMED);
 		assertThat(tokenCaptor.getValue().sessionSecret).isEqualTo("sessionSecret");
-		assertThat(tokenCaptor.getValue().providerOfferedConsents).isNull();
+		assertThat(tokenCaptor.getValue().providerOfferedConsents).isEqualTo(providerConsents);
 		assertThat(tokenCaptor.getValue().tokenExpiresAt.toString()).isEqualTo("2030-12-31T23:59:59.999Z");
 	}
 

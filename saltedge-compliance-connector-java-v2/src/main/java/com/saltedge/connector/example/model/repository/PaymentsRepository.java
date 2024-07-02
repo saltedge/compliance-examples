@@ -22,6 +22,8 @@ package com.saltedge.connector.example.model.repository;
 
 import com.saltedge.connector.example.model.PaymentEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface PaymentsRepository extends JpaRepository<PaymentEntity, Long> {
 }

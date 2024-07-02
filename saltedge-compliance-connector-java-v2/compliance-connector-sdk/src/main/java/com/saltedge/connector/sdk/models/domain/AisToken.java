@@ -38,68 +38,70 @@ import java.time.Instant;
  */
 @Entity(name = "Token")
 public class AisToken extends BaseEntity implements Serializable {
-  @Column(name = SDKConstants.KEY_SESSION_SECRET, nullable = false, length = 1024)
-  public String sessionSecret;
+    @Column(name = SDKConstants.KEY_SESSION_SECRET, nullable = false, length = 1024)
+    public String sessionSecret;
 
-  @Column(name = "provider_offered_consents", length = 4096)
-  @Convert(converter = ConsentDataConverter.class)
-  public ProviderConsents providerOfferedConsents;
+    @Column(name = "provider_offered_consents", length = 4096)
+    @Convert(converter = ConsentDataConverter.class)
+    public ProviderConsents providerOfferedConsents;
 
-  @Column(name = SDKConstants.KEY_STATUS, nullable = false)
-  public ConsentStatus status = ConsentStatus.UNCONFIRMED;
+    @Column(name = SDKConstants.KEY_STATUS, nullable = false)
+    public ConsentStatus status = ConsentStatus.UNCONFIRMED;
 
-  @Column(name = "access_token")
-  public String accessToken;
+    @Column(name = "access_token")
+    public String accessToken;
 
-  @Column(name = "expires_at")
-  public Instant tokenExpiresAt;
+    @Column(name = "expires_at")
+    public Instant tokenExpiresAt;
 
-  @Column(name = SDKConstants.KEY_USER_ID)
-  public String userId;
+    @Column(name = SDKConstants.KEY_USER_ID)
+    public String userId;
 
-  @Column(name = SDKConstants.KEY_CONFIRMATION_CODE)
-  public String confirmationCode;
+    @Column(name = SDKConstants.KEY_CONFIRMATION_CODE)
+    public String confirmationCode;
 
-  @Column(name = "auth_type_code")
-  public String authTypeCode;
+    @Column(name = "auth_type_code")
+    public String authTypeCode;
 
-  @Column(name = "tpp_name")
-  @Size(min = 1, max = 4096)
-  public String tppName;
+    @Column(name = "tpp_name")
+    @Size(min = 1, max = 4096)
+    public String tppName;
 
-  @Column(name = "tpp_redirect_url", length = 1024)
-  public String tppRedirectUrl;
+    @Column(name = "tpp_redirect_url", length = 1024)
+    public String tppRedirectUrl;
 
-  public AisToken() {
-  }
+    public AisToken() {
+    }
 
-  public AisToken(String userId) {
-    this.userId = userId;
-  }
+    public AisToken(String userId) {
+        this.userId = userId;
+    }
 
-  public AisToken(
-      @NotEmpty String sessionSecret,
-      @NotEmpty String tppAppName,
-      String authTypeCode,
-      String tppRedirectUrl,
-      Instant tokenExpiresAt
-  ) {
-    this.sessionSecret = sessionSecret;
-    this.tppName = tppAppName;
-    this.authTypeCode = authTypeCode;
-    this.tppRedirectUrl = tppRedirectUrl;
-    this.tokenExpiresAt = tokenExpiresAt;
-  }
+    public AisToken(
+            @NotEmpty String sessionSecret,
+            @NotEmpty String tppAppName,
+            String authTypeCode,
+            String tppRedirectUrl,
+            Instant tokenExpiresAt,
+            ProviderConsents consents
+    ) {
+        this.sessionSecret = sessionSecret;
+        this.tppName = tppAppName;
+        this.authTypeCode = authTypeCode;
+        this.tppRedirectUrl = tppRedirectUrl;
+        this.tokenExpiresAt = tokenExpiresAt;
+        this.providerOfferedConsents = consents;
+    }
 
-  public boolean isExpired() {
-    return tokenExpiresAt == null || tokenExpiresAt.isBefore(Instant.now());
-  }
+    public boolean isExpired() {
+        return tokenExpiresAt == null || tokenExpiresAt.isBefore(Instant.now());
+    }
 
-  public boolean notGlobalConsent() {
-    return this.providerOfferedConsents == null || !this.providerOfferedConsents.hasGlobalConsent();
-  }
+    public boolean notGlobalConsent() {
+        return this.providerOfferedConsents == null || !this.providerOfferedConsents.hasGlobalConsent();
+    }
 
-  public boolean isRevoked() {
-    return status == ConsentStatus.REVOKED;
-  }
+    public boolean isRevoked() {
+        return status == ConsentStatus.REVOKED;
+    }
 }

@@ -31,7 +31,7 @@ import com.saltedge.connector.sdk.api.models.responses.AccountsResponse;
 import com.saltedge.connector.sdk.api.models.responses.TransactionsResponse;
 import com.saltedge.connector.sdk.callback.mapping.BaseFailRequest;
 import org.assertj.core.util.Lists;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.security.PrivateKey;
 import java.util.Collections;

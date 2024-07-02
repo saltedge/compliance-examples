@@ -1,5 +1,9 @@
 # Salt Edge Compliance Connector SDK Changelog
 
+## 2.14.0 (2024-07-01)
+### Add
+- Add Detailed Consent feature
+
 ## 2.13.0 (2024-05-08)
 ### Dependency Upgrades
 - Update Spring Boot to 3.2.5

@@ -57,19 +57,20 @@ public class SDKConstants {
     public final static String KEY_IBAN = "iban";
     public final static String KEY_BBAN = "bban";
     public final static String KEY_BIC = "bic";
+    public final static String KEY_BANK_ACCOUNT_IDENTIFIER = "bank_account_identifier";
     public final static String KEY_SORT_CODE = "sort_code";
     public final static String KEY_MSISDN = "msisdn";
     public final static String KEY_MASKED_PAN = "masked_pan";
     public final static String KEY_NAME = "name";
     public final static String KEY_DESCRIPTION = "description";
     public final static String KEY_SESSION_SECRET = "session_secret";
-    public final static String KEY_PAYMENT_ID = "payment_id";
     public final static String KEY_END_TO_END_IDENTIFICATION = "end_to_end_identification";
     public final static String KEY_END_TO_END_ID = "end_to_end_id";
     public final static String KEY_ACCESS = "access";
     public final static String KEY_BALANCES = "balances";
     public final static String KEY_PRODUCT = "product";
     public final static String KEY_APP_NAME = "app_name";
+    public final static String KEY_STATE = "state";
 
     public final static String PAYMENT_PRODUCT_FASTER_PAYMENT_SERVICE = "faster-payment-service";
     public final static String PAYMENT_PRODUCT_INSTANT_SEPA_CREDIT_TRANSFERS = "instant-sepa-credit-transfers";

@@ -23,39 +23,39 @@ package com.saltedge.connector.sdk.api.controllers.pis;
 import com.saltedge.connector.sdk.SDKConstants;
 import com.saltedge.connector.sdk.TestTools;
 import com.saltedge.connector.sdk.api.controllers.ControllerIntegrationTests;
-import com.saltedge.connector.sdk.api.models.*;
+import com.saltedge.connector.sdk.api.models.Amount;
+import com.saltedge.connector.sdk.api.models.EmptyJsonModel;
+import com.saltedge.connector.sdk.api.models.ParticipantAddress;
+import com.saltedge.connector.sdk.api.models.PaymentOrder;
 import com.saltedge.connector.sdk.api.models.requests.CreatePaymentRequest;
 import com.saltedge.connector.sdk.api.models.requests.DefaultRequest;
 import com.saltedge.connector.sdk.api.models.responses.ErrorResponse;
 import com.saltedge.connector.sdk.config.ApplicationProperties;
 import com.saltedge.connector.sdk.models.ParticipantAccount;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.LinkedMultiValueMap;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Tests Interceptors + PaymentsV2Controller
  */
-@RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class PaymentsV2ControllerIntegrationTests extends ControllerIntegrationTests {
 
   private final String psuIpAddress = "192.168.0.1";
 
-  @Before
+  @BeforeEach
   public void setUp() {
     seedTokensRepository();
     callbackService.applicationProperties = new ApplicationProperties();
@@ -162,7 +162,7 @@ public class PaymentsV2ControllerIntegrationTests extends ControllerIntegrationT
 
     // then
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-    Assert.assertNotNull(response.getBody());
+    assertNotNull(response.getBody());
     assertThat(response.getBody().errorClass).isEqualTo("WrongRequestFormat");
   }
 
@@ -182,7 +182,7 @@ public class PaymentsV2ControllerIntegrationTests extends ControllerIntegrationT
 
     // then
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-    Assert.assertNotNull(response.getBody());
+    assertNotNull(response.getBody());
     assertThat(response.getBody().errorClass).isEqualTo("JWTExpiredSignature");
     assertThat(response.getBody().errorMessage).isEqualTo("JWT Expired Signature.");
   }
@@ -198,9 +198,9 @@ public class PaymentsV2ControllerIntegrationTests extends ControllerIntegrationT
 
     // then
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-    Assert.assertNotNull(response.getBody());
+    assertNotNull(response.getBody());
     assertThat(response.getBody().errorClass).isEqualTo("JWTDecodeError");
-    assertThat(response.getBody().errorMessage).isEqualTo("JWT strings must contain exactly 2 period characters. Found: 0");
+    assertThat(response.getBody().errorMessage).isEqualTo("Invalid compact JWT string: Compact JWSs must contain exactly 2 period characters, and compact JWEs must contain exactly 4.  Found: 0");
   }
 
   private ResponseEntity<ErrorResponse> doCreatePaymentRequestForError(LinkedMultiValueMap<String, String> headers) {
