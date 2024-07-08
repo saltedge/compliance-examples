@@ -35,6 +35,8 @@ import java.util.Objects;
 
 /**
  * Account information
+ *
+ * @author Constantin Chelban
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Account {
@@ -46,7 +48,7 @@ public class Account {
   private String id;
 
   /**
-   * Human readable account name
+   * Human-readable account name
    */
   @JsonProperty(SDKConstants.KEY_NAME)
   @NotBlank
@@ -57,7 +59,7 @@ public class Account {
   private List<AccountBalance> balances;
 
   /**
-   * ExternalCashAccountType1Code from ISO 20022 (https://www.iso20022.org/).
+   * ExternalCashAccountType1Code from ISO 20022 (<a href="https://www.iso20022.org/">...</a>).
    * Allowed values: CACC, CASH, CISH, COMM, CPAC, LLSV, LOAN, MGLD, MOMA, NREX, ODFT, ONDP, OTHR, SACC, SLRY, SVGS, TAXE, TRAN, TRAS
    */
   @JsonProperty("cash_account_type")
@@ -121,6 +123,9 @@ public class Account {
   @JsonProperty(SDKConstants.KEY_SORT_CODE)
   private String sortCode;
 
+  /**
+   * Constructor
+   */
   public Account() {
   }
 

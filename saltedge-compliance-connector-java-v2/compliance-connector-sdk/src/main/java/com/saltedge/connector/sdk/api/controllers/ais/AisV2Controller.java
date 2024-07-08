@@ -23,25 +23,15 @@ package com.saltedge.connector.sdk.api.controllers.ais;
 import com.saltedge.connector.sdk.SDKConstants;
 import com.saltedge.connector.sdk.api.controllers.BaseV2Controller;
 import com.saltedge.connector.sdk.api.models.EmptyJsonModel;
-import com.saltedge.connector.sdk.api.models.Meta;
 import com.saltedge.connector.sdk.api.models.requests.AisRefreshRequest;
-import com.saltedge.connector.sdk.api.models.requests.CreatePaymentRequest;
-import com.saltedge.connector.sdk.api.models.requests.DefaultRequest;
-import com.saltedge.connector.sdk.api.models.requests.TransactionsRequest;
-import com.saltedge.connector.sdk.api.models.responses.AccountsResponse;
-import com.saltedge.connector.sdk.api.models.responses.TransactionsResponse;
-import com.saltedge.connector.sdk.models.TransactionsPage;
-import com.saltedge.connector.sdk.models.domain.AisToken;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * This controller is responsible for receiving refresh request of account information for Account Information Service.
@@ -51,14 +41,15 @@ import jakarta.validation.constraints.NotNull;
 @RequestMapping(AisV2Controller.BASE_PATH)
 @Validated
 public class AisV2Controller extends BaseV2Controller {
+    /**
+     * Base path
+     */
     public final static String BASE_PATH = SDKConstants.API_BASE_PATH + "/ais";
     private static final Logger log = LoggerFactory.getLogger(AisV2Controller.class);
 
     /**
      * This endpoint is responsible for refreshing account information on connector side.
      *
-     * @param token linked to Access-Token header
-     * @param accountId unique id of bank account
      * @param request data
      * @return list of transactions data with nextId of next page
      */

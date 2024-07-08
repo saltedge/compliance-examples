@@ -22,11 +22,17 @@ package com.saltedge.connector.sdk.api.models;
 
 /**
  * Salt Edge Compliance solution supports next Authorization modes.
- *
  * Oauth: For the OAuth flow authentication is made via redirect on ASPSP side, and PSU redirected back to the app.
  * Embedded: In Embedded flow login widget is served from the same app without redirecting the user to another domain.
  *           The credentials are then sent to the authentication provider for authentication.
  */
 public enum AuthMode {
-    OAUTH, EMBEDDED;
+    /**
+     * Authentication mode: OAUTH
+     */
+    OAUTH,
+    /**
+     * Authentication mode: EMBEDDED
+     */
+    EMBEDDED
 }

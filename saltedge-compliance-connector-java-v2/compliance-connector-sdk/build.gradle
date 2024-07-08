@@ -1,10 +1,10 @@
 plugins {
     id 'java'
     id 'java-library'
-    id 'org.springframework.boot'
-    id 'io.spring.dependency-management'
-//    id 'maven' // Temporally commented before fixing deploy to maven central.
-//    id 'com.bmuschko.nexus' version '2.3.1'
+    id 'org.springframework.boot' version '3.2.5'
+    id 'io.spring.dependency-management' version '1.1.5'
+    id 'maven-publish'
+    id 'signing'
 }
 
 group 'com.saltedge.connector.sdk'
@@ -15,18 +15,14 @@ compileJava {
     targetCompatibility = JavaVersion.VERSION_17
 }
 
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
 repositories {
     mavenCentral()
 }
-// Temporally commented before fixing deploy to maven central.
-//bootJar {
-//    enabled = false
-//}
-//
-//jar {
-//    enabled = true
-//    archiveClassifier = ''
-//}
 
 dependencies {
     def springVersion = '3.2.5'
@@ -58,49 +54,74 @@ tasks.test {
     useJUnitPlatform()
 }
 
-// Temporally commented before fixing deploy to maven central.
-// UPLOAD JAR TO MAVEN CENTRAL REPO
-//modifyPom {
-//    project {
-//        name 'compliance-connector-sdk'
-//        description 'Salt Edge Compliance Connector Java SDK'
-//        url 'https://github.com/saltedge/compliance-examples/tree/master/saltedge-compliance-connector-java-v2/compliance-connector-sdk'
-//        inceptionYear '2020'
-//
-//        scm {
-//            url 'https://github.com/saltedge/compliance-examples/tree/master/saltedge-compliance-connector-java-v2/compliance-connector-sdk'
-//            connection 'scm:https://github.com/saltedge/compliance-examples.git'
-//            developerConnection 'scm:https://github.com/saltedge/compliance-examples.git'
-//        }
-//
-//        licenses {
-//            license {
-//                name 'The MIT License (MIT)'
-//                url 'https://raw.githubusercontent.com/saltedge/compliance-examples/master/saltedge-compliance-connector-java-v2/LICENSE.txt'
-//                distribution 'repo'
-//            }
-//        }
-//
-//        developers {
-//            developer {
-//                id 'constantink'
-//                name 'Constantin Chelban'
-//                email 'constantink@saltedge.com'
-//            }
-//        }
-//    }
-//}
-//
-//extraArchive {
-//    sources = true
-//    tests = true
-//    javadoc = true
-//}
-//
-//nexus {
-//    sign = true
-//    repositoryUrl = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
-//    snapshotRepositoryUrl = 'https://oss.sonatype.org/content/repositories/snapshots/'
-//}
-//
-//archivesBaseName = project.name
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId = 'compliance-connector-sdk'
+            from components.getByName('java')
+            versionMapping {
+                usage('java-api') {
+                    fromResolutionOf('runtimeClasspath')
+                }
+                usage('java-runtime') {
+                    fromResolutionResult()
+                }
+            }
+            pom {
+                name = 'Salt Edge Compliance Connector Java SDK'
+                description = 'Salt Edge Compliance Connector Java SDK (BG)'
+                url = 'https://github.com/saltedge/compliance-examples/tree/master/saltedge-compliance-connector-java-v2/compliance-connector-sdk'
+                licenses {
+                    license {
+                        name = 'The MIT License (MIT)'
+                        url = 'https://raw.githubusercontent.com/saltedge/compliance-examples/master/saltedge-compliance-connector-java-v2/LICENSE.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'constantink'
+                        name = 'Constantin Chelban'
+                        email = 'constantink@saltedge.com'
+                    }
+                }
+                scm {
+                    connection = 'scm:https://github.com/saltedge/compliance-examples.git'
+                    developerConnection = 'scm:https://github.com/saltedge/compliance-examples.git'
+                    url = 'https://github.com/saltedge/compliance-examples/tree/master/saltedge-compliance-connector-java-v2/compliance-connector-sdk'
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            name = 'sonatype'
+            def releasesRepoUrl = 'https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/'
+            def snapshotsRepoUrl = 'https://s01.oss.sonatype.org/content/repositories/snapshots/'
+            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+            credentials {
+                username = project.properties["ossrhUsername"].toString()
+                password = project.properties["ossrhPassword"].toString()
+            }
+        }
+        maven {
+            name = 'localOutput'
+            url = "${rootDir}/out"
+        }
+    }
+}
+
+signing {
+    sign publishing.publications
+}
+
+
+javadoc {
+    if(JavaVersion.current().isJava9Compatible()) {
+        options.addBooleanOption('html5', true)
+    }
+}
+
+jar {
+//    enabled = true
+    archiveClassifier = '' //use empty string
+}

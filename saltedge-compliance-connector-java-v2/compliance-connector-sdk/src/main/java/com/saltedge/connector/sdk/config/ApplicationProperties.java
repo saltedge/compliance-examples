@@ -32,7 +32,6 @@ import java.security.PublicKey;
 
 /**
  * Configuration properties from application.yml
- *
  * Example of application.yml
  * spring:
  *   profiles: dev

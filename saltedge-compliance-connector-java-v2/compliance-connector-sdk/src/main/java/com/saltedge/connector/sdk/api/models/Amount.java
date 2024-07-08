@@ -47,6 +47,9 @@ public class Amount {
   @NotEmpty
   public String currency;
 
+  /**
+   * Constructor
+   */
   public Amount() {
   }
 
