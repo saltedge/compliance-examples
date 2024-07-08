@@ -27,11 +27,20 @@ import com.saltedge.connector.sdk.api.models.Account;
 
 import java.util.List;
 
+/**
+ * Account Response POJO
+ */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AccountsResponse {
+    /**
+     * List of Accounts
+     */
     @JsonProperty(SDKConstants.KEY_DATA)
     public List<Account> data;
 
+    /**
+     * Constructor
+     */
     public AccountsResponse() {
     }
 

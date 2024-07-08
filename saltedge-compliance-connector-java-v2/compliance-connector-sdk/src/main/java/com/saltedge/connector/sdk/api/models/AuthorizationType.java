@@ -24,7 +24,7 @@ import jakarta.validation.constraints.NotBlank;
 
 /**
  * Unique Authorization Type which corresponds to data registered in `Dashboard/Settings/Authorization types` for Customer.
- * (https://priora.saltedge.com/providers/settings#authorization_types)
+ * (<a href="https://priora.saltedge.com/providers/settings#authorization_types">...</a>)
  */
 public class AuthorizationType {
     /**

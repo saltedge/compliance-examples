@@ -25,6 +25,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * JPA Repository for storing AisToken
+ */
 @Repository
 public interface AisTokensRepository extends JpaRepository<AisToken, Long> {
     AisToken findFirstBySessionSecret(String sessionSecret);

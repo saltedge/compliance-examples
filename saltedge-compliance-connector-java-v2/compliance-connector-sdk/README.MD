@@ -132,7 +132,14 @@ Is required to be defined one of `private_key` fields and one of `public_key` fi
 * SDK implements `ApiExceptionsHandler` which extends `ResponseEntityExceptionHandler` with order of execution `0`.  
 
 ## [Api Documentation](https://priora.banksalt.com/docs/aspsp/v2)
-  
+
+## Upload Bundle
+- gradlew :publishMavenJavaPublicationToLocalOutputRepository
+- jar -cvf bundle.jar path_to_generated_files/*.*
+
+- Deploy to OSSRH
+- Promote to release
+
 ---
 ## [LICENSE](../LICENSE.txt)
 
