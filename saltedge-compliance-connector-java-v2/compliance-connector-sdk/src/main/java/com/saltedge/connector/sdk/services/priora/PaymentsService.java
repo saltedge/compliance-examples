@@ -46,7 +46,7 @@ import static com.saltedge.connector.sdk.SDKConstants.PAYMENT_PRODUCT_FASTER_PAY
 
 /**
  * Service designated for creating payment orders.
- * https://priora.saltedge.com/docs/aspsp/v2/pis#pis-connector_endpoints-payments
+ * <a href="https://priora.saltedge.com/docs/aspsp/v2/pis#pis-connector_endpoints-payments">...</a>
  */
 @Service
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)

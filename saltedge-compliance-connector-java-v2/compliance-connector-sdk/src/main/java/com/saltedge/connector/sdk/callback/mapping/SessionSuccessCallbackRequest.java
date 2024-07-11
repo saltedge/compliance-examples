@@ -28,7 +28,10 @@ import com.saltedge.connector.sdk.api.models.ProviderConsents;
 import jakarta.validation.constraints.NotBlank;
 import java.util.Objects;
 
-//TODO: https://priora.saltedge.com/docs/aspsp/v2/ais#salt-edge-endpoints-sessions-sessions-success
+/**
+ * Session Success callback request model
+ * <a href="https://priora.saltedge.com/docs/aspsp/v2/ais#salt-edge-endpoints-sessions-sessions-success">...</a>
+ */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SessionSuccessCallbackRequest extends BaseCallbackRequest {
     @JsonProperty("consent")

@@ -29,6 +29,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * Base Callback request model
+ */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class BaseCallbackRequest {
     @JsonProperty(SDKConstants.KEY_SESSION_SECRET)

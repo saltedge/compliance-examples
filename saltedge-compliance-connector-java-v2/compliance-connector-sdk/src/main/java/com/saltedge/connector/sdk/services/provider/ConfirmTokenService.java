@@ -37,6 +37,9 @@ import jakarta.validation.constraints.NotEmpty;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
+/**
+ * Service designated for consent confirmation.
+ */
 @Service
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Validated

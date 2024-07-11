@@ -22,8 +22,22 @@ package com.saltedge.connector.sdk.api.models.err;
 
 import org.springframework.http.HttpStatus;
 
+/**
+ * HTTP error params
+ */
 public interface HttpErrorParams {
+    /**
+     * Error status getter
+     */
     HttpStatus getErrorStatus();
+
+    /**
+     * Error class getter
+     */
     String getErrorClass();
+
+    /**
+     * Error message getter
+     */
     String getErrorMessage();
 }

@@ -29,6 +29,9 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import java.util.Random;
 
+/**
+ * Set of helper methods
+ */
 public class CodeBuilder {
     public static final String DEFAULT_SALT = CodeBuilder.generateRandomString(16);
     private static final Logger log = LoggerFactory.getLogger(CodeBuilder.class);

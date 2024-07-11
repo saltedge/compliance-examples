@@ -28,15 +28,15 @@ dependencies {
     implementation 'joda-time:joda-time:2.10.14'
 
     // COMPLIANCE-CONNECTOR-SDK AS LOCAL MODULE
-    implementation project(':compliance-connector-sdk')
+//    implementation project(':compliance-connector-sdk')
 
     // COMPLIANCE-CONNECTOR-SDK AS MAVEN CENTRAL DEPENDENCY
-//    implementation 'com.saltedge.connector.sdk:compliance-connector-sdk:2.14.0'
-//    def jjwtVersion = '0.12.5'
-//    implementation "io.jsonwebtoken:jjwt-api:$jjwtVersion"
-//    runtime "io.jsonwebtoken:jjwt-impl:$jjwtVersion", "io.jsonwebtoken:jjwt-jackson:$jjwtVersion"
-//    implementation "io.jsonwebtoken:jjwt-impl:$jjwtVersion"
-//    implementation "io.jsonwebtoken:jjwt-jackson:$jjwtVersion"
+    implementation 'com.saltedge.connector.sdk:compliance-connector-sdk:2.14.0'
+    def jjwtVersion = '0.12.6'
+    implementation "io.jsonwebtoken:jjwt-api:$jjwtVersion"
+    runtimeOnly "io.jsonwebtoken:jjwt-impl:$jjwtVersion"
+    runtimeOnly "io.jsonwebtoken:jjwt-jackson:$jjwtVersion"
+    implementation "io.jsonwebtoken:jjwt-jackson:$jjwtVersion"
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.2'

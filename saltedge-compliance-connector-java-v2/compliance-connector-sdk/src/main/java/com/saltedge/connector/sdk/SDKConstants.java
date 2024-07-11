@@ -20,6 +20,9 @@
  */
 package com.saltedge.connector.sdk;
 
+/**
+ * Common used constants
+ */
 public class SDKConstants {
     public final static String CONNECTOR_PACKAGE = "com.saltedge.connector.sdk";
     public final static String API_BASE_PATH = "/api/priora/v2";

@@ -24,8 +24,11 @@ import com.saltedge.connector.sdk.services.priora.FundsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Set of type conversion tools
+ */
 public class TypeTools {
-    private static Logger log = LoggerFactory.getLogger(FundsService.class);
+    private static final Logger log = LoggerFactory.getLogger(FundsService.class);
 
     public static Float safeParseFloat(String str, Float fallback) {
         if (str == null) return fallback;

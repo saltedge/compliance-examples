@@ -25,6 +25,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * JPA Repository for storing PiisToken
+ */
 @Repository
 public interface PiisTokensRepository extends JpaRepository<PiisToken, Long> {
     PiisToken findFirstBySessionSecret(String sessionSecret);

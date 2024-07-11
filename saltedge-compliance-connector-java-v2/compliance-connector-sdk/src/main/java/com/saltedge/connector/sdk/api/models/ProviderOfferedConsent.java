@@ -28,6 +28,9 @@ import org.springframework.util.StringUtils;
 
 import java.util.Objects;
 
+/**
+ * Identifiers to which provider offered access.
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ProviderOfferedConsent {
     /**
