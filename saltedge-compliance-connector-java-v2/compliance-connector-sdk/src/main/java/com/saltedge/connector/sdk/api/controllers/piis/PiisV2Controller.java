@@ -49,7 +49,7 @@ import jakarta.validation.constraints.NotNull;
 /**
  * This controller is responsible for checking whether a specific amount is available at point of time of the request
  * on an account addressed by IBAN or other available identifiers.
- * https://priora.saltedge.com/docs/aspsp/v2/piis
+ * <a href="https://priora.saltedge.com/docs/aspsp/v2/piis">...</a>
  */
 @RestController
 @RequestMapping(PiisV2Controller.BASE_PATH)

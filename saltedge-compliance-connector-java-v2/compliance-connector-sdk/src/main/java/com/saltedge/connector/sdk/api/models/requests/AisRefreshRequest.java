@@ -39,6 +39,9 @@ public class AisRefreshRequest extends PrioraBaseRequest {
   @NotEmpty
   public String providerCode;
 
+  /**
+   * Constructor
+   */
   public AisRefreshRequest() {
   }
 
@@ -46,10 +49,16 @@ public class AisRefreshRequest extends PrioraBaseRequest {
     this.providerCode = providerCode;
   }
 
+  /**
+   * Provider code getter
+   */
   public String getProviderCode() {
     return providerCode;
   }
 
+  /**
+   * Provider code setter
+   */
   public void setProviderCode(String providerCode) {
     this.providerCode = providerCode;
   }

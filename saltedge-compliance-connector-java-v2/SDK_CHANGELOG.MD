@@ -1,6 +1,10 @@
 # Salt Edge Compliance Connector SDK Changelog
 
-## 2.14.0 (2024-07-01)
+## 2.14.1 (2024-07-12)
+### Update
+- Update JJWT version. Fix CVE-2024-31033
+
+## 2.14.0 (2024-07-06)
 ### Add
 - Add Detailed Consent feature
 

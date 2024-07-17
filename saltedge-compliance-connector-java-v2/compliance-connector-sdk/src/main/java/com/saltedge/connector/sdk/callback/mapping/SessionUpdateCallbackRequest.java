@@ -26,6 +26,10 @@ import com.saltedge.connector.sdk.SDKConstants;
 
 import java.time.Instant;
 
+/**
+ * Session Update callback request model
+ * <a href="https://priora.saltedge.com/docs/aspsp/v2/ais#salt-edge-endpoints-sessions-sessions-update">...</a>
+ */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SessionUpdateCallbackRequest extends BaseCallbackRequest {
     @JsonProperty(SDKConstants.KEY_REDIRECT_URL)

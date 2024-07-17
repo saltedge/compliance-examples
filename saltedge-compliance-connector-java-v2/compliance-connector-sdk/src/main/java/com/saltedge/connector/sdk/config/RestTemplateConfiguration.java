@@ -27,6 +27,9 @@ import org.springframework.web.client.RestTemplate;
 
 import java.time.Duration;
 
+/**
+ * Rest Template Configuration
+ */
 @Configuration
 public class RestTemplateConfiguration {
 

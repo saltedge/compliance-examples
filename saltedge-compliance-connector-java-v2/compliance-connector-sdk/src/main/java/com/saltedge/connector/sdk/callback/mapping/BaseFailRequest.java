@@ -24,6 +24,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.saltedge.connector.sdk.SDKConstants;
 
+/**
+ * Base Fail callback request model
+ */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class BaseFailRequest extends BaseCallbackRequest {
     @JsonProperty(SDKConstants.KEY_ERROR_CLASS)

@@ -32,6 +32,9 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+/**
+ * Service designated for consent revoke initiated by TPP.
+ */
 @Service
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class RevokeTokenByPrioraService extends BaseService {

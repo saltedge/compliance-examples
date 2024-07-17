@@ -22,5 +22,8 @@ package com.saltedge.connector.sdk.api.models;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+/**
+ * Empty model
+ */
 @JsonSerialize
 public class EmptyJsonModel { }

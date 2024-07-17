@@ -34,6 +34,9 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
+/**
+ * Set of json tools
+ */
 public class JsonTools {
     /**
      * Creates mapper with deserialization option to fail on unknown property

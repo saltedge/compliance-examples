@@ -24,8 +24,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.util.UriComponentsBuilder;
 
+/**
+ * Set of URL tools
+ */
 public class UrlTools {
-    private static Logger log = LoggerFactory.getLogger(UrlTools.class);
+    private static final Logger log = LoggerFactory.getLogger(UrlTools.class);
 
     /**
      * Appends params to url string

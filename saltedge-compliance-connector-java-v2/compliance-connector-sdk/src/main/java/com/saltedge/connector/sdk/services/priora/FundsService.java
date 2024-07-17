@@ -37,6 +37,9 @@ import org.springframework.util.StringUtils;
 
 import java.util.List;
 
+/**
+ * Service designated for fund confirmation functionality.
+ */
 @Service
 public class FundsService extends BaseService {
   private static final Logger log = LoggerFactory.getLogger(FundsService.class);
