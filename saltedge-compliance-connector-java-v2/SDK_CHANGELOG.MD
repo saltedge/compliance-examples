@@ -1,8 +1,14 @@
 # Salt Edge Compliance Connector SDK Changelog
 
+## 2.12.3 (2022-07-18)
+### Dependency Upgrades
+- Add Detailed Consent feature
+- Update Spring Boot to 2.7.18
+- Update JJWT version to 0.12.6 (Fix CVE-2024-31033).
+  
 ## 2.14.1 (2024-07-12)
 ### Update
-- Update JJWT version. Fix CVE-2024-31033
+- Update JJWT version to 0.12.6 (Fix CVE-2024-31033).
 
 ## 2.14.0 (2024-07-06)
 ### Add

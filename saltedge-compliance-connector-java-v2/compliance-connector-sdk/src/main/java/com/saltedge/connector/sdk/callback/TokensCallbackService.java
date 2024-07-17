@@ -28,7 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.validation.annotation.Validated;
 
-import jakarta.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotEmpty;
 import java.util.HashMap;
 
 /**

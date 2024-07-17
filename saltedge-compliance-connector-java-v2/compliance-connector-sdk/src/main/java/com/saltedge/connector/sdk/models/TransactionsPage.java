@@ -22,7 +22,7 @@ package com.saltedge.connector.sdk.models;
 
 import com.saltedge.connector.sdk.api.models.Transaction;
 
-import jakarta.validation.constraints.NotNull;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**

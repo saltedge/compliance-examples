@@ -33,7 +33,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
-import jakarta.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotEmpty;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 

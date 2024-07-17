@@ -21,11 +21,10 @@
 package com.saltedge.connector.example.model;
 
 import com.saltedge.connector.example.model.converter.StringMapConverter;
-import com.saltedge.connector.sdk.models.domain.BaseEntity;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;

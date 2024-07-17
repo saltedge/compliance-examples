@@ -27,9 +27,9 @@ import com.saltedge.connector.sdk.api.models.validation.RequestAccountConstraint
 import com.saltedge.connector.sdk.models.ParticipantAccount;
 import org.springframework.util.StringUtils;
 
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
+import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import static com.saltedge.connector.sdk.SDKConstants.*;
 

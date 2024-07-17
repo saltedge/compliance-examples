@@ -27,7 +27,7 @@ import com.saltedge.connector.sdk.provider.ProviderServiceAbs;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
-import jakarta.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotEmpty;
 import java.time.LocalDate;
 import java.util.List;
 

@@ -24,7 +24,7 @@ import com.saltedge.connector.sdk.api.models.ProviderConsents;
 import com.saltedge.connector.sdk.models.ParticipantAccount;
 
 import com.saltedge.connector.sdk.models.domain.AisToken;
-import jakarta.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 /**

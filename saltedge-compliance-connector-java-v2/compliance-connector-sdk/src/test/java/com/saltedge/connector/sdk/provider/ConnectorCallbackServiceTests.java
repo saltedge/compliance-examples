@@ -35,7 +35,7 @@ import com.saltedge.connector.sdk.services.provider.ConfirmTokenService;
 import com.saltedge.connector.sdk.services.provider.RevokeTokenByProviderService;
 import com.saltedge.connector.sdk.services.provider.TokensCollectorService;
 import com.saltedge.connector.sdk.tools.JsonTools;
-import jakarta.validation.ConstraintViolationException;
+import javax.validation.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;

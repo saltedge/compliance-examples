@@ -23,11 +23,11 @@ package com.saltedge.connector.sdk.models.domain;
 import com.saltedge.connector.sdk.SDKConstants;
 import com.saltedge.connector.sdk.models.*;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
-import jakarta.persistence.Entity;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Size;
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.Entity;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 /**

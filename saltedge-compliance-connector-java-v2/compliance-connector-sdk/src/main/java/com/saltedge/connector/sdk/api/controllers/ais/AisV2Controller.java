@@ -24,7 +24,7 @@ import com.saltedge.connector.sdk.SDKConstants;
 import com.saltedge.connector.sdk.api.controllers.BaseV2Controller;
 import com.saltedge.connector.sdk.api.models.EmptyJsonModel;
 import com.saltedge.connector.sdk.api.models.requests.AisRefreshRequest;
-import jakarta.validation.Valid;
+import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;

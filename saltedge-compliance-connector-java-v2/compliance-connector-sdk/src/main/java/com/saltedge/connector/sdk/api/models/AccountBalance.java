@@ -23,7 +23,7 @@ package com.saltedge.connector.sdk.api.models;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import jakarta.validation.constraints.NotBlank;
+import javax.validation.constraints.NotBlank;
 import java.time.Instant;
 import java.time.LocalDate;
 

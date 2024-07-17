@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.StringUtils;
 
-import jakarta.validation.constraints.NotBlank;
+import javax.validation.constraints.NotBlank;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.PublicKey;

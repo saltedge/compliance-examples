@@ -24,7 +24,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.saltedge.connector.sdk.SDKConstants;
 
-import jakarta.validation.constraints.NotBlank;
+import javax.validation.constraints.NotBlank;
 
 @JsonIgnoreProperties
 public class RevokeTokenRequest extends PrioraBaseRequest {

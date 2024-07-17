@@ -26,7 +26,7 @@ import com.saltedge.connector.sdk.api.models.ProviderConsents;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jakarta.persistence.AttributeConverter;
+import javax.persistence.AttributeConverter;
 import java.io.IOException;
 
 /**

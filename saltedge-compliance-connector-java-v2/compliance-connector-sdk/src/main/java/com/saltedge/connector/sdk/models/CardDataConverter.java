@@ -25,7 +25,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jakarta.persistence.AttributeConverter;
+import javax.persistence.AttributeConverter;
 import java.io.IOException;
 
 /**

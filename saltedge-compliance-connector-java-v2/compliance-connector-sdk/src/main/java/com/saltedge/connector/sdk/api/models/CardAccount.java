@@ -24,8 +24,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.saltedge.connector.sdk.SDKConstants;
 
-import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.NotBlank;
+import javax.validation.constraints.NotBlank;
+
+import org.springframework.lang.Nullable;
 import org.springframework.util.StringUtils;
 
 import java.util.List;

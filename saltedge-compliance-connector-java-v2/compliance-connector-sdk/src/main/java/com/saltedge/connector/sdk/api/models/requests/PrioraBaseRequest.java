@@ -23,7 +23,7 @@ package com.saltedge.connector.sdk.api.models.requests;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.saltedge.connector.sdk.SDKConstants;
 
-import jakarta.validation.constraints.NotBlank;
+import javax.validation.constraints.NotBlank;
 
 /**
  * Base class for requests from Salt Edge to Connector

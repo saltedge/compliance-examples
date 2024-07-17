@@ -25,9 +25,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.saltedge.connector.sdk.SDKConstants;
 import com.saltedge.connector.sdk.api.models.PaymentOrder;
 
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
+import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import static com.saltedge.connector.sdk.SDKConstants.KEY_APP_NAME;
 import static com.saltedge.connector.sdk.SDKConstants.KEY_PROVIDER_CODE;

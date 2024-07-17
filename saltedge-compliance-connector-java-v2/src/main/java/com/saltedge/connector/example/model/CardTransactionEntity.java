@@ -22,9 +22,8 @@ package com.saltedge.connector.example.model;
 
 import com.saltedge.connector.example.model.converter.FeesConverter;
 import com.saltedge.connector.example.model.converter.StringMapConverter;
-import com.saltedge.connector.sdk.models.domain.BaseEntity;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;

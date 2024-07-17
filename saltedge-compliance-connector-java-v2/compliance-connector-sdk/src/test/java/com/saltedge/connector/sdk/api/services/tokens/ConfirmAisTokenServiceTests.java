@@ -27,7 +27,7 @@ import com.saltedge.connector.sdk.callback.mapping.SessionSuccessCallbackRequest
 import com.saltedge.connector.sdk.models.ConsentStatus;
 import com.saltedge.connector.sdk.models.domain.AisToken;
 import com.saltedge.connector.sdk.services.provider.ConfirmTokenService;
-import jakarta.validation.ConstraintViolationException;
+import javax.validation.ConstraintViolationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;

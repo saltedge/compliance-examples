@@ -25,7 +25,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.saltedge.connector.sdk.SDKConstants;
 import com.saltedge.connector.sdk.api.models.ProviderConsents;
 
-import jakarta.validation.constraints.NotBlank;
+import javax.validation.constraints.NotBlank;
 import java.util.Objects;
 
 /**

@@ -20,11 +20,13 @@
  */
 package com.saltedge.connector.example.model;
 
-import com.saltedge.connector.sdk.models.domain.BaseEntity;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
-import jakarta.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.List;
 
