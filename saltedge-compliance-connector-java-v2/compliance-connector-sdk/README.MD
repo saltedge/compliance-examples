@@ -10,9 +10,12 @@ When you migrate to the new version of Salt Edge Compliance Connector SDK, pleas
 ## Application Requirements
   
 1. JDK, at least version 17
-1. Spring Boot Framework, version `3.2.+`
-1. Registration & API Keys  
-   Follow the guide on how to [register and add API keys](https://priora.saltedge.com/docs/aspsp/v1#registrationandapikeys)  
+2. Spring Boot Framework, version `3.2.+`
+3. Registration & API Keys  
+   Follow the guide on how to [register and add API keys](https://priora.saltedge.com/docs/aspsp/v1#registrationandapikeys)
+
+Please note that the above requirements are applicable for SDK version 2.14.+.  
+For SDK version 2.12.+ is applicable min Java version 8 and Spring Boot Framework 2.7.1.  
   
 ## SDK Integration  
 
