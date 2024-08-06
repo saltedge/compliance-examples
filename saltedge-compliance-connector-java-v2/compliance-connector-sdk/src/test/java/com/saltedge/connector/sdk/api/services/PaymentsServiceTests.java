@@ -62,6 +62,7 @@ public class PaymentsServiceTests extends BaseServicesTests {
         // given
         HashMap<String, String> extra = new HashMap<>();
         extra.put(SDKConstants.KEY_SESSION_SECRET, "sessionSecret");
+        extra.put(SDKConstants.KEY_TPP_APP_NAME, "tppAppName");
         extra.put(SDKConstants.KEY_RETURN_TO_URL, "redirectUrl");
         extra.put(SDKConstants.KEY_END_TO_END_IDENTIFICATION, "endToEndIdentification");
         String extraJson = JsonTools.createDefaultMapper().writeValueAsString(extra);
@@ -96,6 +97,7 @@ public class PaymentsServiceTests extends BaseServicesTests {
         // given
         HashMap<String, String> extra = new HashMap<>();
         extra.put(SDKConstants.KEY_SESSION_SECRET, "sessionSecret");
+        extra.put(SDKConstants.KEY_TPP_APP_NAME, "tppAppName");
         extra.put(SDKConstants.KEY_RETURN_TO_URL, "redirectUrl");
         extra.put(SDKConstants.KEY_END_TO_END_IDENTIFICATION, "endToEndIdentification");
         String extraJson = JsonTools.createDefaultMapper().writeValueAsString(extra);
@@ -146,6 +148,7 @@ public class PaymentsServiceTests extends BaseServicesTests {
         // given
         HashMap<String, String> extra = new HashMap<>();
         extra.put(SDKConstants.KEY_SESSION_SECRET, "sessionSecret");
+        extra.put(SDKConstants.KEY_TPP_APP_NAME, "tppAppName");
         extra.put(SDKConstants.KEY_RETURN_TO_URL, "redirectUrl");
         extra.put(SDKConstants.KEY_END_TO_END_IDENTIFICATION, "endToEndIdentification");
         String extraJson = JsonTools.createDefaultMapper().writeValueAsString(extra);
@@ -196,6 +199,7 @@ public class PaymentsServiceTests extends BaseServicesTests {
         // given
         HashMap<String, String> extra = new HashMap<>();
         extra.put(SDKConstants.KEY_SESSION_SECRET, "sessionSecret");
+        extra.put(SDKConstants.KEY_TPP_APP_NAME, "tppAppName");
         extra.put(SDKConstants.KEY_RETURN_TO_URL, "redirectUrl");
         extra.put(SDKConstants.KEY_END_TO_END_IDENTIFICATION, "endToEndIdentification");
         String extraJson = JsonTools.createDefaultMapper().writeValueAsString(extra);

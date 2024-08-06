@@ -285,7 +285,8 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
 
     private Map<String, String> parseExtra(String paymentExtraJson) {
         try {
-            return JsonTools.createDefaultMapper().readValue(paymentExtraJson, new TypeReference<Map<String, String>>() {});
+            return JsonTools.createDefaultMapper().readValue(paymentExtraJson, new TypeReference<>() {
+            });
         } catch (JsonProcessingException e) {
             log.error("ConnectorSDKCallbackService.parseExtra", e);
         }
