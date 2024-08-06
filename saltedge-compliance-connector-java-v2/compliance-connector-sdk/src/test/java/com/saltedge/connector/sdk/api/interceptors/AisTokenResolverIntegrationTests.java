@@ -95,9 +95,9 @@ public class AisTokenResolverIntegrationTests {
         ResponseEntity<ErrorResponse> response = doRequest(headers);
 
         // then
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
         ErrorResponse body = response.getBody();
         assertThat(body.errorClass).isEqualTo("TokenExpired");
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
     }
 
     @BeforeEach
