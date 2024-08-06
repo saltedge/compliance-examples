@@ -1,12 +1,20 @@
 # Salt Edge Compliance Connector SDK Changelog
 
-## 2.12.3 (2022-07-18)
+## 2.14.2 (2024-08-06)
+### Add
+- Add tpp_app_name to payment extra.
+
+## 2.12.4 (2024-08-06)
+### Add
+- Add tpp_app_name to payment extra.
+
+## 2.12.3 (2024-07-17)
 ### Dependency Upgrades
 - Add Detailed Consent feature
 - Update Spring Boot to 2.7.18
 - Update JJWT version to 0.12.6 (Fix CVE-2024-31033).
   
-## 2.14.1 (2024-07-12)
+## 2.14.1 (2024-07-11)
 ### Update
 - Update JJWT version to 0.12.6 (Fix CVE-2024-31033).
 
