@@ -81,7 +81,7 @@ public class ConfirmAisTokenServiceTests extends BaseServicesTests {
     }
 
     @Test
-    public void givenValidParamsWithBankConsent_whenConfirmToken_thenReturnTokenAndSendSuccess() {
+    public void givenValidParamsWithBankConsent_whenConfirmToken_thenReturnTokenAndSendSuccess() throws InterruptedException {
         // given
         AisToken aisToken = new AisToken();
         aisToken.sessionSecret = "sessionSecret";
@@ -117,7 +117,7 @@ public class ConfirmAisTokenServiceTests extends BaseServicesTests {
     }
 
     @Test
-    public void givenValidParamsWithNullBankConsent_whenConfirmToken_thenReturnTokenAndSendSuccess() {
+    public void givenValidParamsWithNullBankConsent_whenConfirmToken_thenReturnTokenAndSendSuccess() throws InterruptedException {
         // given
         AisToken aisToken = new AisToken();
         aisToken.tokenExpiresAt = null;
@@ -151,7 +151,7 @@ public class ConfirmAisTokenServiceTests extends BaseServicesTests {
     }
 
     @Test
-    public void givenValidParamsWithGlobalConsent_whenConfirmToken_thenReturnTokenAndSendSuccess() {
+    public void givenValidParamsWithGlobalConsent_whenConfirmToken_thenReturnTokenAndSendSuccess() throws InterruptedException {
         // given
         ProviderConsents globalConsents = new ProviderConsents(ProviderConsents.GLOBAL_CONSENT_VALUE);
         AisToken aisToken = new AisToken();

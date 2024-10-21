@@ -20,24 +20,45 @@
  */
 package com.saltedge.connector.example.controllers;
 
-import com.saltedge.connector.example.compliance_connector.ProviderService;
 import com.saltedge.connector.sdk.provider.ConnectorCallbackAbs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
-@RequestMapping(IndexController.BASE_PATH)
-public class IndexController {
-    public final static String BASE_PATH = "/";
-    private static final Logger log = LoggerFactory.getLogger(IndexController.class);
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+
+@RestController
+@RequestMapping(AsyncTestController.BASE_PATH)
+public class AsyncTestController {
+    public final static String BASE_PATH = "/async";
+    private static final Logger log = LoggerFactory.getLogger(AsyncTestController.class);
+    @Autowired
+    private ConnectorCallbackAbs sdkService;
 
     @GetMapping
-    public ModelAndView index() {
-        return new ModelAndView("redirect:" + UserAuthController.BASE_PATH);
+    public Map<String, String> testAsync() throws InterruptedException, ExecutionException {
+        log.info("Test Async Start");
+
+        CompletableFuture<String> token1 = sdkService.testAsync1();
+        CompletableFuture<String> token2 = sdkService.testAsync2();
+
+        log.info("Test Async Before result");
+//        // Wait until they are all done
+//        CompletableFuture.allOf(employeeAddress, employeeName, employeePhone).join();
+        log.info("token1--> {}", token1.get());
+        log.info("token2--> {}", token2.get());
+        log.info("Test Async End");
+
+        HashMap<String, String> map = new HashMap<>();
+        map.put("token1", token1.get());
+        map.put("token2", token2.get());
+        log.info("Test Async render");
+        return map;
     }
 }

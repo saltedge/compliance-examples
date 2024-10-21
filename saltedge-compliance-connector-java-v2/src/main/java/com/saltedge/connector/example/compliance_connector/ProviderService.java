@@ -119,7 +119,11 @@ public class ProviderService implements ProviderServiceAbs {
     @Override
     public void refresh(String providerCode, String sessionSecret) {
         log.info("Send refresh callback");
-        callbackService.sendSuccessCallback(sessionSecret, new SessionSuccessCallbackRequest());
+        try {
+            callbackService.sendSuccessCallback(sessionSecret, new SessionSuccessCallbackRequest());
+        } catch (InterruptedException e) {
+            log.error("refresh callback failed", e);
+        }
     }
 
     @Override

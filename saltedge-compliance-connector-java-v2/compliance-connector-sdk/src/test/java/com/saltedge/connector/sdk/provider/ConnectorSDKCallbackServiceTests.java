@@ -54,7 +54,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 @SpringBootTest
-public class ConnectorCallbackServiceTests {
+public class ConnectorSDKCallbackServiceTests {
 	@Autowired
 	private ConnectorSDKCallbackService testService;
 	@MockBean
@@ -316,7 +316,7 @@ public class ConnectorCallbackServiceTests {
 	}
 
 	@Test
-	public void givenExtra_whenOnSepaPaymentInitiationAuthorizationSuccess_thenReturnRedirect() throws JsonProcessingException {
+	public void givenExtra_whenOnSepaPaymentInitiationAuthorizationSuccess_thenReturnRedirect() throws JsonProcessingException, InterruptedException {
 		// given
 		HashMap<String, String> extraData = new HashMap<>();
 		extraData.put(SDKConstants.KEY_SESSION_SECRET, "sessionSecret");
@@ -332,7 +332,7 @@ public class ConnectorCallbackServiceTests {
 	}
 
 	@Test
-	public void givenExtra_whenOnInstantSepaPaymentInitiationAuthorizationSuccess_thenReturnRedirect() throws JsonProcessingException {
+	public void givenExtra_whenOnInstantSepaPaymentInitiationAuthorizationSuccess_thenReturnRedirect() throws JsonProcessingException, InterruptedException {
 		// given
 		HashMap<String, String> extraData = new HashMap<>();
 		extraData.put(SDKConstants.KEY_SESSION_SECRET, "sessionSecret");
@@ -348,7 +348,7 @@ public class ConnectorCallbackServiceTests {
 	}
 
 	@Test
-	public void givenExtra_whenOnFpsPaymentInitiationAuthorizationSuccess_thenReturnRedirect() throws JsonProcessingException {
+	public void givenExtra_whenOnFpsPaymentInitiationAuthorizationSuccess_thenReturnRedirect() throws JsonProcessingException, InterruptedException {
 		// given
 		HashMap<String, String> extraData = new HashMap<>();
 		extraData.put(SDKConstants.KEY_SESSION_SECRET, "sessionSecret");

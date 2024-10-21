@@ -26,6 +26,7 @@ import com.saltedge.connector.sdk.models.ParticipantAccount;
 import com.saltedge.connector.sdk.models.domain.AisToken;
 import jakarta.validation.constraints.NotEmpty;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Interface for call back communication from Provider application to Connector SDK Module
@@ -33,6 +34,9 @@ import java.util.List;
  * @see ConnectorSDKCallbackService
  */
 public interface ConnectorCallbackAbs {
+
+    public CompletableFuture<String> testAsync1() throws InterruptedException;
+    public CompletableFuture<String> testAsync2() throws InterruptedException;
 
     /**
      * Duplicate of isAccountSelectionRequired

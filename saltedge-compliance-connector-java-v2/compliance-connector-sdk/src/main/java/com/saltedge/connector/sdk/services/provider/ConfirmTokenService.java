@@ -22,6 +22,7 @@ package com.saltedge.connector.sdk.services.provider;
 
 import com.saltedge.connector.sdk.SDKConstants;
 import com.saltedge.connector.sdk.api.models.ProviderConsents;
+import com.saltedge.connector.sdk.api.models.responses.ErrorResponse;
 import com.saltedge.connector.sdk.callback.mapping.SessionSuccessCallbackRequest;
 import com.saltedge.connector.sdk.models.ConsentStatus;
 import com.saltedge.connector.sdk.models.domain.AisToken;
@@ -36,6 +37,7 @@ import org.springframework.validation.annotation.Validated;
 import jakarta.validation.constraints.NotEmpty;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Service designated for consent confirmation.
@@ -53,25 +55,31 @@ public class ConfirmTokenService extends BaseService {
       ProviderConsents providerOfferedConsents
   ) {
     AisToken token = findAisTokenBySessionSecret(sessionSecret);
-    if (token != null) {
-      try {
-        token.userId = userId;
-        token.status = ConsentStatus.CONFIRMED;
-        token.accessToken = accessToken;
-        if (token.tokenExpiresAt == null) {
-          token.tokenExpiresAt = Instant.now().plus(SDKConstants.CONSENT_MAX_PERIOD, ChronoUnit.DAYS);
-        }
-        if (token.notGlobalConsent()) {
-          token.providerOfferedConsents = (providerOfferedConsents == null)
-              ? ProviderConsents.buildAllAccountsConsent() : providerOfferedConsents;
-        }
-        aisTokensRepository.save(token);
+    if (token == null) return null;
 
-        sendAisSessionSuccess(token);
-      } catch (Exception e) {
-        log.error("confirmAisToken: ", e);
-        callbackService.sendFailCallback(token.sessionSecret, e);
+    try {
+      token.userId = userId;
+      token.status = ConsentStatus.CONFIRMED;
+      token.accessToken = accessToken;
+      if (token.tokenExpiresAt == null) {
+        token.tokenExpiresAt = Instant.now().plus(SDKConstants.CONSENT_MAX_PERIOD, ChronoUnit.DAYS);
       }
+      if (token.notGlobalConsent()) {
+        token.providerOfferedConsents = (providerOfferedConsents == null) ? ProviderConsents.buildAllAccountsConsent() : providerOfferedConsents;
+      }
+      aisTokensRepository.save(token);
+      // Sending callback to SE side
+      CompletableFuture<ErrorResponse> result = sendAisSessionSuccess(token);
+
+      if (result == null || result.get() == null) {
+        updateAisStatusSafe(token, ConsentStatus.CONFIRMED);
+      } else {
+        updateAisStatusSafe(token, ConsentStatus.FAILED);
+      }
+    } catch (Exception e) {
+      log.error("confirmAisToken: ", e);
+      updateAisStatusSafe(token, ConsentStatus.FAILED);
+      callbackService.sendFailCallback(token.sessionSecret, e);
     }
     return token;
   }
@@ -85,11 +93,14 @@ public class ConfirmTokenService extends BaseService {
     if (token != null) {
       try {
         token.userId = userId;
-        token.status = ConsentStatus.CONFIRMED;
         token.accessToken = accessToken;
         piisTokensRepository.save(token);
 
+        // Sending callback to SE side
         sendPiisSessionSuccess(token);
+
+        token.status = ConsentStatus.CONFIRMED;
+        piisTokensRepository.save(token);
       } catch (Exception e) {
         log.error("confirmPiisToken: ", e);
         callbackService.sendFailCallback(token.sessionSecret, e);
@@ -98,18 +109,37 @@ public class ConfirmTokenService extends BaseService {
     return token;
   }
 
-  private void sendAisSessionSuccess(AisToken token) {
-    SessionSuccessCallbackRequest params = new SessionSuccessCallbackRequest();
-    params.providerOfferedConsents = token.providerOfferedConsents;
-    params.token = token.accessToken;
-    params.userId = token.userId;
-    callbackService.sendSuccessCallback(token.sessionSecret, params);
+  private CompletableFuture<ErrorResponse> sendAisSessionSuccess(AisToken token) {
+    try {
+      SessionSuccessCallbackRequest params = new SessionSuccessCallbackRequest();
+      params.providerOfferedConsents = token.providerOfferedConsents;
+      params.token = token.accessToken;
+      params.userId = token.userId;
+      return callbackService.sendSuccessCallback(token.sessionSecret, params);
+    } catch (Exception ignored) {
+      return null;
+    }
+  }
+
+  private void updateAisStatusSafe(AisToken token, ConsentStatus status) {
+    try {
+      if (token.status == status) return;
+
+      token.status = status;
+      aisTokensRepository.save(token);
+    } catch (Exception e) {
+      log.error("updateAisStatusSafe:", e);
+    }
   }
 
   private void sendPiisSessionSuccess(PiisToken token) {
-    SessionSuccessCallbackRequest params = new SessionSuccessCallbackRequest();
-    params.token = token.accessToken;
-    params.userId = token.userId;
-    callbackService.sendSuccessCallback(token.sessionSecret, params);
+    try {
+      SessionSuccessCallbackRequest params = new SessionSuccessCallbackRequest();
+      params.token = token.accessToken;
+      params.userId = token.userId;
+      callbackService.sendSuccessCallback(token.sessionSecret, params);
+    } catch (Exception ignored) {
+
+    }
   }
 }

@@ -24,5 +24,5 @@ package com.saltedge.connector.sdk.models;
  * Statuses of consent
  */
 public enum ConsentStatus {
-    UNCONFIRMED, CONFIRMED, REVOKED
+    UNCONFIRMED, CONFIRMED, REVOKED, CANCELLED, FAILED
 }

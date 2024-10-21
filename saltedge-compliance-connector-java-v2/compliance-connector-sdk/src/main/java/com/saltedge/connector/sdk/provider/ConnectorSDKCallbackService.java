@@ -37,9 +37,11 @@ import com.saltedge.connector.sdk.services.provider.ConfirmTokenService;
 import com.saltedge.connector.sdk.services.provider.RevokeTokenByProviderService;
 import com.saltedge.connector.sdk.services.provider.TokensCollectorService;
 import com.saltedge.connector.sdk.tools.JsonTools;
+import com.saltedge.connector.sdk.tools.KeyTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
@@ -48,6 +50,7 @@ import jakarta.validation.constraints.NotEmpty;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 import static com.saltedge.connector.sdk.SDKConstants.PAYMENT_PRODUCT_FASTER_PAYMENT_SERVICE;
 import static com.saltedge.connector.sdk.SDKConstants.PAYMENT_PRODUCT_INSTANT_SEPA_CREDIT_TRANSFERS;
@@ -72,6 +75,26 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
     private SessionsCallbackService sessionsCallbackService;
     @Autowired
     private TokensCallbackService tokensCallbackService;
+
+    @Override
+    @Async
+    public CompletableFuture<String> testAsync1() throws InterruptedException {
+        log.info("testAsync1 start");
+        String result = KeyTools.generateToken(32);
+        Thread.sleep(5000L);
+        log.info("testAsync1 completed, {}", result);
+        return CompletableFuture.completedFuture(result);
+    }
+
+    @Override
+    @Async
+    public CompletableFuture<String> testAsync2() throws InterruptedException {
+        log.info("testAsync2 start");
+        String result = KeyTools.generateToken(32);
+        Thread.sleep(3000L);
+        log.info("testAsync2 completed, {}", result);
+        return CompletableFuture.completedFuture(result);
+    }
 
     /**
      * Duplicate of isAccountSelectionRequired
@@ -105,7 +128,8 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
     }
 
     /**
-     * Collect list of access tokens of active consents (AIS, PIIS)
+     * Collect list of access tokens of active consents (AIS, PIIS).
+     * Active - confirmed and non-expired consents.
      *
      * @param userId unique identifier of authenticated User
      * @return list of access tokens of active consents
@@ -116,8 +140,8 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
     }
 
     /**
-     * Provider notify Connector SDK Module about oAuth success authentication
-     * and provides user consent for accounts (balances/transactions)
+     * Provider notify Connector SDK Module about oAuth success authentication and authorization of consent.
+     *
      *
      * @param sessionSecret of User authorization session.
      * @param userId        of authenticated User.
@@ -142,7 +166,7 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
                 accessToken,
                 consents
         );
-        return (token == null) ? null : token.tppRedirectUrl;
+        return (token == null) ? null : token.tppRedirectUrlWithParams();
     }
 
     /**
@@ -193,7 +217,11 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
         String sessionSecret = paymentExtraMap.get(SDKConstants.KEY_SESSION_SECRET);
         String status = getFinalStatusOfPaymentProduct(paymentProduct);
         SessionSuccessCallbackRequest params = new SessionSuccessCallbackRequest(userId, status);
-        if (StringUtils.hasLength(sessionSecret)) sessionsCallbackService.sendSuccessCallback(sessionSecret, params);
+        try {
+            if (StringUtils.hasLength(sessionSecret)) sessionsCallbackService.sendSuccessCallback(sessionSecret, params);
+        } catch (Exception ignored) {
+
+        }
 
         return paymentExtraMap.getOrDefault(SDKConstants.KEY_RETURN_TO_URL, "");
     }

@@ -24,19 +24,19 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-freemarker:$springVersion"
     implementation "org.springframework.boot:spring-boot-starter-data-jpa:$springVersion"
     implementation "org.springframework.boot:spring-boot-starter-validation:$springVersion"
-    implementation 'com.h2database:h2:2.2.224'
+    implementation 'com.h2database:h2:2.3.232'
     implementation 'joda-time:joda-time:2.10.14'
 
     // COMPLIANCE-CONNECTOR-SDK AS LOCAL MODULE
-//    implementation project(':compliance-connector-sdk')
+    implementation project(':compliance-connector-sdk')
 
     // COMPLIANCE-CONNECTOR-SDK AS MAVEN CENTRAL DEPENDENCY
-    implementation 'com.saltedge.connector.sdk:compliance-connector-sdk:2.14.1'
-    def jjwtVersion = '0.12.6'
-    implementation "io.jsonwebtoken:jjwt-api:$jjwtVersion"
-    runtimeOnly "io.jsonwebtoken:jjwt-impl:$jjwtVersion"
-    runtimeOnly "io.jsonwebtoken:jjwt-jackson:$jjwtVersion"
-    implementation "io.jsonwebtoken:jjwt-jackson:$jjwtVersion"
+//    implementation 'com.saltedge.connector.sdk:compliance-connector-sdk:2.14.1'
+//    def jjwtVersion = '0.12.6'
+//    implementation "io.jsonwebtoken:jjwt-api:$jjwtVersion"
+//    runtimeOnly "io.jsonwebtoken:jjwt-impl:$jjwtVersion"
+//    runtimeOnly "io.jsonwebtoken:jjwt-jackson:$jjwtVersion"
+//    implementation "io.jsonwebtoken:jjwt-jackson:$jjwtVersion"
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.2'
