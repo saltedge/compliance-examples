@@ -22,7 +22,7 @@ package com.saltedge.connector.ob.sdk.model.jpa;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import javax.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotEmpty;
 
 public interface ConsentsRepository extends JpaRepository<Consent, Long> {
     Consent findFirstByAuthCode(@NotEmpty String authCode);

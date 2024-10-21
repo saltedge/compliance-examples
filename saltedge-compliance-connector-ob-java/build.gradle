@@ -1,15 +1,15 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '2.7.1'
-    id 'io.spring.dependency-management' version '1.0.12.RELEASE'
+    id 'org.springframework.boot' version '3.3.4'
+    id 'io.spring.dependency-management' version '1.1.5'
 }
 
 group 'com.saltedge.connector'
 version '1.2.0'
 
 compileJava {
-    sourceCompatibility = 1.8
-    targetCompatibility = 1.8
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
 }
 
 repositories {
@@ -18,20 +18,20 @@ repositories {
 }
 
 dependencies {
-    def springVersion = '2.7.1'
-    implementation 'org.jetbrains:annotations:23.0.0'
+    def springVersion = '3.3.4'
+    implementation 'org.jetbrains:annotations:24.1.0'
     implementation "org.springframework.boot:spring-boot-starter:$springVersion"
     implementation "org.springframework.boot:spring-boot-starter-web:$springVersion"
     implementation "org.springframework.boot:spring-boot-starter-freemarker:$springVersion"
     implementation "org.springframework.boot:spring-boot-starter-data-jpa:$springVersion"
     implementation "org.springframework.boot:spring-boot-starter-validation:$springVersion"
-    implementation "com.h2database:h2:2.1.214"
+    implementation "com.h2database:h2:2.2.224"
     implementation "joda-time:joda-time:2.10.14"
 
     implementation project(':compliance-connector-ob-sdk')
 
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.2'
     testImplementation "org.springframework.boot:spring-boot-starter-test:$springVersion"
 }
 

@@ -20,10 +20,9 @@
  */
 package com.saltedge.connector.ob.sdk.tools;
 
+import jakarta.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.validation.constraints.NotNull;
 import java.security.KeyFactory;
 import java.security.PrivateKey;
 import java.security.PublicKey;

@@ -25,7 +25,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.saltedge.connector.ob.sdk.SDKConstants;
 
-import javax.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotEmpty;
 
 /**
  * Open Banking Card identifier

@@ -20,7 +20,7 @@
  */
 package com.saltedge.connector.ob.sdk.provider.dto.account;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 import java.util.List;
 
 /**

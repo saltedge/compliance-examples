@@ -26,10 +26,10 @@ import com.saltedge.connector.ob.sdk.provider.dto.payment.ObPaymentInitiationDat
 import com.saltedge.connector.ob.sdk.provider.dto.payment.ObRiskData;
 import org.springframework.util.StringUtils;
 
-import javax.persistence.Column;
-import javax.persistence.Convert;
-import javax.persistence.Entity;
-import javax.validation.constraints.Size;
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
+import jakarta.persistence.Entity;
+import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.List;
