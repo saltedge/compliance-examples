@@ -22,7 +22,7 @@ package com.saltedge.connector.example.model;
 
 import com.saltedge.connector.example.model.converter.FeesConverter;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;

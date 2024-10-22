@@ -47,7 +47,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 
-import javax.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotEmpty;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
