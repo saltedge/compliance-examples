@@ -184,7 +184,7 @@ public class Consent extends BaseJpaEntity implements Serializable {
     }
 
     public boolean isAisConsent() {
-        return permissions != null;
+        return permissions != null && !permissions.isEmpty();
     }
 
     public boolean isPisConsent() {
