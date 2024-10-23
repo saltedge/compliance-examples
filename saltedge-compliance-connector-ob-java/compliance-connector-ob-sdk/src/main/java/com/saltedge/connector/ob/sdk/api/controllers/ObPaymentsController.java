@@ -41,8 +41,7 @@ import java.util.Objects;
 
 /**
  * Controller is responsible for implementing payment creation.
- *
- * https://priora.saltedge.com/docs/aspsp/ob/pis#connector-endpoints-payments-payments-payment
+ * <a href="https://priora.saltedge.com/docs/aspsp/ob/pis#connector-endpoints-payments-payments-payment">...</a>
  */
 @RestController
 @RequestMapping(ObPaymentsController.BASE_PATH)

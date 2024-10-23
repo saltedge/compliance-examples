@@ -70,6 +70,12 @@ public class AuthorizationUpdateRequest {
         this.accountIdentifiers = accountIdentifiers;
     }
 
+    public AuthorizationUpdateRequest(@NotBlank String userId, @NotBlank String status, ObAccountIdentifier debtorAccount) {
+        this.userId = userId;
+        this.status = status;
+        this.debtorAccount = debtorAccount;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
