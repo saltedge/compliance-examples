@@ -22,6 +22,7 @@ package com.saltedge.connector.sdk.services.provider;
 
 import com.saltedge.connector.sdk.models.ConsentStatus;
 import com.saltedge.connector.sdk.models.ParticipantAccount;
+import com.saltedge.connector.sdk.models.domain.AisToken;
 import com.saltedge.connector.sdk.models.domain.PiisToken;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -38,6 +39,14 @@ import java.util.stream.Stream;
 @Service
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class TokensCollectorService extends BaseService {
+
+    public List<AisToken> collectAisTokensByUserId(@NotEmpty String userId) {
+        return aisTokensRepository.findAllByUserId(userId);
+    }
+
+    public List<PiisToken> collectPiisTokensByUserId(@NotEmpty String userId) {
+        return piisTokensRepository.findAllByUserId(userId);
+    }
 
     public List<String> collectActiveAccessTokensByUserId(@NotEmpty String userId) {
         Stream<String> aisStream = aisTokensRepository.findAllByUserId(userId).stream()

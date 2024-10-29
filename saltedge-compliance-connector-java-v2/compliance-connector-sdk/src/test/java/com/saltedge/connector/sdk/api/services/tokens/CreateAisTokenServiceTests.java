@@ -69,7 +69,7 @@ public class CreateAisTokenServiceTests extends BaseServicesTests {
 
 		// then
 		final ArgumentCaptor<RuntimeException> captor = ArgumentCaptor.forClass(RuntimeException.class);
-		verify(sessionsCallbackService).sendFailCallback(eq("sessionSecret"), captor.capture());
+		verify(sessionsCallbackService).sendFailCallbackAsync(eq("sessionSecret"), captor.capture());
 		assertThat(((HttpErrorParams) captor.getValue()).getErrorClass()).isEqualTo("InvalidAuthorizationType");
 		verifyNoInteractions(aisTokensRepository);
 	}
@@ -88,7 +88,7 @@ public class CreateAisTokenServiceTests extends BaseServicesTests {
 
 		// then
 		final ArgumentCaptor<SessionUpdateCallbackRequest> callbackCaptor = ArgumentCaptor.forClass(SessionUpdateCallbackRequest.class);
-		verify(sessionsCallbackService).sendUpdateCallback(eq("sessionSecret"), callbackCaptor.capture());
+		verify(sessionsCallbackService).sendUpdateCallbackAsync(eq("sessionSecret"), callbackCaptor.capture());
 		assertThat(callbackCaptor.getValue().status).isEqualTo(SDKConstants.STATUS_RECEIVED);
 		assertThat(callbackCaptor.getValue().redirectUrl).isEqualTo("http://example.com?session_secret=sessionSecret");
 
@@ -113,7 +113,7 @@ public class CreateAisTokenServiceTests extends BaseServicesTests {
 
 		// then
 		final ArgumentCaptor<SessionUpdateCallbackRequest> callbackCaptor = ArgumentCaptor.forClass(SessionUpdateCallbackRequest.class);
-		verify(sessionsCallbackService).sendUpdateCallback(eq("sessionSecret"), callbackCaptor.capture());
+		verify(sessionsCallbackService).sendUpdateCallbackAsync(eq("sessionSecret"), callbackCaptor.capture());
 		assertThat(callbackCaptor.getValue().status).isEqualTo(SDKConstants.STATUS_RECEIVED);
 		assertThat(callbackCaptor.getValue().redirectUrl).isEqualTo("http://example.com?session_secret=sessionSecret");
 

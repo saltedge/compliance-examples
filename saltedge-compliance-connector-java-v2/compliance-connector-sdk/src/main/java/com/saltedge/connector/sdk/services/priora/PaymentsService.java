@@ -51,83 +51,86 @@ import static com.saltedge.connector.sdk.SDKConstants.PAYMENT_PRODUCT_FASTER_PAY
 @Service
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class PaymentsService extends BaseService {
-  private static final Logger log = LoggerFactory.getLogger(PaymentsService.class);
+    private static final Logger log = LoggerFactory.getLogger(PaymentsService.class);
 
-  @Async
-  public void createPayment(@NotNull CreatePaymentRequest paymentRequest) {
-    try {
-      PaymentOrder order = paymentRequest.getPaymentOrder();
-      String extraData = createExtraData(
-        paymentRequest.sessionSecret,
-        paymentRequest.returnToUrl,
-        order.endToEndIdentification
-      );
+    @Async
+    public void createPayment(@NotNull CreatePaymentRequest paymentRequest) {
+        try {
+            PaymentOrder order = paymentRequest.getPaymentOrder();
+            String extraData = createExtraData(
+                    paymentRequest.getSessionSecret(),
+                    paymentRequest.getAppName(),
+                    paymentRequest.getReturnToUrl(),
+                    order.getEndToEndIdentification()
+            );
 
-      ParticipantAccount debtorAccount = order.getDebtorAccount();
-      Optional<ParticipantAccount> optDebtorAccount = Optional.ofNullable(debtorAccount);
+            ParticipantAccount debtorAccount = order.getDebtorAccount();
+            Optional<ParticipantAccount> optDebtorAccount = Optional.ofNullable(debtorAccount);
 
-      String paymentAuthenticationUrl;
-      if (paymentRequest.getPaymentProduct().equals(PAYMENT_PRODUCT_FASTER_PAYMENT_SERVICE)) {
-        paymentAuthenticationUrl = providerService.createFPSPayment(
-            paymentRequest.getPaymentProduct(),
-            order.getCreditorAccount().getBban(),
-            order.getCreditorAccount().getSortCode(), //add sort code
-            order.getCreditorName(),
-            order.getCreditorAddress(),
-            order.getCreditorAgentName(),
-            optDebtorAccount.map(ParticipantAccount::getBban).orElse(null),
-            optDebtorAccount.map(ParticipantAccount::getSortCode).orElse(null),
-            order.getInstructedAmount().getAmount(),
-            order.getInstructedAmount().getCurrency(),
-            order.getRemittanceInformationUnstructured(),
-            extraData,
-            paymentRequest.psuIpAddress
-        );
-      } else {
-        paymentAuthenticationUrl = providerService.createPayment(
-            paymentRequest.getPaymentProduct(),
-            order.getCreditorAccount().getIban(),
-            order.getCreditorAccount().getBic(),
-            order.getCreditorName(),
-            order.getCreditorAddress(),
-            order.getCreditorAgentName(),
-            optDebtorAccount.map(ParticipantAccount::getIban).orElse(null),
-            optDebtorAccount.map(ParticipantAccount::getBic).orElse(null),
-            order.getInstructedAmount().getAmount(),
-            order.getInstructedAmount().getCurrency(),
-            order.getRemittanceInformationUnstructured(),
-            extraData,
-            paymentRequest.psuIpAddress
-        );
-      }
+            String paymentAuthenticationUrl;
+            if (paymentRequest.getPaymentProduct().equals(PAYMENT_PRODUCT_FASTER_PAYMENT_SERVICE)) {
+                paymentAuthenticationUrl = providerService.createFPSPayment(
+                        paymentRequest.getPaymentProduct(),
+                        order.getCreditorAccount().getBban(),
+                        order.getCreditorAccount().getSortCode(), //add sort code
+                        order.getCreditorName(),
+                        order.getCreditorAddress(),
+                        order.getCreditorAgentName(),
+                        optDebtorAccount.map(ParticipantAccount::getBban).orElse(null),
+                        optDebtorAccount.map(ParticipantAccount::getSortCode).orElse(null),
+                        order.getInstructedAmount().getAmount(),
+                        order.getInstructedAmount().getCurrency(),
+                        order.getRemittanceInformationUnstructured(),
+                        extraData,
+                        paymentRequest.psuIpAddress
+                );
+            } else {
+                paymentAuthenticationUrl = providerService.createPayment(
+                        paymentRequest.getPaymentProduct(),
+                        order.getCreditorAccount().getIban(),
+                        order.getCreditorAccount().getBic(),
+                        order.getCreditorName(),
+                        order.getCreditorAddress(),
+                        order.getCreditorAgentName(),
+                        optDebtorAccount.map(ParticipantAccount::getIban).orElse(null),
+                        optDebtorAccount.map(ParticipantAccount::getBic).orElse(null),
+                        order.getInstructedAmount().getAmount(),
+                        order.getInstructedAmount().getCurrency(),
+                        order.getRemittanceInformationUnstructured(),
+                        extraData,
+                        paymentRequest.psuIpAddress
+                );
+            }
 
-      if (StringUtils.hasLength(paymentAuthenticationUrl)) {
-        SessionUpdateCallbackRequest params = new SessionUpdateCallbackRequest(
-            paymentAuthenticationUrl,
-            SDKConstants.STATUS_RCVD
-        );
-        sessionCallbackService.sendUpdateCallback(paymentRequest.sessionSecret, params);
-      } else {
-        sessionCallbackService.sendFailCallback(paymentRequest.sessionSecret, new NotFound.PaymentNotCreated());
-      }
-    } catch (Exception e) {
-      log.error("PaymentsService.createPayment:", e);
-      if (e instanceof HttpErrorParams) sessionCallbackService.sendFailCallback(paymentRequest.sessionSecret, e);
-      else sessionCallbackService.sendFailCallback(paymentRequest.sessionSecret, new NotFound.PaymentNotCreated());
+            if (StringUtils.hasLength(paymentAuthenticationUrl)) {
+                SessionUpdateCallbackRequest params = new SessionUpdateCallbackRequest(
+                        paymentAuthenticationUrl,
+                        SDKConstants.STATUS_RCVD
+                );
+                sessionCallbackService.sendUpdateCallbackAsync(paymentRequest.sessionSecret, params);
+            } else {
+                sessionCallbackService.sendFailCallbackAsync(paymentRequest.sessionSecret, new NotFound.PaymentNotCreated());
+            }
+        } catch (Exception e) {
+            log.error("PaymentsService.createPayment:", e);
+            if (e instanceof HttpErrorParams) sessionCallbackService.sendFailCallbackAsync(paymentRequest.sessionSecret, e);
+            else sessionCallbackService.sendFailCallbackAsync(paymentRequest.sessionSecret, new NotFound.PaymentNotCreated());
+        }
     }
-  }
 
-  private String createExtraData(
-    @NotEmpty String sessionSecret,
-    String returnToUrl,
-    String endToEndIdentification
-  ) throws JsonProcessingException {
-    HashMap<String, String> result = new HashMap<>();
-    result.put(SDKConstants.KEY_SESSION_SECRET, sessionSecret);
-    if (StringUtils.hasLength(returnToUrl)) result.put(SDKConstants.KEY_RETURN_TO_URL, returnToUrl);
-    if (StringUtils.hasLength(endToEndIdentification)) {
-      result.put(SDKConstants.KEY_END_TO_END_IDENTIFICATION, endToEndIdentification);
+    private String createExtraData(
+            @NotEmpty String sessionSecret,
+            @NotEmpty String tppAppName,
+            String returnToUrl,
+            String endToEndIdentification
+    ) throws JsonProcessingException {
+        HashMap<String, String> result = new HashMap<>();
+        result.put(SDKConstants.KEY_SESSION_SECRET, sessionSecret);
+        result.put(SDKConstants.KEY_TPP_APP_NAME, tppAppName);
+        if (StringUtils.hasLength(returnToUrl)) result.put(SDKConstants.KEY_RETURN_TO_URL, returnToUrl);
+        if (StringUtils.hasLength(endToEndIdentification)) {
+            result.put(SDKConstants.KEY_END_TO_END_IDENTIFICATION, endToEndIdentification);
+        }
+        return JsonTools.createDefaultMapper().writeValueAsString(result);
     }
-    return JsonTools.createDefaultMapper().writeValueAsString(result);
-  }
 }

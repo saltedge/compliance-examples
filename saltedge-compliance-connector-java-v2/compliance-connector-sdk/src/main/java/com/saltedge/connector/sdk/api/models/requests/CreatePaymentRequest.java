@@ -37,114 +37,114 @@ import static com.saltedge.connector.sdk.SDKConstants.KEY_PROVIDER_CODE;
  */
 @JsonIgnoreProperties
 public class CreatePaymentRequest extends PrioraBaseRequest {
-  /**
-   * TPP application name.
-   */
-  @JsonProperty(KEY_APP_NAME)
-  @NotEmpty
-  public String appName;
+    /**
+     * TPP application name.
+     */
+    @JsonProperty(KEY_APP_NAME)
+    @NotEmpty
+    public String appName;
 
-  /**
-   * Provider identifier.
-   */
-  @JsonProperty(KEY_PROVIDER_CODE)
-  @NotEmpty
-  public String providerCode;
+    /**
+     * Provider identifier.
+     */
+    @JsonProperty(KEY_PROVIDER_CODE)
+    @NotEmpty
+    public String providerCode;
 
-  /**
-   * Ip Address of PSU.
-   */
-  @JsonProperty("psu_ip_address")
-  @NotEmpty
-  public String psuIpAddress;
+    /**
+     * Ip Address of PSU.
+     */
+    @JsonProperty("psu_ip_address")
+    @NotEmpty
+    public String psuIpAddress;
 
-  /**
-   * The addressed payment product.
-   * Allowed values: sepa-credit-transfers, instant-sepa-credit-transfers, target-2-payments, faster-payment-service, internal-transfer
-   */
-  @JsonProperty("payment_product")
-  @NotEmpty
-  public String paymentProduct;
+    /**
+     * The addressed payment product.
+     * Allowed values: sepa-credit-transfers, instant-sepa-credit-transfers, target-2-payments, faster-payment-service, internal-transfer
+     */
+    @JsonProperty("payment_product")
+    @NotEmpty
+    public String paymentProduct;
 
-  /**
-   * Wrapper for payment data.
-   */
-  @JsonProperty("payment")
-  @NotNull
-  @Valid
-  public PaymentOrder paymentOrder;
+    /**
+     * Wrapper for payment data.
+     */
+    @JsonProperty("payment")
+    @NotNull
+    @Valid
+    public PaymentOrder paymentOrder;
 
-  /**
-   * The URL that the PSU will be redirected to after he finishes the authentication process on provider’s side.
-   */
-  @JsonProperty(SDKConstants.KEY_REDIRECT_URL)
-  @NotEmpty
-  public String returnToUrl;
+    /**
+     * The URL that the PSU will be redirected to after he finishes the authentication process on provider’s side.
+     */
+    @JsonProperty(SDKConstants.KEY_REDIRECT_URL)
+    @NotEmpty
+    public String returnToUrl;
 
-  public CreatePaymentRequest() {
-  }
+    public CreatePaymentRequest() {
+    }
 
-  public CreatePaymentRequest(
-    @NotEmpty String appName,
-    @NotEmpty String providerCode,
-    @NotEmpty String returnToUrl,
-    @NotNull @Valid PaymentOrder paymentOrder,
-    @NotEmpty String paymentProduct,
-    @NotEmpty String psuIpAddress
-  ) {
-    this.appName = appName;
-    this.providerCode = providerCode;
-    this.paymentProduct = paymentProduct;
-    this.paymentOrder = paymentOrder;
-    this.returnToUrl = returnToUrl;
-    this.psuIpAddress = psuIpAddress;
-  }
+    public CreatePaymentRequest(
+            @NotEmpty String appName,
+            @NotEmpty String providerCode,
+            @NotEmpty String returnToUrl,
+            @NotNull @Valid PaymentOrder paymentOrder,
+            @NotEmpty String paymentProduct,
+            @NotEmpty String psuIpAddress
+    ) {
+        this.appName = appName;
+        this.providerCode = providerCode;
+        this.paymentProduct = paymentProduct;
+        this.paymentOrder = paymentOrder;
+        this.returnToUrl = returnToUrl;
+        this.psuIpAddress = psuIpAddress;
+    }
 
-  public String getAppName() {
-    return appName;
-  }
+    public String getAppName() {
+        return appName;
+    }
 
-  public void setAppName(String appName) {
-    this.appName = appName;
-  }
+    public void setAppName(String appName) {
+        this.appName = appName;
+    }
 
-  public String getProviderCode() {
-    return providerCode;
-  }
+    public String getProviderCode() {
+        return providerCode;
+    }
 
-  public void setProviderCode(String providerCode) {
-    this.providerCode = providerCode;
-  }
+    public void setProviderCode(String providerCode) {
+        this.providerCode = providerCode;
+    }
 
-  public String getPaymentProduct() {
-    return paymentProduct;
-  }
+    public String getPaymentProduct() {
+        return paymentProduct;
+    }
 
-  public void setPaymentProduct(String paymentProduct) {
-    this.paymentProduct = paymentProduct;
-  }
+    public void setPaymentProduct(String paymentProduct) {
+        this.paymentProduct = paymentProduct;
+    }
 
-  public PaymentOrder getPaymentOrder() {
-    return paymentOrder;
-  }
+    public PaymentOrder getPaymentOrder() {
+        return paymentOrder;
+    }
 
-  public void setPaymentOrder(PaymentOrder paymentOrder) {
-    this.paymentOrder = paymentOrder;
-  }
+    public void setPaymentOrder(PaymentOrder paymentOrder) {
+        this.paymentOrder = paymentOrder;
+    }
 
-  public String getReturnToUrl() {
-    return returnToUrl;
-  }
+    public String getReturnToUrl() {
+        return returnToUrl;
+    }
 
-  public void setReturnToUrl(String returnToUrl) {
-    this.returnToUrl = returnToUrl;
-  }
+    public void setReturnToUrl(String returnToUrl) {
+        this.returnToUrl = returnToUrl;
+    }
 
-  public String getPsuIpAddress() {
-    return psuIpAddress;
-  }
+    public String getPsuIpAddress() {
+        return psuIpAddress;
+    }
 
-  public void setPsuIpAddress(String psuIpAddress) {
-    this.psuIpAddress = psuIpAddress;
-  }
+    public void setPsuIpAddress(String psuIpAddress) {
+        this.psuIpAddress = psuIpAddress;
+    }
 }

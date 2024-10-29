@@ -26,7 +26,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.saltedge.connector.ob.sdk.SDKConstants;
 import com.saltedge.connector.ob.sdk.provider.dto.account.ObAccountIdentifier;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 import java.util.List;
 import java.util.Objects;
 
@@ -68,6 +68,12 @@ public class AuthorizationUpdateRequest {
         this.userId = userId;
         this.status = status;
         this.accountIdentifiers = accountIdentifiers;
+    }
+
+    public AuthorizationUpdateRequest(@NotBlank String userId, @NotBlank String status, ObAccountIdentifier debtorAccount) {
+        this.userId = userId;
+        this.status = status;
+        this.debtorAccount = debtorAccount;
     }
 
     @Override

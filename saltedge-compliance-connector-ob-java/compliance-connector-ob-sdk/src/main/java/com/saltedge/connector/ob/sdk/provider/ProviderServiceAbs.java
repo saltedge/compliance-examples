@@ -25,7 +25,7 @@ import com.saltedge.connector.ob.sdk.provider.dto.payment.ObPaymentInitiationDat
 import com.saltedge.connector.ob.sdk.provider.dto.payment.ObRiskData;
 import org.jetbrains.annotations.NotNull;
 
-import javax.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotEmpty;
 import java.time.LocalDate;
 import java.util.List;
 

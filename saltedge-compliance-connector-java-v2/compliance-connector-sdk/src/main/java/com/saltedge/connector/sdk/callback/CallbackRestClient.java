@@ -22,6 +22,7 @@ package com.saltedge.connector.sdk.callback;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.saltedge.connector.sdk.SDKConstants;
+import com.saltedge.connector.sdk.api.models.responses.ErrorResponse;
 import com.saltedge.connector.sdk.config.ApplicationProperties;
 import com.saltedge.connector.sdk.config.PrioraProperties;
 import com.saltedge.connector.sdk.tools.JsonTools;
@@ -85,16 +86,20 @@ public abstract class CallbackRestClient {
         return headersMap;
     }
 
-    public void doCallbackRequest(String url, LinkedMultiValueMap<String, String> headers) {
+    public ErrorResponse doCallbackRequest(String url, LinkedMultiValueMap<String, String> headers) {
         try {
             headers.add("X-HTTP-Method-Override", "PATCH");
             ResponseEntity<Object> response = callbackRestTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(headers), Object.class);
+            return null;
         } catch (HttpClientErrorException e) {
-            getLogger().error("HttpClientErrorException:", e);
+            getLogger().error("HttpClientErrorException (4xx):", e);
+            return new ErrorResponse(e);
         } catch (HttpServerErrorException e) {
-            getLogger().error("HttpServerErrorException:", e);
+            getLogger().error("HttpServerErrorException (5xx):", e);
+            return new ErrorResponse(e);
         } catch (UnknownHttpStatusCodeException e) {
             getLogger().error("UnknownHttpStatusCodeException:", e);
+            return new ErrorResponse(e);
         }
     }
 

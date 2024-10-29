@@ -26,6 +26,7 @@ import com.saltedge.connector.sdk.models.ParticipantAccount;
 import com.saltedge.connector.sdk.models.domain.AisToken;
 import javax.validation.constraints.NotEmpty;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Interface for call back communication from Provider application to Connector SDK Module
@@ -33,7 +34,6 @@ import java.util.List;
  * @see ConnectorSDKCallbackService
  */
 public interface ConnectorCallbackAbs {
-
     /**
      * Duplicate of isAccountSelectionRequired
      */
@@ -54,6 +54,22 @@ public interface ConnectorCallbackAbs {
      * @return Ais Consent
      */
     AisToken getAisToken(@NotEmpty String sessionSecret);
+
+    /**
+     * Collect list of all AIS Consents by user id.
+     *
+     * @param userId unique identifier of authenticated User
+     * @return list of AIS Consents
+     */
+    List<AisToken> getAisTokens(@NotEmpty String userId);
+
+    /**
+     * Collect list of all PIIS Consents by user id.
+     *
+     * @param userId unique identifier of authenticated User
+     * @return list of PIIS Consents
+     */
+    List<AisToken> getPiisTokens(@NotEmpty String userId);
 
     /**
      * Collect list of access tokens of active consents (AIS, PIIS)

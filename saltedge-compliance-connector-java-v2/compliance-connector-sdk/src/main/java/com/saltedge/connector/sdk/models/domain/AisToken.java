@@ -34,7 +34,7 @@ import java.io.Serializable;
 import java.time.Instant;
 
 /**
- * Database entity for saving data about connection between Connector and Salt Edge Compliance Solution
+ * Database entity for saving data about Consent between Connector and Salt Edge Compliance Solution
  */
 @Entity(name = "Token")
 public class AisToken extends BaseEntity implements Serializable {
@@ -103,5 +103,9 @@ public class AisToken extends BaseEntity implements Serializable {
 
     public boolean isRevoked() {
         return status == ConsentStatus.REVOKED;
+    }
+
+    public String tppRedirectUrlWithParams() {
+        return tppRedirectUrl;
     }
 }

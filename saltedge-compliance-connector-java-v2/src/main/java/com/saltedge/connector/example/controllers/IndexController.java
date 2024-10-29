@@ -35,10 +35,6 @@ import org.springframework.web.servlet.ModelAndView;
 public class IndexController {
     public final static String BASE_PATH = "/";
     private static final Logger log = LoggerFactory.getLogger(IndexController.class);
-    @Autowired
-    private ProviderService providerService;
-    @Autowired
-    private ConnectorCallbackAbs providerCallback;
 
     @GetMapping
     public ModelAndView index() {

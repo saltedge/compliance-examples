@@ -47,7 +47,7 @@ public class TokensCallbackService extends CallbackRestClient {
      * @param accessToken unique token of current consent
      */
     @Async
-    public void sendRevokeAisTokenCallback(@NotEmpty String accessToken) {
+    public void sendRevokeAisTokenCallbackAsync(@NotEmpty String accessToken) {
         String url = createCallbackRequestUrl(SDKConstants.CALLBACK_BASE_PATH + "/tokens/revoke");
         HashMap<String, String> params = new HashMap<>();
         LinkedMultiValueMap<String, String> headers = createCallbackRequestHeaders(params);

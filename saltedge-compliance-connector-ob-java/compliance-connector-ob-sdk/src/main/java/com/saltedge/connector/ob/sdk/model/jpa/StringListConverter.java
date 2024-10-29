@@ -23,7 +23,7 @@ package com.saltedge.connector.ob.sdk.model.jpa;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.persistence.AttributeConverter;
+import jakarta.persistence.AttributeConverter;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;

@@ -67,15 +67,15 @@ public class CreatePiisTokenService extends BaseService {
       }
     } catch (Exception e) {
       log.error("startAuthorization:", e);
-      if (e instanceof HttpErrorParams) sessionCallbackService.sendFailCallback(params.sessionSecret, e);
-      else sessionCallbackService.sendFailCallback(params.sessionSecret, new NotFound.AccountNotFound());
+      if (e instanceof HttpErrorParams) sessionCallbackService.sendFailCallbackAsync(params.sessionSecret, e);
+      else sessionCallbackService.sendFailCallbackAsync(params.sessionSecret, new NotFound.AccountNotFound());
     }
   }
 
   private void oAuthAuthorize(PiisToken token) {
     String url = providerService.getFundsConfirmationAuthorizationPageUrl(token.sessionSecret);
     SessionUpdateCallbackRequest params = new SessionUpdateCallbackRequest(url, SDKConstants.STATUS_RECEIVED);
-    sessionCallbackService.sendUpdateCallback(token.sessionSecret, params);
+    sessionCallbackService.sendUpdateCallbackAsync(token.sessionSecret, params);
   }
 
   private PiisToken initToken(AuthorizationType authType, CreatePiisTokenRequest requestParams) {

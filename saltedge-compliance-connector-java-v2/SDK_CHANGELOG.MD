@@ -1,6 +1,26 @@
 # Salt Edge Compliance Connector SDK Changelog
 
-## 2.12.3 (2022-07-18)
+## 2.12.4 (2024-10-29)
+### Add
+- Add getAisTokens, getPiisTokens methods.
+### Update
+- Fix consent status management for edge cases.
+
+## 2.14.3 (2024-10-29)
+### Add
+- Add getAisTokens, getPiisTokens methods.
+### Update
+- Fix consent status management for edge cases.
+
+## 2.14.2 (2024-08-06)
+### Add
+- Add tpp_app_name to payment extra.
+
+## 2.12.4 (2024-08-06)
+### Add
+- Add tpp_app_name to payment extra.
+
+## 2.12.3 (2024-07-18)
 ### Dependency Upgrades
 - Add Detailed Consent feature
 - Update Spring Boot to 2.7.18
