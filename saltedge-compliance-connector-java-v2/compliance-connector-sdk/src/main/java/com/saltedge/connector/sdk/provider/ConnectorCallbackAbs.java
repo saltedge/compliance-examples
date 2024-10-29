@@ -34,10 +34,6 @@ import java.util.concurrent.CompletableFuture;
  * @see ConnectorSDKCallbackService
  */
 public interface ConnectorCallbackAbs {
-
-    public CompletableFuture<String> testAsync1() throws InterruptedException;
-    public CompletableFuture<String> testAsync2() throws InterruptedException;
-
     /**
      * Duplicate of isAccountSelectionRequired
      */
@@ -58,6 +54,22 @@ public interface ConnectorCallbackAbs {
      * @return Ais Consent
      */
     AisToken getAisToken(@NotEmpty String sessionSecret);
+
+    /**
+     * Collect list of all AIS Consents by user id.
+     *
+     * @param userId unique identifier of authenticated User
+     * @return list of AIS Consents
+     */
+    List<AisToken> getAisTokens(@NotEmpty String userId);
+
+    /**
+     * Collect list of all PIIS Consents by user id.
+     *
+     * @param userId unique identifier of authenticated User
+     * @return list of PIIS Consents
+     */
+    List<AisToken> getPiisTokens(@NotEmpty String userId);
 
     /**
      * Collect list of access tokens of active consents (AIS, PIIS)

@@ -48,7 +48,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 /**
  * Example (Proof of concept) of Provider Service,
@@ -120,7 +119,7 @@ public class ProviderService implements ProviderServiceAbs {
     public void refresh(String providerCode, String sessionSecret) {
         log.info("Send refresh callback");
         try {
-            callbackService.sendSuccessCallback(sessionSecret, new SessionSuccessCallbackRequest());
+            callbackService.sendSuccessCallbackAsync(sessionSecret, new SessionSuccessCallbackRequest());
         } catch (InterruptedException e) {
             log.error("refresh callback failed", e);
         }

@@ -57,7 +57,7 @@ public class TokensCallbackServiceTest {
     @Test
     public void givenMockingRestTemplate_whenSendRevokeTokenCallback_shouldBeCalledExchangeWithParams() {
         // when
-        service.sendRevokeAisTokenCallback("accessToken");
+        service.sendRevokeAisTokenCallbackAsync("accessToken");
 
         // then
         ArgumentCaptor<String> urlCaptor = ArgumentCaptor.forClass(String.class);

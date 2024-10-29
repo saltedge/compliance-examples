@@ -27,10 +27,12 @@ import com.saltedge.connector.sdk.callback.mapping.SessionSuccessCallbackRequest
 import com.saltedge.connector.sdk.models.ConsentStatus;
 import com.saltedge.connector.sdk.models.domain.AisToken;
 import com.saltedge.connector.sdk.models.domain.PiisToken;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -48,15 +50,45 @@ import java.util.concurrent.CompletableFuture;
 public class ConfirmTokenService extends BaseService {
   private static final Logger log = LoggerFactory.getLogger(ConfirmTokenService.class);
 
-  public AisToken confirmAisToken(
+  // Return tppRedirectUrl url
+  public String confirmAisToken(
       @NotEmpty String sessionSecret,
       @NotEmpty String userId,
       @NotEmpty String accessToken,
       ProviderConsents providerOfferedConsents
   ) {
     AisToken token = findAisTokenBySessionSecret(sessionSecret);
-    if (token == null) return null;
+    if (token == null || token.id == null) {
+      return null;
+    } else {
+      confirmAisTokenAsync(token.id, userId, accessToken, providerOfferedConsents);
+      return token.tppRedirectUrl;
+    }
+  }
 
+  // Return tppRedirectUrl url
+  public String confirmPiisToken(
+      @NotEmpty String sessionSecret,
+      @NotEmpty String userId,
+      @NotEmpty String accessToken
+  ) {
+    PiisToken token = piisTokensRepository.findFirstBySessionSecret(sessionSecret);
+    if (token == null) {
+      return null;
+    } else {
+      confirmPiisTokenAsync(token.id, userId, accessToken);
+      return token.tppRedirectUrl;
+    }
+  }
+
+  @Async
+  private void confirmAisTokenAsync(
+          Long consentId,
+          @NotEmpty String userId,
+          @NotEmpty String accessToken,
+          ProviderConsents providerOfferedConsents
+  ) {
+    AisToken token = aisTokensRepository.findById(consentId).orElseThrow();
     try {
       token.userId = userId;
       token.status = ConsentStatus.CONFIRMED;
@@ -68,51 +100,51 @@ public class ConfirmTokenService extends BaseService {
         token.providerOfferedConsents = (providerOfferedConsents == null) ? ProviderConsents.buildAllAccountsConsent() : providerOfferedConsents;
       }
       aisTokensRepository.save(token);
+
       // Sending callback to SE side
-      CompletableFuture<ErrorResponse> result = sendAisSessionSuccess(token);
-
-      if (result == null || result.get() == null) {
-        updateAisStatusSafe(token, ConsentStatus.CONFIRMED);
-      } else {
-        updateAisStatusSafe(token, ConsentStatus.FAILED);
-      }
+      ErrorResponse result = sendAisSessionSuccess(token);
+      ConsentStatus status = (result == null) ? ConsentStatus.CONFIRMED : ConsentStatus.FAILED;
+      updateAisStatusSafe(token, status);
     } catch (Exception e) {
-      log.error("confirmAisToken: ", e);
+      log.error("confirmAisTokenAsync: ", e);
       updateAisStatusSafe(token, ConsentStatus.FAILED);
-      callbackService.sendFailCallback(token.sessionSecret, e);
+      callbackService.sendFailCallbackAsync(token.sessionSecret, e);
     }
-    return token;
   }
 
-  public PiisToken confirmPiisToken(
-      @NotEmpty String sessionSecret,
-      @NotEmpty String userId,
-      @NotEmpty String accessToken
-  ) {
-    PiisToken token = piisTokensRepository.findFirstBySessionSecret(sessionSecret);
-    if (token != null) {
-      try {
-        token.userId = userId;
-        token.accessToken = accessToken;
-        piisTokensRepository.save(token);
+  @Async
+  private void confirmPiisTokenAsync(Long consentId, @NotEmpty String userId, @NotEmpty String accessToken) {
+    PiisToken token = piisTokensRepository.findById(consentId).orElseThrow();
+    try {
+      token.userId = userId;
+      token.accessToken = accessToken;
+      piisTokensRepository.save(token);
 
-        // Sending callback to SE side
-        sendPiisSessionSuccess(token);
-
-        token.status = ConsentStatus.CONFIRMED;
-        piisTokensRepository.save(token);
-      } catch (Exception e) {
-        log.error("confirmPiisToken: ", e);
-        callbackService.sendFailCallback(token.sessionSecret, e);
-      }
+      // Sending callback to SE side
+      ErrorResponse result = sendPiisSessionSuccess(token);
+      ConsentStatus status = (result == null) ? ConsentStatus.CONFIRMED : ConsentStatus.FAILED;
+      updatePiisStatusSafe(token, status);
+    } catch (Exception e) {
+      log.error("confirmPiisToken: ", e);
+      callbackService.sendFailCallbackAsync(token.sessionSecret, e);
     }
-    return token;
   }
 
-  private CompletableFuture<ErrorResponse> sendAisSessionSuccess(AisToken token) {
+  private @Nullable ErrorResponse sendAisSessionSuccess(AisToken token) {
     try {
       SessionSuccessCallbackRequest params = new SessionSuccessCallbackRequest();
       params.providerOfferedConsents = token.providerOfferedConsents;
+      params.token = token.accessToken;
+      params.userId = token.userId;
+      return callbackService.sendSuccessCallback(token.sessionSecret, params);
+    } catch (Exception ignored) {
+      return null;
+    }
+  }
+
+  private @Nullable ErrorResponse sendPiisSessionSuccess(PiisToken token) {
+    try {
+      SessionSuccessCallbackRequest params = new SessionSuccessCallbackRequest();
       params.token = token.accessToken;
       params.userId = token.userId;
       return callbackService.sendSuccessCallback(token.sessionSecret, params);
@@ -132,14 +164,14 @@ public class ConfirmTokenService extends BaseService {
     }
   }
 
-  private void sendPiisSessionSuccess(PiisToken token) {
+  private void updatePiisStatusSafe(PiisToken token, ConsentStatus status) {
     try {
-      SessionSuccessCallbackRequest params = new SessionSuccessCallbackRequest();
-      params.token = token.accessToken;
-      params.userId = token.userId;
-      callbackService.sendSuccessCallback(token.sessionSecret, params);
-    } catch (Exception ignored) {
+      if (token.status == status) return;
 
+      token.status = status;
+      piisTokensRepository.save(token);
+    } catch (Exception e) {
+      log.error("updatePiisStatusSafe:", e);
     }
   }
 }

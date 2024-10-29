@@ -107,14 +107,14 @@ public class PaymentsService extends BaseService {
                         paymentAuthenticationUrl,
                         SDKConstants.STATUS_RCVD
                 );
-                sessionCallbackService.sendUpdateCallback(paymentRequest.sessionSecret, params);
+                sessionCallbackService.sendUpdateCallbackAsync(paymentRequest.sessionSecret, params);
             } else {
-                sessionCallbackService.sendFailCallback(paymentRequest.sessionSecret, new NotFound.PaymentNotCreated());
+                sessionCallbackService.sendFailCallbackAsync(paymentRequest.sessionSecret, new NotFound.PaymentNotCreated());
             }
         } catch (Exception e) {
             log.error("PaymentsService.createPayment:", e);
-            if (e instanceof HttpErrorParams) sessionCallbackService.sendFailCallback(paymentRequest.sessionSecret, e);
-            else sessionCallbackService.sendFailCallback(paymentRequest.sessionSecret, new NotFound.PaymentNotCreated());
+            if (e instanceof HttpErrorParams) sessionCallbackService.sendFailCallbackAsync(paymentRequest.sessionSecret, e);
+            else sessionCallbackService.sendFailCallbackAsync(paymentRequest.sessionSecret, new NotFound.PaymentNotCreated());
         }
     }
 

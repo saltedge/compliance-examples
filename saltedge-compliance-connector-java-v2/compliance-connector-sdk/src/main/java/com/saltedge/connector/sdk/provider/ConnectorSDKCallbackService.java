@@ -37,11 +37,9 @@ import com.saltedge.connector.sdk.services.provider.ConfirmTokenService;
 import com.saltedge.connector.sdk.services.provider.RevokeTokenByProviderService;
 import com.saltedge.connector.sdk.services.provider.TokensCollectorService;
 import com.saltedge.connector.sdk.tools.JsonTools;
-import com.saltedge.connector.sdk.tools.KeyTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
@@ -50,7 +48,6 @@ import jakarta.validation.constraints.NotEmpty;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 
 import static com.saltedge.connector.sdk.SDKConstants.PAYMENT_PRODUCT_FASTER_PAYMENT_SERVICE;
 import static com.saltedge.connector.sdk.SDKConstants.PAYMENT_PRODUCT_INSTANT_SEPA_CREDIT_TRANSFERS;
@@ -75,26 +72,6 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
     private SessionsCallbackService sessionsCallbackService;
     @Autowired
     private TokensCallbackService tokensCallbackService;
-
-    @Override
-    @Async
-    public CompletableFuture<String> testAsync1() throws InterruptedException {
-        log.info("testAsync1 start");
-        String result = KeyTools.generateToken(32);
-        Thread.sleep(5000L);
-        log.info("testAsync1 completed, {}", result);
-        return CompletableFuture.completedFuture(result);
-    }
-
-    @Override
-    @Async
-    public CompletableFuture<String> testAsync2() throws InterruptedException {
-        log.info("testAsync2 start");
-        String result = KeyTools.generateToken(32);
-        Thread.sleep(3000L);
-        log.info("testAsync2 completed, {}", result);
-        return CompletableFuture.completedFuture(result);
-    }
 
     /**
      * Duplicate of isAccountSelectionRequired
@@ -125,6 +102,28 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
     @Override
     public AisToken getAisToken(@NotEmpty String sessionSecret) {
         return tokensCollectorService.findAisTokenBySessionSecret(sessionSecret);
+    }
+
+    /**
+     * Collect list of all AIS Consents by user id.
+     *
+     * @param userId unique identifier of authenticated User
+     * @return list of AIS Consents
+     */
+    @Override
+    public List<AisToken> getAisTokens(@NotEmpty String userId) {
+        return tokensCollectorService.collectAisTokensByUserId(userId);
+    }
+
+    /**
+     * Collect list of all PIIS Consents by user id.
+     *
+     * @param userId unique identifier of authenticated User
+     * @return list of PIIS Consents
+     */
+    @Override
+    public List<AisToken> getPiisTokens(@NotEmpty String userId) {
+        return tokensCollectorService.collectAisTokensByUserId(userId);
     }
 
     /**
@@ -160,13 +159,7 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
             @NotEmpty String accessToken,
             ProviderConsents consents
     ) {
-        AisToken token = confirmTokenService.confirmAisToken(
-                sessionSecret,
-                userId,
-                accessToken,
-                consents
-        );
-        return (token == null) ? null : token.tppRedirectUrlWithParams();
+        return confirmTokenService.confirmAisToken(sessionSecret, userId, accessToken, consents);
     }
 
     /**
@@ -179,8 +172,10 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
     @Override
     public String onAccountInformationAuthorizationFail(@NotEmpty String sessionSecret) {
         AisToken token = revokeTokenService.revokeAisTokenBySessionSecret(sessionSecret);
-        sessionsCallbackService.sendFailCallback(sessionSecret, new Unauthorized.AccessDenied());
-        return (token == null) ? null : token.tppRedirectUrl;
+        if (token == null) return null;
+
+        sessionsCallbackService.sendFailCallbackAsync(sessionSecret, new Unauthorized.AccessDenied());
+        return token.tppRedirectUrl;
     }
 
     /**
@@ -194,7 +189,7 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
     public boolean revokeAccountInformationConsent(@NotEmpty String userId, @NotEmpty String accessToken) {
         AisToken token = revokeTokenService.revokeAisTokenByUserIdAndAccessToken(userId, accessToken);
         boolean isRevoked = token != null && token.isRevoked();
-        if (isRevoked) tokensCallbackService.sendRevokeAisTokenCallback(accessToken);
+        if (isRevoked) tokensCallbackService.sendRevokeAisTokenCallbackAsync(accessToken);
         return isRevoked;
     }
 
@@ -218,9 +213,8 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
         String status = getFinalStatusOfPaymentProduct(paymentProduct);
         SessionSuccessCallbackRequest params = new SessionSuccessCallbackRequest(userId, status);
         try {
-            if (StringUtils.hasLength(sessionSecret)) sessionsCallbackService.sendSuccessCallback(sessionSecret, params);
+            if (StringUtils.hasLength(sessionSecret)) sessionsCallbackService.sendSuccessCallbackAsync(sessionSecret, params);
         } catch (Exception ignored) {
-
         }
 
         return paymentExtraMap.getOrDefault(SDKConstants.KEY_RETURN_TO_URL, "");
@@ -232,7 +226,7 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
         String sessionSecret = paymentExtraMap.get(SDKConstants.KEY_SESSION_SECRET);
 
         SessionUpdateCallbackRequest updateParams = new SessionUpdateCallbackRequest(fundsAvailable, status);
-        if (StringUtils.hasText(sessionSecret)) sessionsCallbackService.sendUpdateCallback(sessionSecret, updateParams);
+        if (StringUtils.hasText(sessionSecret)) sessionsCallbackService.sendUpdateCallbackAsync(sessionSecret, updateParams);
     }
 
     /**
@@ -247,7 +241,7 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
 
         String sessionSecret = paymentExtraMap.get(SDKConstants.KEY_SESSION_SECRET);
         if (StringUtils.hasLength(sessionSecret)) {
-            sessionsCallbackService.sendFailCallback(sessionSecret, new NotFound.PaymentNotCreated());
+            sessionsCallbackService.sendFailCallbackAsync(sessionSecret, new NotFound.PaymentNotCreated());
         }
 
         return paymentExtraMap.getOrDefault(SDKConstants.KEY_RETURN_TO_URL, "");
@@ -282,8 +276,7 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
             @NotEmpty String userId,
             @NotEmpty String accessToken
     ) {
-        PiisToken token = confirmTokenService.confirmPiisToken(sessionSecret, userId, accessToken);
-        return (token == null) ? null : token.tppRedirectUrl;
+        return confirmTokenService.confirmPiisToken(sessionSecret, userId, accessToken);
     }
 
     /**
@@ -296,19 +289,16 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
     @Override
     public String onFundsConfirmationConsentAuthorizationFail(@NotEmpty String sessionSecret) {
         PiisToken token = revokeTokenService.revokePiisTokenBySessionSecret(sessionSecret);
-        sessionsCallbackService.sendFailCallback(sessionSecret, new Unauthorized.AccessDenied());
+        sessionsCallbackService.sendFailCallbackAsync(sessionSecret, new Unauthorized.AccessDenied());
         return (token == null) ? null : token.tppRedirectUrl;
     }
 
     private String getFinalStatusOfPaymentProduct(@NotEmpty String paymentProduct) {
-        switch (paymentProduct) {
-            case PAYMENT_PRODUCT_FASTER_PAYMENT_SERVICE:
-                return "ACSC";
-            case PAYMENT_PRODUCT_INSTANT_SEPA_CREDIT_TRANSFERS:
-                return "ACCC";
-            default:
-                return "ACTC";
-        }
+        return switch (paymentProduct) {
+            case PAYMENT_PRODUCT_FASTER_PAYMENT_SERVICE -> "ACSC";
+            case PAYMENT_PRODUCT_INSTANT_SEPA_CREDIT_TRANSFERS -> "ACCC";
+            default -> "ACTC";
+        };
     }
 
     private Map<String, String> parseExtra(String paymentExtraJson) {

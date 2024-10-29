@@ -50,8 +50,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 public class ConnectorSDKCallbackServiceTests {
@@ -156,7 +155,7 @@ public class ConnectorSDKCallbackServiceTests {
 				"user1",
 				"accessToken",
 				consent
-		)).willReturn(aisToken);
+		)).willReturn(aisToken.tppRedirectUrl);
 
 		// when
 		String result = testService.onAccountInformationAuthorizationSuccess(
@@ -176,7 +175,7 @@ public class ConnectorSDKCallbackServiceTests {
 	}
 
 	@Test
-	public void givenNullToken_whenOnAccountInformationAuthorizationFail_thenReturnNullAndSendFailCallback() {
+	public void givenNullToken_whenOnAccountInformationAuthorizationFail_thenReturnNullAndNotSendFailCallback() {
 		// given
 		given(revokeTokenService.revokeAisTokenBySessionSecret("sessionSecret")).willReturn(null);
 
@@ -185,7 +184,7 @@ public class ConnectorSDKCallbackServiceTests {
 
 		// then
 		assertThat(result).isNull();
-		verify(sessionsCallbackService).sendFailCallback(eq("sessionSecret"), eq(new Unauthorized.AccessDenied()));
+		verify(sessionsCallbackService, never()).sendFailCallbackAsync(eq("sessionSecret"), eq(new Unauthorized.AccessDenied()));
 	}
 
 	@Test
@@ -200,7 +199,7 @@ public class ConnectorSDKCallbackServiceTests {
 
 		// then
 		assertThat(result).isEqualTo("http://redirect.to");
-		verify(sessionsCallbackService).sendFailCallback(eq("sessionSecret"), eq(new Unauthorized.AccessDenied()));
+		verify(sessionsCallbackService).sendFailCallbackAsync(eq("sessionSecret"), eq(new Unauthorized.AccessDenied()));
 	}
 
 	@Test
@@ -232,7 +231,7 @@ public class ConnectorSDKCallbackServiceTests {
 
 		// then
 		assertThat(result).isTrue();
-		verify(tokensCallbackService).sendRevokeAisTokenCallback(eq("accessToken"));
+		verify(tokensCallbackService).sendRevokeAisTokenCallbackAsync(eq("accessToken"));
 	}
 
 	@Test
@@ -261,7 +260,7 @@ public class ConnectorSDKCallbackServiceTests {
 		testService.updatePaymentFundsInformation(true, extraJson, "PDNG");
 
 		// then
-		verify(sessionsCallbackService).sendUpdateCallback(eq("sessionSecret"), eq(new SessionUpdateCallbackRequest(true, "PDNG")));
+		verify(sessionsCallbackService).sendUpdateCallbackAsync(eq("sessionSecret"), eq(new SessionUpdateCallbackRequest(true, "PDNG")));
 	}
 
 	@Test
@@ -275,7 +274,7 @@ public class ConnectorSDKCallbackServiceTests {
 		testService.updatePaymentFundsInformation(false, extraJson, "PDNG");
 
 		// then
-		verify(sessionsCallbackService).sendUpdateCallback(eq("sessionSecret"), eq(new SessionUpdateCallbackRequest(false, "PDNG")));
+		verify(sessionsCallbackService).sendUpdateCallbackAsync(eq("sessionSecret"), eq(new SessionUpdateCallbackRequest(false, "PDNG")));
 	}
 
 	@Test
@@ -328,7 +327,7 @@ public class ConnectorSDKCallbackServiceTests {
 
 		// then
 		assertThat(result).isEqualTo("http://redirect.to");
-		verify(sessionsCallbackService).sendSuccessCallback(eq("sessionSecret"), eq(new SessionSuccessCallbackRequest("user1", "ACTC")));
+		verify(sessionsCallbackService).sendSuccessCallbackAsync(eq("sessionSecret"), eq(new SessionSuccessCallbackRequest("user1", "ACTC")));
 	}
 
 	@Test
@@ -344,7 +343,7 @@ public class ConnectorSDKCallbackServiceTests {
 
 		// then
 		assertThat(result).isEqualTo("http://redirect.to");
-		verify(sessionsCallbackService).sendSuccessCallback(eq("sessionSecret"), eq(new SessionSuccessCallbackRequest("user1", "ACCC")));
+		verify(sessionsCallbackService).sendSuccessCallbackAsync(eq("sessionSecret"), eq(new SessionSuccessCallbackRequest("user1", "ACCC")));
 	}
 
 	@Test
@@ -360,7 +359,7 @@ public class ConnectorSDKCallbackServiceTests {
 
 		// then
 		assertThat(result).isEqualTo("http://redirect.to");
-		verify(sessionsCallbackService).sendSuccessCallback(eq("sessionSecret"), eq(new SessionSuccessCallbackRequest("user1", "ACSC")));
+		verify(sessionsCallbackService).sendSuccessCallbackAsync(eq("sessionSecret"), eq(new SessionSuccessCallbackRequest("user1", "ACSC")));
 	}
 
 	@Test
@@ -381,6 +380,6 @@ public class ConnectorSDKCallbackServiceTests {
 
 		// then
 		assertThat(result).isEqualTo("http://redirect.to");
-		verify(sessionsCallbackService).sendFailCallback(eq("sessionSecret"), ArgumentMatchers.any(NotFound.PaymentNotCreated.class));
+		verify(sessionsCallbackService).sendFailCallbackAsync(eq("sessionSecret"), ArgumentMatchers.any(NotFound.PaymentNotCreated.class));
 	}
 }
