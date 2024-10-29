@@ -105,7 +105,30 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
     }
 
     /**
-     * Collect list of access tokens of active consents (AIS, PIIS)
+     * Collect list of all AIS Consents by user id.
+     *
+     * @param userId unique identifier of authenticated User
+     * @return list of AIS Consents
+     */
+    @Override
+    public List<AisToken> getAisTokens(@NotEmpty String userId) {
+        return tokensCollectorService.collectAisTokensByUserId(userId);
+    }
+
+    /**
+     * Collect list of all PIIS Consents by user id.
+     *
+     * @param userId unique identifier of authenticated User
+     * @return list of PIIS Consents
+     */
+    @Override
+    public List<AisToken> getPiisTokens(@NotEmpty String userId) {
+        return tokensCollectorService.collectAisTokensByUserId(userId);
+    }
+
+    /**
+     * Collect list of access tokens of active consents (AIS, PIIS).
+     * Active - confirmed and non-expired consents.
      *
      * @param userId unique identifier of authenticated User
      * @return list of access tokens of active consents
@@ -116,8 +139,8 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
     }
 
     /**
-     * Provider notify Connector SDK Module about oAuth success authentication
-     * and provides user consent for accounts (balances/transactions)
+     * Provider notify Connector SDK Module about oAuth success authentication and authorization of consent.
+     *
      *
      * @param sessionSecret of User authorization session.
      * @param userId        of authenticated User.
@@ -136,13 +159,7 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
             @NotEmpty String accessToken,
             ProviderConsents consents
     ) {
-        AisToken token = confirmTokenService.confirmAisToken(
-                sessionSecret,
-                userId,
-                accessToken,
-                consents
-        );
-        return (token == null) ? null : token.tppRedirectUrl;
+        return confirmTokenService.confirmAisToken(sessionSecret, userId, accessToken, consents);
     }
 
     /**
@@ -155,8 +172,10 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
     @Override
     public String onAccountInformationAuthorizationFail(@NotEmpty String sessionSecret) {
         AisToken token = revokeTokenService.revokeAisTokenBySessionSecret(sessionSecret);
-        sessionsCallbackService.sendFailCallback(sessionSecret, new Unauthorized.AccessDenied());
-        return (token == null) ? null : token.tppRedirectUrl;
+        if (token == null) return null;
+
+        sessionsCallbackService.sendFailCallbackAsync(sessionSecret, new Unauthorized.AccessDenied());
+        return token.tppRedirectUrl;
     }
 
     /**
@@ -170,7 +189,7 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
     public boolean revokeAccountInformationConsent(@NotEmpty String userId, @NotEmpty String accessToken) {
         AisToken token = revokeTokenService.revokeAisTokenByUserIdAndAccessToken(userId, accessToken);
         boolean isRevoked = token != null && token.isRevoked();
-        if (isRevoked) tokensCallbackService.sendRevokeAisTokenCallback(accessToken);
+        if (isRevoked) tokensCallbackService.sendRevokeAisTokenCallbackAsync(accessToken);
         return isRevoked;
     }
 
@@ -193,7 +212,10 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
         String sessionSecret = paymentExtraMap.get(SDKConstants.KEY_SESSION_SECRET);
         String status = getFinalStatusOfPaymentProduct(paymentProduct);
         SessionSuccessCallbackRequest params = new SessionSuccessCallbackRequest(userId, status);
-        if (StringUtils.hasLength(sessionSecret)) sessionsCallbackService.sendSuccessCallback(sessionSecret, params);
+        try {
+            if (StringUtils.hasLength(sessionSecret)) sessionsCallbackService.sendSuccessCallbackAsync(sessionSecret, params);
+        } catch (Exception ignored) {
+        }
 
         return paymentExtraMap.getOrDefault(SDKConstants.KEY_RETURN_TO_URL, "");
     }
@@ -204,7 +226,7 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
         String sessionSecret = paymentExtraMap.get(SDKConstants.KEY_SESSION_SECRET);
 
         SessionUpdateCallbackRequest updateParams = new SessionUpdateCallbackRequest(fundsAvailable, status);
-        if (StringUtils.hasText(sessionSecret)) sessionsCallbackService.sendUpdateCallback(sessionSecret, updateParams);
+        if (StringUtils.hasText(sessionSecret)) sessionsCallbackService.sendUpdateCallbackAsync(sessionSecret, updateParams);
     }
 
     /**
@@ -219,7 +241,7 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
 
         String sessionSecret = paymentExtraMap.get(SDKConstants.KEY_SESSION_SECRET);
         if (StringUtils.hasLength(sessionSecret)) {
-            sessionsCallbackService.sendFailCallback(sessionSecret, new NotFound.PaymentNotCreated());
+            sessionsCallbackService.sendFailCallbackAsync(sessionSecret, new NotFound.PaymentNotCreated());
         }
 
         return paymentExtraMap.getOrDefault(SDKConstants.KEY_RETURN_TO_URL, "");
@@ -254,8 +276,7 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
             @NotEmpty String userId,
             @NotEmpty String accessToken
     ) {
-        PiisToken token = confirmTokenService.confirmPiisToken(sessionSecret, userId, accessToken);
-        return (token == null) ? null : token.tppRedirectUrl;
+        return confirmTokenService.confirmPiisToken(sessionSecret, userId, accessToken);
     }
 
     /**
@@ -268,19 +289,16 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
     @Override
     public String onFundsConfirmationConsentAuthorizationFail(@NotEmpty String sessionSecret) {
         PiisToken token = revokeTokenService.revokePiisTokenBySessionSecret(sessionSecret);
-        sessionsCallbackService.sendFailCallback(sessionSecret, new Unauthorized.AccessDenied());
+        sessionsCallbackService.sendFailCallbackAsync(sessionSecret, new Unauthorized.AccessDenied());
         return (token == null) ? null : token.tppRedirectUrl;
     }
 
     private String getFinalStatusOfPaymentProduct(@NotEmpty String paymentProduct) {
-        switch (paymentProduct) {
-            case PAYMENT_PRODUCT_FASTER_PAYMENT_SERVICE:
-                return "ACSC";
-            case PAYMENT_PRODUCT_INSTANT_SEPA_CREDIT_TRANSFERS:
-                return "ACCC";
-            default:
-                return "ACTC";
-        }
+        return switch (paymentProduct) {
+            case PAYMENT_PRODUCT_FASTER_PAYMENT_SERVICE -> "ACSC";
+            case PAYMENT_PRODUCT_INSTANT_SEPA_CREDIT_TRANSFERS -> "ACCC";
+            default -> "ACTC";
+        };
     }
 
     private Map<String, String> parseExtra(String paymentExtraJson) {

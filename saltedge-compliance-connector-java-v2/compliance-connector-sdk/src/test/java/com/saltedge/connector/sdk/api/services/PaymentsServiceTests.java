@@ -87,7 +87,7 @@ public class PaymentsServiceTests extends BaseServicesTests {
 
         // then
         final ArgumentCaptor<RuntimeException> captor = ArgumentCaptor.forClass(RuntimeException.class);
-        verify(sessionsCallbackService).sendFailCallback(eq("sessionSecret"), captor.capture());
+        verify(sessionsCallbackService).sendFailCallbackAsync(eq("sessionSecret"), captor.capture());
         assertThat(((HttpErrorParams) captor.getValue()).getErrorClass()).isEqualTo("PaymentNotCreated");
         verifyNoInteractions(aisTokensRepository);
     }
@@ -138,7 +138,7 @@ public class PaymentsServiceTests extends BaseServicesTests {
                 psuIpAddress
         );
         final ArgumentCaptor<SessionUpdateCallbackRequest> callbackCaptor = ArgumentCaptor.forClass(SessionUpdateCallbackRequest.class);
-        verify(sessionsCallbackService).sendUpdateCallback(eq("sessionSecret"), callbackCaptor.capture());
+        verify(sessionsCallbackService).sendUpdateCallbackAsync(eq("sessionSecret"), callbackCaptor.capture());
         assertThat(callbackCaptor.getValue().status).isEqualTo(SDKConstants.STATUS_RCVD);
         assertThat(callbackCaptor.getValue().redirectUrl).isEqualTo(redirectUrl);
     }
@@ -189,7 +189,7 @@ public class PaymentsServiceTests extends BaseServicesTests {
                 psuIpAddress
         );
         final ArgumentCaptor<SessionUpdateCallbackRequest> callbackCaptor = ArgumentCaptor.forClass(SessionUpdateCallbackRequest.class);
-        verify(sessionsCallbackService).sendUpdateCallback(eq("sessionSecret"), callbackCaptor.capture());
+        verify(sessionsCallbackService).sendUpdateCallbackAsync(eq("sessionSecret"), callbackCaptor.capture());
         assertThat(callbackCaptor.getValue().status).isEqualTo(SDKConstants.STATUS_RCVD);
         assertThat(callbackCaptor.getValue().redirectUrl).isEqualTo(redirectUrl);
     }
@@ -240,7 +240,7 @@ public class PaymentsServiceTests extends BaseServicesTests {
                 psuIpAddress
         );
         final ArgumentCaptor<SessionUpdateCallbackRequest> callbackCaptor = ArgumentCaptor.forClass(SessionUpdateCallbackRequest.class);
-        verify(sessionsCallbackService).sendUpdateCallback(eq("sessionSecret"), callbackCaptor.capture());
+        verify(sessionsCallbackService).sendUpdateCallbackAsync(eq("sessionSecret"), callbackCaptor.capture());
         assertThat(callbackCaptor.getValue().status).isEqualTo(SDKConstants.STATUS_RCVD);
         assertThat(callbackCaptor.getValue().redirectUrl).isEqualTo(redirectUrl);
     }

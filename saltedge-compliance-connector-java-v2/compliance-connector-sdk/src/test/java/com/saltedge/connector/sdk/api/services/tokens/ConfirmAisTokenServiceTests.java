@@ -20,11 +20,9 @@
  */
 package com.saltedge.connector.sdk.api.services.tokens;
 
-import com.saltedge.connector.sdk.SDKConstants;
 import com.saltedge.connector.sdk.api.models.ProviderConsents;
 import com.saltedge.connector.sdk.api.services.BaseServicesTests;
 import com.saltedge.connector.sdk.callback.mapping.SessionSuccessCallbackRequest;
-import com.saltedge.connector.sdk.models.ConsentStatus;
 import com.saltedge.connector.sdk.models.domain.AisToken;
 import com.saltedge.connector.sdk.services.provider.ConfirmTokenService;
 import jakarta.validation.ConstraintViolationException;
@@ -35,10 +33,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.byLessThan;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -70,7 +67,7 @@ public class ConfirmAisTokenServiceTests extends BaseServicesTests {
         given(aisTokensRepository.findFirstBySessionSecret("sessionSecret")).willReturn(null);
 
         // when
-        AisToken result = testService.confirmAisToken(
+        String result = testService.confirmAisToken(
                 "sessionSecret",
                 "userId",
                 "accessToken",
@@ -81,30 +78,27 @@ public class ConfirmAisTokenServiceTests extends BaseServicesTests {
     }
 
     @Test
-    public void givenValidParamsWithBankConsent_whenConfirmToken_thenReturnTokenAndSendSuccess() {
+    public void givenValidParamsWithBankConsent_whenConfirmToken_thenReturnTokenAndSendSuccess() throws InterruptedException {
         // given
         AisToken aisToken = new AisToken();
+        aisToken.id = 1L;
         aisToken.sessionSecret = "sessionSecret";
+        aisToken.tppRedirectUrl = "tpp_redirect_url";
         aisToken.tokenExpiresAt = Instant.parse("2019-08-21T16:04:49.021Z");
         ProviderConsents providerOfferedConsents = ProviderConsents.buildAllAccountsConsent();
-        given(aisTokensRepository.findFirstBySessionSecret("sessionSecret")).willReturn(aisToken);
+        given(aisTokensRepository.findFirstBySessionSecret(aisToken.sessionSecret)).willReturn(aisToken);
+        given(aisTokensRepository.findById(aisToken.id)).willReturn(Optional.of(aisToken));
 
         // when
-        AisToken result = testService.confirmAisToken(
-                "sessionSecret",
+        String result = testService.confirmAisToken(
+                aisToken.sessionSecret,
                 "userId",
                 "accessToken",
                 providerOfferedConsents
         );
 
         // then
-        assertThat(result).isNotNull();
-        assertThat(result.sessionSecret).isEqualTo("sessionSecret");
-        assertThat(result.userId).isEqualTo("userId");
-        assertThat(result.status).isEqualTo(ConsentStatus.CONFIRMED);
-        assertThat(result.accessToken).isEqualTo("accessToken");
-        assertThat(result.tokenExpiresAt).isEqualTo(Instant.parse("2019-08-21T16:04:49.021Z"));
-        assertThat(result.providerOfferedConsents).isEqualTo(providerOfferedConsents);
+        assertThat(result).isEqualTo("tpp_redirect_url");
         verify(aisTokensRepository).save(any(AisToken.class));
 
         ArgumentCaptor<SessionSuccessCallbackRequest> captor = ArgumentCaptor.forClass(SessionSuccessCallbackRequest.class);
@@ -117,15 +111,18 @@ public class ConfirmAisTokenServiceTests extends BaseServicesTests {
     }
 
     @Test
-    public void givenValidParamsWithNullBankConsent_whenConfirmToken_thenReturnTokenAndSendSuccess() {
+    public void givenValidParamsWithNullBankConsent_whenConfirmToken_thenReturnTokenAndSendSuccess() throws InterruptedException {
         // given
         AisToken aisToken = new AisToken();
+        aisToken.id = 1L;
         aisToken.tokenExpiresAt = null;
         aisToken.sessionSecret = "sessionSecret";
+        aisToken.tppRedirectUrl = "tpp_redirect_url";
         given(aisTokensRepository.findFirstBySessionSecret("sessionSecret")).willReturn(aisToken);
+        given(aisTokensRepository.findById(aisToken.id)).willReturn(Optional.of(aisToken));
 
         // when
-        AisToken result = testService.confirmAisToken(
+        String result = testService.confirmAisToken(
                 "sessionSecret",
                 "userId",
                 "accessToken",
@@ -133,14 +130,7 @@ public class ConfirmAisTokenServiceTests extends BaseServicesTests {
         );
 
         // then
-        assertThat(result).isNotNull();
-        assertThat(result.sessionSecret).isEqualTo("sessionSecret");
-        assertThat(result.userId).isEqualTo("userId");
-        assertThat(result.status).isEqualTo(ConsentStatus.CONFIRMED);
-        assertThat(result.accessToken).isEqualTo("accessToken");
-        assertThat(result.tokenExpiresAt)
-                .isCloseTo(Instant.now().plus(SDKConstants.CONSENT_MAX_PERIOD, ChronoUnit.DAYS), byLessThan(100, ChronoUnit.MILLIS));
-        assertThat(result.providerOfferedConsents).isEqualTo(ProviderConsents.buildAllAccountsConsent());
+        assertThat(result).isEqualTo("tpp_redirect_url");
         verify(aisTokensRepository).save(any(AisToken.class));
 
         ArgumentCaptor<SessionSuccessCallbackRequest> captor = ArgumentCaptor.forClass(SessionSuccessCallbackRequest.class);
@@ -151,17 +141,20 @@ public class ConfirmAisTokenServiceTests extends BaseServicesTests {
     }
 
     @Test
-    public void givenValidParamsWithGlobalConsent_whenConfirmToken_thenReturnTokenAndSendSuccess() {
+    public void givenValidParamsWithGlobalConsent_whenConfirmToken_thenReturnTokenAndSendSuccess() throws InterruptedException {
         // given
         ProviderConsents globalConsents = new ProviderConsents(ProviderConsents.GLOBAL_CONSENT_VALUE);
         AisToken aisToken = new AisToken();
+        aisToken.id = 1L;
         aisToken.providerOfferedConsents = globalConsents;
         aisToken.sessionSecret = "sessionSecret";
+        aisToken.tppRedirectUrl = "tpp_redirect_url";
         aisToken.tokenExpiresAt = Instant.parse("2019-08-21T16:04:49.021Z");
         given(aisTokensRepository.findFirstBySessionSecret("sessionSecret")).willReturn(aisToken);
+        given(aisTokensRepository.findById(aisToken.id)).willReturn(Optional.of(aisToken));
 
         // when
-        AisToken result = testService.confirmAisToken(
+        String result = testService.confirmAisToken(
                 "sessionSecret",
                 "userId",
                 "accessToken",
@@ -169,13 +162,7 @@ public class ConfirmAisTokenServiceTests extends BaseServicesTests {
         );
 
         // then
-        assertThat(result).isNotNull();
-        assertThat(result.sessionSecret).isEqualTo("sessionSecret");
-        assertThat(result.userId).isEqualTo("userId");
-        assertThat(result.status).isEqualTo(ConsentStatus.CONFIRMED);
-        assertThat(result.accessToken).isEqualTo("accessToken");
-        assertThat(result.tokenExpiresAt).isEqualTo(Instant.parse("2019-08-21T16:04:49.021Z"));
-        assertThat(result.providerOfferedConsents).isEqualTo(globalConsents);
+        assertThat(result).isEqualTo("tpp_redirect_url");
         verify(aisTokensRepository).save(any(AisToken.class));
 
         ArgumentCaptor<SessionSuccessCallbackRequest> captor = ArgumentCaptor.forClass(SessionSuccessCallbackRequest.class);

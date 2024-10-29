@@ -36,7 +36,7 @@ import java.util.List;
 public interface ProviderServiceAbs {
     /**
      * Provides Authorization Types registered in `Dashboard/Settings/Authorization types` for Customer.
-     * (https://priora.saltedge.com/providers/settings#authorization_types)
+     * (<a href="https://priora.saltedge.com/providers/settings#authorization_types">...</a>)
      *
      * @return List of AuthorizationType objects
      * @see AuthorizationType
@@ -69,7 +69,7 @@ public interface ProviderServiceAbs {
 
     /**
      * Return accounts information of user.
-     * Serves accounts endpoint (https://priora.saltedge.com/docs/aspsp/v2/ais#ais-connector_endpoints-accounts-get)
+     * Serves accounts endpoint (<a href="https://priora.saltedge.com/docs/aspsp/v2/ais#ais-connector_endpoints-accounts-get">...</a>)
      *
      * @param userId User identifier on Provider side
      * @return List of Account objects
@@ -87,7 +87,7 @@ public interface ProviderServiceAbs {
 
     /**
      * Provides transactions which belong to an account of user.
-     * Serves transactions endpoint (https://priora.saltedge.com/docs/aspsp/v2/ais#ais-connector_endpoints-accounts-transactions)
+     * Serves transactions endpoint (<a href="https://priora.saltedge.com/docs/aspsp/v2/ais#ais-connector_endpoints-accounts-transactions">...</a>)
      *
      * @param userId User identifier on Provider side
      * @param accountId Account identifier on Provider side
@@ -108,7 +108,7 @@ public interface ProviderServiceAbs {
 
     /**
      * Provides card accounts information of user.
-     * Serves card accounts endpoint (https://priora.saltedge.com/docs/aspsp/v2/ais#ais-connector_endpoints-card_accounts-get)
+     * Serves card accounts endpoint (<a href="https://priora.saltedge.com/docs/aspsp/v2/ais#ais-connector_endpoints-card_accounts-get">...</a>)
      *
      * @param userId User identifier on Provider side
      * @return List of CardAccount objects
@@ -118,7 +118,7 @@ public interface ProviderServiceAbs {
 
     /**
      * Provides transactions which belong to a card account of user.
-     * Serves card transactions endpoint (https://priora.saltedge.com/docs/aspsp/v2/ais#ais-connector_endpoints-card_accounts-transactions)
+     * Serves card transactions endpoint (<a href="https://priora.saltedge.com/docs/aspsp/v2/ais#ais-connector_endpoints-card_accounts-transactions">...</a>)
      *
      * @param userId User identifier on Provider side
      * @param accountId An account identifier on Provider side
@@ -139,7 +139,7 @@ public interface ProviderServiceAbs {
 
     /**
      * Initiate a SEPA payment order.
-     * Serves payment endpoint (https://priora.saltedge.com/docs/aspsp/v2/pis#pis-connector_endpoints-payments)
+     * Serves payment endpoint (<a href="https://priora.saltedge.com/docs/aspsp/v2/pis#pis-connector_endpoints-payments">...</a>)
      * If SEPA payment not supported return null.
      *
      * @param paymentProduct The addressed payment product. Allowed values: sepa-credit-transfers, instant-sepa-credit-transfers, target-2-payments, internal-transfer
@@ -176,7 +176,7 @@ public interface ProviderServiceAbs {
 
     /**
      * Initiate a FPS (Faster Payment Service) payment order.
-     * Serves payment endpoint (https://priora.saltedge.com/docs/aspsp/v2/pis#pis-connector_endpoints-payments)
+     * Serves payment endpoint (<a href="https://priora.saltedge.com/docs/aspsp/v2/pis#pis-connector_endpoints-payments">...</a>)
      * If FPS payment not supported return null.
      *
      * @param paymentProduct The addressed payment product. Allowed values: faster-payment-service

@@ -1,5 +1,11 @@
 # Salt Edge Compliance Connector SDK Changelog
 
+## 2.14.3 (2024-10-29)
+### Add
+- Add getAisTokens, getPiisTokens methods.
+### Update
+- Fix consent status management for edge cases.
+
 ## 2.14.2 (2024-08-06)
 ### Add
 - Add tpp_app_name to payment extra.
