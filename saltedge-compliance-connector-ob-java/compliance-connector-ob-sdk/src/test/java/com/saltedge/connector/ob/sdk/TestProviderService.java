@@ -30,7 +30,7 @@ import com.saltedge.connector.ob.sdk.provider.dto.payment.ObRiskData;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
-import javax.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotEmpty;
 import java.time.LocalDate;
 import java.util.List;
 

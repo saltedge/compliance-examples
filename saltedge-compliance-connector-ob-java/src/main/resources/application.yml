@@ -1,5 +1,7 @@
 spring:
-  profiles: dev
+  config:
+    activate:
+      on-profile: dev
 connector:
   private_key_name: connector_private_dev.pem
   priora:
@@ -11,7 +13,9 @@ connector:
 
 ---
 spring:
-  profiles: prod
+  config:
+    activate:
+      on-profile: prod
 connector:
   private_key_name: connector_private_prod.pem
   priora:

@@ -27,7 +27,7 @@ import com.saltedge.connector.example.model.Fee;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.persistence.AttributeConverter;
+import jakarta.persistence.AttributeConverter;
 import java.io.IOException;
 import java.util.List;
 

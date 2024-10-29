@@ -26,7 +26,7 @@ import com.saltedge.connector.ob.sdk.SDKConstants;
 import com.saltedge.connector.ob.sdk.provider.dto.account.Meta;
 import com.saltedge.connector.ob.sdk.provider.dto.account.ObTransaction;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)

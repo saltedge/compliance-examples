@@ -40,14 +40,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * Controller is responsible for implementing authentication and authorization of Customer.
  * Process of token creation starts once Customer grants his consent to TTP.
  * At the end of authorization, Connector should issue an access_token which can be used for further actions.
- * https://priora.saltedge.com/docs/aspsp/ob/pis#connector-endpoints-payments-payments-consent
+ * <a href="https://priora.saltedge.com/docs/aspsp/ob/pis#connector-endpoints-payments-payments-consent">...</a>
  */
 @RestController
 @RequestMapping(ObPaymentsConsentsController.BASE_PATH)
@@ -85,10 +85,17 @@ public class ObPaymentsConsentsController extends ObBaseController {
       @Valid PaymentFundsConfirmationRequest request
     ) {
         if (!consent.isPisConsent()) throw new Unauthorized.AccessDenied();
-        if (consent.paymentInitiation.debtorAccount == null || consent.paymentInitiation.instructedAmount == null) throw new NotFound.PaymentNotFound();
+        if (consent.debtorAccount == null) {
+            log.error("debtorAccount not found. consent: {}", consent.consentId);
+            throw new NotFound.PaymentNotFound();
+        }
+        if (consent.paymentInitiation.instructedAmount == null) {
+            log.error("instructedAmount not found. consent: {}", consent.consentId);
+            throw new NotFound.PaymentNotFound();
+        }
         boolean fundsAvailable = providerService.confirmFunds(
           consent.userId,
-          consent.paymentInitiation.debtorAccount,
+          consent.debtorAccount,
           consent.paymentInitiation.instructedAmount
         );
         return new ResponseEntity<>(new FundsConfirmationResponse(fundsAvailable), HttpStatus.OK);

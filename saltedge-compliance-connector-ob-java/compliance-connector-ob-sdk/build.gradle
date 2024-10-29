@@ -1,101 +1,121 @@
 plugins {
     id 'java'
     id 'java-library'
-    id 'org.springframework.boot'
-    id 'io.spring.dependency-management'
-    id 'maven'
-    id 'com.bmuschko.nexus' version '2.3.1'
+    id 'org.springframework.boot' version '3.3.4'
+    id 'io.spring.dependency-management' version '1.1.5'
+    id 'maven-publish'
+    id 'signing'
 }
 
 group 'com.saltedge.connector.sdk'
-version '1.2.2'
+version '1.3.0'
 
 compileJava {
-    sourceCompatibility = 1.8
-    targetCompatibility = 1.8
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+java {
+    withJavadocJar()
+    withSourcesJar()
 }
 
 repositories {
     mavenCentral()
 }
 
-bootJar {
-    enabled = false
-}
-
-jar {
-    enabled = true
-    archiveClassifier = ''
-}
+//bootJar {
+//    enabled = false
+//}
 
 dependencies {
-    def springVersion = '2.7.1'
-    implementation 'org.jetbrains:annotations:23.0.0'
+    def springVersion = '3.3.4'
+    implementation 'org.jetbrains:annotations:24.1.0'
     implementation "org.springframework.boot:spring-boot-starter:$springVersion"
     implementation "org.springframework.boot:spring-boot-starter-web:$springVersion"
     implementation "org.springframework.boot:spring-boot-starter-data-jpa:$springVersion"
     implementation "org.springframework.boot:spring-boot-starter-validation:$springVersion"
 
-    def jjwtVersion = '0.11.5'
+    def jjwtVersion = '0.12.6'
     implementation "io.jsonwebtoken:jjwt-api:$jjwtVersion"
     runtimeOnly "io.jsonwebtoken:jjwt-impl:$jjwtVersion", "io.jsonwebtoken:jjwt-jackson:$jjwtVersion", 'org.bouncycastle:bcprov-jdk15on:1.60'
     implementation "io.jsonwebtoken:jjwt-jackson:$jjwtVersion"
 
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.2'
 
     testImplementation "io.jsonwebtoken:jjwt-api:$jjwtVersion"
     testImplementation "io.jsonwebtoken:jjwt-jackson:$jjwtVersion"
     testImplementation "org.springframework.boot:spring-boot-starter-test:$springVersion"
-    testImplementation 'com.h2database:h2:2.1.214'
+    testImplementation 'com.h2database:h2:2.2.224'
 }
 
 test {
     useJUnitPlatform()
 }
 
+tasks.test {
+    useJUnitPlatform()
+}
+
 // UPLOAD JAR TO MAVEN CENTRAL REPO
-modifyPom {
-    project {
-        name 'compliance-connector-ob-sdk'
-        description 'Salt Edge Compliance Connector Java SDK'
-        url 'https://github.com/saltedge/compliance-examples/tree/master/saltedge-compliance-connector-ob-java/compliance-connector-ob-sdk'
-        inceptionYear '2021'
+//modifyPom {
+//    project {
+//        name 'compliance-connector-ob-sdk'
+//        description 'Salt Edge Compliance Connector Java SDK'
+//        url 'https://github.com/saltedge/compliance-examples/tree/master/saltedge-compliance-connector-ob-java/compliance-connector-ob-sdk'
+//        inceptionYear '2021'
+//
+//        scm {
+//            url 'https://github.com/saltedge/compliance-examples/tree/master/saltedge-compliance-connector-ob-java/compliance-connector-ob-sdk'
+//            connection 'scm:https://github.com/saltedge/compliance-examples.git'
+//            developerConnection 'scm:https://github.com/saltedge/compliance-examples.git'
+//        }
+//
+//        licenses {
+//            license {
+//                name 'The MIT License (MIT)'
+//                url 'https://raw.githubusercontent.com/saltedge/compliance-examples/master/saltedge-compliance-connector-ob-java/LICENSE.txt'
+//                distribution 'repo'
+//            }
+//        }
+//
+//        developers {
+//            developer {
+//                id 'constantink'
+//                name 'Constantin Chelban'
+//                email 'constantink@saltedge.com'
+//            }
+//        }
+//    }
+//}
 
-        scm {
-            url 'https://github.com/saltedge/compliance-examples/tree/master/saltedge-compliance-connector-ob-java/compliance-connector-ob-sdk'
-            connection 'scm:https://github.com/saltedge/compliance-examples.git'
-            developerConnection 'scm:https://github.com/saltedge/compliance-examples.git'
-        }
+//extraArchive {
+//    sources = true
+//    tests = true
+//    javadoc = true
+//}
+//
+//nexus {
+//    sign = true
+//    repositoryUrl = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
+//    snapshotRepositoryUrl = 'https://oss.sonatype.org/content/repositories/snapshots/'
+//}
 
-        licenses {
-            license {
-                name 'The MIT License (MIT)'
-                url 'https://raw.githubusercontent.com/saltedge/compliance-examples/master/saltedge-compliance-connector-ob-java/LICENSE.txt'
-                distribution 'repo'
-            }
-        }
+//archivesBaseName = project.name
 
-        developers {
-            developer {
-                id 'constantink'
-                name 'Constantin Chelban'
-                email 'constantink@saltedge.com'
-            }
-        }
+signing {
+    sign publishing.publications
+}
+
+
+javadoc {
+    if(JavaVersion.current().isJava9Compatible()) {
+        options.addBooleanOption('html5', true)
     }
 }
 
-extraArchive {
-    sources = true
-    tests = true
-    javadoc = true
+jar {
+//    enabled = true
+    archiveClassifier = '' //use empty string
 }
-
-nexus {
-    sign = true
-    repositoryUrl = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
-    snapshotRepositoryUrl = 'https://oss.sonatype.org/content/repositories/snapshots/'
-}
-
-archivesBaseName = project.name
