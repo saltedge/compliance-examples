@@ -1,6 +1,6 @@
 # Salt Edge Compliance Connector SDK Changelog
 
-## 2.12.4 (2024-10-29)
+## 2.12.5 (2024-10-29)
 ### Add
 - Add getAisTokens, getPiisTokens methods.
 ### Update

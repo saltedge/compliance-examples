@@ -8,7 +8,7 @@ plugins {
 }
 
 group 'com.saltedge.connector.sdk'
-version '2.12.4'
+version '2.12.5'
 
 compileJava {
     sourceCompatibility = JavaVersion.VERSION_1_8
