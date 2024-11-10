@@ -1,12 +1,12 @@
 # Salt Edge Compliance Connector SDK Changelog
 
-## 2.12.5 (2024-10-29)
+## 2.12.5.2 (2024-11-10)
 ### Add
 - Add getAisTokens, getPiisTokens methods.
 ### Update
 - Fix consent status management for edge cases.
 
-## 2.14.3 (2024-10-29)
+## 2.14.3 (2024-10)
 ### Add
 - Add getAisTokens, getPiisTokens methods.
 ### Update
