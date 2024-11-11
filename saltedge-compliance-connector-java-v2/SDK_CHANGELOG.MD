@@ -1,12 +1,12 @@
 # Salt Edge Compliance Connector SDK Changelog
 
-## 2.12.5.2 (2024-11-10)
+## 2.14.3 (2024-11-10)
 ### Add
 - Add getAisTokens, getPiisTokens methods.
 ### Update
 - Fix consent status management for edge cases.
 
-## 2.14.3 (2024-10)
+## 2.12.5.2 (2024-11-10)
 ### Add
 - Add getAisTokens, getPiisTokens methods.
 ### Update
@@ -25,7 +25,7 @@
 - Add Detailed Consent feature
 - Update Spring Boot to 2.7.18
 - Update JJWT version to 0.12.6 (Fix CVE-2024-31033).
-  
+
 ## 2.14.1 (2024-07-12)
 ### Update
 - Update JJWT version to 0.12.6 (Fix CVE-2024-31033).
