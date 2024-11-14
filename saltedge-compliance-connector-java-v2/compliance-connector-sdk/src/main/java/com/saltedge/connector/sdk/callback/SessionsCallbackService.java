@@ -58,16 +58,22 @@ public class SessionsCallbackService extends CallbackRestClient {
 
     @Async
     public void sendFailCallbackAsync(String sessionSecret, Exception exception) {
-        if (exception instanceof HttpErrorParams errorParams) {
-            BaseFailRequest params = new BaseFailRequest(errorParams.getErrorClass(), errorParams.getErrorMessage());
-            sendFailCallback(sessionSecret, params);
-        } else {
-            BaseFailRequest params = new BaseFailRequest(exception.getClass().getSimpleName(), exception.getMessage());
-            sendFailCallback(sessionSecret, params);
-        }
+        sendFailCallback(sessionSecret, exception, null);
     }
 
-    private void sendFailCallback(String sessionSecret, BaseFailRequest params) {
+    @Async
+    public void sendFailCallbackAsync(String sessionSecret, Exception exception, String userId) {
+        sendFailCallback(sessionSecret, exception, userId);
+    }
+
+    private void sendFailCallback(String sessionSecret, Exception exception, String userId) {
+        BaseFailRequest params;
+        if (exception instanceof HttpErrorParams errorParams) {
+            params = new BaseFailRequest(errorParams.getErrorClass(), errorParams.getErrorMessage(), userId);
+        } else {
+            params = new BaseFailRequest(exception.getClass().getSimpleName(), exception.getMessage(), userId);
+        }
+
         String url = createCallbackRequestUrl(createSessionPath(sessionSecret) + "/fail");
         sendSessionCallback(url, sessionSecret, params);
     }

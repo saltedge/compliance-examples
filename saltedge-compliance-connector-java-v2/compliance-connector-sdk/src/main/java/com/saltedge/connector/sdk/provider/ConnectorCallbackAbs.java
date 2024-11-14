@@ -42,7 +42,7 @@ public interface ConnectorCallbackAbs {
     /**
      * Check if User Consent (Bank Offered Consent) is required for authorization session determined by sessionSecret.
      *
-     * @param sessionSecret Unique identifier of authorization session
+     * @param sessionSecret Unique identifier of authorization session.
      * @return True if User Consent (Bank Offered Consent) is required
      */
     boolean isAccountSelectionRequired(@NotEmpty String sessionSecret);
@@ -50,7 +50,7 @@ public interface ConnectorCallbackAbs {
     /**
      * Return Ais Consent model.
      *
-     * @param sessionSecret Unique identifier of authorization session
+     * @param sessionSecret Unique identifier of authorization session.
      * @return Ais Consent
      */
     AisToken getAisToken(@NotEmpty String sessionSecret);
@@ -58,34 +58,27 @@ public interface ConnectorCallbackAbs {
     /**
      * Collect list of all AIS Consents by user id.
      *
-     * @param userId unique identifier of authenticated User
+     * @param userId Unique PSU identifier issued by ASPSP.
      * @return list of AIS Consents
      */
     List<AisToken> getAisTokens(@NotEmpty String userId);
 
     /**
-     * Collect list of all PIIS Consents by user id.
-     *
-     * @param userId unique identifier of authenticated User
-     * @return list of PIIS Consents
-     */
-    List<AisToken> getPiisTokens(@NotEmpty String userId);
-
-    /**
      * Collect list of access tokens of active consents (AIS, PIIS)
      *
-     * @param userId Unique identifier of authenticated User
+     * @param userId Unique PSU identifier issued by ASPSP.
      * @return List of access tokens of active consents
      */
     List<String> getActiveAccessTokens(@NotEmpty String userId);
 
     /**
-     * Provider notify Connector SDK Module about oAuth success authentication
-     * and provides user consent for accounts (balances/transactions)
+     * ASPSP notifies Salt Edge Compliance service that the AIS authorisation finished with success
+     * and provides user consent for accounts (balances/transactions).
      *
-     * @param sessionSecret Secret of User authorization session.
-     * @param userId Unique identifier of authenticated User.
-     * @param accessToken Unique string that identifies a user access. Life period of accessToken is set by TPP and can not be more than 180 days.
+     * @param sessionSecret Unique identifier of authorization session.
+     * @param userId Unique PSU identifier issued by ASPSP.
+     * @param accessToken Unique token that will be used to access ASPSP data. Token is a unique value which is linked to authenticated user and consent.
+     *                    Life period of accessToken can not be more than 180 days.
      * @param consents List of balances and transactions of accounts for which is offered consent. Can be null if bank offered consent is not required.
      * @return returnUrl URL string for final redirection of Authorization session (in browser) back to TPP side.
      * @see ProviderServiceAbs#getAccountInformationAuthorizationPageUrl
@@ -99,18 +92,27 @@ public interface ConnectorCallbackAbs {
     );
 
     /**
-     * Provider notifies Connector SDK Module about oAuth authentication fail
+     * ASPSP notifies Salt Edge Compliance service that the AIS authorisation has been cancelled by user or failed.
      *
-     * @param sessionSecret Secret of Token Create session
+     * @param sessionSecret Unique identifier of authorization session.
      * @return URL string for final redirection of Authorization session (in browser) back to TPP side.
      */
     String onAccountInformationAuthorizationFail(@NotEmpty String sessionSecret);
 
     /**
+     * ASPSP notifies Salt Edge Compliance service that the AIS authorisation has been cancelled by user or failed.
+     *
+     * @param sessionSecret Unique identifier of authorization session.
+     * @param userId        Unique PSU identifier issued by ASPSP.
+     * @return redirectUrl string for final redirection of Authorization session (in browser) back to TPP side.
+     */
+    String onAccountInformationAuthorizationFail(@NotEmpty String sessionSecret, String userId);
+
+    /**
      * Revoke Account information consent associated with userId and accessToken
      *
-     * @param userId Unique identifier of authenticated User
-     * @param accessToken Unique string that identifies a user
+     * @param userId Unique PSU identifier issued by ASPSP.
+     * @param accessToken Unique token that will be used to access ASPSP data. Token is a unique value which is linked to authenticated user and consent.
      * @return Operation result, `true` if successful
      */
     boolean revokeAccountInformationConsent(
@@ -119,9 +121,20 @@ public interface ConnectorCallbackAbs {
     );
 
     /**
-     * Provider notify Connector Module about oAuth success authentication and user consent for payment
+     * ASPSP notifies Salt Edge Compliance service about funds availability and payment status changes.
+     * Should not be performed after onPaymentInitiationAuthorizationSuccess or onPaymentInitiationAuthorizationFail.
      *
-     * @param userId Unique identifier of authenticated User
+     * @param fundsAvailable a value that indicates whether we have enough funds to make a payment
+     * @param paymentExtra Extra data of payment order, provided in `ProviderServiceAbs.createPayment(...)`
+     * @param status intermediate status (RCVD, ACTC, ACSC, ACSP, ACWC, ACCP, PDNG, PATC, ACWP, ACFC)
+     */
+    void updatePaymentFundsInformation(Boolean fundsAvailable, String paymentExtra, String status);
+
+    /**
+     * ASPSP notifies Salt Edge Compliance service that the PIS flow (payment authorisation and payment initiation) finished with success.
+     * As result Salt Edge Compliance service will set final status as indicated ij ASPSP Dashboard (e.g. ACSC, ACCC)
+     *
+     * @param userId Unique PSU identifier issued by ASPSP.
      * @param paymentExtra Extra data of payment order, provided in `ProviderServiceAbs.createPayment(...)`
      * @param paymentProduct Payment product code (Allowed values: sepa-credit-transfers, instant-sepa-credit-transfers, target-2-payments, faster-payment-service, internal-transfer)
      * @return URL as string for final redirection of Payment Authorization session
@@ -133,7 +146,7 @@ public interface ConnectorCallbackAbs {
     );
 
     /**
-     * Provider should notify Connector Module about oAuth authentication fail or Payment confirmation deny
+     * ASPSP notifies Salt Edge Compliance service that the PIS authorisation has been cancelled by user or failed.
      *
      * @param paymentExtra Extra data of payment order, provided in `ProviderServiceAbs.createPayment(...)`
      * @return URL string for final redirection of Payment Authorization session
@@ -141,28 +154,28 @@ public interface ConnectorCallbackAbs {
     String onPaymentInitiationAuthorizationFail(@NotEmpty String paymentExtra);
 
     /**
-     * Provider notify Connector Module about funds available
+     * Collect list of all PIIS Consents by user id.
      *
-     * @param fundsAvailable a value that indicates whether we have enough funds to make a payment
-     * @param paymentExtra Extra data of payment order, provided in `ProviderServiceAbs.createPayment(...)`
-     * @param status intermediate status
+     * @param userId Unique PSU identifier issued by ASPSP.
+     * @return list of PIIS Consents
      */
-    void updatePaymentFundsInformation(Boolean fundsAvailable, String paymentExtra, String status);
+    List<AisToken> getPiisTokens(@NotEmpty String userId);
 
     /**
      * Collect Account identifiers of PIIS consents
      *
-     * @param sessionSecret unique identifier of consent authentication session
+     * @param sessionSecret Unique identifier of authorization session.
      * @return Account identifiers data
      */
     ParticipantAccount getFundsConfirmationConsentData(@NotEmpty String sessionSecret);
 
     /**
-     * Provider notify Connector SDK Module about oAuth success authentication of Funds Confirmation flow
+     * ASPSP notifies Salt Edge Compliance service that the PIIS authorisation finished with success.
      *
-     * @param sessionSecret Secret of User authorization session.
-     * @param userId Unique identifier of authenticated User.
-     * @param accessToken Unique string that identifies a user access.
+     * @param sessionSecret Unique identifier of authorization session.
+     * @param userId Unique PSU identifier issued by ASPSP.
+     * @param accessToken Unique token that will be used to access ASPSP data. Token is a unique value which is linked to authenticated user and consent.
+     *                    Life period of accessToken for PIIS consent is unlimited.
      * @return returnUrl URL string for final redirection of Authorization session (in browser) back to TPP side.
      * @see ProviderServiceAbs#getAccountInformationAuthorizationPageUrl
      * @see ProviderConsents
@@ -174,10 +187,19 @@ public interface ConnectorCallbackAbs {
     );
 
     /**
-     * Provider notifies Connector SDK Module about oAuth authentication fail of Funds Confirmation flow
+     * ASPSP notifies Salt Edge Compliance service that the PIIS authorisation has been cancelled by user or failed.
      *
-     * @param sessionSecret Secret of Token Create session
+     * @param sessionSecret Unique identifier of authorization session.
      * @return returnUrl URL string for final redirection of Authorization session (in browser) back to TPP side.
      */
     String onFundsConfirmationConsentAuthorizationFail(@NotEmpty String sessionSecret);
+
+    /**
+     * ASPSP notifies Salt Edge Compliance service that the PIIS authorisation has been cancelled by user or failed.
+     *
+     * @param sessionSecret Unique identifier of authorization session.
+     * @param userId        Unique PSU identifier issued by ASPSP.
+     * @return returnUrl URL string for final redirection of Authorization session (in browser) back to TPP side.
+     */
+    String onFundsConfirmationConsentAuthorizationFail(@NotEmpty String sessionSecret, String userId);
 }

@@ -54,7 +54,7 @@ import static com.saltedge.connector.sdk.SDKConstants.PAYMENT_PRODUCT_INSTANT_SE
 
 /**
  * Class for call back communication from Provider application to Connector SDK Module.
- * Implementation of ProviderCallback interface.
+ * Implementation of ConnectorCallbackAbs interface.
  *
  * @see ConnectorCallbackAbs
  */
@@ -84,7 +84,7 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
     /**
      * Check if User Consent (Bank Offered Consent) is required for AIS authorization session determined by sessionSecret.
      *
-     * @param sessionSecret unique identifier of authorization session
+     * @param sessionSecret Unique identifier of authorization session.
      * @return true if User Consent (Bank Offered Consent) is required
      */
     @Override
@@ -96,8 +96,8 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
     /**
      * Return Ais Consent model.
      *
-     * @param sessionSecret Unique identifier of authorization session
-     * @return Ais Consent
+     * @param sessionSecret Unique identifier of authorization session.
+     * @return Ais Consent model.
      */
     @Override
     public AisToken getAisToken(@NotEmpty String sessionSecret) {
@@ -107,8 +107,8 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
     /**
      * Collect list of all AIS Consents by user id.
      *
-     * @param userId unique identifier of authenticated User
-     * @return list of AIS Consents
+     * @param userId Unique PSU identifier issued by ASPSP.
+     * @return list of AIS Consent models.
      */
     @Override
     public List<AisToken> getAisTokens(@NotEmpty String userId) {
@@ -116,21 +116,10 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
     }
 
     /**
-     * Collect list of all PIIS Consents by user id.
-     *
-     * @param userId unique identifier of authenticated User
-     * @return list of PIIS Consents
-     */
-    @Override
-    public List<AisToken> getPiisTokens(@NotEmpty String userId) {
-        return tokensCollectorService.collectAisTokensByUserId(userId);
-    }
-
-    /**
      * Collect list of access tokens of active consents (AIS, PIIS).
      * Active - confirmed and non-expired consents.
      *
-     * @param userId unique identifier of authenticated User
+     * @param userId Unique PSU identifier issued by ASPSP.
      * @return list of access tokens of active consents
      */
     @Override
@@ -139,13 +128,13 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
     }
 
     /**
-     * Provider notify Connector SDK Module about oAuth success authentication and authorization of consent.
+     * ASPSP notifies Salt Edge Compliance Service that the AIS authorisation finished with success
+     * and provides user consent for accounts (balances/transactions).
      *
-     *
-     * @param sessionSecret of User authorization session.
-     * @param userId        of authenticated User.
-     * @param accessToken   is an unique string that identifies a user access.
-     *                      life period of accessToken is set by TPP and can not be more than 180 days.
+     * @param sessionSecret Unique identifier of authorization session.
+     * @param userId        Unique PSU identifier issued by ASPSP.
+     * @param accessToken   Unique token that will be used to access ASPSP data. Token is a unique value which is linked to authenticated user and consent.
+     *                      Life period of accessToken can not be more than 180 days.
      * @param consents      bank offered consent with list of balances of accounts and transactions of accounts.
      *                      Can be null if bank offered consent is not required.
      * @return redirectUrl string for final redirection of Authorization session (in browser) back to TPP side.
@@ -163,10 +152,9 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
     }
 
     /**
-     * Provider notifies Connector SDK Module about oAuth authentication fail
-     * and SDK send fail callback request
+     * ASPSP notifies Salt Edge Compliance Service that the AIS authorisation has been cancelled by user or failed.
      *
-     * @param sessionSecret of Token Create session
+     * @param sessionSecret Unique identifier of authorization session.
      * @return redirectUrl string for final redirection of Authorization session (in browser) back to TPP side.
      */
     @Override
@@ -179,10 +167,26 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
     }
 
     /**
+     * ASPSP notifies Salt Edge Compliance Service that the AIS authorisation has been cancelled by user or failed.
+     *
+     * @param sessionSecret Unique identifier of authorization session.
+     * @param userId        Unique PSU identifier issued by ASPSP.
+     * @return redirectUrl string for final redirection of Authorization session (in browser) back to TPP side.
+     */
+    @Override
+    public String onAccountInformationAuthorizationFail(@NotEmpty String sessionSecret, String userId) {
+        AisToken token = revokeTokenService.revokeAisTokenBySessionSecret(sessionSecret);
+        if (token == null) return null;
+
+        sessionsCallbackService.sendFailCallbackAsync(sessionSecret, new Unauthorized.AccessDenied());
+        return token.tppRedirectUrl;
+    }
+
+    /**
      * Revoke Account information consent associated with userId and accessToken
      *
-     * @param userId      unique identifier of User
-     * @param accessToken unique string that identifies current access to Account Information of an User
+     * @param userId      Unique PSU identifier issued by ASPSP.
+     * @param accessToken Unique token that will be used to access ASPSP data. Token is a unique value which is linked to authenticated user and consent.
      * @return true if revoke order is saved
      */
     @Override
@@ -194,9 +198,27 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
     }
 
     /**
-     * Provider notify Connector Module about oAuth success authentication and user consent for payment
+     * ASPSP notifies Salt Edge Compliance service about funds availability and payment status changes.
+     * Should not be performed after onPaymentInitiationAuthorizationSuccess or onPaymentInitiationAuthorizationFail.
      *
-     * @param userId Unique identifier of authenticated User
+     * @param fundsAvailable a value that indicates whether we have enough funds to make a payment
+     * @param paymentExtra Extra data of payment order, provided in `ProviderServiceAbs.createPayment(...)`
+     * @param status intermediate status (RCVD, ACTC, ACSC, ACSP, ACWC, ACCP, PDNG, PATC, ACWP, ACFC)
+     */
+    @Override
+    public void updatePaymentFundsInformation(Boolean fundsAvailable, String paymentExtra, String status) {
+        Map<String, String> paymentExtraMap = parseExtra(paymentExtra);
+        String sessionSecret = paymentExtraMap.get(SDKConstants.KEY_SESSION_SECRET);
+
+        SessionUpdateCallbackRequest updateParams = new SessionUpdateCallbackRequest(fundsAvailable, status);
+        if (StringUtils.hasText(sessionSecret)) sessionsCallbackService.sendUpdateCallbackAsync(sessionSecret, updateParams);
+    }
+
+    /**
+     * ASPSP notifies Salt Edge Compliance service that the PIS flow (payment authorisation and payment initiation) finished with success.
+     * As result Salt Edge Compliance service will set final status as indicated ij ASPSP Dashboard (e.g. ACSC, ACCC)
+     *
+     * @param userId Unique PSU identifier issued by ASPSP.
      * @param paymentExtra Extra data of payment order, provided in `ProviderServiceAbs.createPayment(...)`
      * @param paymentProduct Payment product code (Allowed values: sepa-credit-transfers, instant-sepa-credit-transfers, target-2-payments, faster-payment-service, internal-transfer)
      * @return returnUrl string for final redirection of Payment Authorization session
@@ -220,17 +242,8 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
         return paymentExtraMap.getOrDefault(SDKConstants.KEY_RETURN_TO_URL, "");
     }
 
-    @Override
-    public void updatePaymentFundsInformation(Boolean fundsAvailable, String paymentExtra, String status) {
-        Map<String, String> paymentExtraMap = parseExtra(paymentExtra);
-        String sessionSecret = paymentExtraMap.get(SDKConstants.KEY_SESSION_SECRET);
-
-        SessionUpdateCallbackRequest updateParams = new SessionUpdateCallbackRequest(fundsAvailable, status);
-        if (StringUtils.hasText(sessionSecret)) sessionsCallbackService.sendUpdateCallbackAsync(sessionSecret, updateParams);
-    }
-
     /**
-     * Provider should notify Connector Module about oAuth authentication fail or Payment confirmation deny
+     * ASPSP notifies Salt Edge Compliance service that the PIS authorisation has been cancelled by user or failed.
      *
      * @param paymentExtra extra data of payment order
      * @return returnUrl string for final redirection of Payment Authorization session
@@ -248,9 +261,20 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
     }
 
     /**
+     * Collect list of all PIIS Consents by user id.
+     *
+     * @param userId Unique PSU identifier issued by ASPSP.
+     * @return list of PIIS Consent models.
+     */
+    @Override
+    public List<AisToken> getPiisTokens(@NotEmpty String userId) {
+        return tokensCollectorService.collectAisTokensByUserId(userId);
+    }
+
+    /**
      * Collect Account identifiers of PIIS consents
      *
-     * @param sessionSecret unique identifier of consent authentication session
+     * @param sessionSecret Unique identifier of authorization session.
      * @return Account identifiers data
      */
     @Override
@@ -259,13 +283,12 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
     }
 
     /**
-     * Provider notify Connector SDK Module about oAuth success authentication
-     * and provides user consent for accounts (balances/transactions)
+     * ASPSP notifies Salt Edge Compliance Service that the PIIS authorisation finished with success.
      *
-     * @param sessionSecret of User authorization session.
-     * @param userId        of authenticated User.
-     * @param accessToken   is a unique string that identifies a user access.
-     *                      life period of accessToken is set by TPP and can not be more than 180 days.
+     * @param sessionSecret Unique identifier of authorization session.
+     * @param userId        Unique PSU identifier issued by ASPSP.
+     * @param accessToken   Unique token that will be used to access ASPSP data. Token is a unique value which is linked to authenticated user and consent.
+     *                      Life period of accessToken for PIIS consent is unlimited.
      * @return redirectUrl string for final redirection of Authorization session (in browser) back to TPP side.
      * @see ProviderServiceAbs#getAccountInformationAuthorizationPageUrl
      * @see ProviderConsents
@@ -280,16 +303,29 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
     }
 
     /**
-     * Provider notifies Connector SDK Module about oAuth authentication fail
-     * and SDK send fail callback request
+     * ASPSP notifies Salt Edge Compliance Service that the PIIS authorisation has been cancelled by user or failed.
      *
-     * @param sessionSecret of Token Create session
+     * @param sessionSecret Unique identifier of authorization session.
      * @return redirectUrl string for final redirection of Authorization session (in browser) back to TPP side.
      */
     @Override
     public String onFundsConfirmationConsentAuthorizationFail(@NotEmpty String sessionSecret) {
         PiisToken token = revokeTokenService.revokePiisTokenBySessionSecret(sessionSecret);
         sessionsCallbackService.sendFailCallbackAsync(sessionSecret, new Unauthorized.AccessDenied());
+        return (token == null) ? null : token.tppRedirectUrl;
+    }
+
+    /**
+     * ASPSP notifies Salt Edge Compliance Service that the PIIS authorisation has been cancelled by user or failed.
+     *
+     * @param sessionSecret Unique identifier of authorization session.
+     * @param userId        Unique PSU identifier issued by ASPSP.
+     * @return redirectUrl string for final redirection of Authorization session (in browser) back to TPP side.
+     */
+    @Override
+    public String onFundsConfirmationConsentAuthorizationFail(@NotEmpty String sessionSecret, String userId) {
+        PiisToken token = revokeTokenService.revokePiisTokenBySessionSecret(sessionSecret);
+        sessionsCallbackService.sendFailCallbackAsync(sessionSecret, new Unauthorized.AccessDenied(), userId);
         return (token == null) ? null : token.tppRedirectUrl;
     }
 
