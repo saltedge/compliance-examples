@@ -22,11 +22,11 @@ package com.saltedge.connector.sdk.provider;
 
 import com.saltedge.connector.sdk.api.models.ProviderConsents;
 import com.saltedge.connector.sdk.models.ParticipantAccount;
-
 import com.saltedge.connector.sdk.models.domain.AisToken;
+import com.saltedge.connector.sdk.models.domain.PiisToken;
 import jakarta.validation.constraints.NotEmpty;
+
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 /**
  * Interface for call back communication from Provider application to Connector SDK Module
@@ -156,10 +156,10 @@ public interface ConnectorCallbackAbs {
     /**
      * Collect list of all PIIS Consents by user id.
      *
-     * @param userId Unique PSU identifier issued by ASPSP.
+     * @param userId unique identifier of authenticated User
      * @return list of PIIS Consents
      */
-    List<AisToken> getPiisTokens(@NotEmpty String userId);
+    List<PiisToken> getPiisTokens(@NotEmpty String userId);
 
     /**
      * Collect Account identifiers of PIIS consents
