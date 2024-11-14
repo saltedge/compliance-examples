@@ -122,8 +122,8 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
      * @return list of PIIS Consents
      */
     @Override
-    public List<AisToken> getPiisTokens(@NotEmpty String userId) {
-        return tokensCollectorService.collectAisTokensByUserId(userId);
+    public List<PiisToken> getPiisTokens(@NotEmpty String userId) {
+        return tokensCollectorService.collectPiisTokensByUserId(userId);
     }
 
     /**
