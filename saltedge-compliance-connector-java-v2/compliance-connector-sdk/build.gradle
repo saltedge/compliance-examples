@@ -105,7 +105,7 @@ publishing {
         }
         maven {
             name = 'localOutput'
-            url = "${rootDir}/../out_${sourceCompatibility}"
+            url = "${rootDir}/../out_${compileJava.sourceCompatibility}"
         }
     }
 }
