@@ -114,4 +114,11 @@ public class TransactionExtra {
      */
     @JsonProperty("transaction_timestamp")
     public Instant transactionTimestamp;
+
+    /**
+     * Original amount of the transaction at the Point of Interaction in original currency.
+     * The amount of the transaction as billed to the card account.
+     */
+    @JsonProperty("original_amount")
+    public Amount originalAmount;
 }
