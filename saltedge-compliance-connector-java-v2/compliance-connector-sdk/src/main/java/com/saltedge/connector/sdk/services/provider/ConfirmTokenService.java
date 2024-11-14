@@ -126,6 +126,7 @@ public class ConfirmTokenService extends BaseService {
       updatePiisStatusSafe(token, status);
     } catch (Exception e) {
       log.error("confirmPiisToken: ", e);
+      updatePiisStatusSafe(token, ConsentStatus.FAILED);
       callbackService.sendFailCallbackAsync(token.sessionSecret, e);
     }
   }
