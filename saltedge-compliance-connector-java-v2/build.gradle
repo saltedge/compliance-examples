@@ -5,7 +5,7 @@ plugins {
 }
 
 group 'com.saltedge.connector.example'
-version '1.2.0'
+version '1.3.0'
 
 compileJava {
     sourceCompatibility = JavaVersion.VERSION_17
@@ -31,7 +31,7 @@ dependencies {
     implementation project(':compliance-connector-sdk')
 
     // COMPLIANCE-CONNECTOR-SDK AS MAVEN CENTRAL DEPENDENCY
-//    implementation 'com.saltedge.connector.sdk:compliance-connector-sdk:2.14.1'
+//    implementation 'com.saltedge.connector.sdk:compliance-connector-sdk:2.14.4'
 //    def jjwtVersion = '0.12.6'
 //    implementation "io.jsonwebtoken:jjwt-api:$jjwtVersion"
 //    runtimeOnly "io.jsonwebtoken:jjwt-impl:$jjwtVersion"
@@ -41,4 +41,5 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.2'
     testImplementation "org.springframework.boot:spring-boot-starter-test:$springVersion"
+    testImplementation "org.xmlunit:xmlunit-core:2.10.0" // FIX GHSA-chfm-68vv-pvw5
 }

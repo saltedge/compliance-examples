@@ -163,9 +163,10 @@ public interface ConnectorCallbackAbs {
      * @param userId Unique PSU identifier issued by ASPSP.
      * @param paymentExtra Service data of payment order, provided in `ProviderServiceAbs.createPayment(...)`.
      * @param debtorAccount If the debtor account was selected on ASPSP side this object must be indicated in request, containing the same debtor account identifiers as displayed to the end user in ASPSP interfaces.
-     * @return CompletableFuture<ErrorResponse> Result of Async job. Can be used for retry if an error occurs.
+     * @return CompletableFuture (with ErrorResponse) Result of Async job. Can be used for retry if an error occurs.
      * @throws NotFound.PaymentNotFound if paymentExtra has invalid format.
      * @throws InterruptedException Thrown when a thread is waiting, sleeping, or otherwise occupied, and the thread is interrupted, either before or during the activity.
+     * @see ErrorResponse
      */
     CompletableFuture<ErrorResponse> onPaymentInitiateSuccess(
             @NotEmpty String userId,
@@ -181,9 +182,10 @@ public interface ConnectorCallbackAbs {
      * @param userId Unique PSU identifier issued by ASPSP.
      * @param paymentExtra Service data of payment order, provided in `ProviderServiceAbs.createPayment(...)`.
      * @param status Fail status of payment, Allowed: CANC, RJCT.
-     * @return CompletableFuture<ErrorResponse> Result of Async job. Can be used for retry if an error occurs.
+     * @return CompletableFuture (with ErrorResponse) Result of Async job. Can be used for retry if an error occurs.
      * @throws NotFound.PaymentNotFound if paymentExtra has invalid format.
      * @throws InterruptedException Thrown when a thread is waiting, sleeping, or otherwise occupied, and the thread is interrupted, either before or during the activity.
+     * @see ErrorResponse
      */
     CompletableFuture<ErrorResponse> onPaymentInitiateFail(
             @NotEmpty String userId,
