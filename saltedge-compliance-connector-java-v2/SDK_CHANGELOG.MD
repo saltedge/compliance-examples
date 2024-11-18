@@ -1,5 +1,39 @@
 # Salt Edge Compliance Connector SDK Changelog
 
+## 2.12.6 (2024-11-19)
+### Add
+- originalAmount to TransactionExtra
+- userId to BaseFailRequest
+- aisTppRedirectUrl(), piisTppRedirectUrl(), pisTppRedirectUrl()
+- updatePaymentStatus() with CompletableFuture<ErrorResponse> result
+- onPaymentInitiateSuccess() with CompletableFuture<ErrorResponse> result
+- onPaymentInitiateFail() with CompletableFuture<ErrorResponse> result
+### Update
+- Fix consent status management.
+- updatePaymentFundsInformation() returns CompletableFuture<ErrorResponse> instead of void
+- onPaymentInitiationAuthorizationSuccess() throws NotFound.PaymentNotFound
+- onPaymentInitiationAuthorizationFail() throws NotFound.PaymentNotFound
+- onPaymentInitiationAuthorizationSuccess() throws NotFound.PaymentNotFound
+### Fix
+- GHSA-chfm-68vv-pvw5
+
+## 2.14.4 (2024-11-19)
+### Add
+- originalAmount to TransactionExtra
+- userId to BaseFailRequest
+- aisTppRedirectUrl(), piisTppRedirectUrl(), pisTppRedirectUrl()
+- updatePaymentStatus() with CompletableFuture<ErrorResponse> result
+- onPaymentInitiateSuccess() with CompletableFuture<ErrorResponse> result
+- onPaymentInitiateFail() with CompletableFuture<ErrorResponse> result
+### Update
+- Fix consent status management.
+- updatePaymentFundsInformation() returns CompletableFuture<ErrorResponse> instead of void
+- onPaymentInitiationAuthorizationSuccess() throws NotFound.PaymentNotFound
+- onPaymentInitiationAuthorizationFail() throws NotFound.PaymentNotFound
+- onPaymentInitiationAuthorizationSuccess() throws NotFound.PaymentNotFound
+### Fix
+- GHSA-chfm-68vv-pvw5
+
 ## 2.14.3 (2024-11-10)
 ### Add
 - Add getAisTokens, getPiisTokens methods.

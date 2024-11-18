@@ -46,7 +46,10 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.Supplier;
 
 /**
@@ -80,7 +83,7 @@ public class ProviderService implements ProviderServiceAbs {
     @Override
     public String getAccountInformationAuthorizationPageUrl(
             String sessionSecret,
-            boolean userConsentIsRequired,//TODO
+            boolean userConsentIsRequired,
             String psuIpAddress
     ) {
         return getSessionAuthorizationPageUrl(UserAuthenticateController.Scope.accounts, sessionSecret);
@@ -204,7 +207,8 @@ public class ProviderService implements ProviderServiceAbs {
             String currency,
             String description,
             String extraData,
-            String psuIpAddress
+            String psuIpAddress,
+            String tppRedirectUrl
     ) {
         Double amountValue = ConnectorServiceTools.getAmountValue(amount);
         if (amountValue == null) throw new BadRequest.InvalidAttributeValue("amount");
@@ -244,7 +248,8 @@ public class ProviderService implements ProviderServiceAbs {
             String currency,
             String description,
             String extraData,
-            String psuIpAddress
+            String psuIpAddress,
+            String tppRedirectUrl
     ) {
         Double amountValue = ConnectorServiceTools.getAmountValue(amount);
         if (amountValue == null) throw new BadRequest.InvalidAttributeValue("amount");

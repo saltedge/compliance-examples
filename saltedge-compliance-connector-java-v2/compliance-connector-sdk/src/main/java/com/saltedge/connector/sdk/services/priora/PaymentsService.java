@@ -82,7 +82,8 @@ public class PaymentsService extends BaseService {
                         order.getInstructedAmount().getCurrency(),
                         order.getRemittanceInformationUnstructured(),
                         extraData,
-                        paymentRequest.psuIpAddress
+                        paymentRequest.psuIpAddress,
+                        paymentRequest.returnToUrl
                 );
             } else {
                 paymentAuthenticationUrl = providerService.createPayment(
@@ -98,7 +99,8 @@ public class PaymentsService extends BaseService {
                         order.getInstructedAmount().getCurrency(),
                         order.getRemittanceInformationUnstructured(),
                         extraData,
-                        paymentRequest.psuIpAddress
+                        paymentRequest.psuIpAddress,
+                        paymentRequest.returnToUrl
                 );
             }
 
@@ -107,9 +109,9 @@ public class PaymentsService extends BaseService {
                         paymentAuthenticationUrl,
                         SDKConstants.STATUS_RCVD
                 );
-                sessionCallbackService.sendUpdateCallbackAsync(paymentRequest.sessionSecret, params);
+                sessionCallbackService.sendUpdateCallback(paymentRequest.sessionSecret, params);
             } else {
-                sessionCallbackService.sendFailCallbackAsync(paymentRequest.sessionSecret, new NotFound.PaymentNotCreated());
+                sessionCallbackService.sendFailCallback(paymentRequest.sessionSecret, new NotFound.PaymentNotCreated(), null);
             }
         } catch (Exception e) {
             log.error("PaymentsService.createPayment:", e);

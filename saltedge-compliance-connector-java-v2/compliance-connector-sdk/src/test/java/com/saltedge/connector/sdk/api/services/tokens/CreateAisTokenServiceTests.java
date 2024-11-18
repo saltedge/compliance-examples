@@ -69,13 +69,13 @@ public class CreateAisTokenServiceTests extends BaseServicesTests {
 
 		// then
 		final ArgumentCaptor<RuntimeException> captor = ArgumentCaptor.forClass(RuntimeException.class);
-		verify(sessionsCallbackService).sendFailCallbackAsync(eq("sessionSecret"), captor.capture());
+		verify(sessionsCallbackService).sendFailCallback(eq("sessionSecret"), captor.capture());
 		assertThat(((HttpErrorParams) captor.getValue()).getErrorClass()).isEqualTo("InvalidAuthorizationType");
 		verifyNoInteractions(aisTokensRepository);
 	}
 
 	@Test
-	public void givenOAuthAuthTypeAndBankConsent_whenStartAuthorization_thenSaveTokenWithoutConsentAndSendSessionsUpdateCallback() {
+	public void givenOAuthAuthTypeAndBankConsent_whenStartAuthorization_thenSaveTokenWithoutConsentAndSendSessionsUpdateCallback() throws InterruptedException {
 		// given
 		given(providerService.getAccountInformationAuthorizationPageUrl("sessionSecret", true, psuIpAddress))
 				.willReturn("http://example.com?session_secret=sessionSecret");
@@ -88,7 +88,7 @@ public class CreateAisTokenServiceTests extends BaseServicesTests {
 
 		// then
 		final ArgumentCaptor<SessionUpdateCallbackRequest> callbackCaptor = ArgumentCaptor.forClass(SessionUpdateCallbackRequest.class);
-		verify(sessionsCallbackService).sendUpdateCallbackAsync(eq("sessionSecret"), callbackCaptor.capture());
+		verify(sessionsCallbackService).sendUpdateCallback(eq("sessionSecret"), callbackCaptor.capture());
 		assertThat(callbackCaptor.getValue().status).isEqualTo(SDKConstants.STATUS_RECEIVED);
 		assertThat(callbackCaptor.getValue().redirectUrl).isEqualTo("http://example.com?session_secret=sessionSecret");
 
@@ -101,7 +101,7 @@ public class CreateAisTokenServiceTests extends BaseServicesTests {
 	}
 
 	@Test
-	public void givenOAuthAuthTypeAndGlobalConsent_whenStartAuthorization_thenSaveTokenWithConsentAndSendSessionsUpdateCallback() {
+	public void givenOAuthAuthTypeAndGlobalConsent_whenStartAuthorization_thenSaveTokenWithConsentAndSendSessionsUpdateCallback() throws InterruptedException {
 		// given
 		given(providerService.getAccountInformationAuthorizationPageUrl("sessionSecret", false, psuIpAddress))
 				.willReturn("http://example.com?session_secret=sessionSecret");
@@ -113,7 +113,7 @@ public class CreateAisTokenServiceTests extends BaseServicesTests {
 
 		// then
 		final ArgumentCaptor<SessionUpdateCallbackRequest> callbackCaptor = ArgumentCaptor.forClass(SessionUpdateCallbackRequest.class);
-		verify(sessionsCallbackService).sendUpdateCallbackAsync(eq("sessionSecret"), callbackCaptor.capture());
+		verify(sessionsCallbackService).sendUpdateCallback(eq("sessionSecret"), callbackCaptor.capture());
 		assertThat(callbackCaptor.getValue().status).isEqualTo(SDKConstants.STATUS_RECEIVED);
 		assertThat(callbackCaptor.getValue().redirectUrl).isEqualTo("http://example.com?session_secret=sessionSecret");
 

@@ -56,6 +56,7 @@ public class SDKConstants {
     public final static String KEY_ACCOUNT = "account";
     public final static String KEY_AMOUNT = "amount";
     public final static String KEY_INSTRUCTED_AMOUNT = "instructed_amount";
+    public final static String DEBTOR_ACCOUNT = "debtor_account";
     public final static String KEY_ACCOUNT_ID = "account_id";
     public final static String KEY_IBAN = "iban";
     public final static String KEY_BBAN = "bban";
@@ -63,6 +64,7 @@ public class SDKConstants {
     public final static String KEY_BANK_ACCOUNT_IDENTIFIER = "bank_account_identifier";
     public final static String KEY_SORT_CODE = "sort_code";
     public final static String KEY_MSISDN = "msisdn";
+    public final static String KEY_SWIFT_CODE = "swift_code";
     public final static String KEY_MASKED_PAN = "masked_pan";
     public final static String KEY_NAME = "name";
     public final static String KEY_DESCRIPTION = "description";

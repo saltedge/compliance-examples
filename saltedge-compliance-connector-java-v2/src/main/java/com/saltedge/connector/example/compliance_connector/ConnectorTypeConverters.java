@@ -112,6 +112,7 @@ public class ConnectorTypeConverters {
         result.setExtra(new TransactionExtra());
         result.getExtra().ultimateCreditor = result.getCreditorDetails().name;
         result.getExtra().ultimateDebtor = result.getDebtorDetails().name;
+        result.getExtra().originalAmount = new Amount(transaction.amount, transaction.currencyCode);
 
         TransactionRemittanceInformation information = new TransactionRemittanceInformation();
         information.structured = transaction.description;

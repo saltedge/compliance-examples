@@ -26,19 +26,45 @@ import com.saltedge.connector.sdk.SDKConstants;
 
 /**
  * Base Fail callback request model
+ * <a href="https://priora.saltedge.com/docs/aspsp/v2/ais#salt-edge-endpoints-sessions-sessions-fail">...</a>
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class BaseFailRequest extends BaseCallbackRequest {
+    /**
+     * Class of failure.
+     */
     @JsonProperty(SDKConstants.KEY_ERROR_CLASS)
     public String errorClass;
 
+    /**
+     * Conveys the reason of failure in human-readable text.
+     */
     @JsonProperty(SDKConstants.KEY_ERROR_MESSAGE)
     public String errorMessage;
+
+    /**
+     * PSU identifier on Connector side. Used to map PSU resource on Salt Edge PSD2 Compliance side to Connector one.
+     */
+    @JsonProperty(SDKConstants.KEY_USER_ID)
+    public String userId;
+
+    /**
+     * Conveys current status of the operation.
+     * Allowed values: RJCT, CANC
+     */
+    @JsonProperty(SDKConstants.KEY_STATUS)
+    public String status;
 
     public BaseFailRequest() { }
 
     public BaseFailRequest(String errorClass, String errorMessage) {
         this.errorClass = errorClass;
         this.errorMessage = errorMessage;
+    }
+
+    public BaseFailRequest(String errorClass, String errorMessage, String userId) {
+        this.errorClass = errorClass;
+        this.errorMessage = errorMessage;
+        this.userId = userId;
     }
 }

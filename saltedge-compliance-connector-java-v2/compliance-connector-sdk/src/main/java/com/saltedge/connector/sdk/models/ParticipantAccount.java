@@ -39,13 +39,13 @@ public class ParticipantAccount {
     public String currencyCode;
 
     /**
-     * Basic Bank Account Number
+     * Basic Bank Account Number.
      */
     @JsonProperty(SDKConstants.KEY_BBAN)
     public String bban;
 
     /**
-     * International Bank Account Number
+     * International Bank Account Number.
      */
     @JsonProperty(SDKConstants.KEY_IBAN)
     public String iban;
@@ -57,13 +57,13 @@ public class ParticipantAccount {
     private String sortCode;
 
     /**
-     * International Bank Identifier Code
+     * International Bank Identifier Code.
      */
     @JsonProperty(SDKConstants.KEY_BIC)
     public String bic;
 
     /**
-     * Primary Account Number (PAN) of a card
+     * Primary Account Number (PAN) of a card.
      */
     @JsonProperty
     public String pan;
@@ -75,13 +75,25 @@ public class ParticipantAccount {
     public String maskedPan;
 
     /**
-     * A number uniquely identifying a subscription
+     * A number uniquely identifying a subscription.
      */
     @JsonProperty(SDKConstants.KEY_MSISDN)
     public String msisdn;
 
     /**
-     * Check if one of identifiers is not empty
+     * Business Identifier Code.
+     */
+    @JsonProperty(SDKConstants.KEY_SWIFT_CODE)
+    public String swiftCode;
+
+    /**
+     * Internal bank account identifier.
+     */
+    @JsonProperty(SDKConstants.KEY_BANK_ACCOUNT_IDENTIFIER)
+    public String bankAccountIdentifier;
+
+    /**
+     * Check if at least one of identifiers is present.
      *
      * @return true if model contains at least one identifier
      */
@@ -91,6 +103,8 @@ public class ParticipantAccount {
             || StringUtils.hasText(iban)
             || StringUtils.hasText(sortCode)
             || StringUtils.hasText(maskedPan)
+            || StringUtils.hasText(bankAccountIdentifier)
+            || StringUtils.hasText(swiftCode)
             || StringUtils.hasText(msisdn);
     }
 
@@ -182,30 +196,48 @@ public class ParticipantAccount {
         this.pan = pan;
     }
 
+    public String getSwiftCode() {
+        return swiftCode;
+    }
+
+    public void setSwiftCode(String swiftCode) {
+        this.swiftCode = swiftCode;
+    }
+
+    public String getBankAccountIdentifier() {
+        return bankAccountIdentifier;
+    }
+
+    public void setBankAccountIdentifier(String bankAccountIdentifier) {
+        this.bankAccountIdentifier = bankAccountIdentifier;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ParticipantAccount that = (ParticipantAccount) o;
-        return Objects.equals(getCurrencyCode(), that.getCurrencyCode()) && Objects.equals(getBban(), that.getBban()) && Objects.equals(getIban(), that.getIban()) && Objects.equals(getSortCode(), that.getSortCode()) && Objects.equals(getBic(), that.getBic()) && Objects.equals(getPan(), that.getPan()) && Objects.equals(getMaskedPan(), that.getMaskedPan()) && Objects.equals(getMsisdn(), that.getMsisdn());
+        return Objects.equals(currencyCode, that.currencyCode) && Objects.equals(bban, that.bban) && Objects.equals(iban, that.iban) && Objects.equals(sortCode, that.sortCode) && Objects.equals(bic, that.bic) && Objects.equals(pan, that.pan) && Objects.equals(maskedPan, that.maskedPan) && Objects.equals(msisdn, that.msisdn) && Objects.equals(swiftCode, that.swiftCode) && Objects.equals(bankAccountIdentifier, that.bankAccountIdentifier);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getCurrencyCode(), getBban(), getIban(), getSortCode(), getBic(), getPan(), getMaskedPan(), getMsisdn());
+        return Objects.hash(currencyCode, bban, iban, sortCode, bic, pan, maskedPan, msisdn, swiftCode, bankAccountIdentifier);
     }
 
     @Override
     public String toString() {
         return "ParticipantAccount{" +
-            "currencyCode='" + currencyCode + '\'' +
-            ", bban='" + bban + '\'' +
-            ", iban='" + iban + '\'' +
-            ", sortCode='" + sortCode + '\'' +
-            ", bic='" + bic + '\'' +
-            ", pan='" + pan + '\'' +
-            ", maskedPan='" + maskedPan + '\'' +
-            ", msisdn='" + msisdn + '\'' +
-            '}';
+                "currencyCode='" + currencyCode + '\'' +
+                ", bban='" + bban + '\'' +
+                ", iban='" + iban + '\'' +
+                ", sortCode='" + sortCode + '\'' +
+                ", bic='" + bic + '\'' +
+                ", pan='" + pan + '\'' +
+                ", maskedPan='" + maskedPan + '\'' +
+                ", msisdn='" + msisdn + '\'' +
+                ", swiftCode='" + swiftCode + '\'' +
+                ", bankAccountIdentifier='" + bankAccountIdentifier + '\'' +
+                '}';
     }
 }
