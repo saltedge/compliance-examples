@@ -219,7 +219,7 @@ public interface ConnectorCallbackAbs {
     String onPaymentInitiationAuthorizationSuccess(
             @NotEmpty String userId,
             @NotEmpty String paymentExtra,
-            @NotEmpty String paymentProduct
+            String paymentProduct
     ) throws NotFound.PaymentNotFound;
 
     /**
