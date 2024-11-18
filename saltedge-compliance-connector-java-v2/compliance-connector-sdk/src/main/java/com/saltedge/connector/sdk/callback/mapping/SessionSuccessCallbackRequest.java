@@ -25,8 +25,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.saltedge.connector.sdk.SDKConstants;
 import com.saltedge.connector.sdk.api.models.ProviderConsents;
 
-import jakarta.validation.constraints.NotBlank;
+import com.saltedge.connector.sdk.models.ParticipantAccount;
+import jakarta.validation.constraints.NotEmpty;
+
 import java.util.Objects;
+
+import static com.saltedge.connector.sdk.SDKConstants.DEBTOR_ACCOUNT;
 
 /**
  * Session Success callback request model
@@ -34,24 +38,60 @@ import java.util.Objects;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SessionSuccessCallbackRequest extends BaseCallbackRequest {
+    /**
+     * Consent info confirmed by PSU.
+     */
     @JsonProperty("consent")
     public ProviderConsents providerOfferedConsents;
 
+    /**
+     * Access token that will be used to access ASPSP data. Token is a unique value which is linked to authenticated user.
+     */
     @JsonProperty("token")
-    @NotBlank
     public String token;
 
+    /**
+     * PSU identifier on ASPSP side.
+     */
     @JsonProperty(SDKConstants.KEY_USER_ID)
     public String userId;
 
-    @JsonProperty(SDKConstants.KEY_STATUS)
-    public String status;
+    /**
+     * Debtor account data selected by PSU for payment initiation.
+     */
+    @JsonProperty(DEBTOR_ACCOUNT)
+    public ParticipantAccount debtorAccount;
 
-    public SessionSuccessCallbackRequest() {}
+    public static SessionSuccessCallbackRequest successAisCallback(
+            @NotEmpty String userId,
+            @NotEmpty String accessToken,
+            ProviderConsents providerOfferedConsents
+    ) {
+        SessionSuccessCallbackRequest params = new SessionSuccessCallbackRequest();
+        params.providerOfferedConsents = providerOfferedConsents;
+        params.token = accessToken;
+        params.userId = userId;
+        return params;
+    }
 
-    public SessionSuccessCallbackRequest(String userId, String status) {
-        this.userId = userId;
-        this.status = status;
+    public static SessionSuccessCallbackRequest successPiisCallback(
+            @NotEmpty String userId,
+            @NotEmpty String accessToken
+    ) {
+        SessionSuccessCallbackRequest params = new SessionSuccessCallbackRequest();
+        params.token = accessToken;
+        params.userId = userId;
+        return params;
+    }
+
+    public static SessionSuccessCallbackRequest successPisCallback(
+            @NotEmpty String userId,
+            ParticipantAccount debtorAccount
+    ) {
+        SessionSuccessCallbackRequest params = new SessionSuccessCallbackRequest();
+        params.debtorAccount = debtorAccount;
+        params.userId = userId;
+        return params;
     }
 
     @Override

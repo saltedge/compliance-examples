@@ -30,7 +30,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.StringUtils;
 
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -40,10 +42,17 @@ import java.util.concurrent.CompletableFuture;
 public class SessionsCallbackService extends CallbackRestClient {
     private static final Logger log = LoggerFactory.getLogger(SessionsCallbackService.class);
 
-    @Async
-    public void sendUpdateCallbackAsync(String sessionSecret, BaseCallbackRequest params) {
+    public ErrorResponse sendUpdateCallback(String sessionSecret, BaseCallbackRequest params) {
         String url = createCallbackRequestUrl(createSessionPath(sessionSecret) + "/update");
-        sendSessionCallback(url, sessionSecret, params);
+        return sendSessionCallback(url, sessionSecret, params);
+    }
+
+    @Async
+    public CompletableFuture<ErrorResponse> sendUpdateCallbackAsync(
+            String sessionSecret,
+            BaseCallbackRequest params
+    ) throws InterruptedException {
+        return CompletableFuture.completedFuture(sendUpdateCallback(sessionSecret, params));
     }
 
     public ErrorResponse sendSuccessCallback(String sessionSecret, BaseCallbackRequest params) {
@@ -52,8 +61,19 @@ public class SessionsCallbackService extends CallbackRestClient {
     }
 
     @Async
-    public CompletableFuture<ErrorResponse> sendSuccessCallbackAsync(String sessionSecret, BaseCallbackRequest params) throws InterruptedException {
+    public CompletableFuture<ErrorResponse> sendSuccessCallbackAsync(
+            String sessionSecret,
+            BaseCallbackRequest params
+    ) throws InterruptedException {
         return CompletableFuture.completedFuture(sendSuccessCallback(sessionSecret, params));
+    }
+
+    public ErrorResponse sendFailCallback(String sessionSecret, Exception exception) {
+        return sendFailCallback(sessionSecret, exception, null, null);
+    }
+
+    public ErrorResponse sendFailCallback(String sessionSecret, Exception exception, String userId) {
+        return sendFailCallback(sessionSecret, exception, userId, null);
     }
 
     @Async
@@ -62,20 +82,34 @@ public class SessionsCallbackService extends CallbackRestClient {
     }
 
     @Async
-    public void sendFailCallbackAsync(String sessionSecret, Exception exception, String userId) {
-        sendFailCallback(sessionSecret, exception, userId);
+    public CompletableFuture<ErrorResponse> sendFailCallbackAsync(
+            String sessionSecret,
+            Exception exception,
+            String userId
+    ) throws InterruptedException {
+        return CompletableFuture.completedFuture(sendFailCallback(sessionSecret, exception, userId));
     }
 
-    private void sendFailCallback(String sessionSecret, Exception exception, String userId) {
+    @Async
+    public CompletableFuture<ErrorResponse> sendFailCallbackAsync(
+            String sessionSecret,
+            Exception exception,
+            String userId,
+            String status
+    ) throws InterruptedException {
+        return CompletableFuture.completedFuture(sendFailCallback(sessionSecret, exception, userId, status));
+    }
+
+    private ErrorResponse sendFailCallback(String sessionSecret, Exception exception, String userId, String status) {
         BaseFailRequest params;
         if (exception instanceof HttpErrorParams errorParams) {
             params = new BaseFailRequest(errorParams.getErrorClass(), errorParams.getErrorMessage(), userId);
         } else {
             params = new BaseFailRequest(exception.getClass().getSimpleName(), exception.getMessage(), userId);
         }
-
+        if (Objects.equals(status, "RJCT") || Objects.equals(status, "CANC")) params.status = status;
         String url = createCallbackRequestUrl(createSessionPath(sessionSecret) + "/fail");
-        sendSessionCallback(url, sessionSecret, params);
+        return sendSessionCallback(url, sessionSecret, params);
     }
 
     @Override

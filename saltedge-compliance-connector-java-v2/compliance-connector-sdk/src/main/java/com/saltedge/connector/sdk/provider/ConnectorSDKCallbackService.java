@@ -26,6 +26,7 @@ import com.saltedge.connector.sdk.SDKConstants;
 import com.saltedge.connector.sdk.api.models.ProviderConsents;
 import com.saltedge.connector.sdk.api.models.err.NotFound;
 import com.saltedge.connector.sdk.api.models.err.Unauthorized;
+import com.saltedge.connector.sdk.api.models.responses.ErrorResponse;
 import com.saltedge.connector.sdk.callback.SessionsCallbackService;
 import com.saltedge.connector.sdk.callback.TokensCallbackService;
 import com.saltedge.connector.sdk.callback.mapping.SessionSuccessCallbackRequest;
@@ -37,6 +38,7 @@ import com.saltedge.connector.sdk.services.provider.ConfirmTokenService;
 import com.saltedge.connector.sdk.services.provider.RevokeTokenByProviderService;
 import com.saltedge.connector.sdk.services.provider.TokensCollectorService;
 import com.saltedge.connector.sdk.tools.JsonTools;
+import jakarta.validation.constraints.NotEmpty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,13 +46,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 
-import jakarta.validation.constraints.NotEmpty;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static com.saltedge.connector.sdk.SDKConstants.PAYMENT_PRODUCT_FASTER_PAYMENT_SERVICE;
-import static com.saltedge.connector.sdk.SDKConstants.PAYMENT_PRODUCT_INSTANT_SEPA_CREDIT_TRANSFERS;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Class for call back communication from Provider application to Connector SDK Module.
@@ -94,10 +93,10 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
     }
 
     /**
-     * Return Ais Consent model.
+     * Return AIS Consent model.
      *
      * @param sessionSecret Unique identifier of authorization session.
-     * @return Ais Consent model.
+     * @return AIS Consent model.
      */
     @Override
     public AisToken getAisToken(@NotEmpty String sessionSecret) {
@@ -198,66 +197,154 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
     }
 
     /**
-     * ASPSP notifies Salt Edge Compliance service about funds availability and payment status changes.
-     * Should not be performed after onPaymentInitiationAuthorizationSuccess or onPaymentInitiationAuthorizationFail.
+     * Get redirect url for final redirection of Authorization session of AIS Consent, back to TPP side.
      *
-     * @param fundsAvailable a value that indicates whether we have enough funds to make a payment
-     * @param paymentExtra Extra data of payment order, provided in `ProviderServiceAbs.createPayment(...)`
-     * @param status intermediate status (RCVD, ACTC, ACSC, ACSP, ACWC, ACCP, PDNG, PATC, ACWP, ACFC)
+     * @param sessionSecret Unique identifier of authorization session.
+     * @return URL string for final redirection of Authorization session (in browser) back to TPP side.
+     * @throws NotFound.TokenNotFound if Consent not found by sessionSecret.
+     */
+    public String aisTppRedirectUrl(@NotEmpty String sessionSecret) throws NotFound.TokenNotFound {
+        AisToken token = tokensCollectorService.findAisTokenBySessionSecret(sessionSecret);
+        if (token == null) throw new NotFound.TokenNotFound();
+        return token.tppRedirectUrl;
+    }
+
+    /**
+     * Get redirect url for final redirection of Authorization session of Payment, back to TPP side.
+     *
+     * @param paymentExtra Unique identifier of authorization session.
+     * @return URL string for final redirection of Authorization session (in browser) back to TPP side.
+     * @throws NotFound.PaymentNotFound if paymentExtra has invalid format.
+     */
+    public String pisTppRedirectUrl(@NotEmpty String paymentExtra) throws NotFound.PaymentNotFound {
+        return extractReturnToUrl(paymentExtra);
+    }
+
+    /**
+     * ASPSP notifies Salt Edge Compliance service about funds availability and payment status changes.
+     * NOTE: Should be performed only before onPaymentInitiationAuthorizationSuccess or onPaymentInitiationAuthorizationFail.
+     *
+     * @param paymentExtra Service data of payment order, provided in `ProviderServiceAbs.createPayment(...)`.
+     * @param status intermediate payment status (RCVD, ACTC, ACSC, ACSP, ACWC, ACCP, PDNG, PATC, ACWP, ACFC).
+     * @throws NotFound.PaymentNotFound if paymentExtra has invalid format.
+     * @throws InterruptedException Thrown when a thread is waiting, sleeping, or otherwise occupied, and the thread is interrupted, either before or during the activity.
      */
     @Override
-    public void updatePaymentFundsInformation(Boolean fundsAvailable, String paymentExtra, String status) {
-        Map<String, String> paymentExtraMap = parseExtra(paymentExtra);
-        String sessionSecret = paymentExtraMap.get(SDKConstants.KEY_SESSION_SECRET);
-
-        SessionUpdateCallbackRequest updateParams = new SessionUpdateCallbackRequest(fundsAvailable, status);
-        if (StringUtils.hasText(sessionSecret)) sessionsCallbackService.sendUpdateCallbackAsync(sessionSecret, updateParams);
+    public CompletableFuture<ErrorResponse> updatePaymentStatus(
+            @NotEmpty String paymentExtra,
+            String status
+    ) throws NotFound.PaymentNotFound, InterruptedException {
+        String sessionSecret = extractSessionSecret(paymentExtra);
+        SessionUpdateCallbackRequest updateParams = new SessionUpdateCallbackRequest(status);
+        return sessionsCallbackService.sendUpdateCallbackAsync(sessionSecret, updateParams);
     }
 
     /**
      * ASPSP notifies Salt Edge Compliance service that the PIS flow (payment authorisation and payment initiation) finished with success.
      * As result Salt Edge Compliance service will set final status as indicated ij ASPSP Dashboard (e.g. ACSC, ACCC)
+     * After calling onPaymentInitiateSuccess(...), PSU should be redirected back to TPP application.
+     * tppRedirectUrl is passed in `ProviderServiceAbs.createPayment(...)`, or can be got from tppRedirectUrl(...).
      *
      * @param userId Unique PSU identifier issued by ASPSP.
-     * @param paymentExtra Extra data of payment order, provided in `ProviderServiceAbs.createPayment(...)`
+     * @param paymentExtra Service data of payment order, provided in `ProviderServiceAbs.createPayment(...)`.
+     * @param debtorAccount If the debtor account was selected on ASPSP side this object must be indicated in request, containing the same debtor account identifiers as displayed to the end user in ASPSP interfaces.
+     * @return CompletableFuture<ErrorResponse> Result of Async job. Can be used for retry if an error occurs.
+     * @throws NotFound.PaymentNotFound if paymentExtra has invalid format.
+     * @throws InterruptedException Thrown when a thread is waiting, sleeping, or otherwise occupied, and the thread is interrupted, either before or during the activity.
+     */
+    @Override
+    public CompletableFuture<ErrorResponse> onPaymentInitiateSuccess(
+            @NotEmpty String userId,
+            @NotEmpty String paymentExtra,
+            ParticipantAccount debtorAccount
+    ) throws NotFound.PaymentNotFound, InterruptedException {
+        String sessionSecret = extractSessionSecret(paymentExtra);
+        SessionSuccessCallbackRequest params = SessionSuccessCallbackRequest.successPisCallback(userId, debtorAccount);
+        return sessionsCallbackService.sendSuccessCallbackAsync(sessionSecret, params);
+    }
+
+    /**
+     * ASPSP notifies Salt Edge Compliance service that the PIS authorisation has been cancelled by user or failed.
+     * After calling onPaymentInitiateSuccess(...), PSU should be redirected back to TPP application.
+     * tppRedirectUrl is passed in `ProviderServiceAbs.createPayment(...)`, or can be got from tppRedirectUrl(...).
+     *
+     * @param userId Unique PSU identifier issued by ASPSP.
+     * @param paymentExtra Service data of payment order, provided in `ProviderServiceAbs.createPayment(...)`.
+     * @param status Fail status of payment, Allowed: CANC, RJCT.
+     * @return CompletableFuture<ErrorResponse> Result of Async job. Can be used for retry if an error occurs.
+     * @throws NotFound.PaymentNotFound if paymentExtra has invalid format.
+     * @throws InterruptedException Thrown when a thread is waiting, sleeping, or otherwise occupied, and the thread is interrupted, either before or during the activity.
+     */
+    @Override
+    public CompletableFuture<ErrorResponse> onPaymentInitiateFail(
+            @NotEmpty String userId,
+            @NotEmpty String paymentExtra,
+            String status
+    ) throws NotFound.PaymentNotFound, InterruptedException {
+        String sessionSecret = extractSessionSecret(paymentExtra);
+        return sessionsCallbackService.sendFailCallbackAsync(sessionSecret, new NotFound.PaymentNotCreated(), userId, status);
+    }
+
+    /**
+     * ASPSP notifies Salt Edge Compliance service about funds availability and payment status changes.
+     * Should be performed only before onPaymentInitiationAuthorizationSuccess or onPaymentInitiationAuthorizationFail.
+     *
+     * @param fundsAvailable a value that indicates whether we have enough funds to make a payment
+     * @param paymentExtra Service data of payment order, provided in `ProviderServiceAbs.createPayment(...)`.
+     * @param status intermediate payment status (RCVD, ACTC, ACSC, ACSP, ACWC, ACCP, PDNG, PATC, ACWP, ACFC).
+     * @throws NotFound.PaymentNotFound if paymentExtra has invalid format.
+     * @throws InterruptedException Thrown when a thread is waiting, sleeping, or otherwise occupied, and the thread is interrupted, either before or during the activity.
+     */
+    @Override
+    public CompletableFuture<ErrorResponse> updatePaymentFundsInformation(
+            Boolean fundsAvailable,
+            @NotEmpty String paymentExtra,
+            String status
+    ) throws NotFound.PaymentNotFound, InterruptedException {
+        String sessionSecret = extractSessionSecret(paymentExtra);
+        SessionUpdateCallbackRequest updateParams = new SessionUpdateCallbackRequest(fundsAvailable, status);
+        return sessionsCallbackService.sendUpdateCallbackAsync(sessionSecret, updateParams);
+    }
+
+    /**
+     * ASPSP notifies Salt Edge Compliance service that the PIS flow (payment authorisation and payment initiation) finished with success.
+     * As result Salt Edge Compliance service will set final status as indicated ij ASPSP Dashboard (e.g. ACSC, ACCC).
+     * After calling onPaymentInitiationAuthorizationSuccess(...), PSU should be redirected back to TPP application.
+     *
+     * @param userId Unique PSU identifier issued by ASPSP.
+     * @param paymentExtra Service data of payment order, provided in `ProviderServiceAbs.createPayment(...)`.
      * @param paymentProduct Payment product code (Allowed values: sepa-credit-transfers, instant-sepa-credit-transfers, target-2-payments, faster-payment-service, internal-transfer)
-     * @return returnUrl string for final redirection of Payment Authorization session
+     * @return returnUrl string for final redirection of Payment Authorization session.
+     * @throws NotFound.PaymentNotFound if paymentExtra has invalid format.
      */
     @Override
     public String onPaymentInitiationAuthorizationSuccess(
             @NotEmpty String userId,
             @NotEmpty String paymentExtra,
-            @NotEmpty String paymentProduct
-    ) {
-        Map<String, String> paymentExtraMap = parseExtra(paymentExtra);
-
-        String sessionSecret = paymentExtraMap.get(SDKConstants.KEY_SESSION_SECRET);
-        String status = getFinalStatusOfPaymentProduct(paymentProduct);
-        SessionSuccessCallbackRequest params = new SessionSuccessCallbackRequest(userId, status);
+            String paymentProduct
+    ) throws NotFound.PaymentNotFound {
+        String sessionSecret = extractSessionSecret(paymentExtra);
+        SessionSuccessCallbackRequest params = SessionSuccessCallbackRequest.successPisCallback(userId, null);
         try {
-            if (StringUtils.hasLength(sessionSecret)) sessionsCallbackService.sendSuccessCallbackAsync(sessionSecret, params);
+            sessionsCallbackService.sendSuccessCallbackAsync(sessionSecret, params);
         } catch (Exception ignored) {
         }
 
-        return paymentExtraMap.getOrDefault(SDKConstants.KEY_RETURN_TO_URL, "");
+        return extractReturnToUrl(paymentExtra);
     }
 
     /**
      * ASPSP notifies Salt Edge Compliance service that the PIS authorisation has been cancelled by user or failed.
      *
-     * @param paymentExtra extra data of payment order
-     * @return returnUrl string for final redirection of Payment Authorization session
+     * @param paymentExtra Service data of payment order, provided in `ProviderServiceAbs.createPayment(...)`.
+     * @return returnUrl string for final redirection of Payment Authorization session.
+     * @throws NotFound.PaymentNotFound if paymentExtra has invalid format.
      */
     @Override
-    public String onPaymentInitiationAuthorizationFail(@NotEmpty String paymentExtra) {
-        Map<String, String> paymentExtraMap = parseExtra(paymentExtra);
-
-        String sessionSecret = paymentExtraMap.get(SDKConstants.KEY_SESSION_SECRET);
-        if (StringUtils.hasLength(sessionSecret)) {
-            sessionsCallbackService.sendFailCallbackAsync(sessionSecret, new NotFound.PaymentNotCreated());
-        }
-
-        return paymentExtraMap.getOrDefault(SDKConstants.KEY_RETURN_TO_URL, "");
+    public String onPaymentInitiationAuthorizationFail(@NotEmpty String paymentExtra) throws NotFound.PaymentNotFound {
+        String sessionSecret = extractSessionSecret(paymentExtra);
+        sessionsCallbackService.sendFailCallbackAsync(sessionSecret, new NotFound.PaymentNotCreated());
+        return extractReturnToUrl(paymentExtra);
     }
 
     /**
@@ -325,16 +412,42 @@ public class ConnectorSDKCallbackService implements ConnectorCallbackAbs {
     @Override
     public String onFundsConfirmationConsentAuthorizationFail(@NotEmpty String sessionSecret, String userId) {
         PiisToken token = revokeTokenService.revokePiisTokenBySessionSecret(sessionSecret);
-        sessionsCallbackService.sendFailCallbackAsync(sessionSecret, new Unauthorized.AccessDenied(), userId);
+        try {
+            sessionsCallbackService.sendFailCallbackAsync(sessionSecret, new Unauthorized.AccessDenied(), userId);
+        } catch (InterruptedException ignored) {
+        }
         return (token == null) ? null : token.tppRedirectUrl;
     }
 
-    private String getFinalStatusOfPaymentProduct(@NotEmpty String paymentProduct) {
-        return switch (paymentProduct) {
-            case PAYMENT_PRODUCT_FASTER_PAYMENT_SERVICE -> "ACSC";
-            case PAYMENT_PRODUCT_INSTANT_SEPA_CREDIT_TRANSFERS -> "ACCC";
-            default -> "ACTC";
-        };
+    /**
+     * Get redirect url for final redirection of Authorization session of PIIS Consent, back to TPP side.
+     *
+     * @param sessionSecret Unique identifier of authorization session.
+     * @return URL string for final redirection of Authorization session (in browser) back to TPP side.
+     * @throws NotFound.TokenNotFound if Consent not found by sessionSecret.
+     */
+    public String piisTppRedirectUrl(@NotEmpty String sessionSecret) throws NotFound.TokenNotFound {
+        PiisToken token = tokensCollectorService.findPiisTokenBySessionSecret(sessionSecret);
+        if (token == null) throw new NotFound.TokenNotFound();
+        return token.tppRedirectUrl;
+    }
+
+    private String extractSessionSecret(String paymentExtraJson) throws NotFound.PaymentNotFound {
+        Map<String, String> paymentExtraMap = parseExtra(paymentExtraJson);
+        String sessionSecret = paymentExtraMap.get(SDKConstants.KEY_SESSION_SECRET);
+        if (!StringUtils.hasLength(sessionSecret)) {
+            throw new NotFound.PaymentNotFound("Invalid paymentExtra. Not found session_secret.");
+        }
+        return sessionSecret;
+    }
+
+    private String extractReturnToUrl(String paymentExtraJson) throws NotFound.PaymentNotFound {
+        Map<String, String> paymentExtraMap = parseExtra(paymentExtraJson);
+        String url = paymentExtraMap.get(SDKConstants.KEY_RETURN_TO_URL);
+        if (!StringUtils.hasLength(url)) {
+            throw new NotFound.PaymentNotFound("Invalid paymentExtra. Not found return_to_url.");
+        }
+        return url;
     }
 
     private Map<String, String> parseExtra(String paymentExtraJson) {

@@ -305,7 +305,9 @@ public class ExampleProviderService implements ProviderServiceAbs {
       @NotEmpty String amount,
       @NotEmpty String currency,
       String description,
-      @NotNull Map<String, String> extraData
+      @NotNull Map<String, String> extraData,
+      @NotEmpty String psuIpAddress,
+      @NotEmpty String tppRedirectUrl
     ) {
         String fakePaymentId = "1"
         return fakePaymentId;
@@ -339,7 +341,9 @@ public class ExampleProviderService implements ProviderServiceAbs {
       @NotEmpty String amount,
       @NotEmpty String currency,
       String description,
-      @NotNull Map<String, String> extraData
+      @NotNull Map<String, String> extraData,
+      @NotEmpty String psuIpAddress,
+      @NotEmpty String tppRedirectUrl
     ) {
         String fakePaymentId = "1"
         return fakePaymentId;

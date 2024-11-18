@@ -226,7 +226,11 @@ public class ConsentController extends ConsentBaseController {
 
     private void updatePaymentFundsInformation(PaymentEntity payment, Double amount) {
         boolean fundsAvailable = payment.amount < amount;
-        connectorCallbackService.updatePaymentFundsInformation(fundsAvailable, payment.extra, "PDNG");
+        try {
+            connectorCallbackService.updatePaymentFundsInformation(fundsAvailable, payment.extra, "PDNG");
+        } catch (InterruptedException e) {
+            log.error(e.getMessage(), e);
+        }
     }
 
     private void processAndClosePayment(PaymentEntity payment, Long userId) {
