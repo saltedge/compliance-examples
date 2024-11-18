@@ -92,7 +92,7 @@ public class ConsentController extends ConsentBaseController {
             @RequestParam(name = "accounts_ids", required = false) List<String> accountsIds,
             @RequestParam(name = "card_accounts_ids", required = false) List<String> cardAccountsIds
     ) {
-        if (!confirmed) return onAisDenied(state);
+        if (!confirmed) return onAisDenied(state, userId);
 
         AisToken aisToken = connectorCallbackService.getAisToken(state);
         List<ProviderOfferedConsent> preselectedIdentifiers = aisToken.providerOfferedConsents.balances;
@@ -134,7 +134,7 @@ public class ConsentController extends ConsentBaseController {
             @RequestParam(name = SDKConstants.KEY_STATE) Long state,
             @RequestParam(name = SDKConstants.KEY_USER_ID) Long userId
     ) {
-        return confirmed ? confirmPayment(state, userId) : onPisDenied(state);
+        return confirmed ? confirmPayment(state, userId) : onPisDenied(state, String.valueOf(userId));
     }
 
     @GetMapping(FUNDS_BASE_PATH)
@@ -159,7 +159,7 @@ public class ConsentController extends ConsentBaseController {
             @RequestParam(name = SDKConstants.KEY_USER_ID) Long userId
     ) {
         if (confirmed) return confirmFunds(state, userId);
-        else return onPiisDenied(state);
+        else return onPiisDenied(state, String.valueOf(userId));
     }
 
     private ModelAndView confirmAccountsConsent(String sessionSecret, String userId, List<String> balancesIds, List<String> transactionIds, List<String> cardBalanceIds, List<String> cardTransactionIds) {
@@ -226,7 +226,11 @@ public class ConsentController extends ConsentBaseController {
 
     private void updatePaymentFundsInformation(PaymentEntity payment, Double amount) {
         boolean fundsAvailable = payment.amount < amount;
-        connectorCallbackService.updatePaymentFundsInformation(fundsAvailable, payment.extra, "PDNG");
+        try {
+            connectorCallbackService.updatePaymentFundsInformation(fundsAvailable, payment.extra, "PDNG");
+        } catch (InterruptedException e) {
+            log.error(e.getMessage(), e);
+        }
     }
 
     private void processAndClosePayment(PaymentEntity payment, Long userId) {

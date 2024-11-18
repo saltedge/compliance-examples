@@ -23,6 +23,7 @@ package com.saltedge.connector.sdk.services.provider;
 import com.saltedge.connector.sdk.callback.SessionsCallbackService;
 import com.saltedge.connector.sdk.models.domain.AisToken;
 import com.saltedge.connector.sdk.models.domain.AisTokensRepository;
+import com.saltedge.connector.sdk.models.domain.PiisToken;
 import com.saltedge.connector.sdk.models.domain.PiisTokensRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -39,5 +40,9 @@ abstract class BaseService {
 
     public AisToken findAisTokenBySessionSecret(String sessionSecret) {
         return aisTokensRepository.findFirstBySessionSecret(sessionSecret);
+    }
+
+    public PiisToken findPiisTokenBySessionSecret(String sessionSecret) {
+        return piisTokensRepository.findFirstBySessionSecret(sessionSecret);
     }
 }

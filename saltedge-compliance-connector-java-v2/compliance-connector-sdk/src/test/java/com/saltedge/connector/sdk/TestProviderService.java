@@ -77,12 +77,12 @@ public class TestProviderService implements ProviderServiceAbs {
   }
 
   @Override
-  public String createPayment(String paymentProduct, String creditorIban, String creditorBic, String creditorName, ParticipantAddress creditorAddress, String creditorAgentName, String debtorIban, String debtorBic, String amount, String currency, String description, @NotNull String extraData, @NotEmpty String psuIpAddress) {
+  public String createPayment(String paymentProduct, String creditorIban, String creditorBic, String creditorName, ParticipantAddress creditorAddress, String creditorAgentName, String debtorIban, String debtorBic, String amount, String currency, String description, @NotNull String extraData, @NotEmpty String psuIpAddress, @NotEmpty String tppRedirectUrl) {
     return null;
   }
 
   @Override
-  public String createFPSPayment(String paymentProduct, String creditorBban, String creditorSortCode, String creditorName, ParticipantAddress creditorAddress, String creditorAgentName, String debtorBban, String debtorSortCode, String amount, String currency, String description, @NotNull String extraData, @NotEmpty String psuIpAddress) {
+  public String createFPSPayment(String paymentProduct, String creditorBban, String creditorSortCode, String creditorName, ParticipantAddress creditorAddress, String creditorAgentName, String debtorBban, String debtorSortCode, String amount, String currency, String description, @NotNull String extraData, @NotEmpty String psuIpAddress, @NotEmpty String tppRedirectUrl) {
     return null;
   }
 

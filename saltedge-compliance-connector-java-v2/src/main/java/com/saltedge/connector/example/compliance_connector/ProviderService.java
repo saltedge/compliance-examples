@@ -34,6 +34,7 @@ import com.saltedge.connector.sdk.callback.mapping.SessionSuccessCallbackRequest
 import com.saltedge.connector.sdk.models.CardTransactionsPage;
 import com.saltedge.connector.sdk.models.TransactionsPage;
 import com.saltedge.connector.sdk.provider.ProviderServiceAbs;
+import jakarta.validation.constraints.NotEmpty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -204,7 +205,8 @@ public class ProviderService implements ProviderServiceAbs {
             String currency,
             String description,
             String extraData,
-            String psuIpAddress
+            String psuIpAddress,
+            String tppRedirectUrl
     ) {
         Double amountValue = ConnectorServiceTools.getAmountValue(amount);
         if (amountValue == null) throw new BadRequest.InvalidAttributeValue("amount");
@@ -244,7 +246,8 @@ public class ProviderService implements ProviderServiceAbs {
             String currency,
             String description,
             String extraData,
-            String psuIpAddress
+            String psuIpAddress,
+            String tppRedirectUrl
     ) {
         Double amountValue = ConnectorServiceTools.getAmountValue(amount);
         if (amountValue == null) throw new BadRequest.InvalidAttributeValue("amount");
