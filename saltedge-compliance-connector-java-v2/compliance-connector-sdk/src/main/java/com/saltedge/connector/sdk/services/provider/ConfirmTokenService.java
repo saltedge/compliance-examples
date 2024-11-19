@@ -126,16 +126,14 @@ public class ConfirmTokenService extends BaseService {
       updatePiisStatusSafe(token, status);
     } catch (Exception e) {
       log.error("confirmPiisToken: ", e);
+      updatePiisStatusSafe(token, ConsentStatus.FAILED);
       callbackService.sendFailCallbackAsync(token.sessionSecret, e);
     }
   }
 
   private @Nullable ErrorResponse sendAisSessionSuccess(AisToken token) {
     try {
-      SessionSuccessCallbackRequest params = new SessionSuccessCallbackRequest();
-      params.providerOfferedConsents = token.providerOfferedConsents;
-      params.token = token.accessToken;
-      params.userId = token.userId;
+      SessionSuccessCallbackRequest params = SessionSuccessCallbackRequest.successAisCallback(token.userId, token.accessToken, token.providerOfferedConsents);
       return callbackService.sendSuccessCallback(token.sessionSecret, params);
     } catch (Exception ignored) {
       return null;
@@ -144,9 +142,7 @@ public class ConfirmTokenService extends BaseService {
 
   private @Nullable ErrorResponse sendPiisSessionSuccess(PiisToken token) {
     try {
-      SessionSuccessCallbackRequest params = new SessionSuccessCallbackRequest();
-      params.token = token.accessToken;
-      params.userId = token.userId;
+      SessionSuccessCallbackRequest params = SessionSuccessCallbackRequest.successPiisCallback(token.userId, token.accessToken);
       return callbackService.sendSuccessCallback(token.sessionSecret, params);
     } catch (Exception ignored) {
       return null;

@@ -59,17 +59,24 @@ public class UserAuthenticateController extends ConsentBaseController {
             @RequestParam String username,
             @RequestParam String password
     ) {
+        Long userId = findUser(username, password);// Find user by credentials
+
         if (!positiveAction) {
-            return switch (scope) {
-                case accounts -> onAisDenied(state);
-                case payments -> onPisDenied(Long.parseLong(state));
-                case funds -> onPiisDenied(state);
-            };
+            switch (scope) {
+                case accounts:
+                    return onAisDenied(state, String.valueOf(userId));
+                case payments:
+                    return onPisDenied(Long.parseLong(state), String.valueOf(userId));
+                case funds:
+                    return onPiisDenied(state, String.valueOf(userId));
+                default:
+                    throw new IllegalArgumentException();
+            }
         }
         if (scope == null || !StringUtils.hasLength(state)) {
             return createSignInModel(scope).addObject("error", "Unauthorized access.");
         }
-        Long userId = findUser(username, password);// Find user by credentials
+
         if (userId == null) return createSignInModel(scope).addObject("error", "Invalid credentials.");
 
         ModelAndView consentRedirect = new ModelAndView("redirect:" + ConsentController.BASE_PATH + "/" + scope);
@@ -100,11 +107,16 @@ public class UserAuthenticateController extends ConsentBaseController {
     }
 
     private String createInputTitle(Scope scope) {
-        return switch (scope) {
-            case payments -> "Authorization of payment initiation";
-            case accounts -> "Authorization of access to accounts information";
-            case funds -> "Authorization of access to funds confirmation information";
-        };
+        switch (scope) {
+            case payments:
+                return "Authorization of payment initiation";
+            case accounts:
+                return "Authorization of access to accounts information";
+            case funds:
+                return "Authorization of access to funds confirmation information";
+            default:
+                throw new IllegalArgumentException();
+        }
     }
 
     public enum Scope {

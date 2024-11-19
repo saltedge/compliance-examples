@@ -138,11 +138,11 @@ public interface ProviderServiceAbs {
     );
 
     /**
-     * Initiate a SEPA payment order.
+     * Initiate a payment order.
      * Serves payment endpoint (<a href="https://priora.saltedge.com/docs/aspsp/v2/pis#pis-connector_endpoints-payments">...</a>)
-     * If SEPA payment not supported return null.
      *
-     * @param paymentProduct The addressed payment product. Allowed values: sepa-credit-transfers, instant-sepa-credit-transfers, target-2-payments, internal-transfer
+     * @param paymentProduct The addressed payment product.
+     *                       Allowed values: sepa-credit-transfers, instant-sepa-credit-transfers, target-2-payments, faster-payment-service, cross-border-credit-transfers, credit-transfers, combined-payment, internal-transfer, automated-clearing-house-service, claim-payments, outbound-sepa-transfer, chaps-transfer, instant-credit-transfers, p2p-card-transfer, fedwire-credit-transfers, masav, zahav, fp, mia-instant-credit-transfers.
      * @param creditorIban International Bank Account Number of creditor
      * @param creditorBic Bank Identifier Code of creditor
      * @param creditorName Name of creditor
@@ -154,9 +154,10 @@ public interface ProviderServiceAbs {
      * @param currency Currency code of payment order
      * @param description Description of payment order
      * @param extraData Extra data of payment order. Attention: should be saved in payment model.
-     * @param psuIpAddress Ip Address of PSU.
+     * @param psuIpAddress IP address of PSU.
+     * @param tppRedirectUrl The URL that the PSU will be redirected to after he finishes the authentication process on provider’s side.
      *
-     * @return URL string of provider's authorization page designated for authorization of new Payment Initiation Session
+     * @return URL string of provider's authorization page designated for authorization of new Payment Initiation Session. If payment product not supported return null.
      */
     String createPayment(
             @NotEmpty String paymentProduct,
@@ -171,13 +172,13 @@ public interface ProviderServiceAbs {
             @NotEmpty String currency,
             String description,
             @NotNull String extraData,
-            @NotEmpty String psuIpAddress
+            @NotEmpty String psuIpAddress,
+            @NotEmpty String tppRedirectUrl
     );
 
     /**
-     * Initiate a FPS (Faster Payment Service) payment order.
+     * Initiate a FPS (Faster Payment Service) payment order. Designated for providers under UK TPR.
      * Serves payment endpoint (<a href="https://priora.saltedge.com/docs/aspsp/v2/pis#pis-connector_endpoints-payments">...</a>)
-     * If FPS payment not supported return null.
      *
      * @param paymentProduct The addressed payment product. Allowed values: faster-payment-service
      * @param creditorBban Basic Bank Account Number of creditor
@@ -191,9 +192,10 @@ public interface ProviderServiceAbs {
      * @param currency Currency code of payment order
      * @param description Description of payment order
      * @param extraData Extra data of payment order. Attention: should be saved in payment model.
-     * @param psuIpAddress Ip Address of PSU.
+     * @param psuIpAddress IP address of PSU.
+     * @param tppRedirectUrl The URL that the PSU will be redirected to after he finishes the authentication process on provider’s side.
      *
-     * @return URL string of provider's authorization page designated for authorization of new Payment Initiation Session
+     * @return URL string of provider's authorization page designated for authorization of new Payment Initiation Session. If FPS payment not supported return null.
      */
     String createFPSPayment(
             @NotEmpty String paymentProduct,
@@ -208,7 +210,8 @@ public interface ProviderServiceAbs {
             @NotEmpty String currency,
             String description,
             @NotNull String extraData,
-            @NotEmpty String psuIpAddress
+            @NotEmpty String psuIpAddress,
+            @NotEmpty String tppRedirectUrl
     );
 
     /**

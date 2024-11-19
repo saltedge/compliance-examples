@@ -29,8 +29,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-import static com.saltedge.connector.sdk.SDKConstants.KEY_END_TO_END_IDENTIFICATION;
-import static com.saltedge.connector.sdk.SDKConstants.KEY_INSTRUCTED_AMOUNT;
+import static com.saltedge.connector.sdk.SDKConstants.*;
 
 /**
  * Payment data.
@@ -61,8 +60,8 @@ public class PaymentOrder {
   /**
    * Debtor account data.
    */
-  @JsonProperty("debtor_account")
-  public ParticipantAccount debtorAccount; //TODO: use only iban with bic (string, optional) https://git.saltedge.com/psd2/priora/-/issues/2876#note_1500608
+  @JsonProperty(DEBTOR_ACCOUNT)
+  public ParticipantAccount debtorAccount;
 
   /**
    * Amount and currency.

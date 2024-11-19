@@ -32,9 +32,17 @@ import org.springframework.http.ResponseEntity;
  * Base Connector v2 controller
  */
 public abstract class BaseV2Controller {
+    /**
+     * ProviderServiceAbs
+     */
     @Autowired
     public ProviderServiceAbs providerService;
 
+    /**
+     * Generate empty response
+     *
+     * @return ResponseEntity
+     */
     @NotNull
     @Contract(" -> new")
     public ResponseEntity<EmptyJsonModel> createEmptyOkResponseEntity() {

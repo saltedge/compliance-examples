@@ -47,13 +47,13 @@ abstract public class ConsentBaseController extends BaseController {
         else return new ModelAndView("redirect:" + returnToUrl);
     }
 
-    protected ModelAndView onAisDenied(@NotEmpty String sessionSecret) {
-        String returnToUrl = connectorCallbackService.onAccountInformationAuthorizationFail(sessionSecret);
+    protected ModelAndView onAisDenied(@NotEmpty String sessionSecret, String userId) {
+        String returnToUrl = connectorCallbackService.onAccountInformationAuthorizationFail(sessionSecret, userId);
         if (returnToUrl == null) return redirectToAccountsAuth(sessionSecret, null);
         else return new ModelAndView("redirect:" + returnToUrl);
     }
 
-    protected ModelAndView onPisDenied(long paymentId) {
+    protected ModelAndView onPisDenied(long paymentId, String userId) {
         PaymentEntity payment = paymentsRepository.findById(paymentId).orElse(null);
         String extra = "";
         if (payment != null) {
@@ -67,8 +67,8 @@ abstract public class ConsentBaseController extends BaseController {
         return redirectToPaymentsAuth(String.valueOf(paymentId), null);
     }
 
-    protected ModelAndView onPiisDenied(@NotEmpty String sessionSecret) {
-        String returnToUrl = connectorCallbackService.onFundsConfirmationConsentAuthorizationFail(sessionSecret);
+    protected ModelAndView onPiisDenied(@NotEmpty String sessionSecret, String userId) {
+        String returnToUrl = connectorCallbackService.onFundsConfirmationConsentAuthorizationFail(sessionSecret, userId);
         if (returnToUrl == null) return redirectToFundsAuth(sessionSecret, null);
         else return new ModelAndView("redirect:" + returnToUrl);
     }

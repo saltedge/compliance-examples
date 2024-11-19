@@ -79,7 +79,8 @@ public class PaymentsServiceTests extends BaseServicesTests {
                 "USD",
                 "remittanceInformationUnstructured",
                 extraJson,
-                psuIpAddress
+                psuIpAddress,
+                "redirectUrl"
         )).willReturn(null);
 
         // when
@@ -87,13 +88,13 @@ public class PaymentsServiceTests extends BaseServicesTests {
 
         // then
         final ArgumentCaptor<RuntimeException> captor = ArgumentCaptor.forClass(RuntimeException.class);
-        verify(sessionsCallbackService).sendFailCallbackAsync(eq("sessionSecret"), captor.capture());
+        verify(sessionsCallbackService).sendFailCallback(eq("sessionSecret"), captor.capture(), eq(null));
         assertThat(((HttpErrorParams) captor.getValue()).getErrorClass()).isEqualTo("PaymentNotCreated");
         verifyNoInteractions(aisTokensRepository);
     }
 
     @Test
-    public void givenSepaRequest_whenCreatePayment_thenSaveTokenAndSendSessionsUpdateCallback() throws JsonProcessingException {
+    public void givenSepaRequest_whenCreatePayment_thenSaveTokenAndSendSessionsUpdateCallback() throws JsonProcessingException, InterruptedException {
         // given
         HashMap<String, String> extra = new HashMap<>();
         extra.put(SDKConstants.KEY_SESSION_SECRET, "sessionSecret");
@@ -115,7 +116,8 @@ public class PaymentsServiceTests extends BaseServicesTests {
                 "USD",
                 "remittanceInformationUnstructured",
                 extraJson,
-                psuIpAddress
+                psuIpAddress,
+                "redirectUrl"
         )).willReturn(redirectUrl);
 
         // when
@@ -135,16 +137,17 @@ public class PaymentsServiceTests extends BaseServicesTests {
                 "USD",
                 "remittanceInformationUnstructured",
                 extraJson,
-                psuIpAddress
+                psuIpAddress,
+                "redirectUrl"
         );
         final ArgumentCaptor<SessionUpdateCallbackRequest> callbackCaptor = ArgumentCaptor.forClass(SessionUpdateCallbackRequest.class);
-        verify(sessionsCallbackService).sendUpdateCallbackAsync(eq("sessionSecret"), callbackCaptor.capture());
+        verify(sessionsCallbackService).sendUpdateCallback(eq("sessionSecret"), callbackCaptor.capture());
         assertThat(callbackCaptor.getValue().status).isEqualTo(SDKConstants.STATUS_RCVD);
         assertThat(callbackCaptor.getValue().redirectUrl).isEqualTo(redirectUrl);
     }
 
     @Test
-    public void givenSepaRequestWithoutDebtor_whenCreatePayment_thenSaveTokenAndSendSessionsUpdateCallback() throws JsonProcessingException {
+    public void givenSepaRequestWithoutDebtor_whenCreatePayment_thenSaveTokenAndSendSessionsUpdateCallback() throws JsonProcessingException, InterruptedException {
         // given
         HashMap<String, String> extra = new HashMap<>();
         extra.put(SDKConstants.KEY_SESSION_SECRET, "sessionSecret");
@@ -166,7 +169,8 @@ public class PaymentsServiceTests extends BaseServicesTests {
                 "USD",
                 "remittanceInformationUnstructured",
                 extraJson,
-                psuIpAddress
+                psuIpAddress,
+                "redirectUrl"
         )).willReturn(redirectUrl);
 
         // when
@@ -186,16 +190,17 @@ public class PaymentsServiceTests extends BaseServicesTests {
                 "USD",
                 "remittanceInformationUnstructured",
                 extraJson,
-                psuIpAddress
+                psuIpAddress,
+                "redirectUrl"
         );
         final ArgumentCaptor<SessionUpdateCallbackRequest> callbackCaptor = ArgumentCaptor.forClass(SessionUpdateCallbackRequest.class);
-        verify(sessionsCallbackService).sendUpdateCallbackAsync(eq("sessionSecret"), callbackCaptor.capture());
+        verify(sessionsCallbackService).sendUpdateCallback(eq("sessionSecret"), callbackCaptor.capture());
         assertThat(callbackCaptor.getValue().status).isEqualTo(SDKConstants.STATUS_RCVD);
         assertThat(callbackCaptor.getValue().redirectUrl).isEqualTo(redirectUrl);
     }
 
     @Test
-    public void givenFPSRequest_whenCreatePayment_thenSaveTokenAndSendSessionsUpdateCallback() throws JsonProcessingException {
+    public void givenFPSRequest_whenCreatePayment_thenSaveTokenAndSendSessionsUpdateCallback() throws JsonProcessingException, InterruptedException {
         // given
         HashMap<String, String> extra = new HashMap<>();
         extra.put(SDKConstants.KEY_SESSION_SECRET, "sessionSecret");
@@ -217,7 +222,8 @@ public class PaymentsServiceTests extends BaseServicesTests {
                 "USD",
                 "remittanceInformationUnstructured",
                 extraJson,
-                psuIpAddress
+                psuIpAddress,
+                "redirectUrl"
         )).willReturn(redirectUrl);
 
         // when
@@ -237,10 +243,11 @@ public class PaymentsServiceTests extends BaseServicesTests {
                 "USD",
                 "remittanceInformationUnstructured",
                 extraJson,
-                psuIpAddress
+                psuIpAddress,
+                "redirectUrl"
         );
         final ArgumentCaptor<SessionUpdateCallbackRequest> callbackCaptor = ArgumentCaptor.forClass(SessionUpdateCallbackRequest.class);
-        verify(sessionsCallbackService).sendUpdateCallbackAsync(eq("sessionSecret"), callbackCaptor.capture());
+        verify(sessionsCallbackService).sendUpdateCallback(eq("sessionSecret"), callbackCaptor.capture());
         assertThat(callbackCaptor.getValue().status).isEqualTo(SDKConstants.STATUS_RCVD);
         assertThat(callbackCaptor.getValue().redirectUrl).isEqualTo(redirectUrl);
     }

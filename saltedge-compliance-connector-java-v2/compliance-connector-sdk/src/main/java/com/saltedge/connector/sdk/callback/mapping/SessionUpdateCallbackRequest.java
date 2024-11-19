@@ -38,15 +38,17 @@ public class SessionUpdateCallbackRequest extends BaseCallbackRequest {
     @JsonProperty(SDKConstants.KEY_STATUS)
     public String status;
 
+    @JsonProperty("sca_status")
+    public String scaStatus;
+
     @JsonProperty("session_expires_at")
     public Instant sessionExpiresAt;
 
     @JsonProperty("funds_available")
     public Boolean fundsAvailable;
 
-    //TODO: Add sca_status
-
-    public SessionUpdateCallbackRequest() {
+    public SessionUpdateCallbackRequest(String status) {
+        this.status = status;
     }
 
     public SessionUpdateCallbackRequest(String redirectUrl, String status) {

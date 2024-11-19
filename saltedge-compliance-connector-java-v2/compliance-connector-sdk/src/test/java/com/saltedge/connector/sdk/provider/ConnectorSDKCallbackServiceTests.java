@@ -45,8 +45,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import java.time.Instant;
 import java.util.HashMap;
 
-import static com.saltedge.connector.sdk.SDKConstants.KEY_DESCRIPTION;
+import static com.saltedge.connector.sdk.SDKConstants.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatException;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
@@ -250,7 +251,7 @@ public class ConnectorSDKCallbackServiceTests {
 	}
 
 	@Test
-	public void updatePaymentFundsInformationTestCase1() throws JsonProcessingException {
+	public void updatePaymentFundsInformationTestCase1() throws JsonProcessingException, InterruptedException {
 		// given
 		HashMap<String, String> extraData = new HashMap<>();
 		extraData.put(SDKConstants.KEY_SESSION_SECRET, "sessionSecret");
@@ -264,7 +265,7 @@ public class ConnectorSDKCallbackServiceTests {
 	}
 
 	@Test
-	public void updatePaymentFundsInformationTestCase2() throws JsonProcessingException {
+	public void updatePaymentFundsInformationTestCase2() throws JsonProcessingException, InterruptedException {
 		// given
 		HashMap<String, String> extraData = new HashMap<>();
 		extraData.put(SDKConstants.KEY_SESSION_SECRET, "sessionSecret");
@@ -278,16 +279,15 @@ public class ConnectorSDKCallbackServiceTests {
 	}
 
 	@Test
-	public void updatePaymentFundsInformationTestCase3() throws JsonProcessingException {
+	public void updatePaymentFundsInformationTestCase3() throws JsonProcessingException, InterruptedException {
 		// given
 		HashMap<String, String> extraData = new HashMap<>();
 		String extraJson = JsonTools.createDefaultMapper().writeValueAsString(extraData);
 
 		// when
-		testService.updatePaymentFundsInformation(false, extraJson, "PDNG");
-
-		// then
-		verifyNoMoreInteractions(sessionsCallbackService);
+		NotFound.PaymentNotFound exception = assertThrows(NotFound.PaymentNotFound.class, () ->
+				testService.updatePaymentFundsInformation(false, extraJson, "PDNG")
+		);
 	}
 
 	@Test
@@ -301,17 +301,16 @@ public class ConnectorSDKCallbackServiceTests {
 	}
 
 	@Test
-	public void givenExtraWithoutSessionSecret_whenOnPaymentInitiationAuthorizationSuccess_thenReturnEmptyRedirect() throws JsonProcessingException {
+	public void givenExtraWithoutSessionSecret_whenOnPaymentInitiationAuthorizationSuccess_thenRaiseError() throws JsonProcessingException {
 		// given
 		HashMap<String, String> extraData = new HashMap<>();
 		extraData.put(KEY_DESCRIPTION, "test");
 		String extraJson = JsonTools.createDefaultMapper().writeValueAsString(extraData);
 
 		// when
-		String result = testService.onPaymentInitiationAuthorizationSuccess("user1", extraJson, "sepa-credit-transfers");
-
-		// then
-		assertThat(result).isEqualTo("");
+		NotFound.PaymentNotFound exception = assertThrows(NotFound.PaymentNotFound.class, () ->
+				testService.onPaymentInitiationAuthorizationSuccess("user1", extraJson, "sepa-credit-transfers")
+		);
 	}
 
 	@Test
@@ -319,7 +318,7 @@ public class ConnectorSDKCallbackServiceTests {
 		// given
 		HashMap<String, String> extraData = new HashMap<>();
 		extraData.put(SDKConstants.KEY_SESSION_SECRET, "sessionSecret");
-		extraData.put(SDKConstants.KEY_RETURN_TO_URL, "http://redirect.to");
+		extraData.put(KEY_RETURN_TO_URL, "http://redirect.to");
 		String extraJson = JsonTools.createDefaultMapper().writeValueAsString(extraData);
 
 		// when
@@ -327,7 +326,7 @@ public class ConnectorSDKCallbackServiceTests {
 
 		// then
 		assertThat(result).isEqualTo("http://redirect.to");
-		verify(sessionsCallbackService).sendSuccessCallbackAsync(eq("sessionSecret"), eq(new SessionSuccessCallbackRequest("user1", "ACTC")));
+		verify(sessionsCallbackService).sendSuccessCallbackAsync(eq("sessionSecret"), eq(SessionSuccessCallbackRequest.successPisCallback("user1", null)));
 	}
 
 	@Test
@@ -335,7 +334,7 @@ public class ConnectorSDKCallbackServiceTests {
 		// given
 		HashMap<String, String> extraData = new HashMap<>();
 		extraData.put(SDKConstants.KEY_SESSION_SECRET, "sessionSecret");
-		extraData.put(SDKConstants.KEY_RETURN_TO_URL, "http://redirect.to");
+		extraData.put(KEY_RETURN_TO_URL, "http://redirect.to");
 		String extraJson = JsonTools.createDefaultMapper().writeValueAsString(extraData);
 
 		// when
@@ -343,7 +342,7 @@ public class ConnectorSDKCallbackServiceTests {
 
 		// then
 		assertThat(result).isEqualTo("http://redirect.to");
-		verify(sessionsCallbackService).sendSuccessCallbackAsync(eq("sessionSecret"), eq(new SessionSuccessCallbackRequest("user1", "ACCC")));
+		verify(sessionsCallbackService).sendSuccessCallbackAsync(eq("sessionSecret"), eq(SessionSuccessCallbackRequest.successPisCallback("user1", null)));
 	}
 
 	@Test
@@ -351,7 +350,7 @@ public class ConnectorSDKCallbackServiceTests {
 		// given
 		HashMap<String, String> extraData = new HashMap<>();
 		extraData.put(SDKConstants.KEY_SESSION_SECRET, "sessionSecret");
-		extraData.put(SDKConstants.KEY_RETURN_TO_URL, "http://redirect.to");
+		extraData.put(KEY_RETURN_TO_URL, "http://redirect.to");
 		String extraJson = JsonTools.createDefaultMapper().writeValueAsString(extraData);
 
 		// when
@@ -359,7 +358,7 @@ public class ConnectorSDKCallbackServiceTests {
 
 		// then
 		assertThat(result).isEqualTo("http://redirect.to");
-		verify(sessionsCallbackService).sendSuccessCallbackAsync(eq("sessionSecret"), eq(new SessionSuccessCallbackRequest("user1", "ACSC")));
+		verify(sessionsCallbackService).sendSuccessCallbackAsync(eq("sessionSecret"), eq(SessionSuccessCallbackRequest.successPisCallback("user1", null)));
 	}
 
 	@Test
@@ -372,7 +371,7 @@ public class ConnectorSDKCallbackServiceTests {
 		// given
 		HashMap<String, String> extraData = new HashMap<>();
 		extraData.put(SDKConstants.KEY_SESSION_SECRET, "sessionSecret");
-		extraData.put(SDKConstants.KEY_RETURN_TO_URL, "http://redirect.to");
+		extraData.put(KEY_RETURN_TO_URL, "http://redirect.to");
 		String extraJson = JsonTools.createDefaultMapper().writeValueAsString(extraData);
 
 		// when

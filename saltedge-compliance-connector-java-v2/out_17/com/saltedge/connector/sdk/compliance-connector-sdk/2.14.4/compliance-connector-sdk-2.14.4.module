@@ -1,0 +1,158 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "com.saltedge.connector.sdk",
+    "module": "compliance-connector-sdk",
+    "version": "2.14.4",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "8.8"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 17,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api"
+      },
+      "files": [
+        {
+          "name": "compliance-connector-sdk-2.14.4.jar",
+          "url": "compliance-connector-sdk-2.14.4.jar",
+          "size": 152270,
+          "sha512": "55e8250fa9418ac0e586125dec4ad7ddd8f5cda4f239ff00b3859510edcd7fc2dd709f0c424ecce826c507705284449f7351e412a8382b8d7e5bf61912b54fd5",
+          "sha256": "73c4e312f824e82c52ecc2d84e1054935f48a54f73229cb63f4a448ac9dc9cb5",
+          "sha1": "eed638546031829ffe6e3212253b9490d8044b5f",
+          "md5": "ec79d40822b1ac1dc0d11c36588dff3b"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 17,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains",
+          "module": "annotations",
+          "version": {
+            "requires": "24.1.0"
+          }
+        },
+        {
+          "group": "org.springframework.boot",
+          "module": "spring-boot-starter",
+          "version": {
+            "requires": "3.2.5"
+          }
+        },
+        {
+          "group": "org.springframework.boot",
+          "module": "spring-boot-starter-web",
+          "version": {
+            "requires": "3.2.5"
+          }
+        },
+        {
+          "group": "org.springframework.boot",
+          "module": "spring-boot-starter-data-jpa",
+          "version": {
+            "requires": "3.2.5"
+          }
+        },
+        {
+          "group": "org.springframework.boot",
+          "module": "spring-boot-starter-validation",
+          "version": {
+            "requires": "3.2.5"
+          }
+        },
+        {
+          "group": "io.jsonwebtoken",
+          "module": "jjwt-api",
+          "version": {
+            "requires": "0.12.6"
+          }
+        },
+        {
+          "group": "io.jsonwebtoken",
+          "module": "jjwt-impl",
+          "version": {
+            "requires": "0.12.6"
+          }
+        },
+        {
+          "group": "io.jsonwebtoken",
+          "module": "jjwt-jackson",
+          "version": {
+            "requires": "0.12.6"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "compliance-connector-sdk-2.14.4.jar",
+          "url": "compliance-connector-sdk-2.14.4.jar",
+          "size": 152270,
+          "sha512": "55e8250fa9418ac0e586125dec4ad7ddd8f5cda4f239ff00b3859510edcd7fc2dd709f0c424ecce826c507705284449f7351e412a8382b8d7e5bf61912b54fd5",
+          "sha256": "73c4e312f824e82c52ecc2d84e1054935f48a54f73229cb63f4a448ac9dc9cb5",
+          "sha1": "eed638546031829ffe6e3212253b9490d8044b5f",
+          "md5": "ec79d40822b1ac1dc0d11c36588dff3b"
+        }
+      ]
+    },
+    {
+      "name": "javadocElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "javadoc",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "compliance-connector-sdk-2.14.4-javadoc.jar",
+          "url": "compliance-connector-sdk-2.14.4-javadoc.jar",
+          "size": 564817,
+          "sha512": "d0a0725d7284b7df88fd8cf9a8216502cd3fa6c097ebaf1dbb94b1b0e89eab10e54848e11f15ec7309353c7955f14d6d69a48b0a472dd6b8371a25f139527ab2",
+          "sha256": "1cac12e50c9813ab913035d4f2924b545564e21e0ae7060b3dddc2f2d7a79878",
+          "sha1": "d848da8fe128d65bee3182f2df53a888f914aec8",
+          "md5": "b65c320ce731a3039e3127ac35b52288"
+        }
+      ]
+    },
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "compliance-connector-sdk-2.14.4-sources.jar",
+          "url": "compliance-connector-sdk-2.14.4-sources.jar",
+          "size": 160877,
+          "sha512": "3c4063a6af9f94f1e1589de9cff50ccc53b1b17610caa21d32b28bb0fd1250a71a6c9de1e1e3605142c71eba931c7148a2e815b445b062f0b4d994aecd869fe4",
+          "sha256": "51bab84927f2b7e96376ba7a76637dea4c5d56128c088233a819eefdb6012a08",
+          "sha1": "b0bcc6af0422e5319ea03f214bc30dde24601fdd",
+          "md5": "7ff518d7eff42f1017fb373553d1b4ad"
+        }
+      ]
+    }
+  ]
+}
