@@ -9,6 +9,7 @@
 - onPaymentInitiateSuccess() with CompletableFuture<ErrorResponse> result
 - onPaymentInitiateFail() with CompletableFuture<ErrorResponse> result
 ### Update
+- add tppRedirectUrl to ProviderServiceAbs.createPayment() 
 - Fix consent status management.
 - updatePaymentFundsInformation() returns CompletableFuture<ErrorResponse> instead of void
 - onPaymentInitiationAuthorizationSuccess() throws NotFound.PaymentNotFound
