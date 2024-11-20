@@ -42,22 +42,38 @@ public class TokensCallbackService extends CallbackRestClient {
     private static final Logger log = LoggerFactory.getLogger(TokensCallbackService.class);
 
     /**
+     * Notify Salt Edge Compliance to revoke AIS consent by accessToken.
      * Revoke callback needs to be called any time an AIS consent is revoked by Provider.
      *
      * @param accessToken unique token of current consent
      */
     @Async
     public void sendRevokeAisTokenCallbackAsync(@NotEmpty String accessToken) {
-        String url = createCallbackRequestUrl(SDKConstants.CALLBACK_BASE_PATH + "/tokens/revoke");
-        HashMap<String, String> params = new HashMap<>();
-        LinkedMultiValueMap<String, String> headers = createCallbackRequestHeaders(params);
-        headers.add("Token", accessToken);
-        printPayload(url, headers, params);
-        doCallbackRequest(url, headers);
+        sendRevokeCallback(accessToken, "/tokens/revoke");
+    }
+
+    /**
+     * Notify Salt Edge Compliance to revoke PIIS consent by accessToken.
+     * Revoke callback needs to be called any time an PIIS consent is revoked by Provider.
+     *
+     * @param accessToken unique token of current consent
+     */
+    @Async
+    public void sendRevokePiisTokenCallbackAsync(@NotEmpty String accessToken) {
+        sendRevokeCallback(accessToken, "/funds_confirmations/tokens/revoke");
     }
 
     @Override
     protected Logger getLogger() {
         return log;
+    }
+
+    private void sendRevokeCallback(@NotEmpty String accessToken, String path) {
+        String url = createCallbackRequestUrl(SDKConstants.CALLBACK_BASE_PATH + path);
+        HashMap<String, String> params = new HashMap<>();
+        LinkedMultiValueMap<String, String> headers = createCallbackRequestHeaders(params);
+        headers.add("Token", accessToken);
+        printPayload(url, headers, params);
+        doCallbackRequest(url, headers);
     }
 }

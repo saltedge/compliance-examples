@@ -24,6 +24,7 @@ import com.saltedge.connector.sdk.SDKConstants;
 import com.saltedge.connector.sdk.api.models.err.BadRequest;
 import com.saltedge.connector.sdk.api.models.err.NotFound;
 import com.saltedge.connector.sdk.api.models.err.Unauthorized;
+import com.saltedge.connector.sdk.models.ConsentStatus;
 import com.saltedge.connector.sdk.models.domain.AisToken;
 import com.saltedge.connector.sdk.models.domain.AisTokensRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,6 +62,7 @@ public class AisTokenResolver implements HandlerMethodArgumentResolver {
             AisToken token = tokensRepository.findFirstByAccessToken(accessToken);
             if (token == null) throw new NotFound.TokenNotFound();
             if (token.isExpired()) throw new Unauthorized.TokenExpired(String.valueOf(token.tokenExpiresAt));
+            if (token.status != ConsentStatus.CONFIRMED) throw new Unauthorized.AccessDenied("Token not confirmed");
             return token;
         } else throw new BadRequest.AccessTokenMissing();
     }
