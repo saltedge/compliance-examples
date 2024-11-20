@@ -283,6 +283,15 @@ public interface ConnectorCallbackAbs {
     String onFundsConfirmationConsentAuthorizationFail(@NotEmpty String sessionSecret, String userId);
 
     /**
+     * ASPSP notifies Salt Edge Compliance service that the PIIS authorisation has been revoked by user on ASPSP side.
+     *
+     * @param userId Unique PSU identifier issued by ASPSP.
+     * @param accessToken Unique token that will be used to access ASPSP data. Token is a unique value which is linked to authenticated user and consent.
+     * @return Operation result, `true` if successful
+     */
+    boolean revokeFundsConfirmationConsent(@NotEmpty String userId, @NotEmpty String accessToken);
+
+    /**
      * Get redirect url for final redirection of Authorization session of PIIS Consent, back to TPP side.
      *
      * @param sessionSecret Unique identifier of authorization session.

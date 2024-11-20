@@ -26,6 +26,7 @@ import com.saltedge.connector.sdk.api.controllers.ais.AccountsV2Controller;
 import com.saltedge.connector.sdk.api.models.requests.DefaultRequest;
 import com.saltedge.connector.sdk.api.models.responses.ErrorResponse;
 import com.saltedge.connector.sdk.config.ApplicationProperties;
+import com.saltedge.connector.sdk.models.ConsentStatus;
 import com.saltedge.connector.sdk.models.domain.AisToken;
 import com.saltedge.connector.sdk.models.domain.AisTokensRepository;
 import com.saltedge.connector.sdk.tools.JsonTools;
@@ -50,12 +51,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class AisTokenResolverIntegrationTests {
     @LocalServerPort
     protected int port = 0;
-
     @Autowired
     ApplicationProperties applicationProperties;
     @Autowired
     AisTokensRepository aisTokensRepository;
     private final TestRestTemplate testRestTemplate = new TestRestTemplate();
+
+    AisToken token = null;
 
     @Test
     public void givenHeaderWithNoAccessToken_whenMakeRequest_thenReturnAccessTokenMissing() {
@@ -88,6 +90,9 @@ public class AisTokenResolverIntegrationTests {
     @Test
     public void givenHeaderWithExpiredToken_whenMakeRequest_thenReturnTokenExpiredError() {
         // given
+        token.status = ConsentStatus.CONFIRMED;
+        token.tokenExpiresAt = Instant.now().minusSeconds(60);
+        aisTokensRepository.save(token);
         LinkedMultiValueMap<String, String> headers = createHeaders();
         headers.add(SDKConstants.HEADER_ACCESS_TOKEN, "validToken");
 
@@ -100,13 +105,33 @@ public class AisTokenResolverIntegrationTests {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
     }
 
+    @Test
+    public void givenHeaderWithRevokedToken_whenMakeRequest_thenReturnAcessDeniedError() {
+        // given
+        token.status = ConsentStatus.REVOKED;
+        token.tokenExpiresAt = Instant.now().plusSeconds(60);
+        aisTokensRepository.save(token);
+        LinkedMultiValueMap<String, String> headers = createHeaders();
+        headers.add(SDKConstants.HEADER_ACCESS_TOKEN, "validToken");
+
+        // when
+        ResponseEntity<ErrorResponse> response = doRequest(headers);
+
+        // then
+        ErrorResponse body = response.getBody();
+        assertThat(body.errorClass).isEqualTo("AccessDenied");
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+    }
+
     @BeforeEach
     public void setUp() {
         if (aisTokensRepository.count() == 0) {
-            AisToken token = new AisToken("sessionSecret", "tppAppName", "authTypeCode", "tppRedirectUrl", Instant.now().minusSeconds(10), null);
+            token = new AisToken("sessionSecret", "tppAppName", "authTypeCode", "tppRedirectUrl", Instant.now().minusSeconds(10), null);
             token.id = 1L;
             token.accessToken = "validToken";
             aisTokensRepository.save(token);
+        } else {
+            token = aisTokensRepository.findFirstBySessionSecret("sessionSecret");
         }
     }
 

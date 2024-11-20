@@ -47,6 +47,10 @@ public class RevokeTokenByProviderService extends BaseService {
         return revokePiisToken(piisTokensRepository.findFirstBySessionSecret(sessionSecret));
     }
 
+    public PiisToken revokePiisTokenByUserIdAndAccessToken(String userId, String accessToken) {
+        return revokePiisToken(piisTokensRepository.findFirstByUserIdAndAccessToken(userId, accessToken));
+    }
+
     private AisToken revokeAisToken(AisToken token) {
         if (token == null) throw new NotFound.TokenNotFound();
 
