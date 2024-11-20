@@ -1,6 +1,12 @@
 # Salt Edge Compliance Connector SDK Changelog
 
-## 2.14.4 (2024-11-19)
+## 2.14.5 (2024-11-20)
+### Add
+- revokeFundsConfirmationConsent(@NotEmpty String userId, @NotEmpty String accessToken)
+### Update
+- Fix consent validation.
+
+## 2.14.4 (2024-11-18)
 ### Add
 - originalAmount to TransactionExtra
 - userId to BaseFailRequest

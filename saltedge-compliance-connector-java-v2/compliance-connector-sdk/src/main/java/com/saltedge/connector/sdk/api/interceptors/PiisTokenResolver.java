@@ -23,6 +23,8 @@ package com.saltedge.connector.sdk.api.interceptors;
 import com.saltedge.connector.sdk.SDKConstants;
 import com.saltedge.connector.sdk.api.models.err.BadRequest;
 import com.saltedge.connector.sdk.api.models.err.NotFound;
+import com.saltedge.connector.sdk.api.models.err.Unauthorized;
+import com.saltedge.connector.sdk.models.ConsentStatus;
 import com.saltedge.connector.sdk.models.domain.PiisToken;
 import com.saltedge.connector.sdk.models.domain.PiisTokensRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,6 +61,7 @@ public class PiisTokenResolver implements HandlerMethodArgumentResolver {
         if (StringUtils.hasLength(accessToken)) {
             PiisToken token = tokensRepository.findFirstByAccessToken(accessToken);
             if (token == null) throw new NotFound.TokenNotFound();
+            if (token.status != ConsentStatus.CONFIRMED) throw new Unauthorized.AccessDenied("Token not confirmed");
             return token;
         } else throw new BadRequest.AccessTokenMissing();
     }
