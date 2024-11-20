@@ -59,9 +59,17 @@ public abstract class Unauthorized extends RuntimeException implements HttpError
     }
 
     public static class AccessDenied extends Unauthorized {
+        private String message = "Access denied.";
+
         @Override
         public String getErrorMessage() {
-            return "Access denied.";
+            return message;
+        }
+
+        public AccessDenied() {}
+
+        public AccessDenied(String message) {
+            this.message = message;
         }
     }
 
