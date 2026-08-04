@@ -12,7 +12,7 @@ class AddCardAccounts < ActiveRecord::Migration[5.2]
       t.jsonb :balances
       t.jsonb :extra
 
-      t.timestamp
+      t.timestamps
     end
   end
 end

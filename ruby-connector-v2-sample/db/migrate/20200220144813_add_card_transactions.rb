@@ -25,7 +25,7 @@ class AddCardTransactions < ActiveRecord::Migration[5.2]
       t.boolean    :invoiced
       t.string     :proprietary_bank_transaction_code
 
-      t.timestamp
+      t.timestamps
     end
   end
 end
