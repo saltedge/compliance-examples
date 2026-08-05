@@ -3,6 +3,7 @@ defaults: &defaults
   host: "localhost:8000"
   url: "http://localhost:8000"
   priora:
+    host: "https://priora.banksalt.com"
     app_id: app_id
     app_secret: app_secret
     private_key_file: "config/private_key.pem"
@@ -15,7 +16,6 @@ defaults: &defaults
     port: 6379
     host: "localhost"
     database: 0
-    namespace: "connector"
     password: ""
   devise:
     secret_key: "test"

@@ -36,3 +36,5 @@
 /config/credentials.yml.enc
 /config/database.yml
 /config/private_key.pem
+/config/secrets/*
+/config/application.yml
