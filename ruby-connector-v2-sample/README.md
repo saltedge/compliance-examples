@@ -1,8 +1,17 @@
-## This is a demo application that is strictly not recommended to be used in a production environment.
+## This is a demo application of SaltEdge Connector API v2  
+Strictly not recommended to be used in a production environment as-is.
+
+### SaltEdge Connector API v2  
+https://priora.saltedge.com/docs/aspsp/v2
+
+### SaltEdge BG1.3 TPP API
+https://priora.saltedge.com/docs/berlingroup
+
 
 ### Run connector
 1. $ `bundle`
-2. $ `rails credentials:edit`
+2. Setup config
+$ `rails credentials:edit`
 > *copy content from config/application.example.yml*
 ```yml
 defaults: &defaults
@@ -37,3 +46,6 @@ test:
 4. $ `bundle exec rake db:create db:migrate`
 5. $ `rails s -p 8000`
 6. $ `bundle exec sidekiq`
+
+---
+Copyright © 2015 Salt Edge. https://www.saltedge.com
