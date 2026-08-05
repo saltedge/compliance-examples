@@ -1,5 +1,7 @@
 class Priora::Request
-  BASE_URL = "https://priora.banksalt.com/api/connectors/v2/"
+  def self.base_url
+    URI.join(Settings.priora[:host], "api/connectors/v2/").to_s
+  end
 
   def self.update_session(secret:, params:)
     new(mtd: :patch, url: "sessions/#{secret}/update", params: params).execute
@@ -22,8 +24,7 @@ class Priora::Request
   end
 
   def execute
-    puts URI.join(BASE_URL, url).to_s
-    RestClient::Request.execute(method: mtd, url: URI.join(BASE_URL, url).to_s, headers: headers)
+    RestClient::Request.execute(method: mtd, url: URI.join(self.class.base_url, url).to_s, headers: headers)
   rescue RestClient::Exception => ex
     puts JSON.parse(ex.response)
   end

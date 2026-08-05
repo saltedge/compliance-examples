@@ -9,9 +9,10 @@ defaults: &defaults
   host: "localhost:3000"
   url: "http://localhost:3000" # expose it into external network
   priora:
+    host: "https://priora.banksalt.com" # priora API host, differs between dev and prod
     app_id: app_id # your app-id from priora.saltedge.com/providers dashboard
     app_secret: app_secret # your app-id from priora.saltedge.com/providers dashboard
-    private_key_file: "config/private_key.pem" # generate a 4096 rsa key for JWT
+    private_key_file: "config/private_key.pem" # connector's key. generate a 4096 rsa key for JWT
     public_key: "config/priora_public_key.pem" # priora.saltedge.com public key from documentation
   application: &application
     url: "http://localhost:3000"
