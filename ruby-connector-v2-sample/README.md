@@ -6,8 +6,8 @@
 > *copy content from config/application.example.yml*
 ```yml
 defaults: &defaults
-  host: "localhost:8000"
-  url: "http://localhost:8000" # expose it into external network
+  host: "localhost:3000"
+  url: "http://localhost:3000" # expose it into external network
   priora:
     app_id: app_id # your app-id from priora.saltedge.com/providers dashboard
     app_secret: app_secret # your app-id from priora.saltedge.com/providers dashboard
@@ -21,7 +21,6 @@ defaults: &defaults
     port: 6379
     host: "localhost"
     database: 0
-    namespace: "connector"
     password: ""
   devise:
     secret_key: "test" # change it

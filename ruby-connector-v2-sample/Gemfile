@@ -8,7 +8,6 @@ gem "sidekiq"
 gem "settingslogic"
 gem "rest-client"
 gem "hiredis"
-gem "redis-namespace"
 gem "redis", "<5", require: ["redis", "redis/connection/hiredis"]
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'

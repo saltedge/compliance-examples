@@ -1,5 +1,5 @@
 class Priora::Request
-  BASE_URL = "https://priora.saltedge.com/api/connectors/v2/"
+  BASE_URL = "https://priora.banksalt.com/api/connectors/v2/"
 
   def self.update_session(secret:, params:)
     new(mtd: :patch, url: "sessions/#{secret}/update", params: params).execute

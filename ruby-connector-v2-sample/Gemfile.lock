@@ -200,8 +200,6 @@ GEM
     redis (4.8.1)
     redis-client (0.30.1)
       connection_pool
-    redis-namespace (1.11.0)
-      redis (>= 4)
     responders (3.1.1)
       actionpack (>= 5.2)
       railties (>= 5.2)
@@ -307,7 +305,6 @@ DEPENDENCIES
   puma (>= 5.3.1)
   rails (~> 6.1, >= 6.1.7.9)
   redis (< 5)
-  redis-namespace
   rest-client
   rspec (= 3.8.0)
   rspec-core (= 3.8.0)

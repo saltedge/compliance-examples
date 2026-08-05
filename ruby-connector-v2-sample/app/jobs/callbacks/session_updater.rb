@@ -1,7 +1,6 @@
 class Callbacks::SessionUpdater < ApplicationJob
   def perform(token_id:)
     token = Token.find(token_id)
-
     raise "Token should be initiated" unless token.initiated?
 
     Priora::Request.update_session(
